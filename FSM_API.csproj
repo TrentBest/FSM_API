@@ -7,14 +7,4 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="FSM_API.Create.cs" />
-    <Compile Remove="FSM_API.Error.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="FSM_API.Create.cs" />
-    <None Include="FSM_API.Error.cs" />
-  </ItemGroup>
-
 </Project>

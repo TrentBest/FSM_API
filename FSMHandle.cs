@@ -76,7 +76,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 // If an exception occurs during the FSM's internal step, report it as a "fubar".
                 // This allows the FSM_API to track and potentially remove problematic instances.
-                FSM_API.ReportError(this, ex);
+                FSM_API.Error.ReportError(this, ex);
             }
         }
 
@@ -107,7 +107,7 @@ namespace TheSingularityWorkshop.FSM_API
             catch (Exception ex)
             {
                 // Report any issues during a forced transition as a "fubar".
-                FSM_API.ReportError(this, ex);
+                FSM_API.Error.ReportError(this, ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
         }

@@ -206,7 +206,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             // Register with FSM_API. This handles new registration or updating an existing one.
-            FSM_API.Register(
+            FSM_API.Internal.Register(
                 _fsmName,
                 machine,
                 _processRate, 
@@ -218,11 +218,6 @@ namespace TheSingularityWorkshop.FSM_API
             _initialState = string.Empty; 
             _processRate = 0;
             _processGroup = "Update"; 
-        }
-
-        public object Transition(string v1, string v2, bool isBeingRippedApart)
-        {
-            throw new NotImplementedException();
         }
     }
 }
