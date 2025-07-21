@@ -15,33 +15,6 @@ namespace TheSingularityWorkshop.FSM.API
     /// </summary>
     public static class FSM_API
     {
-        private static readonly Queue<Action> _deferredModifications = new();
-        private static readonly Dictionary<FSMHandle, int> _errorCounts = new();
-        private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new();
-        public static int ErrorCountThreshold { get; set; } = 5;
-        public static int DefinitionErrorThreshold { get; set; } = 3;
-
-        /// <summary>
-        /// Occurs when an internal, non-state-logic API operation throws an unexpected exception.
-        /// Provides a mechanism for users to capture internal API errors without forcing runtime logging.
-        /// </summary>
-        public static event Action<string, Exception>? OnInternalApiError;
-
-        
-
-
-        /// <summary>
-        /// Safely invokes the OnInternalApiError event, checking for null subscribers.
-        /// This method is the only way to trigger OnInternalApiError from within FSM_API.
-        /// </summary>
-        /// <param name="message">The error message.</param>
-        /// <param name="ex">The exception that occurred, if any.</param>
-        internal static void InvokeInternalApiError(string message, Exception? ex)
-        {
-            var err = ex != null ? ex : new Exception(message);
-            OnInternalApiError?.Invoke(message, err);
-        }
-
         /// <summary>
         /// Represents a container for an FSM definition and all its active instances.
         /// Used internally by the FSM_API to manage updates.
@@ -55,6 +28,9 @@ namespace TheSingularityWorkshop.FSM.API
 
         }
 
+        public static int DefinitionErrorThreshold { get; set; } = 3;
+        public static int ErrorCountThreshold { get; set; } = 5;
+
         /// <summary>
         /// Sets a time limit (in milliseconds) for how long an FSM processing group update can take
         /// before a warning message is logged via OnInternalApiError. Helps identify performance bottlenecks.
@@ -62,10 +38,37 @@ namespace TheSingularityWorkshop.FSM.API
         /// </summary>
         public static long TickPerformanceWarningThresholdMs { get; set; } = 5;
 
+        /// <summary>
+        /// Occurs when an internal, non-state-logic API operation throws an unexpected exception.
+        /// Provides a mechanism for users to capture internal API errors without forcing runtime logging.
+        /// </summary>
+        public static event Action<string, Exception>? OnInternalApiError;
+
+        
+        private static readonly Queue<Action> _deferredModifications = new();
+        private static readonly Dictionary<FSMHandle, int> _errorCounts = new();
+        private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new();
+
+
+
+
+
         // _buckets: Stores all FSM definitions and their instances, organized by
         // their processing group (e.g., "Update", "FixedUpdate") and then by FSM name.
         public static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new();
         private static FSM _defaultFSM = new FSM();
+
+        /// <summary>
+        /// Safely invokes the OnInternalApiError event, checking for null subscribers.
+        /// This method is the only way to trigger OnInternalApiError from within FSM_API.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="ex">The exception that occurred, if any.</param>
+        internal static void InvokeInternalApiError(string message, Exception? ex)
+        {
+            var err = ex != null ? ex : new Exception(message);
+            OnInternalApiError?.Invoke(message, err);
+        }
 
         /// <summary>
         /// Safely retrieves the dictionary of FSMs for a given processing group.
@@ -97,10 +100,10 @@ namespace TheSingularityWorkshop.FSM.API
         /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
         public static void CreateProcessingGroup(string processingGroup)
         {
-            if (!isInitialized)
-            {
-                Initialize();
-            }
+            //if (!isInitialized)
+            //{
+            //    Initialize();
+            //}
             GetOrCreateBucketCategory(processingGroup);
         }
 
@@ -588,19 +591,19 @@ namespace TheSingularityWorkshop.FSM.API
             }
         }
 
-        private static bool isInitialized = false;
-        private static void Initialize()
-        {
-            FSM_API.CreateFiniteStateMachine("DefaultFSM", 0, "Update")
-                .BuildDefinition();
-            var def = FSM_API.GetDefinition("DefaultFSM", "Update");
-            if (def == null)
-            {
-                InvokeInternalApiError("Default FSM definition could not be initialized. This is a critical error.", null);
-                return;
-            }
-            isInitialized = true;
-        }
+        //private static bool isInitialized = false;
+        //private static void Initialize()
+        //{
+        //    FSM_API.CreateFiniteStateMachine("DefaultFSM", 0, "Update")
+        //        .BuildDefinition();
+        //    var def = FSM_API.GetDefinition("DefaultFSM", "Update");
+        //    if (def == null)
+        //    {
+        //        InvokeInternalApiError("Default FSM definition could not be initialized. This is a critical error.", null);
+        //        return;
+        //    }
+        //    isInitialized = true;
+        //}
 
         /// <summary>
         /// Internal method to increment the error count for an FSM definition.
