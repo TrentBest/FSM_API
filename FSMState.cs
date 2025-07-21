@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TheSingularityWorkshop.FSM.API
+namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// Represents a single state within a Finite State Machine (FSM) definition.

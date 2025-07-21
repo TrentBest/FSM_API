@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TheSingularityWorkshop.FSM.API
+namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// Represents a live instance of a Finite State Machine (FSM) definition.
