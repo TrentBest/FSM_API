@@ -104,37 +104,7 @@ namespace TheSingularityWorkshop.FSM.API
             GetOrCreateBucketCategory(processingGroup);
         }
 
-        /// <summary>
-        /// Removes an entire FSM processing group, along with all FSM definitions and
-        /// their active instances within that group. This effectively unregisters
-        /// all FSMs associated with it.
-        /// </summary>
-        /// <param name="processingGroup">The name of the processing group to remove.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
-        public static void RemoveProcessingGroup(string processingGroup)
-        {
-            if (string.IsNullOrWhiteSpace(processingGroup))
-            {
-                throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
-            }
-
-            if (_buckets.TryGetValue(processingGroup, out var categoryBuckets))
-            {
-                foreach (var bucket in categoryBuckets.Values)
-                {
-                    if (bucket.Definition != null)
-                    {
-                        _fsmDefinitionErrorCounts.Remove(bucket.Definition.Name);
-                    }
-                    bucket.Instances.Clear();
-                }
-                _buckets.Remove(processingGroup);
-            }
-            else
-            {
-                InvokeInternalApiError($"Attempted to remove non-existent processing group '{processingGroup}'.", null);
-            }
-        }
+       
 
         /// <summary>
         /// Initiates the definition process for a new Finite State Machine,
@@ -173,6 +143,49 @@ namespace TheSingularityWorkshop.FSM.API
             // New FSM definition, return a fresh builder.
             return new FSMBuilder(fsmName, processRate, processingGroup);
         }
+
+
+        /// <summary>
+        /// Creates a live instance of a registered FSM definition, binding it to a specific context object.
+        /// This allows the FSM to manage the state and behaviors of that context.
+        /// </summary>
+        /// <param name="fsmName">The name of the FSM definition to instantiate.</param>
+        /// <param name="ctx">The object that will serve as the FSM's context. This object must implement <see cref="IStateContext"/>.</param>
+        /// <param name="processingGroup">The processing group of the FSM definition you wish to instantiate.</param>
+        /// <returns>An <see cref="FSMHandle"/> that provides control over the newly created FSM instance.</returns>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="fsmName"/> or <paramref name="processingGroup"/> is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="ctx"/> is null.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the FSM definition is not found in the specified group.</exception>
+        public static FSMHandle CreateInstance(
+            string fsmName,
+            IStateContext ctx, string processingGroup = "Update")
+        {
+            if (string.IsNullOrWhiteSpace(fsmName))
+            {
+                throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+            }
+            if (ctx == null)
+            {
+                throw new ArgumentNullException(nameof(ctx), "State context (ctx) cannot be null when creating an FSM instance.");
+            }
+            if (string.IsNullOrWhiteSpace(processingGroup))
+            {
+                throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+            }
+
+            if (!_buckets.TryGetValue(processingGroup, out var categoryBuckets) || !categoryBuckets.TryGetValue(fsmName, out var bucket))
+            {
+                throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'. Cannot create instance.");
+            }
+            if (bucket.Definition == null)
+            {
+                bucket.Definition = _defaultFSM;
+            }
+            var handle = new FSMHandle(bucket.Definition, ctx);
+            bucket.Instances.Add(handle);
+            return handle;
+        }
+
 
         /// <summary>
         /// Internally registers or updates a fully defined FSM into the system. This method is called by
@@ -322,46 +335,7 @@ namespace TheSingularityWorkshop.FSM.API
             return bucket.Instances.AsReadOnly();
         }
 
-        /// <summary>
-        /// Creates a live instance of a registered FSM definition, binding it to a specific context object.
-        /// This allows the FSM to manage the state and behaviors of that context.
-        /// </summary>
-        /// <param name="fsmName">The name of the FSM definition to instantiate.</param>
-        /// <param name="ctx">The object that will serve as the FSM's context. This object must implement <see cref="IStateContext"/>.</param>
-        /// <param name="processingGroup">The processing group of the FSM definition you wish to instantiate.</param>
-        /// <returns>An <see cref="FSMHandle"/> that provides control over the newly created FSM instance.</returns>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="fsmName"/> or <paramref name="processingGroup"/> is null or empty.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="ctx"/> is null.</exception>
-        /// <exception cref="KeyNotFoundException">Thrown if the FSM definition is not found in the specified group.</exception>
-        public static FSMHandle CreateInstance(
-            string fsmName,
-            IStateContext ctx, string processingGroup = "Update")
-        {
-            if (string.IsNullOrWhiteSpace(fsmName))
-            {
-                throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
-            }
-            if (ctx == null)
-            {
-                throw new ArgumentNullException(nameof(ctx), "State context (ctx) cannot be null when creating an FSM instance.");
-            }
-            if (string.IsNullOrWhiteSpace(processingGroup))
-            {
-                throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
-            }
-
-            if (!_buckets.TryGetValue(processingGroup, out var categoryBuckets) || !categoryBuckets.TryGetValue(fsmName, out var bucket))
-            {
-                throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'. Cannot create instance.");
-            }
-            if(bucket.Definition == null)
-            {
-                bucket.Definition = _defaultFSM;
-            }
-            var handle = new FSMHandle(bucket.Definition, ctx);
-            bucket.Instances.Add(handle);
-            return handle;
-        }
+       
 
         /// <summary>
         /// Processes all FSMs in the "Update" processing group. Call this method from a
@@ -399,6 +373,40 @@ namespace TheSingularityWorkshop.FSM.API
                 }
             }
         }
+
+
+        /// <summary>
+        /// Removes an entire FSM processing group, along with all FSM definitions and
+        /// their active instances within that group. This effectively unregisters
+        /// all FSMs associated with it.
+        /// </summary>
+        /// <param name="processingGroup">The name of the processing group to remove.</param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
+        public static void RemoveProcessingGroup(string processingGroup)
+        {
+            if (string.IsNullOrWhiteSpace(processingGroup))
+            {
+                throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+            }
+
+            if (_buckets.TryGetValue(processingGroup, out var categoryBuckets))
+            {
+                foreach (var bucket in categoryBuckets.Values)
+                {
+                    if (bucket.Definition != null)
+                    {
+                        _fsmDefinitionErrorCounts.Remove(bucket.Definition.Name);
+                    }
+                    bucket.Instances.Clear();
+                }
+                _buckets.Remove(processingGroup);
+            }
+            else
+            {
+                InvokeInternalApiError($"Attempted to remove non-existent processing group '{processingGroup}'.", null);
+            }
+        }
+
 
         /// <summary>
         /// The internal core method that ticks (updates) all FSM instances within a
