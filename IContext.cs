@@ -1,4 +1,4 @@
-﻿namespace TheSingularityWorkshop.FSM.API
+﻿namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// Base interface for all FSM contexts.

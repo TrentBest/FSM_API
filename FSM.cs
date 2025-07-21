@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace TheSingularityWorkshop.FSM.API
+namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// Represents a Finite State Machine definition, containing states and transitions.
