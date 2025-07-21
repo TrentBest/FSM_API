@@ -59,6 +59,20 @@ namespace TheSingularityWorkshop.FSM.API
         private static FSM _defaultFSM = new FSM();
 
         /// <summary>
+        /// Ensures an FSM processing group exists. FSMs registered under this group
+        /// will be processed when the corresponding <c>Tick</c> method (e.g., <see cref="Update"/>, <see cref="FixedUpdate"/>) is called.
+        /// </summary>
+        /// <param name="processingGroup">The unique name for the processing group.</param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
+        public static void CreateProcessingGroup(string processingGroup)
+        {
+            //if (!isInitialized)
+            //{
+            //    Initialize();
+            //}
+            GetOrCreateBucketCategory(processingGroup);
+        }
+        /// <summary>
         /// Safely invokes the OnInternalApiError event, checking for null subscribers.
         /// This method is the only way to trigger OnInternalApiError from within FSM_API.
         /// </summary>
@@ -92,20 +106,6 @@ namespace TheSingularityWorkshop.FSM.API
             return categoryBuckets;
         }
 
-        /// <summary>
-        /// Ensures an FSM processing group exists. FSMs registered under this group
-        /// will be processed when the corresponding <c>Tick</c> method (e.g., <see cref="Update"/>, <see cref="FixedUpdate"/>) is called.
-        /// </summary>
-        /// <param name="processingGroup">The unique name for the processing group.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
-        public static void CreateProcessingGroup(string processingGroup)
-        {
-            //if (!isInitialized)
-            //{
-            //    Initialize();
-            //}
-            GetOrCreateBucketCategory(processingGroup);
-        }
 
         /// <summary>
         /// Removes an entire FSM processing group, along with all FSM definitions and
