@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM_API", "FSM_API.csproj", "{09BBBBCB-F4DC-469E-9D7E-BA905D00ED86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM_API", "FSM_API\FSM_API.csproj", "{09BBBBCB-F4DC-469E-9D7E-BA905D00ED86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM_API.Tests", "..\FSM_API_Tests\FSM_API.Tests\FSM_API.Tests.csproj", "{9B198366-B12B-4AC8-9930-17580439B79C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM_API.Tests", "Tests\FSM_API.Tests.csproj", "{9B198366-B12B-4AC8-9930-17580439B79C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
