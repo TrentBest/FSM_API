@@ -28,6 +28,16 @@ namespace TheSingularityWorkshop.FSM_API
     /// </remarks>
     public static partial class FSM_API
     {
+        /// <summary>
+        /// Provides a set of methods for interacting with and managing FSM definitions and instances at runtime.
+        /// This includes querying their existence, retrieving instances, ticking processing groups,
+        /// and destroying definitions or individual instances.
+        /// </summary>
+        /// <remarks>
+        /// This static class groups all operations related to the lifecycle and real-time management
+        /// of FSMs once they have been defined and instantiated. It serves as the primary
+        /// interface for monitoring and controlling your FSMs after their initial setup.
+        /// </remarks>
         public static class Interaction
         {
             /// <summary>
@@ -154,8 +164,8 @@ namespace TheSingularityWorkshop.FSM_API
             /// Purely event-driven FSMs do not strictly require this method for immediate transitions,
             /// but calling it ensures any deferred changes to FSM definitions are applied.
             /// <para>
-            /// A performance warning will be logged via <see cref="InvokeInternalApiError(string, Exception)"/>
-            /// if the processing time for this tick cycle exceeds <see cref="TickPerformanceWarningThresholdMs"/>.
+            /// A performance warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>
+            /// if the processing time for this tick cycle exceeds <see cref="Error.TickPerformanceWarningThresholdMs"/>.
             /// This helps in identifying potential performance bottlenecks in your FSM logic.
             /// </para>
             /// </remarks>
@@ -183,7 +193,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// an entire subsystem or module that relies on a specific FSM processing group
             /// is being unloaded or shut down. All memory and resources tied to FSMs
             /// in this group will be released and they will no longer be managed by the API.
-            /// If the group does not exist, a warning will be logged via <see cref="InvokeInternalApiError(string, Exception)"/>.
+            /// If the group does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
             /// </remarks>
             /// <param name="processingGroup">
             /// The name of the processing group to remove.
@@ -283,7 +293,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// or is being destroyed (e.g., a game object being despawned), but its FSM definition
             /// might still be in use by other instances.
             /// If the instance is not found (e.g., it was already unregistered or never registered),
-            /// a warning will be logged via <see cref="InvokeInternalApiError(string, Exception)"/>.
+            /// a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
             /// </remarks>
             /// <param name="instance">
             /// The <see cref="FSMHandle"/> of the specific live FSM instance to unregister.
@@ -326,6 +336,28 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+
+            /// <summary>
+            /// Resets the FSM API's internal state, optionally performing a hard reset.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="hardReset"/> is <c>true</c>, all FSM definitions, instances, and error counts
+            /// across all processing groups are immediately cleared. This is typically used for
+            /// complete teardown of the FSM system, such as between test runs or when unloading a
+            /// complex scene in an application.
+            /// <para>
+            /// If <paramref name="hardReset"/> is <c>false</c> (soft reset), all FSM instances are gracefully
+            /// shut down (their `ShutDown` method is called), and then all instances and definitions
+            /// are cleared. This allows for proper cleanup routines defined within your FSM states.
+            /// </para>
+            /// <para>
+            /// Use this method with extreme caution, as it will stop all managed FSMs.
+            /// </para>
+            /// </remarks>
+            /// <param name="hardReset">
+            /// If <c>true</c>, performs a complete, immediate reset of all internal data.
+            /// If <c>false</c>, attempts a graceful shutdown of all instances before clearing.
+            /// </param>
             public static void ResetAPI(bool hardReset = false)
             {
                 if (hardReset)
@@ -349,6 +381,25 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                     Internal.GetBuckets().Clear();
                 }
+            }
+
+            public static void AddStateToFSM(string fsmName, string processingGroup, 
+                Action<IStateContext> onEnter, 
+                Action<IStateContext> onUpdate, 
+                Action<IStateContext> onExit)
+            {
+                var fsm = Internal.GetFSM(fsmName, processingGroup);
+                var builder = new FSMBuilder(fsm);
+                builder.State(fsmName, onEnter, onUpdate, onExit)
+                    .BuildDefinition();
+            }
+
+            public static void RemoveStateFromFSM(string fsmName, string stateName, string processGroup = "Update")
+            {
+                var fsm = Internal.GetFSM(fsmName, processGroup);
+                var builder = new FSMBuilder(fsm);
+                builder.Without(stateName)
+                    .BuildDefinition();
             }
         }
     }

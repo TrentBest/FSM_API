@@ -8,7 +8,16 @@ namespace TheSingularityWorkshop.FSM_API
 {
     public static partial class FSM_API
     {
-
+        /// <summary>
+        /// Provides a centralized entry point for defining and creating instances of
+        /// Finite State Machines (FSMs) within the API.
+        /// </summary>
+        /// <remarks>
+        /// This static class serves as a factory for <see cref="FSMBuilder"/> objects
+        /// (used to construct FSM definitions) and for instantiating live FSMs from
+        /// those definitions. All operations related to the initial setup and creation
+        /// of FSMs go through the methods provided here.
+        /// </remarks>
         public static class Create
         {
             /// <summary>
@@ -73,11 +82,10 @@ namespace TheSingularityWorkshop.FSM_API
                 var buckets = FSM_API.Internal.GetOrCreateBucketProcessingGroup(processingGroup);
                 if (buckets.TryGetValue(fsmName, out var existingBucket))
                 {
-                    // FSM definition already exists, return a builder initialized with its data for modification.
+                   
                     return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition : FSM_API.Internal.GetDefaultFSM());
                 }
 
-                // New FSM definition, return a fresh builder.
                 return new FSMBuilder(fsmName, processRate, processingGroup);
             }
 
@@ -156,7 +164,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <summary>
             /// Ensures an FSM processing group exists within the API's internal management system.
             /// FSM instances registered under this group will be processed when the corresponding
-            /// <c>Tick</c> method (e.g., <see cref="FSM_API.Update(double)"/>, <see cref="FSM_API.FixedUpdate(double)"/>)
+            /// <c>Tick</c> method (e.g., <see cref="FSM_API.Interaction.Update(string)"/>)
             /// is called for that specific group.
             /// </summary>
             /// <remarks>

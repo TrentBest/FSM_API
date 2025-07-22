@@ -8,21 +8,25 @@ namespace TheSingularityWorkshop.FSM_API
 {
     public static partial class FSM_API
     {
+        /// <summary>
+        /// Provides a centralized system for managing and reporting errors and warnings within the FSM API.
+        /// This class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs
+        /// and subscribe to internal diagnostic notifications.
+        /// </summary>
+        /// <remarks>
+        /// The API uses a robust error handling mechanism to ensure system stability.
+        /// When FSM instances or definitions encounter repeated errors (e.g., exceptions during state entry/exit,
+        /// or transition evaluation), this system tracks those occurrences. If predefined thresholds are met,
+        /// the problematic FSM instance or even the entire FSM definition can be automatically removed
+        /// to prevent ongoing issues or resource consumption.
+        /// <para>
+        /// You can also subscribe to the <see cref="OnInternalApiError"/> event to receive real-time notifications
+        /// about non-FSM-specific internal errors, warnings, or significant API events.
+        /// </para>
+        /// </remarks>
         public static class Error
         {
             private static readonly Dictionary<FSMHandle, int> _errorCounts = new();
-
-            /// <summary>
-            /// Tracks the cumulative number of instance-level errors that have occurred
-            /// for each FSM definition, leading to automatic instance unregistration.
-            /// Key: FSM Definition Name, Value: Cumulative Error Count.
-            /// </summary>
-            /// <remarks>
-            /// Used in conjunction with <see cref="DefinitionErrorThreshold"/> to automatically
-            /// destroy FSM definitions that consistently produce failing instances.
-            /// Consider using <see cref="System.Collections.Concurrent.ConcurrentDictionary{TKey, TValue}"/>
-            /// for thread safety.
-            /// </remarks>
             private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new();
 
             /// <summary>
@@ -64,35 +68,34 @@ namespace TheSingularityWorkshop.FSM_API
             public static event System.Action<string, Exception>? OnInternalApiError;
 
             /// <summary>
-            /// Safely invokes the <see cref="OnInternalApiError"/> event, checking for null subscribers.
-            /// This method is the central point for triggering internal API error/warning notifications.
+            /// Safely invokes the <see cref="OnInternalApiError"/> event, providing a central point
+            /// for triggering internal API error or warning notifications.
             /// </summary>
-            /// <param name="message">The error or warning message.</param>
-            /// <param name="ex">The exception that occurred, if any.</param>
-            /// <remarks>
-            /// As part of a single-threaded API, this method does not employ internal locks.
-            /// </remarks>
+            /// <param name="message">The descriptive error or warning message.</param>
+            /// <param name="ex">The exception that occurred, if any. Can be <c>null</c>.</param>
             public static void InvokeInternalApiError(string message, Exception? ex)
             {
                 var err = ex != null ? ex : new Exception(message);
                 OnInternalApiError?.Invoke(message, err);
             }
 
-
             /// <summary>
             /// Reports an error related to a specific <see cref="FSMHandle"/> instance.
             /// Increments the instance's error count and potentially schedules its unregistration
             /// if <see cref="ErrorCountThreshold"/> is exceeded. Also contributes to the
-            /// definition's cumulative error count.
+            /// FSM definition's cumulative error count.
             /// </summary>
-            /// <param name="handle">The <see cref="FSMHandle"/> instance that encountered the error.</param>
-            /// <param name="ex">The exception that occurred.</param>
             /// <remarks>
-            /// This method enqueues the actual error processing to the <see cref="_deferredModifications"/> queue
-            /// to ensure it happens safely at a later point in the single-threaded update cycle,
-            /// preventing collection modification errors during FSM updates.
-            /// This method assumes it is called from the designated single thread.
+            /// When an error is reported for an FSM instance, it first increments that instance's
+            /// individual error counter. If this counter reaches or exceeds the <see cref="ErrorCountThreshold"/>,
+            /// the instance is automatically unregistered (removed) from the system.
+            /// Additionally, each instance unregistration due to an error contributes to the overall
+            /// error count for its parent FSM definition. If the definition's cumulative error count
+            /// reaches <see cref="DefinitionErrorThreshold"/>, the entire FSM definition (blueprint)
+            /// will be destroyed, preventing further instances from being created from a problematic blueprint.
             /// </remarks>
+            /// <param name="handle">The <see cref="FSMHandle"/> instance that encountered the error.</param>
+            /// <param name="ex">The exception that occurred. This exception will be passed to <see cref="OnInternalApiError"/> subscribers.</param>
             public static void ReportError(FSMHandle? handle, Exception ex)
             {
                 if (handle == null)
@@ -101,7 +104,6 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                // 1. Handle instance-level error count
                 int newInstanceCount;
                 if (_errorCounts.TryGetValue(handle, out int currentInstanceCount))
                 {
@@ -114,7 +116,6 @@ namespace TheSingularityWorkshop.FSM_API
                     _errorCounts.Add(handle, newInstanceCount);
                 }
 
-                // Report the specific error
                 InvokeInternalApiError(
                     $"FSM Instance '{handle.Name}' (Definition: '{handle.Definition.Name}') in processing group '{handle.Definition.ProcessingGroup}' reported an error. Error count: {newInstanceCount}/{ErrorCountThreshold}. Exception: {ex?.Message}",
                     ex
@@ -122,7 +123,6 @@ namespace TheSingularityWorkshop.FSM_API
 
                 if (newInstanceCount >= ErrorCountThreshold)
                 {
-                    // Instance hit its error threshold, schedule its removal
                     FSM_API.Internal.GetDeferred().Enqueue(() =>
                     {
                         InvokeInternalApiError($"FSM Instance '{handle.Name}' (Definition: '{handle.Definition.Name}') hit Error Threshold ({ErrorCountThreshold}). Scheduling unregistration.", null);
@@ -131,6 +131,10 @@ namespace TheSingularityWorkshop.FSM_API
                     });
                 }
             }
+
+            // Internal methods below are for API's internal use and do not require public XML documentation.
+            // Their summaries and remarks are maintained for internal code clarity if needed,
+            // but will not appear in user-facing API documentation.
 
             internal static Dictionary<string, int> GetDefinitionErrorCounts()
             {
@@ -144,8 +148,6 @@ namespace TheSingularityWorkshop.FSM_API
 
             internal static void Reset(bool hardReset)
             {
-                //ToDo:  Serialize the summary of any errors... or a clean bill of health.
-
                 _errorCounts.Clear();
                 _fsmDefinitionErrorCounts.Clear();
             }
@@ -158,7 +160,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="fsmDefinitionName">The name of the FSM definition that had a failing instance.</param>
             /// <param name="processingGroup">The processing group of the FSM definition.</param>
             /// <remarks>
-            /// This method itself schedules its work on the <see cref="_deferredModifications"/> queue,
+            /// This method itself schedules its work on the deferred modifications queue,
             /// ensuring all modifications happen safely on the single designated thread.
             /// </remarks>
             private static void IncrementDefinitionError(string fsmDefinitionName, string processingGroup)
@@ -182,7 +184,6 @@ namespace TheSingularityWorkshop.FSM_API
 
                 if (newDefinitionCount >= DefinitionErrorThreshold)
                 {
-                    // Definition hit its error threshold, schedule its complete destruction
                     Internal.GetDeferred().Enqueue(() =>
                     {
                         InvokeInternalApiError($"FSM Definition '{fsmDefinitionName}' in processing group '{processingGroup}' hit DefinitionErrorThreshold ({DefinitionErrorThreshold}). Scheduling complete destruction.", null);

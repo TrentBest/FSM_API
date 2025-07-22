@@ -112,14 +112,34 @@ namespace TheSingularityWorkshop.FSM_API
             }
         }
 
+
+        /// <summary>
+        /// Resets the FSM instance to its initial state as defined by its <see cref="FSM.InitialState"/>.
+        /// </summary>
+        /// <remarks>
+        /// This method forces a transition from the current state to the FSM's initial state,
+        /// triggering the 'Exit' action of the current state and the 'Enter' action of the initial state.
+        /// It effectively restarts the FSM's state machine logic.
+        /// </remarks>
         public void ResetFSM()
         {
             Definition.ForceTransition(CurrentState, Definition.InitialState, Context);
         }
 
+
+        /// <summary>
+        /// Shuts down and unregisters this FSM instance from the API's internal management.
+        /// </summary>
+        /// <remarks>
+        /// This method is crucial for proper resource management. It ensures that the FSM
+        /// is no longer processed by any internal update loops and is removed from memory.
+        /// After calling <c>ShutDown()</c>, this <see cref="FSMHandle"/> instance should
+        /// be considered invalid and should not be used for further operations.
+        /// It delegates the actual unregistration and cleanup to <see cref="FSM_API.Interaction.Unregister(FSMHandle)"/>.
+        /// </remarks>
         internal void ShutDown()
         {
-            throw new NotImplementedException();
+            FSM_API.Interaction.Unregister(this);
         }
     }
 }

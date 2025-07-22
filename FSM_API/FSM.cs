@@ -6,56 +6,110 @@ using System.Linq;
 namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
-    /// Represents a Finite State Machine definition, containing states and transitions.
-    /// Instances of this definition are created via FSM_API to manage stateful contexts.
+    /// Represents a complete Finite State Machine definition, serving as a blueprint
+    /// for FSM instances. This class encapsulates the states, transitions between them,
+    /// and core configuration properties for an FSM.
     /// </summary>
+    /// <remarks>
+    /// An <see cref="FSM"/> object defines the behavior of a state machine but does not
+    /// maintain its runtime state. Instead, instances of this definition are created and managed
+    /// through <see cref="FSMHandle"/> objects via the <see cref="FSM_API"/> system.
+    /// This class is part of the internal API mechanics and is typically constructed
+    /// and managed by the <see cref="FSMBuilder"/>.
+    /// </remarks>
     public class FSM
     {
         /// <summary>
-        /// Gets or sets the unique name of this FSM definition.
+        /// Gets or sets the unique name assigned to this FSM definition.
         /// </summary>
+        /// <remarks>
+        /// This name is used to register and retrieve the FSM definition within the
+        /// <see cref="FSM_API"/> system. It is typically set during the FSM's construction
+        /// via the <see cref="FSMBuilder"/>.
+        /// </remarks>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the initial state for this FSM.
-        /// When an FSM instance is created, it will start in this state.
+        /// Gets or sets the name of the initial state for this FSM definition.
         /// </summary>
+        /// <remarks>
+        /// When a new FSM instance (<see cref="FSMHandle"/>) is created from this definition,
+        /// it will begin its lifecycle by entering the state specified by <see cref="InitialState"/>.
+        /// A valid initial state must be added to the FSM definition using <see cref="AddState(FSMState)"/>.
+        /// </remarks>
         public string InitialState { get; set; }
 
         /// <summary>
-        /// Gets or sets the processing rate for instances of this FSM definition.
-        /// This determines how often the FSM's <see cref="Step"/> method is called
-        /// by the <see cref="FSM_API.TickAll"/> methods.
-        /// <list type="bullet">
-        ///    <item><term>-1</term><description>Updates every single frame.</description></item>
-        ///    <item><term>0</term><description>Never updated automatically by the API's Tick methods (must be driven by events or manual calls).</description></item>
-        ///    <item><term>&gt;0</term><description>Updates every Nth frame (e.g., a value of 5 means update every 5th frame).</description></item>
-        /// </list>
+        /// Gets or sets the desired processing rate for instances created from this FSM definition.
         /// </summary>
+        /// <remarks>
+        /// This property determines how frequently the FSM's <see cref="Step"/> method
+        /// is automatically invoked by the <see cref="FSM_API.Internal.TickAll(string)"/>
+        /// method within its designated <see cref="ProcessingGroup"/>.
+        /// </remarks>
+        /// <value>
+        /// <list type="bullet">
+        ///    <item><term><c>-1</c></term><description>
+        ///        Instances will be processed every time the <see cref="FSM_API.Internal.TickAll(string)"/>
+        ///        method is called for this FSM's <see cref="ProcessingGroup"/> (e.g., every frame in a game loop).
+        ///    </description></item>
+        ///    <item><term><c>0</c></term><description>
+        ///        Instances will *not* be automatically ticked by the API's update methods.
+        ///        They must be driven externally via explicit event triggers or manual calls
+        ///        to <see cref="FSMHandle.Update()"/>.
+        ///    </description></item>
+        ///    <item><term><c>&gt;0</c></term><description>
+        ///        Instances will be processed every Nth call to <see cref="FSM_API.Internal.TickAll(string)"/>,
+        ///        where N is the value of <c>ProcessRate</c>. For example, a value of 5 means
+        ///        the FSM will update every 5th tick.
+        ///    </description></item>
+        /// </list>
+        /// </value>
         public int ProcessRate { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the processing group this FSM definition belongs to.
-        /// This dictates which <see cref="FSM_API.Update()"/>, <see cref="FSM_API.FixedUpdate()"/>,
-        /// or <see cref="FSM_API.LateUpdate()"/> call will process this FSM's instances.
+        /// Gets or sets the name of the processing group this FSM definition belongs to.
         /// </summary>
+        /// <remarks>
+        /// This property organizes FSM definitions into logical groups, allowing for
+        /// selective and controlled updates. The <see cref="FSM_API.Interaction.Update(string)"/>
+        /// method is used to manually trigger updates for all FSM instances associated with
+        /// a specific <see cref="ProcessingGroup"/> name.
+        /// <para>
+        /// This design enables hierarchical or nested processing, where a complex system
+        /// (e.g., an "Arcade" FSM) might have its own internal update loop that, in turn,
+        /// calls <see cref="FSM_API.Interaction.Update(string)"/> for its sub-components
+        /// (e.g., a "PacMan" FSM group), providing fine-grained control over execution flow
+        /// beyond traditional engine-level update cycles.
+        /// </para>
+        /// </remarks>
         public string ProcessingGroup { get; internal set; }
 
         /// <summary>
-        /// Internal identifier for "Any State" transitions. Transitions from this
-        /// pseudo-state can occur from any active state in the FSM.
+        /// Internal string identifier used to denote "Any State" transitions.
         /// </summary>
+        /// <remarks>
+        /// Transitions from this pseudo-state (<c>"__ANY_STATE__"</c>) can be triggered
+        /// from any active state in the FSM, effectively acting as global transitions.
+        /// This constant provides a unique and unlikely string to prevent collisions with
+        /// actual state names.
+        /// </remarks>
         public const string AnyStateIdentifier = "__ANY_STATE__"; // Using a unique, unlikely string
 
-        // Internal collections for states and transitions
         private readonly Dictionary<string, FSMState> _states = new();
         private readonly List<FSMTransition> _transitions = new(); // Regular transitions
         private readonly List<FSMTransition> _anyStateTransitions = new(); // Any State transitions
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FSM"/> class.
-        /// Default properties will be set by the <see cref="FSMBuilder"/>.
+        /// Initializes a new instance of the <see cref="FSM"/> class with default values.
         /// </summary>
+        /// <remarks>
+        /// While this constructor is public, an <see cref="FSM"/> object is typically
+        /// instantiated and configured through the fluent interface provided by
+        /// <see cref="FSMBuilder"/> to ensure a complete and valid definition.
+        /// Default values: <see cref="Name"/> = "UnnamedFSM", <see cref="InitialState"/> = "__ANY_STATE__",
+        /// <see cref="ProcessingGroup"/> = "Update".
+        /// </remarks>
         public FSM()
         {
             Name = "UnnamedFSM";
@@ -64,16 +118,22 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Adds or updates a state in the FSM definition. If a state with the same name
-        /// already exists, it will be overwritten.
+        /// Adds or updates a state within this FSM definition.
         /// </summary>
-        /// <param name="s">The <see cref="FSMState"/> object to add.</param>
-        /// <exception cref="ArgumentNullException">Thrown if the provided state is null.</exception>
+        /// <remarks>
+        /// If a state with the same name as the provided <paramref name="s"/> already exists,
+        /// its definition will be overwritten. This method allows for dynamic redefinition
+        /// of states within an FSM blueprint.
+        /// </remarks>
+        /// <param name="s">The <see cref="FSMState"/> object to add or update.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided <paramref name="s"/> (state object) is <c>null</c>.
+        /// An internal error is also invoked via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        /// </exception>
         public void AddState(FSMState s)
         {
             if (s == null)
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError($"Attempted to add a null state to FSM '{Name}'.", new ArgumentNullException(nameof(s)));
                 return;
             }
@@ -82,18 +142,28 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Adds a regular transition between two specific states.
-        /// If a transition with the same 'from' and 'to' states already exists, it will be replaced.
+        /// Adds a regular transition between two specific states in the FSM definition.
         /// </summary>
-        /// <param name="from">The name of the source state for the transition.</param>
-        /// <param name="to">The name of the target state for the transition.</param>
-        /// <param name="cond">The condition function that must return true for the transition to occur.</param>
-        /// <exception cref="ArgumentNullException">Thrown if the condition function is null.</exception>
+        /// <remarks>
+        /// A regular transition is evaluated only when the FSM instance is currently
+        /// in the <paramref name="from"/> state. If a transition with the same
+        /// <paramref name="from"/> and <paramref name="to"/> states already exists,
+        /// it will be replaced with the new definition.
+        /// </remarks>
+        /// <param name="from">The name of the source state from which the transition can occur.</param>
+        /// <param name="to">The name of the target state to which the FSM will transition.</param>
+        /// <param name="cond">
+        /// The condition function (<see cref="Func{T, TResult}"/>) that must return <c>true</c>
+        /// for the transition to be taken. This function receives the current <see cref="IStateContext"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided <paramref name="cond"/> (condition function) is <c>null</c>.
+        /// An internal error is also invoked via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        /// </exception>
         public void AddTransition(string from, string to, Func<IStateContext, bool> cond)
         {
             if (cond == null)
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError($"Attempted to add a transition with null condition from '{from}' to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
@@ -104,18 +174,28 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Adds a global "Any State" transition. An "Any State" transition can be
-        /// triggered from any state within the FSM if its condition is met.
-        /// If an "Any State" transition to the same 'to' state already exists, it will be replaced.
+        /// Adds a global "Any State" transition to the FSM definition.
         /// </summary>
+        /// <remarks>
+        /// An "Any State" transition is evaluated regardless of the FSM's current state.
+        /// If its condition is met, the FSM will transition to the specified target state.
+        /// These transitions are typically checked before regular state-specific transitions.
+        /// If an "Any State" transition to the same <paramref name="to"/> state already exists,
+        /// it will be replaced with the new definition.
+        /// </remarks>
         /// <param name="to">The name of the target state for the "Any State" transition.</param>
-        /// <param name="cond">The condition function that must return true for the transition to occur.</param>
-        /// <exception cref="ArgumentNullException">Thrown if the condition function is null.</exception>
+        /// <param name="cond">
+        /// The condition function (<see cref="Func{T, TResult}"/>) that must return <c>true</c>
+        /// for the transition to be taken. This function receives the current <see cref="IStateContext"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided <paramref name="cond"/> (condition function) is <c>null</c>.
+        /// An internal error is also invoked via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        /// </exception>
         public void AddAnyStateTransition(string to, Func<IStateContext, bool> cond)
         {
             if (cond == null)
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with null condition to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
@@ -126,28 +206,35 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Checks if a state with the given name exists in this FSM definition.
+        /// Checks if a state with the specified name exists within this FSM definition.
         /// </summary>
-        /// <param name="stateName">The name of the state to check.</param>
-        /// <returns>True if the state exists, false otherwise.</returns>
+        /// <param name="stateName">The name of the state to query for existence.</param>
+        /// <returns><c>true</c> if a state with <paramref name="stateName"/> is defined in this FSM; otherwise, <c>false</c>.</returns>
         public bool HasState(string stateName)
         {
             return _states.ContainsKey(stateName);
         }
 
         /// <summary>
-        /// Gets a read-only collection of all states defined in this FSM.
+        /// Retrieves a read-only collection of all <see cref="FSMState"/> objects defined in this FSM.
         /// </summary>
-        /// <returns>A read-only collection of <see cref="FSMState"/> objects.</returns>
+        /// <returns>
+        /// A <see cref="IReadOnlyCollection{T}"/> of <see cref="FSMState"/> objects.
+        /// The returned collection is a snapshot and cannot be modified directly.
+        /// </returns>
         public IReadOnlyCollection<FSMState> GetAllStates()
         {
             return _states.Values.ToList().AsReadOnly();
         }
 
         /// <summary>
-        /// Gets a read-only collection of all transitions (regular and any-state) defined in this FSM.
+        /// Retrieves a read-only collection of all transitions (both regular and "Any State" transitions)
+        /// defined within this FSM.
         /// </summary>
-        /// <returns>A read-only collection of <see cref="FSMTransition"/> objects.</returns>
+        /// <returns>
+        /// A <see cref="IReadOnlyCollection{T}"/> of <see cref="FSMTransition"/> objects.
+        /// The returned collection is a snapshot and cannot be modified directly.
+        /// </returns>
         public IReadOnlyCollection<FSMTransition> GetAllTransitions()
         {
             // Combine regular and any-state transitions
@@ -157,16 +244,23 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Enters the initial state of the FSM for a given context.
-        /// This method is typically called once when an FSMHandle is created.
+        /// Enters the <see cref="InitialState"/> of the FSM for a given context.
         /// </summary>
-        /// <param name="ctx">The context object for the FSM instance.</param>
-        /// <exception cref="ArgumentException">Thrown if the <see cref="InitialState"/> is not found in the FSM definition.</exception>
+        /// <remarks>
+        /// This method is typically invoked internally when an <see cref="FSMHandle"/>
+        /// is first created and needs to establish its starting state. It calls the
+        /// <see cref="FSMState.Enter(IStateContext)"/> method of the initial state.
+        /// </remarks>
+        /// <param name="ctx">The context object (<see cref="IStateContext"/>) specific to the FSM instance.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <see cref="InitialState"/> specified in the FSM definition
+        /// does not correspond to an existing state. This indicates a configuration error
+        /// within the FSM blueprint. An internal error is also invoked.
+        /// </exception>
         public void EnterInitial(IStateContext ctx)
         {
             if (!_states.TryGetValue(InitialState, out var state))
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
                     $"Initial state '{InitialState}' not found for FSM '{Name}'. This indicates a corrupted FSM definition.",
                     new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState))
@@ -178,25 +272,48 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Executes one step of the FSM for a given context. This involves checking
-        /// "Any State" transitions, executing the current state's update logic,
-        /// and then checking regular transitions from the current state.
+        /// Executes a single step (tick) of the FSM for a given context, determining
+        /// and potentially transitioning to the next state.
         /// </summary>
-        /// <param name="current">The name of the current state of the FSM instance.</param>
-        /// <param name="ctx">The context object for the FSM instance.</param>
-        /// <param name="next">Output parameter: The name of the next state after this step.
-        /// This will be the same as 'current' if no transition occurs.</param>
+        /// <remarks>
+        /// The step logic follows a specific order:
+        /// <list type="number">
+        ///     <item><description>
+        ///         **Any-State Transitions:** All <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>
+        ///         conditions are evaluated first. If an "Any State" transition's condition is met,
+        ///         the FSM immediately transitions to the target state, and the method returns.
+        ///         Errors during condition evaluation or to non-existent target states are logged
+        ///         internally, but the process continues or the transition is skipped.
+        ///     </description></item>
+        ///     <item><description>
+        ///         **Current State Update:** The <see cref="FSMState.Update(IStateContext)"/> method
+        ///         of the <paramref name="current"/> state is invoked. Exceptions during this execution
+        ///         are caught and reported via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        ///     </description></item>
+        ///     <item><description>
+        ///         **Regular Transitions:** All transitions defined from the <paramref name="current"/> state
+        ///         via <see cref="AddTransition(string, string, Func{IStateContext, bool})"/> are evaluated.
+        ///         The first transition whose condition returns <c>true</c> will cause the FSM to transition
+        ///         to its target state, and the method returns. Errors are handled similarly to Any-State transitions.
+        ///     </description></item>
+        /// </list>
+        /// If the <paramref name="current"/> state is not found in the FSM definition, an internal error is logged,
+        /// and the FSM attempts to force a transition back to its <see cref="InitialState"/> as a recovery measure.
+        /// </remarks>
+        /// <param name="current">The name of the FSM instance's current state.</param>
+        /// <param name="ctx">The context object (<see cref="IStateContext"/>) for the FSM instance.</param>
+        /// <param name="next">
+        /// An output parameter that will contain the name of the state the FSM is in after this step.
+        /// This will be the same as <paramref name="current"/> if no transition occurs.
+        /// </param>
         public void Step(string current, IStateContext ctx, out string next)
         {
             next = current; // Assume state doesn't change unless a transition fires
 
             if (!_states.TryGetValue(current, out var currentState))
             {
-                // This indicates a severe internal inconsistency.
-                // The FSMHandle thinks it's in a state that doesn't exist in the definition.
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
-                    $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", null       
+                    $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", null
                 );
                 // Attempt to recover by transitioning to the initial state
                 ForceTransition(current, InitialState, ctx);
@@ -210,7 +327,6 @@ namespace TheSingularityWorkshop.FSM_API
                 // Check if the target state exists before evaluating condition
                 if (!_states.ContainsKey(t.To))
                 {
-                    // Corrected: Use FSM_API's internal event invocation helper
                     FSM_API.Error.InvokeInternalApiError(
                         $"FSM '{Name}' Any-State transition defined to non-existent state '{t.To}'. Transition skipped for safety.",
                         null
@@ -230,7 +346,6 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 catch (Exception ex)
                 {
-                    // Corrected: Use FSM_API's internal event invocation helper
                     FSM_API.Error.InvokeInternalApiError(
                         $"Error evaluating Any-State transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
@@ -246,7 +361,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
                     $"Error during Update logic of state '{current}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex
@@ -263,7 +377,6 @@ namespace TheSingularityWorkshop.FSM_API
                     // Check if the target state exists before evaluating condition
                     if (!_states.ContainsKey(t.To))
                     {
-                        // Corrected: Use FSM_API's internal event invocation helper
                         FSM_API.Error.InvokeInternalApiError(
                             $"FSM '{Name}' regular transition defined from '{current}' to non-existent state '{t.To}'. Transition skipped for safety.",
                             null
@@ -283,7 +396,6 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                     catch (Exception ex)
                     {
-                        // Corrected: Use FSM_API's internal event invocation helper
                         FSM_API.Error.InvokeInternalApiError(
                             $"Error evaluating regular transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                             ex
@@ -295,14 +407,27 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Forces a transition from one state to another for a given context, bypassing any conditions.
-        /// This method executes the 'Exit' action of the 'from' state (if it exists)
-        /// and the 'Enter' action of the 'to' state.
+        /// Forces an immediate transition of an FSM instance from a specified state to a new target state,
+        /// bypassing any transition conditions.
         /// </summary>
-        /// <param name="from">The name of the state to exit from. Can be null or non-existent if no exit action is desired.</param>
-        /// <param name="to">The name of the state to enter into.</param>
-        /// <param name="ctx">The context object for the FSM instance.</param>
-        /// <exception cref="ArgumentException">Thrown if the target 'to' state does not exist in the FSM definition.</exception>
+        /// <remarks>
+        /// This method executes the <see cref="FSMState.Exit(IStateContext)"/> action of the
+        /// <paramref name="from"/> state (if that state exists) and then the
+        /// <see cref="FSMState.Enter(IStateContext)"/> action of the <paramref name="to"/> state.
+        /// It's useful for external control or recovery mechanisms.
+        /// Errors during state exit or entry actions are caught and reported via
+        /// <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        /// </remarks>
+        /// <param name="from">
+        /// The name of the state to exit from. If this state does not exist or is <c>null</c>/empty,
+        /// no exit action will be performed, but the method will still attempt to enter the <paramref name="to"/> state.
+        /// </param>
+        /// <param name="to">The name of the state to enter into. This state must exist in the FSM definition.</param>
+        /// <param name="ctx">The context object (<see cref="IStateContext"/>) for the FSM instance.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the target <paramref name="to"/> state does not exist in the FSM definition.
+        /// An internal error is also invoked in this case.
+        /// </exception>
         public void ForceTransition(string from, string to, IStateContext ctx)
         {
             // Check if the "from" state actually exists and handle gracefully if not
@@ -316,7 +441,6 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 catch (Exception ex)
                 {
-                    // Corrected: Use FSM_API's internal event invocation helper
                     FSM_API.Error.InvokeInternalApiError(
                         $"Error during Exit logic of state '{from}' during forced transition to '{to}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
@@ -326,16 +450,14 @@ namespace TheSingularityWorkshop.FSM_API
             }
             else if (!string.IsNullOrEmpty(from)) // Only log if 'from' was specified but not found
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
-                    $"Attempted to force transition from non-existent or null state '{from}' for FSM '{Name}'. Exiting original state skipped.",
+                    $"Attempted to force transition from non-existent state '{from}' for FSM '{Name}'. Exiting original state skipped.",
                     null
                 );
             }
 
             if (!_states.TryGetValue(to, out var toState))
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
                     $"Target state '{to}' for forced transition does not exist in FSM '{Name}'. Forced transition failed.",
                     new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to))
@@ -349,7 +471,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                // Corrected: Use FSM_API's internal event invocation helper
                 FSM_API.Error.InvokeInternalApiError(
                     $"Error during Enter logic of state '{to}' during forced transition from '{from}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex

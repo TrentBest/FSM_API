@@ -22,7 +22,11 @@ namespace TheSingularityWorkshop.FSM_API
     /// </remarks>
     public static partial class FSM_API
     {
-
+        /// <summary>
+        /// Provides internal access to the core data structures and operational methods
+        /// of the FSM API. Members within this class are not intended for direct use
+        /// by external API consumers.
+        /// </summary>
         public static class Internal
         {
             /// <summary>
@@ -55,8 +59,8 @@ namespace TheSingularityWorkshop.FSM_API
                 /// The desired processing rate for instances of this FSM definition.
                 /// </summary>
                 /// <value>
-                /// <c>-1</c>: Process every frame (or every call to <see cref="Update(string)"/>).
-                /// <c>0</c>: Event-driven only (will not be processed by <see cref="Update(string)"/>'s internal tick).
+                /// <c>-1</c>: Process every frame (or every call to <see cref="Interaction.Update(string)"/>).
+                /// <c>0</c>: Event-driven only (will not be processed by <see cref="Interaction.Update(string)"/>'s internal tick).
                 /// <c>&gt;0</c>: Process every Nth frame, where N is the value of <c>ProcessRate</c>.
                 /// </value>
                 public int ProcessRate;
@@ -64,8 +68,7 @@ namespace TheSingularityWorkshop.FSM_API
                 /// <summary>
                 /// An internal counter used for frame-skipping when <see cref="ProcessRate"/> is greater than 0.
                 /// </summary>
-                public int Counter;          // Internal counter for frame-skipping
-
+                public int Counter;
             }
 
             /// <summary>
@@ -75,16 +78,8 @@ namespace TheSingularityWorkshop.FSM_API
             /// <remarks>
             /// Operations like adding or removing FSM instances/definitions are
             /// enqueued and processed at safe points in the update cycle (e.g., after all FSMs have ticked).
-            /// Consider using <see cref="System.Collections.Concurrent.ConcurrentQueue{T}"/> for thread safety
-            /// if enqueue operations can happen from different threads.
             /// </remarks>
             private static readonly Queue<Action> _deferredModifications = new();
-
-
-
-
-
-           
 
             /// <summary>
             /// Stores all FSM definitions and their instances, organized by
@@ -93,37 +88,28 @@ namespace TheSingularityWorkshop.FSM_API
             /// <remarks>
             /// This nested dictionary forms the central registry for the FSM system,
             /// allowing efficient lookup and management of FSM blueprints and their live
-            /// manifestations. Access to this collection should be strictly confined to a single
-            /// thread or protected by locks if concurrent access is needed.
+            /// manifestations. Access to this collection should be strictly confined to the single
+            /// designated thread where FSM updates occur.
             /// </remarks>
             private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new();
 
             /// <summary>
-            /// Represents a default FSM definition.
+            /// Represents a default FSM definition for internal API operations.
             /// </summary>
-            /// <remarks>
-            /// Currently initialized as a new, unconfigured <see cref="FSM"/> object.
-            /// Consider if this should be a fully defined default FSM registered via
-            /// <see cref="Register(string, FSM, int, string)"/> during an initialization phase,
-            /// or if its purpose is solely to prevent null references.
-            /// A robust default FSM would typically have a name, processing group, and initial state.
-            /// </remarks>
-            private static FSM _defaultFSM = new FSM();//<= not sure about this... as in it isn't a complete thought...
-
-
+            private static FSM _defaultFSM = new FSM();
 
 
             /// <summary>
-            /// Safely retrieves the dictionary of <see cref="FsmBucket"/>s for a given processing group.
+            /// Internally retrieves the dictionary of <see cref="FsmBucket"/>s for a given processing group.
             /// If the group does not exist, it will be created automatically.
             /// </summary>
             /// <remarks>
-            /// This method is designed for **internal use** within the <see cref="FSM_API"/> assembly.
+            /// This method is designed for **internal use** within the <see cref="FSM_API"/> assembly
+            /// and is not part of the public API surface.
             /// </remarks>
             /// <param name="processingGroup">The name of the processing group (e.g., "Update", "FixedUpdate").</param>
             /// <returns>A dictionary containing FSM buckets for the specified processing group, keyed by FSM name.</returns>
             /// <exception cref="ArgumentException">Thrown if <paramref name="processingGroup"/> is null or empty.</exception>
-
             internal static Dictionary<string, FsmBucket> GetOrCreateBucketProcessingGroup(string processingGroup)
             {
                 if (string.IsNullOrWhiteSpace(processingGroup))
@@ -139,15 +125,6 @@ namespace TheSingularityWorkshop.FSM_API
                 return categoryBuckets;
             }
 
-
-
-
-
-
-
-
-
-
             /// <summary>
             /// Internally registers or updates a fully defined FSM into the system. This method is called by
             /// <see cref="FSMBuilder.BuildDefinition()"/> and should not be invoked directly by users.
@@ -156,7 +133,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="fsm">The complete <see cref="FSM"/> definition object.</param>
             /// <param name="processRate">The update rate for this FSM.</param>
             /// <param name="processingGroup">The processing group this FSM belongs to.</param>
-            /// <exception cref="ArgumentException">Thrown if <paramref name="fsmName"/>, <paramref name="fsm"/>, or <paramref name="processingGroup"/> is null or empty.</exception>
+            /// <exception cref="ArgumentException">Thrown if <paramref name="fsmName"/> or <paramref name="processingGroup"/> is null, empty, or consists only of white-space characters.</exception>
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="fsm"/> is null.</exception>
             internal static void Register(
                 string fsmName,
@@ -199,21 +176,17 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-
-
-
-
             /// <summary>
             /// Executes any pending modifications (e.g., adding/removing FSM instances)
             /// that were deferred during the FSM update cycle. This ensures collection safety.
             /// </summary>
             /// <remarks>
-            /// This method is called internally by <see cref="Update(string)"/>
+            /// This method is called internally by <see cref="Interaction.Update(string)"/>
             /// and should not typically be called directly by users. It guarantees that
             /// structural changes to the FSM system (like unregistering instances that
             /// hit an error threshold) happen safely after all FSMs for a given tick
             /// have completed their processing.
-            /// Errors during deferred actions are reported via <see cref="OnInternalApiError"/>.
+            /// Errors during deferred actions are reported via <see cref="Error.OnInternalApiError"/>.
             /// </remarks>
             internal static void ProcessDeferredModifications()
             {
@@ -231,10 +204,6 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-
-
-
-
             /// <summary>
             /// The internal core method that ticks (updates) all FSM instances within a
             /// specified processing group, respecting each FSM's defined process rate.
@@ -247,14 +216,9 @@ namespace TheSingularityWorkshop.FSM_API
             /// the rate criteria are met. Instances with a <c>ProcessRate</c> of <c>0</c>
             /// (event-driven) are explicitly skipped by this tick mechanism.
             /// Individual FSM instance updates that throw exceptions are caught and
-            /// reported via <see cref="ReportError(FSMHandle, Exception)"/>, leading
+            /// reported via <see cref="Error.ReportError(FSMHandle, Exception)"/>, leading
             /// to automatic removal if error thresholds are exceeded.
             /// </remarks>
-            /// <exception cref="ArgumentException">
-            /// Although handled internally with `InvokeInternalApiError`, conventionally
-            /// this would throw if `processingGroup` is null or empty, but the internal
-            /// error reporting system is used instead for resilience.
-            /// </exception>
             internal static void TickAll(string processingGroup)
             {
                 if (string.IsNullOrWhiteSpace(processingGroup))
@@ -313,22 +277,77 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+            /// <summary>
+            /// Gets the queue of deferred modifications.
+            /// </summary>
             internal static Queue<Action> GetDeferred()
             {
                 return _deferredModifications;
             }
 
+            /// <summary>
+            /// Gets the internal default FSM definition.
+            /// </summary>
             internal static FSM GetDefaultFSM()
             {
                 return _defaultFSM;
             }
 
-            public static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
+            /// <summary>
+            /// Gets the internal collection of FSM processing buckets.
+            /// </summary>
+            /// <remarks>
+            /// This accessor exposes the central internal data structure of the FSM system.
+            /// It is intended for advanced internal diagnostics or specific integration scenarios
+            /// and should be used with caution, respecting the single-threaded update model.
+            /// </remarks>
+            internal static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
             {
                 return _buckets;
             }
 
-           
+            /// <summary>
+            /// Retrieves a specific Finite State Machine (FSM) definition by its name within a given processing group.
+            /// </summary>
+            /// <remarks>
+            /// This is an **internal-use only** method, primarily utilized by the FSM_API
+            /// for managing and accessing registered FSM blueprints. It provides a safe mechanism
+            /// to attempt retrieval of an FSM definition without raising exceptions if the specified
+            /// processing group or the FSM itself does not currently exist.
+            /// </remarks>
+            /// <param name="name">The unique name of the FSM definition to retrieve.</param>
+            /// <param name="processingGroup">The name of the processing group where the FSM definition is expected to be registered.
+            /// Defaults to "Update" if not specified.</param>
+            /// <returns>
+            /// The <see cref="FSM"/> definition object if found; otherwise, <c>null</c> if either the specified
+            /// <paramref name="processingGroup"/> does not exist or an FSM with the given <paramref name="name"/>
+            /// is not registered within that group.
+            /// </returns>
+            internal static FSM GetFSM(string name, string processingGroup = "Update")
+            {
+                // Step 1: Safely attempt to get the inner dictionary for the processing group.
+                // Using TryGetValue prevents a KeyNotFoundException if the processingGroup doesn't exist.
+                if (!_buckets.TryGetValue(processingGroup, out var groupMap))
+                {
+                    // The specified processing group does not exist.
+                    // For internal methods, you might log this as a debug warning, but for a 'Get' method,
+                    // returning null is the expected graceful failure.
+                    return null;
+                }
+
+                // Step 2: Safely attempt to get the FsmBucket for the specific FSM name within that group.
+                // Using TryGetValue prevents a KeyNotFoundException if the FSM name doesn't exist in the group.
+                if (groupMap.TryGetValue(name, out var fsmBucket))
+                {
+                    // Both the group and the FSM were found. Return its Definition.
+                    return fsmBucket.Definition == null ? GetDefaultFSM() : fsmBucket.Definition;
+                }
+                else
+                {
+                    // The FSM with the given name was not found within the specified processing group.
+                    return GetDefaultFSM();
+                }
+            }
         }
     }
 }
