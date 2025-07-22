@@ -116,5 +116,10 @@ namespace TheSingularityWorkshop.FSM_API
         {
             Definition.ForceTransition(CurrentState, Definition.InitialState, Context);
         }
+
+        internal void ShutDown()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

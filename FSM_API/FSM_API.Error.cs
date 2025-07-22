@@ -142,6 +142,14 @@ namespace TheSingularityWorkshop.FSM_API
                 return _errorCounts;
             }
 
+            internal static void Reset(bool hardReset)
+            {
+                //ToDo:  Serialize the summary of any errors... or a clean bill of health.
+
+                _errorCounts.Clear();
+                _fsmDefinitionErrorCounts.Clear();
+            }
+
             /// <summary>
             /// Internal method to increment the error count for an FSM definition.
             /// If the definition's error count exceeds <see cref="DefinitionErrorThreshold"/>,

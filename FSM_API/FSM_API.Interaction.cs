@@ -305,7 +305,7 @@ namespace TheSingularityWorkshop.FSM_API
                     // Iterate through all FSM definitions within each processing group
                     foreach (var fsmBucket in categoryKvp.Value.Values)
                     {
-                        // Attempt to remove the instance from the bucket's list of instances
+                        // Attempt to remove the instance from the processGroup's list of instances
                         if (fsmBucket.Instances.Remove(instance))
                         {
                             removed = true;
@@ -326,7 +326,30 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-          
+            public static void ResetAPI(bool hardReset = false)
+            {
+                if (hardReset)
+                {
+                    Internal.GetBuckets().Clear();
+                    Error.Reset(hardReset);
+                }
+                else
+                {
+                    foreach (var processGroup in Internal.GetBuckets())
+                    {
+                        foreach (var bucket in processGroup.Value.Values)
+                        {
+                            foreach (var handle in bucket.Instances)
+                            {
+                                handle.ShutDown();
+                            }
+                            bucket.Instances.Clear();
+                        }
+                        processGroup.Value.Clear();
+                    }
+                    Internal.GetBuckets().Clear();
+                }
+            }
         }
     }
 }

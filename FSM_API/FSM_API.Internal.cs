@@ -35,7 +35,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// and properties related to its update rate. Being <c>private</c>, it's
             /// completely encapsulated within the <see cref="FSM_API"/> class.
             /// </remarks>
-            internal class FsmBucket
+            public class FsmBucket
             {
                 /// <summary>
                 /// The blueprint (definition) of the Finite State Machine.
@@ -323,10 +323,12 @@ namespace TheSingularityWorkshop.FSM_API
                 return _defaultFSM;
             }
 
-            internal static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
+            public static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
             {
                 return _buckets;
             }
+
+           
         }
     }
 }
