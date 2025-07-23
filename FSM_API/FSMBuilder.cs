@@ -82,13 +82,13 @@ namespace TheSingularityWorkshop.FSM_API
     ///     // if the player has jumped AND is no longer moving (e.g., they landed and stopped)
     ///     .Transition(FSM.AnyStateIdentifier, "Idle", (ctx) => ((PlayerContext)ctx).HasJumped && !((PlayerContext)ctx).IsMoving)
     ///     // Finalize the definition and register it with the FSM system
-    ///     .BuildDefinition();
+    ///     .ModifyDefinition();
     /// ]]></code>
     /// </example>
     /// </remarks>
     public class FSMBuilder
     {
-        private bool _copy = false;
+
         private string _fsmName = "UnNamedFSM";
         private int _processRate;
         private readonly List<FSMState> _states = new();
@@ -135,17 +135,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <param name="fsm">The existing <see cref="FSM"/> definition to load and potentially modify.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="fsm"/> is <c>null</c>.</exception>
-        public FSMBuilder(FSM fsm, bool copy = false)
+        public FSMBuilder(FSM fsm)
         {
             if (fsm == null)
             {
                 throw new ArgumentNullException(nameof(fsm), "Cannot initialize FSMBuilder with a null FSM definition.");
             }
-            _copy = copy;
-            if (_copy)
-                _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
-            else
-                _fsmName = fsm.Name;
+
+            _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
+
             _processRate = fsm.ProcessRate;
             _initialState = fsm.InitialState;
             _processGroup = fsm.ProcessingGroup;
@@ -392,64 +390,37 @@ namespace TheSingularityWorkshop.FSM_API
                 finalInitialState = _initialState;
             }
 
-            //Here we would want to diverge based upon _copy.
-            if (_copy)
+
+
+            // --- Build the FSM ---
+            var machine = new FSM
             {
-                // --- Build the FSM ---
-                var machine = new FSM
-                {
-                    Name = _fsmName,
-                    ProcessRate = _processRate,
-                    InitialState = finalInitialState,
-                    ProcessingGroup = _processGroup
-                };
+                Name = _fsmName,
+                ProcessRate = _processRate,
+                InitialState = finalInitialState,
+                ProcessingGroup = _processGroup
+            };
 
-                foreach (var s in _states)
-                {
-                    machine.AddState(s);
-                }
-                foreach (var t in _transitions)
-                {
-                    // AddTransition method in FSM handles both regular and AnyState transitions based on 'from'
-                    // and is responsible for validating if 'from' states exist or if 'to' states need to exist.
-                    machine.AddTransition(t.From, t.To, t.Condition);
-                }
-
-                // Register with FSM_API. This handles new registration or updating an existing one.
-                FSM_API.Internal.Register(
-                    _fsmName,
-                    machine,
-                    _processRate,
-                    _processGroup);
-            }
-            else
+            foreach (var s in _states)
             {
-                var bucket = FSM_API.Internal.GetBucket(_fsmName, _processGroup);
-                if (bucket != null)
-                {
-                    var fsm = bucket.Definition;
-                    if (fsm != null)
-                    {
-                        //no definition... 
-
-                    }
-                    var states = fsm.GetAllStates().ToList();
-                    foreach (var state in states)
-                    {
-                        if (!_states.Contains(state))
-                        {
-                            //state was removed... 
-                            foreach (var handle in bucket.Instances.Where(s=>s.CurrentState == state.Name))
-                            {
-                                handle.TransitionTo(fsm.InitialState);
-                            }
-                            fsm.RemoveState(state.Name);
-                        }
-                    }
-                }
+                machine.AddState(s);
             }
-                // Clear builder state to prevent accidental reuse of internal lists for a new build operation.
-                _states.Clear();
+            foreach (var t in _transitions)
+            {
+                // AddTransition method in FSM handles both regular and AnyState transitions based on 'from'
+                // and is responsible for validating if 'from' states exist or if 'to' states need to exist.
+                machine.AddTransition(t.From, t.To, t.Condition);
+            }
+
+            // Register with FSM_API. This handles new registration or updating an existing one.
+            FSM_API.Internal.Register(
+                _fsmName,
+                machine,
+                _processRate,
+                _processGroup);
+
+            // Clear builder state to prevent accidental reuse of internal lists for a new build operation.
+            _states.Clear();
             _transitions.Clear();
             _initialState = string.Empty;
             _processRate = 0;

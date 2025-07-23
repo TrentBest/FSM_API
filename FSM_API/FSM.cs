@@ -483,5 +483,19 @@ namespace TheSingularityWorkshop.FSM_API
         {
             _states.Remove(name);
         }
+
+        public bool HasTransition(string fromState, string toState)
+        {
+            return _transitions.Any(s=>s.From == fromState && s.To == toState);
+        }
+
+        public void RemoveTransition(string from, string to)
+        {
+            if(HasTransition(from, to))
+            {
+                var fsmTransition = _transitions.First(s=>s.From == from && s.To == to);
+                _transitions.Remove(fsmTransition);
+            }
+        }
     }
 }

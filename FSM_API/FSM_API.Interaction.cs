@@ -471,8 +471,8 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                new FSMBuilder(fsm).Without(stateName)
-                   .BuildDefinition();
+                new FSMModifier(fsm).WithoutState(stateName)
+                   .ModifyDefinition();
             }
 
             /// <summary>
