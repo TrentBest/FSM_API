@@ -121,6 +121,6 @@ MIT License. Use it, hack it, build amazing things with it.
 
 The Singularity Workshop — Tools for the curious, the bold, and the systemically inclined.
 
-https://github.com/user-attachments/assets/b94a9412-29f3-4b55-9d07-ddef3b57e082" width="200">
+<https://github.com/user-attachments/assets/b94a9412-29f3-4b55-9d07-ddef3b57e082" width="200">
 
 Because state shouldn't be a mess.
