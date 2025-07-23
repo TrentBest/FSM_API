@@ -348,6 +348,53 @@ namespace TheSingularityWorkshop.FSM_API
                     return GetDefaultFSM();
                 }
             }
+
+            /// <summary>
+            /// Retrieves the FSM bucket for a specific FSM definition and processing group.
+            /// </summary>
+            /// <param name="fsmName">The name of the FSM definition.</param>
+            /// <param name="processGroup">The name of the processing group.</param>
+            /// <returns>The <see cref="FsmBucket"/> if found; otherwise, <c>null</c>.</returns>
+            /// <remarks>
+            /// This method provides direct access to the internal FSM bucket structure.
+            /// It includes safety checks to prevent <see cref="NullReferenceException"/>
+            /// and <see cref="KeyNotFoundException"/> if the specified group or FSM name does not exist.
+            /// </remarks>
+            internal static FsmBucket GetBucket(string fsmName, string processGroup)
+            {
+                if (string.IsNullOrWhiteSpace(fsmName))
+                {
+                    Error.InvokeInternalApiError("GetBucket: FSM name cannot be null or empty.", new ArgumentException(nameof(fsmName)));
+                    return null;
+                }
+                if (string.IsNullOrWhiteSpace(processGroup))
+                {
+                    Error.InvokeInternalApiError("GetBucket: Process group cannot be null or empty.", new ArgumentException(nameof(processGroup)));
+                    return null;
+                }
+
+                // Try to get the dictionary for the specific processing group
+                if (_buckets.TryGetValue(processGroup, out Dictionary<string, FsmBucket> groupBuckets))
+                {
+                    // Try to get the specific FsmBucket within that group
+                    if (groupBuckets.TryGetValue(fsmName, out FsmBucket fsmBucket))
+                    {
+                        return fsmBucket;
+                    }
+                    else
+                    {
+                        // Optional: Log if the FSM name isn't found in the group
+                        // Error.InvokeInternalApiError($"GetBucket: FSM definition '{fsmName}' not found in processing group '{processGroup}'.", null);
+                        return null;
+                    }
+                }
+                else
+                {
+                    // Optional: Log if the processing group isn't found
+                    // Error.InvokeInternalApiError($"GetBucket: Processing group '{processGroup}' not found.", null);
+                    return null;
+                }
+            }
         }
     }
 }

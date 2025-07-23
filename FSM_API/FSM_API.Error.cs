@@ -30,141 +30,129 @@ namespace TheSingularityWorkshop.FSM_API
             private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new();
 
             /// <summary>
-            /// Gets or sets the maximum number of errors an FSM definition (blueprint) can accumulate across all its instances
-            /// before the definition itself is automatically destroyed. Default is 3. Set to -1 to disable this feature.
+            /// The maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down.
             /// </summary>
             /// <remarks>
-            /// This threshold helps identify and remove fundamentally broken FSM definitions that consistently
-            /// produce faulty instances, preventing them from consuming excessive resources.
+            /// Once an FSM instance reaches this error count, it will be automatically unregistered from the system
+            /// to prevent it from causing further issues.
+            /// </remarks>
+            public static int InstanceErrorThreshold { get; set; } = 5;
+
+            /// <summary>
+            /// The maximum number of times an FSM definition can cause an instance to be shut down due to errors
+            /// before the entire definition is scheduled for destruction.
+            /// </summary>
+            /// <remarks>
+            /// If multiple instances of the same FSM definition repeatedly fail (reaching their <see cref="InstanceErrorThreshold"/>),
+            /// it might indicate a fundamental flaw in the FSM's design. When this threshold is met,
+            /// the problematic FSM definition will be removed from the system, and all its remaining active instances will be shut down.
             /// </remarks>
             public static int DefinitionErrorThreshold { get; set; } = 3;
 
             /// <summary>
-            /// Gets or sets the maximum number of errors an individual FSM instance can accumulate
-            /// before it is automatically unregistered from the system. Default is 5. Set to -1 to disable this feature.
+            /// Represents a delegate for internal API error events.
             /// </summary>
-            /// <remarks>
-            /// This threshold prevents runaway errors from a single faulty FSM instance from constantly
-            /// logging errors and consuming resources, ensuring system stability.
-            /// </remarks>
-            public static int ErrorCountThreshold { get; set; } = 5;
+            /// <param name="message">A descriptive error message.</param>
+            /// <param name="exception">The exception that occurred, if any.</param>
+            public delegate void InternalApiErrorEventHandler(string message, Exception exception);
 
             /// <summary>
-            /// Gets or sets a time limit (in milliseconds) for how long an FSM processing group update can take
-            /// before a warning message is logged via <see cref="OnInternalApiError"/>. Helps identify performance bottlenecks.
-            /// Default is 5ms. Set to 0 or less to disable performance warnings.
+            /// Occurs when a non-FSM-instance-specific internal error, warning, or significant API event is reported.
+            /// Subscribe to this event to receive diagnostic notifications about the FSM API's internal operations.
             /// </summary>
-            public static long TickPerformanceWarningThresholdMs { get; set; } = 5;
+            public static event InternalApiErrorEventHandler OnInternalApiError;
 
             /// <summary>
-            /// Occurs when an internal, non-state-logic API operation throws an unexpected exception,
-            /// logs a significant warning, or reports a key internal event.
-            /// Provides a mechanism for users to capture internal API errors and diagnostics without forcing runtime logging.
+            /// Invokes the <see cref="OnInternalApiError"/> event.
+            /// This method is used internally by the FSM API to report critical non-instance-specific issues.
             /// </summary>
-            /// <remarks>
-            /// The first parameter is a descriptive message. The second parameter is
-            /// the associated <see cref="Exception"/>, if any, or <c>null</c>.
-            /// </remarks>
-            public static event System.Action<string, Exception>? OnInternalApiError;
-
-            /// <summary>
-            /// Safely invokes the <see cref="OnInternalApiError"/> event, providing a central point
-            /// for triggering internal API error or warning notifications.
-            /// </summary>
-            /// <param name="message">The descriptive error or warning message.</param>
-            /// <param name="ex">The exception that occurred, if any. Can be <c>null</c>.</param>
-            public static void InvokeInternalApiError(string message, Exception? ex)
+            /// <param name="message">A descriptive message about the error or event.</param>
+            /// <param name="exception">The associated exception, or null if no exception occurred.</param>
+            public static void InvokeInternalApiError(string message, Exception exception)
             {
-                var err = ex != null ? ex : new Exception(message);
-                OnInternalApiError?.Invoke(message, err);
+                OnInternalApiError?.Invoke(message, exception);
             }
 
             /// <summary>
-            /// Reports an error related to a specific <see cref="FSMHandle"/> instance.
-            /// Increments the instance's error count and potentially schedules its unregistration
-            /// if <see cref="ErrorCountThreshold"/> is exceeded. Also contributes to the
-            /// FSM definition's cumulative error count.
+            /// Invokes an error specifically related to a misbehaving FSM instance.
             /// </summary>
             /// <remarks>
-            /// When an error is reported for an FSM instance, it first increments that instance's
-            /// individual error counter. If this counter reaches or exceeds the <see cref="ErrorCountThreshold"/>,
-            /// the instance is automatically unregistered (removed) from the system.
-            /// Additionally, each instance unregistration due to an error contributes to the overall
-            /// error count for its parent FSM definition. If the definition's cumulative error count
-            /// reaches <see cref="DefinitionErrorThreshold"/>, the entire FSM definition (blueprint)
-            /// will be destroyed, preventing further instances from being created from a problematic blueprint.
+            /// This method tracks instance-specific errors and will automatically shut down
+            /// the <paramref name="handle"/> if its error count reaches the <see cref="InstanceErrorThreshold"/>.
             /// </remarks>
             /// <param name="handle">The <see cref="FSMHandle"/> instance that encountered the error.</param>
-            /// <param name="ex">The exception that occurred. This exception will be passed to <see cref="OnInternalApiError"/> subscribers.</param>
-            public static void ReportError(FSMHandle? handle, Exception ex)
+            /// <param name="message">A descriptive message about the instance error.</param>
+            /// <param name="exception">The associated exception, or null if no exception occurred.</param>
+            /// <exception cref="ArgumentNullException">Thrown if <paramref name="handle"/> is null.</exception>
+            public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception)
             {
                 if (handle == null)
                 {
-                    InvokeInternalApiError("Attempted to report error for a null FSMHandle.", ex);
+                    // If handle is null, it's an internal API error, not an instance error.
+                    InvokeInternalApiError("InvokeInstanceError: FSMHandle provided was null.", new ArgumentNullException(nameof(handle)));
                     return;
                 }
 
-                int newInstanceCount;
-                if (_errorCounts.TryGetValue(handle, out int currentInstanceCount))
+                int newCount;
+                if (_errorCounts.TryGetValue(handle, out int currentCount))
                 {
-                    newInstanceCount = currentInstanceCount + 1;
-                    _errorCounts[handle] = newInstanceCount;
+                    newCount = currentCount + 1;
+                    _errorCounts[handle] = newCount;
                 }
                 else
                 {
-                    newInstanceCount = 1;
-                    _errorCounts.Add(handle, newInstanceCount);
+                    newCount = 1;
+                    _errorCounts.Add(handle, newCount);
                 }
 
                 InvokeInternalApiError(
-                    $"FSM Instance '{handle.Name}' (Definition: '{handle.Definition.Name}') in processing group '{handle.Definition.ProcessingGroup}' reported an error. Error count: {newInstanceCount}/{ErrorCountThreshold}. Exception: {ex?.Message}",
-                    ex
+                    $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{handle.ProcessingGroup}' encountered error in state '{handle.CurrentState}'. Count: {newCount}/{InstanceErrorThreshold}. Message: {message}",
+                    exception
                 );
 
-                if (newInstanceCount >= ErrorCountThreshold)
+                if (newCount >= InstanceErrorThreshold)
                 {
-                    FSM_API.Internal.GetDeferred().Enqueue(() =>
+                    // Defer shutdown to avoid re-entrancy issues during error handling or updates
+                    Internal.GetDeferred().Enqueue(() =>
                     {
-                        InvokeInternalApiError($"FSM Instance '{handle.Name}' (Definition: '{handle.Definition.Name}') hit Error Threshold ({ErrorCountThreshold}). Scheduling unregistration.", null);
-                        FSM_API.Interaction.Unregister(handle); // This will also clear its _errorCounts entry
-                        IncrementDefinitionError(handle.Definition.Name, handle.Definition.ProcessingGroup);
+                        InvokeInternalApiError(
+                            $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{handle.ProcessingGroup}' hit InstanceErrorThreshold ({InstanceErrorThreshold}). Shutting down.",
+                            null
+                        );
+                        // Record a definition error before shutting down the instance
+                        InvokeDefinitionError(handle.FSMName, handle.ProcessingGroup);
+                        handle.ShutDown(); // This will unregister the handle
+                        _errorCounts.Remove(handle); // Clean up error count for this handle
                     });
                 }
             }
 
-            // Internal methods below are for API's internal use and do not require public XML documentation.
-            // Their summaries and remarks are maintained for internal code clarity if needed,
-            // but will not appear in user-facing API documentation.
-
-            internal static Dictionary<string, int> GetDefinitionErrorCounts()
-            {
-                return _fsmDefinitionErrorCounts;
-            }
-
-            internal static Dictionary<FSMHandle, int> GetErrorCounts()
-            {
-                return _errorCounts;
-            }
-
-            internal static void Reset(bool hardReset)
-            {
-                _errorCounts.Clear();
-                _fsmDefinitionErrorCounts.Clear();
-            }
-
             /// <summary>
-            /// Internal method to increment the error count for an FSM definition.
-            /// If the definition's error count exceeds <see cref="DefinitionErrorThreshold"/>,
-            /// the entire definition is scheduled for destruction.
+            /// Invokes an error specifically related to an FSM definition, typically when an instance
+            /// derived from it has been shut down due to repeated errors.
             /// </summary>
-            /// <param name="fsmDefinitionName">The name of the FSM definition that had a failing instance.</param>
-            /// <param name="processingGroup">The processing group of the FSM definition.</param>
             /// <remarks>
-            /// This method itself schedules its work on the deferred modifications queue,
-            /// ensuring all modifications happen safely on the single designated thread.
+            /// This method tracks definition-specific errors and will automatically schedule the
+            /// complete destruction of the FSM definition and all its instances if its error count
+            /// reaches the <see cref="DefinitionErrorThreshold"/>.
             /// </remarks>
-            private static void IncrementDefinitionError(string fsmDefinitionName, string processingGroup)
+            /// <param name="fsmDefinitionName">The name of the FSM definition that caused the error.</param>
+            /// <param name="processingGroup">The processing group of the FSM definition.</param>
+            /// <exception cref="ArgumentException">Thrown if <paramref name="fsmDefinitionName"/>
+            /// or <paramref name="processingGroup"/> is null, empty, or whitespace.</exception>
+            public static void InvokeDefinitionError(string fsmDefinitionName, string processingGroup)
             {
+                if (string.IsNullOrWhiteSpace(fsmDefinitionName))
+                {
+                    InvokeInternalApiError("InvokeDefinitionError: FSM Definition Name cannot be null or empty.", new ArgumentException(nameof(fsmDefinitionName)));
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    InvokeInternalApiError("InvokeDefinitionError: Processing Group cannot be null or empty.", new ArgumentException(nameof(processingGroup)));
+                    return;
+                }
+
                 int newDefinitionCount;
                 if (_fsmDefinitionErrorCounts.TryGetValue(fsmDefinitionName, out int currentDefinitionCount))
                 {
@@ -178,7 +166,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 InvokeInternalApiError(
-                    $"FSM Definition '{fsmDefinitionName}' in processing group '{processingGroup}' has had a failing instance removed. Definition failure count: {newDefinitionCount}/{DefinitionErrorThreshold}.",
+                    $"FSM Definition '{fsmDefinitionName}' in processing group '{processingGroup}' has had a failing instance removed. Definition failure count: {newDefinitionCount}/{DefinitionErrorThreshold}. (To adjust this threshold, modify FSM_API.Error.DefinitionErrorThreshold.)",
                     null
                 );
 
@@ -190,6 +178,19 @@ namespace TheSingularityWorkshop.FSM_API
                         Interaction.DestroyFiniteStateMachine(fsmDefinitionName, processingGroup);
                     });
                 }
+            }
+
+            /// <summary>
+            /// Resets the accumulated error count for a specific FSM definition.
+            /// This is typically called when an FSM definition is explicitly destroyed
+            /// or reloaded, to clear its error history.
+            /// </summary>
+            /// <param name="fsmDefinitionName">The name of the FSM definition whose error count to reset.</param>
+            internal static void ResetDefinitionErrorCount(string fsmDefinitionName)
+            {
+                // Note: No processingGroup needed here as _fsmDefinitionErrorCounts key is just fsmDefinitionName.
+                // If it were keyed by (fsmName, processingGroup), then processingGroup would be needed.
+                _fsmDefinitionErrorCounts.Remove(fsmDefinitionName);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// and scaffold the state methods**, making powerful state machine design accessible to a wider audience.
     /// <para>
     /// FSM definitions are typically established during an application's initialization phase. It's a common pattern
-    /// to first check if an FSM by a specific name already <see cref="FSM_API.Interaction.Exists(string)"/>; if not, you
+    /// to first check if an FSM by a specific name already <see cref="FSM_API.Interaction.Exists(string,string)"/>; if not, you
     /// then proceed to define it using this builder. Once an FSM is defined, it exists as an "Idea" or a
     /// blueprint. Nothing happens until you explicitly create instances of it by obtaining <see cref="FSMHandle"/>s
     /// for specific contexts (e.g., your game entities).
@@ -36,8 +36,9 @@ namespace TheSingularityWorkshop.FSM_API
     /// Instances of this builder are typically obtained through the convenient factory methods
     /// provided by <see cref="FSM_API.Create"/>, such as
     /// <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/> for new definitions,
-    /// or <see cref="FSM_API.Interaction.ModifyFiniteStateMachine(string)"/> to alter existing ones.
-    /// For FSMs that are no longer needed, use <see cref="FSM_API.Destroy(string, string)"/> to remove the definition
+    /// or by initializing with an existing <see cref="FSM"/> definition using <see cref="FSMBuilder.FSMBuilder(FSM)"/>
+    /// to alter existing ones.
+    /// For FSMs that are no longer needed, use <see cref="FSM_API.Interaction.DestroyFiniteStateMachine(string, string)"/> to remove the definition
     /// and any associated handles. Individual handles can be <see cref="FSM_API.Interaction.Unregister(FSMHandle)"/>ed.
     /// </para>
     /// <example>
@@ -87,6 +88,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// </remarks>
     public class FSMBuilder
     {
+        private bool _copy = false;
         private string _fsmName = "UnNamedFSM";
         private int _processRate;
         private readonly List<FSMState> _states = new();
@@ -122,7 +124,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// This constructor is intended for internal API use, typically called by
-        /// <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/>.
+        /// methods that allow modification of existing FSMs (e.g., in a future
+        /// `FSM_API.Interaction.ModifyFiniteStateMachine` if one were to be added).
         /// When using this constructor, the builder is pre-populated with the existing
         /// states and transitions of the provided <paramref name="fsm"/> definition,
         /// allowing for seamless modification via the fluent API.
@@ -132,14 +135,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <param name="fsm">The existing <see cref="FSM"/> definition to load and potentially modify.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="fsm"/> is <c>null</c>.</exception>
-        public FSMBuilder(FSM fsm)
+        public FSMBuilder(FSM fsm, bool copy = false)
         {
             if (fsm == null)
             {
                 throw new ArgumentNullException(nameof(fsm), "Cannot initialize FSMBuilder with a null FSM definition.");
             }
-
-            _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
+            _copy = copy;
+            if (_copy)
+                _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
+            else
+                _fsmName = fsm.Name;
             _processRate = fsm.ProcessRate;
             _initialState = fsm.InitialState;
             _processGroup = fsm.ProcessingGroup;
@@ -220,7 +226,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// <remarks>
         /// This name is crucial for registering and later retrieving the FSM blueprint
         /// from the <see cref="FSM_API"/> system. It should be unique across all FSM definitions.
-        /// If this builder was initialized to modify an existing FSM (e.g., via `ModifyFiniteStateMachine`),
+        /// If this builder was initialized to modify an existing FSM (e.g., via <see cref="FSMBuilder.FSMBuilder(FSM)"/>),
         /// calling `WithName` allows you to explicitly rename the FSM.
         /// </remarks>
         /// <param name="name">The unique name for the FSM definition.</param>
@@ -386,47 +392,126 @@ namespace TheSingularityWorkshop.FSM_API
                 finalInitialState = _initialState;
             }
 
-            // --- Build the FSM ---
-            var machine = new FSM
+            //Here we would want to diverge based upon _copy.
+            if (_copy)
             {
-                Name = _fsmName,
-                ProcessRate = _processRate,
-                InitialState = finalInitialState,
-                ProcessingGroup = _processGroup
-            };
+                // --- Build the FSM ---
+                var machine = new FSM
+                {
+                    Name = _fsmName,
+                    ProcessRate = _processRate,
+                    InitialState = finalInitialState,
+                    ProcessingGroup = _processGroup
+                };
 
-            foreach (var s in _states)
-            {
-                machine.AddState(s);
+                foreach (var s in _states)
+                {
+                    machine.AddState(s);
+                }
+                foreach (var t in _transitions)
+                {
+                    // AddTransition method in FSM handles both regular and AnyState transitions based on 'from'
+                    // and is responsible for validating if 'from' states exist or if 'to' states need to exist.
+                    machine.AddTransition(t.From, t.To, t.Condition);
+                }
+
+                // Register with FSM_API. This handles new registration or updating an existing one.
+                FSM_API.Internal.Register(
+                    _fsmName,
+                    machine,
+                    _processRate,
+                    _processGroup);
             }
-            foreach (var t in _transitions)
+            else
             {
-                // AddTransition method in FSM handles both regular and AnyState transitions based on 'from'
-                // and is responsible for validating if 'from' states exist or if 'to' states need to exist.
-                machine.AddTransition(t.From, t.To, t.Condition);
+                var bucket = FSM_API.Internal.GetBucket(_fsmName, _processGroup);
+                if (bucket != null)
+                {
+                    var fsm = bucket.Definition;
+                    if (fsm != null)
+                    {
+                        //no definition... 
+
+                    }
+                    var states = fsm.GetAllStates().ToList();
+                    foreach (var state in states)
+                    {
+                        if (!_states.Contains(state))
+                        {
+                            //state was removed... 
+                            foreach (var handle in bucket.Instances.Where(s=>s.CurrentState == state.Name))
+                            {
+                                handle.TransitionTo(fsm.InitialState);
+                            }
+                            fsm.RemoveState(state.Name);
+                        }
+                    }
+                }
             }
-
-            // Register with FSM_API. This handles new registration or updating an existing one.
-            FSM_API.Internal.Register(
-                _fsmName,
-                machine,
-                _processRate,
-                _processGroup);
-
-            // Clear builder state to prevent accidental reuse of internal lists for a new build operation.
-            _states.Clear();
+                // Clear builder state to prevent accidental reuse of internal lists for a new build operation.
+                _states.Clear();
             _transitions.Clear();
             _initialState = string.Empty;
             _processRate = 0;
             _processGroup = "Update";
         }
 
+        /// <summary>
+        /// Removes a state from the FSM definition being built by this builder.
+        /// </summary>
+        /// <remarks>
+        /// This method removes the specified state from the internal list of states managed by the builder.
+        /// When <see cref="BuildDefinition"/> is called, the FSM will be constructed without this state.
+        /// <para>
+        /// If you are modifying an existing FSM definition at runtime and need to handle
+        /// active instances currently in the state being removed, you should use
+        /// <see cref="FSM_API.Interaction.RemoveStateFromFSM(string, string, string)"/>,
+        /// which wraps this builder method and manages instance transitions.
+        /// </para>
+        /// If the state does not exist in the builder's current definition, no action is taken.
+        /// </remarks>
+        /// <param name="stateName">The name of the state to remove.</param>
+        /// <returns>The current <see cref="FSMBuilder"/> instance for fluent chaining.</returns>
         public FSMBuilder Without(string stateName)
         {
-            var state = _states.FirstOrDefault(s=>s.Name == stateName);
-            if(state != null)
+            var state = _states.FirstOrDefault(s => s.Name == stateName);
+            if (state != null)
             {
+                var handles = FSM_API.Internal.GetBucket(_fsmName, _processGroup);
+                var handlesInState = handles.Instances.Where(s => s.CurrentState == stateName);
+                foreach (var handleInState in handlesInState)
+                {
+                    handleInState.TransitionTo(_initialState);
+                }
                 _states.Remove(state);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Removes a specific transition from the FSM definition being built by this builder.
+        /// </summary>
+        /// <remarks>
+        /// This method removes the specified transition from the internal list of transitions managed by the builder.
+        /// When <see cref="BuildDefinition"/> is called, the FSM will be constructed without this transition.
+        /// <para>
+        /// This is useful for dynamically adjusting FSM behavior by removing paths. If the transition
+        /// does not exist in the builder's current definition, no action is taken.
+        /// </para>
+        /// If you are modifying an existing FSM definition at runtime and wish to remove a transition,
+        /// you should typically use <see cref="FSM_API.Interaction.RemoveTransition(string,string,string,string)"/>,
+        /// which wraps this builder method.
+        /// </remarks>
+        /// <param name="fromState">The name of the state from which the transition originates.
+        /// This can be <see cref="FSM.AnyStateIdentifier"/> for 'Any State' transitions.</param>
+        /// <param name="toState">The name of the state to which the transition leads.</param>
+        /// <returns>The current <see cref="FSMBuilder"/> instance for fluent chaining.</returns>
+        public FSMBuilder WithoutTransition(string fromState, string toState)
+        {
+            var transition = _transitions.FirstOrDefault(s => s.From == fromState && s.To == toState);
+            if (transition != null)
+            {
+                _transitions.Remove(transition);
             }
             return this;
         }

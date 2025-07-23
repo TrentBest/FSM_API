@@ -478,5 +478,10 @@ namespace TheSingularityWorkshop.FSM_API
                 throw; // Re-throw, as the FSM might now be in a partially entered state.
             }
         }
+
+        public void RemoveState(string name)
+        {
+            _states.Remove(name);
+        }
     }
 }
