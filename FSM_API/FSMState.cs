@@ -13,9 +13,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public string Name { get; }
 
-        private readonly Action<IStateContext> _onEnter;
-        private readonly Action<IStateContext> _onUpdate;
-        private readonly Action<IStateContext> _onExit;
+        private  Action<IStateContext> _onEnter;
+        public void SetOnEnter(Action<IStateContext> enter) { _onEnter = enter; }
+        private  Action<IStateContext> _onUpdate;
+        public void SetOnUpdate(Action<IStateContext> update) { _onUpdate = update; }
+        private  Action<IStateContext> _onExit;
+        public void SetOnExit(Action<IStateContext> exit) { _onExit = exit; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FSMState"/> class.

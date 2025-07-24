@@ -266,7 +266,8 @@ namespace TheSingularityWorkshop.FSM_API
                     new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState))
                 );
                 // Even though we invoke an error, we still throw to prevent the FSM from operating in an invalid state.
-                throw new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState));
+                //throw new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState));
+                return;
             }
             state.Enter(ctx);
         }
@@ -462,7 +463,8 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Target state '{to}' for forced transition does not exist in FSM '{Name}'. Forced transition failed.",
                     new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to))
                 );
-                throw new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to));
+                //throw new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to));
+                return;
             }
 
             try
@@ -496,6 +498,16 @@ namespace TheSingularityWorkshop.FSM_API
                 var fsmTransition = _transitions.First(s=>s.From == from && s.To == to);
                 _transitions.Remove(fsmTransition);
             }
+        }
+
+        internal FSMState GetState(string item1)
+        {
+            return _states.FirstOrDefault(s=>s.Key == item1).Value;
+        }
+
+        internal FSMTransition GetTranisition(Tuple<string, string> transition)
+        {
+            return _transitions.FirstOrDefault(s=>s.To == transition.Item1 && s.From == transition.Item2);
         }
     }
 }

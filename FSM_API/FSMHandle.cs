@@ -64,7 +64,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// and potentially transitioning to a new state based on defined rules.
         /// This method is typically called by the FSM_API's internal tick loop.
         /// </summary>
-        public void Update()
+        public void Update(string processGroup = "Update")
         {
             try
             {
@@ -76,7 +76,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 // If an exception occurs during the FSM's internal step, report it as a "fubar".
                 // This allows the FSM_API to track and potentially remove problematic instances.
-                FSM_API.Error.ReportError(this, ex);
+                FSM_API.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
             }
         }
 
@@ -107,7 +107,7 @@ namespace TheSingularityWorkshop.FSM_API
             catch (Exception ex)
             {
                 // Report any issues during a forced transition as a "fubar".
-                FSM_API.Error.ReportError(this, ex);
+                FSM_API.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
         }
@@ -121,7 +121,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// triggering the 'Exit' action of the current state and the 'Enter' action of the initial state.
         /// It effectively restarts the FSM's state machine logic.
         /// </remarks>
-        public void ResetFSM()
+        public void ResetFSMInstance()
         {
             Definition.ForceTransition(CurrentState, Definition.InitialState, Context);
         }

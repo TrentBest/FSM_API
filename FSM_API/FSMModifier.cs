@@ -67,7 +67,7 @@ namespace TheSingularityWorkshop.FSM_API
 
         public FSMModifier WithModifiedTransition(string fromState, string toState, Func<IStateContext, bool> condition)
         {
-            if (!fsm.HasTransition(fromState, toState))
+            if (fsm.HasTransition(fromState, toState))
             {
                 _modifiedTransitions.Add(new Tuple<string, string, Func<IStateContext, bool>>(fromState, toState, condition));
             }
@@ -90,33 +90,86 @@ namespace TheSingularityWorkshop.FSM_API
         public void ModifyDefinition()
         {
             var bucket = FSM_API.Internal.GetBucket(fsm.Name, _existingProcessGroup);
+            if (bucket == null || bucket.Definition == null)
+            {
+                return;
+            }
             if (_modifiedProcessGroup != _existingProcessGroup)
             {
-
+                FSM_API.Internal.SetProcessGroup(_modifiedProcessGroup, bucket);
             }
-            else
-            {
-
-            }
-
             if (_modifiedProcessRate != _existingProcessRate)
             {
                 bucket.ProcessRate = _modifiedProcessRate;
             }
 
-            if(_statesToRemove.Count > 0)
+            foreach (var state in _statesToRemove)
             {
-                foreach (var state in _statesToRemove)
+
+                var handlesInState = bucket.Instances.Where(s => s.CurrentState == state).ToList();
+                foreach (var handle in handlesInState)
                 {
-                    bucket.Definition.RemoveState(state);
-                    var transitions = bucket.Definition.GetAllTransitions();
-                    var anyTrans = transitions.Where(s => s.From == state || s.To == state).ToList();
-                    foreach (var trans in anyTrans)
+                    handle.TransitionTo(bucket.Definition.InitialState);
+                }
+                bucket.Definition.RemoveState(state);
+            }
+
+
+            foreach (var state in _statesToAdd)
+            {
+                bucket.Definition.AddState(new FSMState(state.Item1, state.Item2, state.Item3, state.Item4));
+            }
+
+
+            foreach (var state in _statesToModify)
+            {
+                var stateData = bucket.Definition.GetState(state.Item1);
+                if (stateData != null)
+                {
+                    if (stateData.Enter != state.Item2)
                     {
-                        bucket.Definition.RemoveTransition(trans.From, trans.To);
+                        stateData.SetOnEnter(state.Item2);
+                    }
+                    if (stateData.Update != state.Item3)
+                    {
+                        stateData.SetOnUpdate(state.Item3);
+                    }
+                    if (stateData.Exit != state.Item4)
+                    {
+                        stateData.SetOnExit(state.Item4);
                     }
                 }
             }
+
+
+            foreach (var transition in _transitionsToRemove)
+            {
+                bucket.Definition.RemoveTransition(transition.Item1, transition.Item2);
+            }
+
+            foreach (var transition in _transitionsToAdd)
+            {
+                bucket.Definition.AddTransition(transition.Item1, transition.Item2, transition.Item3);
+            }
+
+            foreach (var transition in _modifiedTransitions)
+            {
+                var tran = bucket.Definition.GetTranisition(new Tuple<string, string>(transition.Item1, transition.Item2));
+                if (tran.From != transition.Item1)
+                {
+                    tran.From = transition.Item1;
+                }
+                if (tran.To != transition.Item2)
+                {
+                    tran.To = transition.Item2;
+                }
+                if (tran.Condition != transition.Item3)
+                {
+                    tran.Condition = transition.Item3;
+                }
+            }
+
+
         }
     }
 }

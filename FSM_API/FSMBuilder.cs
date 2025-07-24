@@ -369,24 +369,27 @@ namespace TheSingularityWorkshop.FSM_API
         public void BuildDefinition()
         {
             // --- Validation before building ---
-            if (_states.Count == 0)
-            {
-                throw new InvalidOperationException($"FSM '{_fsmName}' cannot be built: No states have been defined. Use .State() to add states.");
-            }
+            //if (_states.Count == 0)
+            //{
+            //    throw new InvalidOperationException($"FSM '{_fsmName}' cannot be built: No states have been defined. Use .State() to add states.");
+            //}
 
-            string finalInitialState;
+            string finalInitialState = string.Empty;
             if (string.IsNullOrWhiteSpace(_initialState))
             {
                 // If no initial state explicitly set, use the first added state (order matters here!)
-                finalInitialState = _states[0].Name;
+                if (_states.Count > 0)
+                    finalInitialState = _states[0].Name;
+                else
+                    finalInitialState = "Undefined";
             }
             else
             {
-                // Validate that the specified initial state actually exists
-                if (!_states.Any(s => s.Name == _initialState))
-                {
-                    throw new ArgumentException($"Initial state '{_initialState}' specified for FSM '{_fsmName}' does not exist. Ensure you add it with .State() before building.", nameof(_initialState));
-                }
+                //// Validate that the specified initial state actually exists
+                //if (!_states.Any(s => s.Name == _initialState))
+                //{
+                //    throw new ArgumentException($"Initial state '{_initialState}' specified for FSM '{_fsmName}' does not exist. Ensure you add it with .State() before building.", nameof(_initialState));
+                //}
                 finalInitialState = _initialState;
             }
 
@@ -407,8 +410,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
             foreach (var t in _transitions)
             {
-                // AddTransition method in FSM handles both regular and AnyState transitions based on 'from'
-                // and is responsible for validating if 'from' states exist or if 'to' states need to exist.
                 machine.AddTransition(t.From, t.To, t.Condition);
             }
 

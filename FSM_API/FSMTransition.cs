@@ -11,18 +11,18 @@ namespace TheSingularityWorkshop.FSM_API
         /// <summary>
         /// Gets the name of the source state from which this transition originates.
         /// </summary>
-        public string From { get; }
+        public string From { get; set; }
 
         /// <summary>
         /// Gets the name of the target state to which this transition leads.
         /// </summary>
-        public string To { get; }
+        public string To { get; set; }
 
         /// <summary>
         /// Gets the condition function that must return true for this transition to be taken.
         /// The function receives an <see cref="IStateContext"/> to provide context-specific data.
         /// </summary>
-        public Func<IStateContext, bool> Condition { get; }
+        public Func<IStateContext, bool> Condition { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FSMTransition"/> class.

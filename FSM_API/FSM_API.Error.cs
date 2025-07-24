@@ -84,7 +84,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="message">A descriptive message about the instance error.</param>
             /// <param name="exception">The associated exception, or null if no exception occurred.</param>
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="handle"/> is null.</exception>
-            public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception)
+            public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception, string processGroup = "Update")
             {
                 if (handle == null)
                 {
@@ -104,9 +104,9 @@ namespace TheSingularityWorkshop.FSM_API
                     newCount = 1;
                     _errorCounts.Add(handle, newCount);
                 }
-
+               
                 InvokeInternalApiError(
-                    $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{handle.ProcessingGroup}' encountered error in state '{handle.CurrentState}'. Count: {newCount}/{InstanceErrorThreshold}. Message: {message}",
+                    $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{processGroup}' encountered error in state '{handle.CurrentState}'. Count: {newCount}/{InstanceErrorThreshold}. Message: {message}",
                     exception
                 );
 
@@ -116,11 +116,11 @@ namespace TheSingularityWorkshop.FSM_API
                     Internal.GetDeferred().Enqueue(() =>
                     {
                         InvokeInternalApiError(
-                            $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{handle.ProcessingGroup}' hit InstanceErrorThreshold ({InstanceErrorThreshold}). Shutting down.",
+                            $"FSM Instance '{handle.Name}' (Context ID: {handle.Context.GetHashCode()}) in group '{processGroup}' hit InstanceErrorThreshold ({InstanceErrorThreshold}). Shutting down.",
                             null
                         );
                         // Record a definition error before shutting down the instance
-                        InvokeDefinitionError(handle.FSMName, handle.ProcessingGroup);
+                        InvokeDefinitionError(handle.Definition.Name, processGroup);
                         handle.ShutDown(); // This will unregister the handle
                         _errorCounts.Remove(handle); // Clean up error count for this handle
                     });
@@ -191,6 +191,22 @@ namespace TheSingularityWorkshop.FSM_API
                 // Note: No processingGroup needed here as _fsmDefinitionErrorCounts key is just fsmDefinitionName.
                 // If it were keyed by (fsmName, processingGroup), then processingGroup would be needed.
                 _fsmDefinitionErrorCounts.Remove(fsmDefinitionName);
+            }
+
+            internal static Dictionary<FSMHandle, int> GetErrorCounts()
+            {
+                return _errorCounts;
+            }
+
+            internal static Dictionary<string, int> GetDefinitionErrorCounts()
+            {
+                return _fsmDefinitionErrorCounts;
+            }
+
+            internal static void Reset()
+            {
+                _fsmDefinitionErrorCounts.Clear();
+                _errorCounts.Clear();
             }
         }
     }

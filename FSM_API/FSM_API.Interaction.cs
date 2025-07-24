@@ -165,7 +165,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// but calling it ensures any deferred changes to FSM definitions are applied.
             /// <para>
             /// A performance warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>
-            /// if the processing time for this tick cycle exceeds <see cref="Error.TickPerformanceWarningThresholdMs"/>.
+            /// if the processing time for this tick cycle exceeds <see cref="Internal.TickPerformanceWarningThresholdMs"/>.
             /// This helps in identifying potential performance bottlenecks in your FSM logic.
             /// </para>
             /// </remarks>
@@ -178,9 +178,10 @@ namespace TheSingularityWorkshop.FSM_API
                 Internal.TickAll(processGroup);
                 Internal.ProcessDeferredModifications();
                 sw.Stop();
-                if (sw.ElapsedMilliseconds > Error.TickPerformanceWarningThresholdMs)
+                if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
                 {
-                    Error.InvokeInternalApiError($"'Update' tick took {sw.ElapsedMilliseconds}ms. Threshold: {Error.TickPerformanceWarningThresholdMs}ms.", null);
+                    string message = $"'Update' tick took {sw.ElapsedMilliseconds}ms. Threshold: {Internal.TickPerformanceWarningThresholdMs}ms.";
+                    Error.InvokeInternalApiError(message, new Exception(message));
                 }
             }
 
@@ -228,7 +229,8 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 else
                 {
-                    Error.InvokeInternalApiError($"Attempted to remove non-existent processing group '{processingGroup}'.", null);
+                    string message = $"Attempted to remove non-existent processing group '{processingGroup}'.";
+                    Error.InvokeInternalApiError(message, null);
                 }
             }
 
@@ -416,8 +418,8 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 // Use the FSMBuilder instance method
-                new FSMBuilder(fsm).State(stateName, onEnter, onUpdate, onExit)
-                   .BuildDefinition(); // Builds and applies changes directly to the FSM instance
+                new FSMModifier(fsm).WithState(stateName, onEnter, onUpdate, onExit)
+                   .ModifyDefinition(); // Builds and applies changes directly to the FSM instance
             }
 
             /// <summary>
@@ -542,8 +544,8 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                new FSMBuilder(fsm).Transition(fromState, toState, condition)
-                   .BuildDefinition();
+                new FSMModifier(fsm).WithTransition(fromState, toState, condition)
+                   .ModifyDefinition();
             }
 
             /// <summary>
@@ -599,8 +601,8 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                new FSMBuilder(fsm).WithoutTransition(fromState, toState)
-                   .BuildDefinition();
+                new FSMModifier(fsm).WithoutTransition(fromState, toState)
+                   .ModifyDefinition();
             }
         }
     }

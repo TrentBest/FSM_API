@@ -100,6 +100,132 @@ namespace TheSingularityWorkshop.FSM_API
 
 
             /// <summary>
+            /// Sets a time limit (in milliseconds) for how long an FSM processing group update can take
+            /// before a warning message is logged via OnInternalApiError. Helps identify performance bottlenecks.
+            /// Default is 5ms.
+            /// </summary>
+            public static long TickPerformanceWarningThresholdMs { get; set; } = 5;
+
+
+            /// <summary>
+            /// Gets the total number of distinct processing groups (e.g., "Update", "FixedUpdate").
+            /// This is correct as you had it.
+            /// </summary>
+            public static int ProcessingGroupCount => _buckets.Count;
+
+            /// <summary>
+            /// Gets the total number of unique FSM definitions across all processing groups.
+            /// Your original `FiniteStateMachineCount` was correct for this.
+            /// </summary>
+            public static int TotalFsmDefinitionCount => _buckets.Sum(group => group.Value.Count);
+
+            /// <summary>
+            /// Gets the total number of active FSM instances (handles) across all FSM definitions
+            /// within all processing groups.
+            /// This requires summing the 'Instances' list from each FsmBucket.
+            /// </summary>
+            public static int TotalFsmHandleCount => _buckets.Sum(
+                group => group.Value.Sum(fsm => fsm.Value.Instances.Count)
+            );
+
+            /// <summary>
+            /// Gets the number of FSM definitions within a specific processing group.
+            /// </summary>
+            /// <param name="processingGroupName">The name of the processing group.</param>
+            /// <returns>The count of FSM definitions, or 0 if the group doesn't exist.</returns>
+            public static int GetFsmDefinitionCountInGroup(string processingGroupName)
+            {
+                if (_buckets.TryGetValue(processingGroupName, out var group))
+                {
+                    return group.Count;
+                }
+                return 0;
+            }
+
+            /// <summary>
+            /// Gets the total number of active FSM instances (handles) within a specific processing group.
+            /// </summary>
+            /// <param name="processingGroupName">The name of the processing group.</param>
+            /// <returns>The count of handles, or 0 if the group doesn't exist.</returns>
+            public static int GetFsmHandleCountInGroup(string processingGroupName)
+            {
+                if (_buckets.TryGetValue(processingGroupName, out var group))
+                {
+                    return group.Sum(fsm => fsm.Value.Instances.Count);
+                }
+                return 0;
+            }
+
+            /// <summary>
+            /// Gets the average number of FSM definitions per processing group.
+            /// </summary>
+            public static double AverageFsmDefinitionsPerGroup
+            {
+                get
+                {
+                    if (_buckets.Count == 0) return 0;
+                    return (double)TotalFsmDefinitionCount / _buckets.Count;
+                }
+            }
+
+            /// <summary>
+            /// Gets the average number of FSM handles per FSM definition (across all definitions).
+            /// </summary>
+            public static double AverageFsmHandlesPerDefinition
+            {
+                get
+                {
+                    int totalDefinitions = TotalFsmDefinitionCount;
+                    if (totalDefinitions == 0) return 0;
+                    return (double)TotalFsmHandleCount / totalDefinitions;
+                }
+            }
+
+            /// <summary>
+            /// Gets the names of all currently registered processing groups.
+            /// </summary>
+            public static IEnumerable<string> GetProcessingGroupNames()
+            {
+                return _buckets.Keys;
+            }
+
+            /// <summary>
+            /// Gets the names of all FSM definitions within a specific processing group.
+            /// </summary>
+            /// <param name="processingGroupName">The name of the processing group.</param>
+            /// <returns>An enumerable of FSM names, or empty if the group doesn't exist.</returns>
+            public static IEnumerable<string> GetFsmDefinitionNamesInGroup(string processingGroupName)
+            {
+                if (_buckets.TryGetValue(processingGroupName, out var group))
+                {
+                    return group.Keys;
+                }
+                return Enumerable.Empty<string>();
+            }
+
+            /// <summary>
+            /// Checks if a specific FSM definition exists within a given processing group.
+            /// </summary>
+            public static bool DoesFsmDefinitionExist(string processingGroupName, string fsmName)
+            {
+                if (_buckets.TryGetValue(processingGroupName, out var group))
+                {
+                    return group.ContainsKey(fsmName);
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Gets a flattened list of all active FSM Handles across all processing groups and FSM definitions.
+            /// </summary>
+            public static IEnumerable<FSMHandle> GetAllFsmHandles()
+            {
+                return _buckets.SelectMany(group =>
+                    group.Value.SelectMany(fsm => fsm.Value.Instances)
+                );
+            }
+
+            /// <summary>
             /// Internally retrieves the dictionary of <see cref="FsmBucket"/>s for a given processing group.
             /// If the group does not exist, it will be created automatically.
             /// </summary>
@@ -252,26 +378,28 @@ namespace TheSingularityWorkshop.FSM_API
                     }
 
                     var instancesToTick = bucket.Instances.ToList();
-                    foreach (var h in instancesToTick)
+                    foreach (var handle in instancesToTick)
                     {
                         // Ensure the handle itself is not null, its context is not null,
                         // AND its context is reported as valid by the context itself.
-                        if (h != null && h.Context != null && h.Context.IsValid)
+                        if (handle != null && handle.Context != null && handle.Context.IsValid)
                         {
                             try
                             {
-                                h.Update();
+                                handle.Update();
                             }
                             catch (Exception ex)
                             {
                                 // If an exception occurs during the FSM's internal step, report it as a "error".
-                                Error.ReportError(h, ex);
+                                Error.InvokeInstanceError(handle,
+                                    $"",
+                                    ex, processingGroup);
                             }
                         }
                         else
                         {
                             // If an instance is null or its context is null/invalid, it should be removed.
-                            Error.ReportError(h, new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."));
+                            Error.InvokeInstanceError(handle, "FSM instance or its context became null/invalid (IsValid returned false).", new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
                         }
                     }
                 }
@@ -301,7 +429,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// It is intended for advanced internal diagnostics or specific integration scenarios
             /// and should be used with caution, respecting the single-threaded update model.
             /// </remarks>
-            internal static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
+            public static Dictionary<string, Dictionary<string, FsmBucket>> GetBuckets()
             {
                 return _buckets;
             }
@@ -394,6 +522,63 @@ namespace TheSingularityWorkshop.FSM_API
                     // Error.InvokeInternalApiError($"GetBucket: Processing group '{processGroup}' not found.", null);
                     return null;
                 }
+            }
+
+            public static void ResetAPI(bool hardReset = false)
+            {
+                if (hardReset)
+                {
+                    _buckets.Clear();
+
+
+                }
+                else
+                {
+                    var bucks = _buckets.ToList();
+                    foreach (KeyValuePair<string, Dictionary<string, FsmBucket>> processGroup in bucks)
+                    {
+                        var buckets = processGroup.Value.Values.ToList();
+                        foreach (FsmBucket bucket in buckets)
+                        {
+                            var handles = bucket.Instances.ToList();
+                            foreach (var handle in handles)
+                            {
+                                handle.TransitionTo(handle.Definition.InitialState);
+                                FSM_API.Interaction.Unregister(handle);
+                            }
+
+                        }
+                    }
+                    _buckets.Clear();
+
+                }
+                _deferredModifications.Clear();
+                Error.Reset();
+            }
+
+
+            //Dictionary<string, Dictionary<string, FsmBucket>> 
+
+
+            internal static void SetProcessGroup(string processGroup, FsmBucket bucket)
+            {
+                if (!_buckets.ContainsKey(processGroup))
+                {
+                    Create.CreateProcessingGroup(processGroup);
+                }
+                //remove the bucket from it's current process group
+                _buckets.First(pg => pg.Value.ContainsKey(bucket.Definition.Name)).Value.Remove(bucket.Definition.Name);
+                _buckets[processGroup].Add(bucket.Definition.Name, bucket);
+            }
+
+            public static List<string> GetProcessingGroups()
+            {
+                List<string> groups = new List<string>();
+                foreach (var processingGroup in _buckets)
+                {
+                    groups.Add(processingGroup.Key);
+                }
+                return groups;
             }
         }
     }
