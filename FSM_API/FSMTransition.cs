@@ -4,8 +4,19 @@ namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// Represents a single transition rule within a Finite State Machine (FSM) definition.
-    /// Defines a source state, a target state, and a condition that must be met for the transition to occur.
+    /// <para>
+    /// This class defines the fundamental elements of how an FSM moves from one state to another:
+    /// a source state, a target state, and a dynamic condition that must evaluate to true for the transition to occur.
+    /// </para>
+    /// <para>
+    /// While often created indirectly via fluent builders, this class is publicly exposed for advanced
+    /// scenarios requiring direct manipulation, custom definition loading, or high-performance optimizations.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// An <c>FSMTransition</c> object is immutable after construction in typical usage, though its properties
+    /// are exposed for flexibility in specialized scenarios.
+    /// </remarks>
     public class FSMTransition
     {
         /// <summary>

@@ -29,7 +29,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(names, "Returned collection should not be null.");
-            Assert.AreEqual(3, names.Count, "Expected 3 FSM definitions in the default group.");
+            Assert.That(names.Count, Is.EqualTo(3), "Expected 3 FSM definitions in the default group.");
             CollectionAssert.AreEquivalent(new[] { "FSM1", "FSM2", "FSM3" }, names, "Returned names should match expected FSMs.");
         }
 
@@ -48,7 +48,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(names, "Returned collection should not be null.");
-            Assert.AreEqual(2, names.Count, $"Expected 2 FSM definitions in the '{customGroup}' group.");
+            Assert.That(names.Count, Is.EqualTo(2), $"Expected 2 FSM definitions in the '{customGroup}' group.");
             CollectionAssert.AreEquivalent(new[] { "PhysFSM_A", "PhysFSM_B" }, names, "Returned names should match expected FSMs in custom group.");
         }
 
@@ -65,8 +65,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(names, "Returned collection should not be null.");
-            Assert.AreEqual(1, names.Count, "Expected 1 FSM definition in the group.");
-            Assert.AreEqual(singleFsmName, names.First(), "The single FSM name should be correct.");
+            Assert.That(names.Count, Is.EqualTo(1), "Expected 1 FSM definition in the group.");
+            Assert.That(names.First(), Is.EqualTo(singleFsmName), "The single FSM name should be correct.");
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Assert
             Assert.IsNotNull(names, "Returned collection should not be null.");
             Assert.IsEmpty(names, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
-            Assert.AreEqual(0, names.Count, "Expected 0 FSM definitions.");
+            Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions.");
         }
 
 
@@ -102,7 +102,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Assert
             Assert.IsNotNull(names, "Returned collection should not be null for non-existent group.");
             Assert.IsEmpty(names, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
-            Assert.AreEqual(0, names.Count, "Expected 0 FSM definitions for a non-existent group.");
+            Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions for a non-existent group.");
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void GetAllDefinitionNames_NullProcessingGroup_ThrowsArgumentException()
         {
             // Arrange
-            string nullProcessingGroup = null;
+            string nullProcessingGroup = string.Empty;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetAllDefinitionNames(nullProcessingGroup),

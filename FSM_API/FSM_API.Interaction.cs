@@ -153,25 +153,37 @@ namespace TheSingularityWorkshop.FSM_API
 
 
             /// <summary>
-            /// Processes all FSM instances associated with the specified processing group.
-            /// This method typically advances the state of tick-based FSMs and processes
-            /// deferred modifications to FSM definitions.
+            /// Advances the FSM instance by one logical step. This involves executing the 'OnUpdate'
+            /// action of the <see cref="FSMHandle.CurrentState"/> and evaluating all defined transitions
+            /// from the <see cref="FSMHandle.CurrentState"/>. If a valid transition is found, the FSM will
+            /// move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.
             /// </summary>
+            /// <param name="processGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
             /// <remarks>
-            /// This method should be called regularly (e.g., once per frame in a game loop,
-            /// or in a fixed-rate timer) to ensure that FSMs with a defined <see cref="FSMBuilder.WithProcessRate(int)"/>
-            /// of greater than zero (`&gt; 0`) or `-1` (manual tick) update their internal logic.
-            /// Purely event-driven FSMs do not strictly require this method for immediate transitions,
-            /// but calling it ensures any deferred changes to FSM definitions are applied.
-            /// <para>
-            /// A performance warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>
-            /// if the processing time for this tick cycle exceeds <see cref="Internal.TickPerformanceWarningThresholdMs"/>.
-            /// This helps in identifying potential performance bottlenecks in your FSM logic.
-            /// </para>
+            /// **The Crucial Step for FSM Processing:**
+            /// This <c>Update()</c> method is fundamental to the operation of an FSM instance. Without
+            /// it being called, the FSM will not execute its state's update logic, evaluate transitions,
+            /// or progress through its defined states. An FSM definition, no matter how intricate,
+            /// remains static until its instances are actively updated.
+            ///
+            /// **How FSMs are "Ticked":**
+            /// This method is primarily designed to be invoked by the <c>FSM_API</c>'s internal management
+            /// system (e.g., via <c>FSM_API.Interaction.TickAll(string processingGroup)</c>). The API
+            /// manages the periodic invocation of this method for all registered FSM instances
+            /// within a given processing group, respecting their defined <c>ProcessRate</c>.
+            ///
+            /// **CAUTION: Manual Invocation (Advanced Use Only):**
+            /// While publicly accessible, directly calling <c>Update()</c> manually from your application code
+            /// should only be done by developers who possess a deep understanding of the FSM's internal
+            /// processing cycle and lifecycle management. Manual invocation outside of the
+            /// <c>FSM_API</c>'s managed loop can lead to:
+            /// <list type="bullet">
+            ///     <item><description>Unpredictable state behavior due to uncontrolled update rates.</description></item>
+            ///     <item><description>Performance issues if not integrated into an efficient game loop or update scheduler.</description></item>
+            ///     <item><description>Conflicts with the <c>FSM_API</c>'s internal error handling and instance management.</description></item>
+            /// </list>
+            /// Use with extreme care and only when building a highly customized, self-managed FSM update system.
             /// </remarks>
-            /// <param name="processGroup">
-            /// The name of the processing group whose FSMs should be updated. Defaults to <c>"Update"</c>.
-            /// </param>
             public static void Update(string processGroup = "Update")
             {
                 var sw = Stopwatch.StartNew();
@@ -360,6 +372,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             /// <remarks>
             /// This method allows you to extend the behavior of an FSM after it has been defined.
+            /// It internally uses an <see cref="FSMModifier"/> to apply the changes.
             /// If a state with the given <paramref name="stateName"/> already exists in the FSM,
             /// its <c>onEnter</c>, <c>onUpdate</c>, and <c>onExit</c> actions will be updated.
             /// All active instances of this FSM definition will immediately reflect the added or
@@ -426,13 +439,21 @@ namespace TheSingularityWorkshop.FSM_API
             /// Dynamically removes a state definition from an existing Finite State Machine blueprint at runtime.
             /// </summary>
             /// <remarks>
-            /// When a state is removed, any active FSM instances currently in that state will be
-            /// immediately transitioned to a specified <paramref name="fallbackStateName"/>.
-            /// If no fallback state is provided, instances will be transitioned to the FSM's
-            /// initial state. The `OnExit` action of the removed state will be called, followed
-            /// by the `OnEnter` action of the fallback or initial state.
+            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
             /// <para>
-            /// If the specified state does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
+            /// When a state is removed, any active FSM instances currently in that state will be
+            /// immediately transitioned. The transition target is determined as follows:
+            /// <list type="bullet">
+            ///     <item><description>If a valid <paramref name="fallbackStateName"/> is provided, instances will transition to that state.</description></item>
+            ///     <item><description>If <paramref name="fallbackStateName"/> is null, empty, or consists only of white-space,
+            ///           instances will instead transition to the FSM's <see cref="FSM.InitialState"/>.</description></item>
+            /// </list>
+            /// The `OnExit` action of the removed state will be called, followed by the `OnEnter` action
+            /// of the determined fallback or initial state.
+            /// </para>
+            /// <para>
+            /// If the specified state to remove does not exist in the FSM, a warning will be logged
+            /// via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
             /// </para>
             /// </remarks>
             /// <param name="fsmName">
@@ -440,6 +461,11 @@ namespace TheSingularityWorkshop.FSM_API
             /// </param>
             /// <param name="stateName">
             /// The name of the state to remove.
+            /// </param>
+            /// <param name="fallbackStateName">
+            /// Optional: The name of the state to transition existing FSM instances to if they are
+            /// currently in the state being removed. If not provided (null or empty), instances
+            /// will default to transitioning to the FSM's <see cref="FSM.InitialState"/>.
             /// </param>
             /// <param name="processingGroup">
             /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
@@ -452,7 +478,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// Thrown if the FSM definition specified by <paramref name="fsmName"/> and <paramref name="processingGroup"/>
             /// cannot be found.
             /// </exception>
-            public static void RemoveStateFromFSM(string fsmName, string stateName, string processingGroup = "Update")
+            public static void RemoveStateFromFSM(string fsmName, string stateName, string fallbackStateName, string processingGroup = "Update")
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
@@ -473,14 +499,28 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                new FSMModifier(fsm).WithoutState(stateName)
-                   .ModifyDefinition();
+                // Determine the actual fallback state.
+                // If fallbackStateName is not provided or invalid, use the FSM's InitialState.
+                // We need to ensure that the determined fallback state actually exists in the FSM
+                // before trying to apply the modification, or the FSMModifier might throw.
+                string actualFallbackState = string.IsNullOrWhiteSpace(fallbackStateName) ? fsm.InitialState : fallbackStateName;
+
+                // TODO: (Self-correction/Assumption) FSMModifier.WithoutState should ideally validate
+                // if actualFallbackState exists, or FSM.InitialState is always guaranteed to exist.
+                // Assuming FSMModifier or underlying FSM handles invalid fallbackStateName gracefully
+                // by either throwing an informative exception or defaulting internally.
+                // For now, we pass the chosen actualFallbackState to WithoutState.
+
+                new FSMModifier(fsm)
+                    .WithoutState(stateName, actualFallbackState) // Pass the determined fallback state
+                    .ModifyDefinition();
             }
 
             /// <summary>
             /// Dynamically adds a new transition between two states to an existing Finite State Machine blueprint.
             /// </summary>
             /// <remarks>
+            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
             /// This allows for changing the flow of your FSMs at runtime. If a transition
             /// from <paramref name="fromState"/> to <paramref name="toState"/> with the exact
             /// same condition already exists, it will be updated with the new <paramref name="condition"/>.
@@ -552,6 +592,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// Dynamically removes a specific transition between two states from an existing Finite State Machine blueprint.
             /// </summary>
             /// <remarks>
+            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
             /// This allows for removing unwanted or obsolete paths in your FSM's logic at runtime.
             /// If the specified transition does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
             /// </remarks>
@@ -600,10 +641,145 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
-
+                
                 new FSMModifier(fsm).WithoutTransition(fromState, toState)
                    .ModifyDefinition();
             }
+
+
+            /// <summary>
+            /// Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds)
+            /// and integer increments (e.g., frames or discrete steps).
+            /// <para>
+            /// This class is designed to be time-agnostic; it does not acquire time itself but relies on the
+            /// calling application to provide delta time (<c>dt</c>) and delta integer (<c>di</c>) values.
+            /// It serves as a convenience for implementing frequency-based updates or delays, complementing
+            /// the FSM API's core, untimed step mechanism.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// Users are responsible for integrating <c>UpdateTimers</c> into their application's main loop
+            /// and for providing accurate time deltas. Timers must be manually added and checked for expiration.
+            /// </remarks>
+            public static class FSMTimers
+            {
+                /// <summary>
+                /// Gets a dictionary of float-based timers, keyed by a string name.
+                /// These timers are typically used for time-based delays or frequencies (e.g., seconds).
+                /// </summary>
+                public static Dictionary<string, float> FloatTimers { get; } = new Dictionary<string, float>();
+
+                /// <summary>
+                /// Gets a dictionary of integer-based timers, keyed by a string name.
+                /// These timers are typically used for frame-based or discrete step delays/frequencies.
+                /// </summary>
+                public static Dictionary<string, int> IntTimers { get; } = new Dictionary<string, int>();
+
+                /// <summary>
+                /// Stores the last float time value passed to <see cref="UpdateTimers"/>.
+                /// This can be used to track total elapsed time or for debugging purposes.
+                /// </summary>
+                public static float LastFloatTime { get; set; } = 0;
+
+                /// <summary>
+                /// Stores the last integer time value passed to <see cref="UpdateTimers"/>.
+                /// This can be used to track total elapsed frames/steps or for debugging purposes.
+                /// </summary>
+                public static int LastIntTime { get; set; } = 0;
+
+                /// <summary>
+                /// Updates all registered float and integer timers by subtracting the provided delta values.
+                /// </summary>
+                /// <param name="dt">The delta float time (e.g., seconds since last update) to subtract from float timers.</param>
+                /// <param name="di">The delta integer (e.g., frames since last update) to subtract from integer timers.</param>
+                /// <remarks>
+                /// This method simply decrements all active timers. It does not check if timers have reached
+                /// zero or perform any actions based on timer expiration. It is up to the calling code
+                /// to query individual timers (e.g., <c>FSMTimers.FloatTimers["MyTimer"] &lt;= 0f</c>)
+                /// and trigger relevant FSM updates or other logic.
+                /// </remarks>
+                public static void UpdateTimers(float dt, int di)
+                {
+                    foreach (var timer in FloatTimers.ToArray())
+                    {
+                        FloatTimers[timer.Key] -= dt;
+                        LastFloatTime = FloatTimers[timer.Key];
+                    }
+                    foreach (var timer in IntTimers.ToArray())
+                    {
+                        IntTimers[timer.Key] -= di;
+                        LastIntTime = IntTimers[timer.Key];
+                    }
+                }
+
+                /// <summary>
+                /// Resets a specific float timer to its <paramref name="setPoint"/> value.
+                /// If the timer does not exist, no action is taken.
+                /// </summary>
+                /// <param name="timerName">The name of the float timer to reset.</param>
+                /// <param name="setPoint">The value to reset the timer to (defaults to 1.0f).</param>
+
+                public static void ResetFloatTimer(string timerName, float setPoint = 1f)
+                {
+                    if (FloatTimers.ContainsKey(timerName))
+                        FloatTimers[timerName] = setPoint;
+                }
+
+                /// <summary>
+                /// Resets a specific integer timer to its <paramref name="setPoint"/> value.
+                /// If the timer does not exist, no action is taken.
+                /// </summary>
+                /// <param name="timerName">The name of the integer timer to reset.</param>
+                /// <param name="setPoint">The value to reset the timer to (defaults to 1).</param>
+
+                public static void ResetIntTimer(string timerName, int setPoint = 1)
+                {
+                    if (IntTimers.ContainsKey(timerName))
+                        IntTimers[timerName] = setPoint;
+                }
+
+                /// <summary>
+                /// Adds a new float timer or updates an existing one with an initial value.
+                /// </summary>
+                /// <param name="timerName">The name of the timer to add or update.</param>
+                /// <param name="initialValue">The initial value for the timer.</param>
+                public static void AddOrSetFloatTimer(string timerName, float initialValue)
+                {
+                    FloatTimers[timerName] = initialValue;
+                }
+
+                /// <summary>
+                /// Adds a new integer timer or updates an existing one with an initial value.
+                /// </summary>
+                /// <param name="timerName">The name of the timer to add or update.</param>
+                /// <param name="initialValue">The initial value for the timer.</param>
+                public static void AddOrSetIntTimer(string timerName, int initialValue)
+                {
+                    IntTimers[timerName] = initialValue;
+                }
+
+                /// <summary>
+                /// Removes a float timer.
+                /// </summary>
+                /// <param name="timerName">The name of the timer to remove.</param>
+                /// <returns><c>true</c> if the timer was successfully found and removed; otherwise, <c>false</c>.</returns>
+                public static bool RemoveFloatTimer(string timerName)
+                {
+                    return FloatTimers.Remove(timerName);
+                }
+
+                /// <summary>
+                /// Removes an integer timer.
+                /// </summary>
+                /// <param name="timerName">The name of the timer to remove.</param>
+                /// <returns><c>true</c> if the timer was successfully found and removed; otherwise, <c>false</c>.</returns>
+                public static bool RemoveIntTimer(string timerName)
+                {
+                    return IntTimers.Remove(timerName);
+                }
+            }
         }
+
+
     }
 }

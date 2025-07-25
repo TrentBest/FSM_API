@@ -33,9 +33,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(actualHandles, "Returned list should not be null.");
-            Assert.AreEqual(expectedHandles.Count, actualHandles.Count, "Expected count of instances does not match.");
+            Assert.That(actualHandles.Count, Is.EqualTo(expectedHandles.Count), "Expected count of instances does not match.");
             CollectionAssert.AreEquivalent(expectedHandles, actualHandles, "Returned instances should match the created instances.");
-            Assert.AreEqual(3, FSM_API.Internal.TotalFsmHandleCount, "Total FSM handle count should reflect created instances.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect created instances.");
         }
 
         [Test]
@@ -60,9 +60,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(actualHandles, "Returned list should not be null.");
-            Assert.AreEqual(expectedHandles.Count, actualHandles.Count, "Expected count of instances does not match.");
+            Assert.That(actualHandles.Count, Is.EqualTo(expectedHandles.Count), "Expected count of instances does not match.");
             CollectionAssert.AreEquivalent(expectedHandles, actualHandles, "Returned instances should match the created instances.");
-            Assert.AreEqual(3, FSM_API.Internal.TotalFsmHandleCount, "Total FSM handle count should reflect all instances created across groups.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect all instances created across groups.");
         }
 
         [Test]
@@ -78,8 +78,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             Assert.IsNotNull(actualHandles, "Returned list should not be null.");
-            Assert.AreEqual(1, actualHandles.Count, "Expected exactly one FSM instance.");
-            Assert.AreEqual(expectedHandle, actualHandles.First(), "The returned handle should be the expected instance.");
+            Assert.That(actualHandles.Count, Is.EqualTo(1), "Expected exactly one FSM instance.");
+            Assert.That(actualHandles.First(), Is.EqualTo(expectedHandle), "The returned handle should be the expected instance.");
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Assert
             Assert.IsNotNull(actualHandles, "Returned list should not be null.");
             Assert.IsEmpty(actualHandles, "Expected an empty list when FSM definition exists but has no instances.");
-            Assert.AreEqual(0, FSM_API.Internal.TotalFsmHandleCount, "Total FSM handle count should still be zero.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "Total FSM handle count should still be zero.");
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void GetInstances_NullFsmName_ThrowsArgumentException()
         {
             // Arrange (no FSM definition needed for this test as validation happens first)
-            string nullFsmName = null;
+            string nullFsmName = string.Empty;
             string validProcessingGroup = "Update";
 
             // Act & Assert
@@ -158,7 +158,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             string validFsmName = "TestFSM";
-            string nullProcessingGroup = null;
+            string nullProcessingGroup = string.Empty;
             FSM_API.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition(); // Need a definition to avoid KeyNotFoundException first
 
             // Act & Assert

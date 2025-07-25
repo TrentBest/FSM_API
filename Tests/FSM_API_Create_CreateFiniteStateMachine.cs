@@ -33,9 +33,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Create.CreateFiniteStateMachine().BuildDefinition(); // Use default name and group
 
             // Assert
-            Assert.AreEqual(1, FSM_API.Internal.TotalFsmDefinitionCount, "Expected one FSM definition after creating with defaults.");
-            Assert.IsTrue(FSM_API.Internal.DoesFsmDefinitionExist("Update", "UnNamedFSM"), "Expected 'UnNamedFSM' in 'Update' group.");
-            Assert.AreEqual(1, FSM_API.Internal.ProcessingGroupCount, "Expected one processing group ('Update') to exist.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(1), "Expected one FSM definition after creating with defaults.");
+            Assert.That(FSM_API.Internal.DoesFsmDefinitionExist("Update", "UnNamedFSM"), Is.True, "Expected 'UnNamedFSM' in 'Update' group.");
+            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(1), "Expected one processing group ('Update') to exist.");
+
         }
 
         [Test]
@@ -50,9 +51,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Create.CreateFiniteStateMachine(customFsmName, customProcessRate, customProcessingGroup).BuildDefinition();
 
             // Assert
-            Assert.AreEqual(1, FSM_API.Internal.TotalFsmDefinitionCount, "Expected one FSM definition after creating with custom parameters.");
-            Assert.IsTrue(FSM_API.Internal.DoesFsmDefinitionExist(customProcessingGroup, customFsmName), $"Expected '{customFsmName}' in '{customProcessingGroup}' group.");
-            Assert.AreEqual(1, FSM_API.Internal.ProcessingGroupCount, $"Expected one processing group ('{customProcessingGroup}') to exist.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(1), "Expected one FSM definition after creating with custom parameters.");
+            Assert.That(FSM_API.Internal.DoesFsmDefinitionExist(customProcessingGroup, customFsmName), Is.True, $"Expected '{customFsmName}' in '{customProcessingGroup}' group.");
+            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(1), $"Expected one processing group ('{customProcessingGroup}') to exist.");
 
             // You might want to check the process rate directly on the FsmBucket if possible.
             // This would require FSM_API.Internal to expose a way to get the FsmBucket for a given name/group.
@@ -77,9 +78,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Assert
             // The key assertion here is that no *new* FSM definition is created.
-            Assert.AreEqual(1, FSM_API.Internal.TotalFsmDefinitionCount, "Expected only one FSM definition to exist, not a new one.");
-            Assert.AreEqual(1, FSM_API.Internal.ProcessingGroupCount, "Expected only one processing group to exist.");
-            Assert.IsTrue(FSM_API.Internal.DoesFsmDefinitionExist(existingProcessingGroup, existingFsmName), "Existing FSM definition should still be present.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(1), "Expected only one FSM definition to exist, not a new one.");
+            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(1), "Expected only one processing group to exist.");
+            Assert.That(FSM_API.Internal.DoesFsmDefinitionExist(existingProcessingGroup, existingFsmName), Is.True, "Existing FSM definition should still be present.");
 
             // You could also assert that the returned builder references the same underlying definition object,
             // if FSMBuilder exposes that, but that starts to lean into builder's internal behavior.
@@ -92,7 +93,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             string emptyFsmName = "";
             string whitespaceFsmName = "   ";
-            string nullFsmName = null;
+            string nullFsmName = string.Empty;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateFiniteStateMachine(emptyFsmName), "Expected ArgumentException for empty FSM name.");
@@ -100,7 +101,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateFiniteStateMachine(nullFsmName), "Expected ArgumentException for null FSM name.");
 
             // Ensure no FSM was created
-            Assert.AreEqual(0, FSM_API.Internal.TotalFsmDefinitionCount, "No FSM definition should be created when invalid name is provided.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(0), "No FSM definition should be created when invalid name is provided.");
         }
 
         [Test]
@@ -109,7 +110,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             string emptyProcessingGroup = "";
             string whitespaceProcessingGroup = "   ";
-            string nullProcessingGroup = null;
+            string nullProcessingGroup = string.Empty;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateFiniteStateMachine("ValidFSM", 0, emptyProcessingGroup), "Expected ArgumentException for empty processing group.");
@@ -117,7 +118,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateFiniteStateMachine("ValidFSM", 0, nullProcessingGroup), "Expected ArgumentException for null processing group.");
 
             // Ensure no FSM was created
-            Assert.AreEqual(0, FSM_API.Internal.TotalFsmDefinitionCount, "No FSM definition should be created when invalid processing group is provided.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(0), "No FSM definition should be created when invalid processing group is provided.");
         }
 
         [Test]
@@ -139,7 +140,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Create.CreateFiniteStateMachine(fsmName, invalidProcessRate, processingGroup).BuildDefinition();
 
             // Assert
-            Assert.AreEqual(1, FSM_API.Internal.TotalFsmDefinitionCount, "Expected one FSM definition to be created despite invalid rate.");
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(1), "Expected one FSM definition to be created despite invalid rate.");
             Assert.IsTrue(FSM_API.Internal.DoesFsmDefinitionExist(processingGroup, fsmName), "FSM should exist after creation with coerced rate.");
 
             // Verification of coercion:

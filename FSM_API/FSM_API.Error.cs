@@ -60,7 +60,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// Occurs when a non-FSM-instance-specific internal error, warning, or significant API event is reported.
             /// Subscribe to this event to receive diagnostic notifications about the FSM API's internal operations.
             /// </summary>
-            public static event InternalApiErrorEventHandler OnInternalApiError;
+            public static event InternalApiErrorEventHandler? OnInternalApiError;
 
             /// <summary>
             /// Invokes the <see cref="OnInternalApiError"/> event.
@@ -83,7 +83,9 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="handle">The <see cref="FSMHandle"/> instance that encountered the error.</param>
             /// <param name="message">A descriptive message about the instance error.</param>
             /// <param name="exception">The associated exception, or null if no exception occurred.</param>
+            /// <param name="processGroup">The name of the processing group where the error occurred (default is "Update").</param>
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="handle"/> is null.</exception>
+
             public static void InvokeInstanceError(FSMHandle? handle, string message, Exception exception, string processGroup = "Update")
             {
                 if (handle == null)

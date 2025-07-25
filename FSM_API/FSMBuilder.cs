@@ -437,7 +437,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// <para>
         /// If you are modifying an existing FSM definition at runtime and need to handle
         /// active instances currently in the state being removed, you should use
-        /// <see cref="FSM_API.Interaction.RemoveStateFromFSM(string, string, string)"/>,
+        /// <see cref="FSM_API.Interaction.RemoveStateFromFSM(string, string, string, string)"/>,
         /// which wraps this builder method and manages instance transitions.
         /// </para>
         /// If the state does not exist in the builder's current definition, no action is taken.
@@ -450,12 +450,15 @@ namespace TheSingularityWorkshop.FSM_API
             if (state != null)
             {
                 var handles = FSM_API.Internal.GetBucket(_fsmName, _processGroup);
-                var handlesInState = handles.Instances.Where(s => s.CurrentState == stateName);
-                foreach (var handleInState in handlesInState)
+                if (handles != null)
                 {
-                    handleInState.TransitionTo(_initialState);
+                    var handlesInState = handles.Instances.Where(s => s.CurrentState == stateName);
+                    foreach (var handleInState in handlesInState)
+                    {
+                        handleInState.TransitionTo(_initialState);
+                    }
+                    _states.Remove(state);
                 }
-                _states.Remove(state);
             }
             return this;
         }
