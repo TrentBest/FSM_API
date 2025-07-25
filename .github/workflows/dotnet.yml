@@ -21,16 +21,21 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      # Specify the path to your .csproj file
+      run: dotnet restore FSM_API/FSM_API.csproj 
     - name: Build
-      run: dotnet build --no-restore
+      # Specify the path to your .csproj file
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      # Specify the path to your .csproj file
+      run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
 
-       # NEW: Create the NuGet package
+    # NEW: Create the NuGet package
     - name: Pack
-      run: dotnet pack --no-build --configuration Release -o nuget-packages
+      # Specify the path to your .csproj file and the output directory
+      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
       
     # NEW: Publish to NuGet.org
     - name: Publish to NuGet.org
+      # The output directory 'nuget-packages' is relative to the repository root, so this path is correct.
       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
