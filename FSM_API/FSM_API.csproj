@@ -21,5 +21,9 @@
 		<PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
 		<Copyright>Copyright © 2024 The Singularity Workshop. All rights reserved.</Copyright>
 	</PropertyGroup>
+<ItemGroup>
+    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
 
+    <None Include="..\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
+  </ItemGroup>
 </Project>
