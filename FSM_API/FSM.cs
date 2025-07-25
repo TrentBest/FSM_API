@@ -314,7 +314,7 @@ namespace TheSingularityWorkshop.FSM_API
             if (!_states.TryGetValue(current, out var currentState))
             {
                 FSM_API.Error.InvokeInternalApiError(
-                    $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", null
+                    $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", new Exception()
                 );
                 // Attempt to recover by transitioning to the initial state
                 ForceTransition(current, InitialState, ctx);
@@ -330,7 +330,7 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     FSM_API.Error.InvokeInternalApiError(
                         $"FSM '{Name}' Any-State transition defined to non-existent state '{t.To}'. Transition skipped for safety.",
-                        null
+                        new Exception()
                     );
                     continue; // Skip this problematic transition
                 }
@@ -380,7 +380,7 @@ namespace TheSingularityWorkshop.FSM_API
                     {
                         FSM_API.Error.InvokeInternalApiError(
                             $"FSM '{Name}' regular transition defined from '{current}' to non-existent state '{t.To}'. Transition skipped for safety.",
-                            null
+                            new Exception()
                         );
                         continue; // Skip this problematic transition
                     }
@@ -505,7 +505,7 @@ namespace TheSingularityWorkshop.FSM_API
             return _states.FirstOrDefault(s=>s.Key == item1).Value;
         }
 
-        internal FSMTransition GetTranisition(Tuple<string, string> transition)
+        internal FSMTransition? GetTranisition(Tuple<string, string> transition)
         {
             return _transitions.FirstOrDefault(s=>s.To == transition.Item1 && s.From == transition.Item2);
         }

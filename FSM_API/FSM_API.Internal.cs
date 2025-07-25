@@ -287,7 +287,7 @@ namespace TheSingularityWorkshop.FSM_API
                     existingBucket.Definition = fsm;
                     existingBucket.ProcessRate = processRate;
                     existingBucket.Counter = processRate > 0 ? processRate : 0; // Reset counter for new rate
-                    Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' definition updated at runtime.", null);
+                    Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' definition updated at runtime.", new Exception());
                 }
                 else
                 {
@@ -298,7 +298,7 @@ namespace TheSingularityWorkshop.FSM_API
                         ProcessRate = processRate,
                         Counter = processRate > 0 ? processRate : 0,
                     };
-                    Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' newly registered.", null);
+                    Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' newly registered.", new Exception());
                 }
             }
 
@@ -399,7 +399,7 @@ namespace TheSingularityWorkshop.FSM_API
                         else
                         {
                             // If an instance is null or its context is null/invalid, it should be removed.
-                            Error.InvokeInstanceError(handle, "FSM instance or its context became null/invalid (IsValid returned false).", new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
+                            Error.InvokeInstanceError(handle==null?null:handle, "FSM instance or its context became null/invalid (IsValid returned false).", new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
                         }
                     }
                 }
@@ -451,7 +451,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <paramref name="processingGroup"/> does not exist or an FSM with the given <paramref name="name"/>
             /// is not registered within that group.
             /// </returns>
-            internal static FSM GetFSM(string name, string processingGroup = "Update")
+            internal static FSM? GetFSM(string name, string processingGroup = "Update")
             {
                 // Step 1: Safely attempt to get the inner dictionary for the processing group.
                 // Using TryGetValue prevents a KeyNotFoundException if the processingGroup doesn't exist.

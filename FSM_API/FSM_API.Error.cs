@@ -54,7 +54,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             /// <param name="message">A descriptive error message.</param>
             /// <param name="exception">The exception that occurred, if any.</param>
-            public delegate void InternalApiErrorEventHandler(string message, Exception exception);
+            public delegate void InternalApiErrorEventHandler(string message, Exception? exception);
 
             /// <summary>
             /// Occurs when a non-FSM-instance-specific internal error, warning, or significant API event is reported.
@@ -68,7 +68,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             /// <param name="message">A descriptive message about the error or event.</param>
             /// <param name="exception">The associated exception, or null if no exception occurred.</param>
-            public static void InvokeInternalApiError(string message, Exception exception)
+            public static void InvokeInternalApiError(string message, Exception? exception)
             {
                 OnInternalApiError?.Invoke(message, exception);
             }
@@ -84,7 +84,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="message">A descriptive message about the instance error.</param>
             /// <param name="exception">The associated exception, or null if no exception occurred.</param>
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="handle"/> is null.</exception>
-            public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception, string processGroup = "Update")
+            public static void InvokeInstanceError(FSMHandle? handle, string message, Exception exception, string processGroup = "Update")
             {
                 if (handle == null)
                 {
