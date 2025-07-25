@@ -112,7 +112,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Exists_NullFsmName_ThrowsArgumentException()
         {
             // Arrange
-            string nullFsmName = null;
+            string nullFsmName = string.Empty;
             string validProcessingGroup = "Update";
 
             // Act & Assert
@@ -149,7 +149,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             string validFsmName = "TestFSM";
-            string nullProcessingGroup = null;
+            string nullProcessingGroup = string.Empty;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(validFsmName, nullProcessingGroup),

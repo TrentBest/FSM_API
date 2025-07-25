@@ -62,7 +62,7 @@ namespace TheSingularityWorkshop.FSM_API
             FSM_API.Create.CreateProcessingGroup(groupName); // Create it once
 
             // Add a dummy FSM to ensure the bucket isn't empty on subsequent check
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", processingGroup: groupName).State("TestState",null, null,null).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("TestFSM", processingGroup: groupName).State("TestState",null!, null!,null!).BuildDefinition();
             var initialBucketState = FSM_API.Internal.GetBuckets()[groupName];
             var initialFSMCount = initialBucketState.Count;
 

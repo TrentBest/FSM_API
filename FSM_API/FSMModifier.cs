@@ -328,7 +328,7 @@ namespace TheSingularityWorkshop.FSM_API
 
             foreach (var transition in _modifiedTransitions)
             {
-                var tran = bucket.Definition.GetTranisition(new Tuple<string, string>(transition.Item1, transition.Item2));
+                var tran = bucket.Definition.GetTransition(new Tuple<string, string>(transition.Item1, transition.Item2));
                 if (tran == null)
                 {
                     continue;

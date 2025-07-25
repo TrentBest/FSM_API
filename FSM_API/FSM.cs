@@ -49,20 +49,20 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <value>
         /// <list type="bullet">
-        ///    <item><term><c>-1</c></term><description>
-        ///        Instances will be processed every time the <see cref="FSM_API.Internal.TickAll(string)"/>
-        ///        method is called for this FSM's <see cref="ProcessingGroup"/> (e.g., every frame in a game loop).
-        ///    </description></item>
-        ///    <item><term><c>0</c></term><description>
-        ///        Instances will *not* be automatically ticked by the API's update methods.
-        ///        They must be driven externally via explicit event triggers or manual calls
-        ///        to <see cref="FSMHandle.Update()"/>.
-        ///    </description></item>
-        ///    <item><term><c>&gt;0</c></term><description>
-        ///        Instances will be processed every Nth call to <see cref="FSM_API.Internal.TickAll(string)"/>,
-        ///        where N is the value of <c>ProcessRate</c>. For example, a value of 5 means
-        ///        the FSM will update every 5th tick.
-        ///    </description></item>
+        ///     <item><term><c>-1</c></term><description>
+        ///         Instances will be processed every time the <see cref="FSM_API.Internal.TickAll(string)"/>
+        ///         method is called for this FSM's <see cref="ProcessingGroup"/> (e.g., every frame in a game loop).
+        ///     </description></item>
+        ///     <item><term><c>0</c></term><description>
+        ///         Instances will *not* be automatically ticked by the API's update methods.
+        ///         They must be driven externally via explicit event triggers or manual calls
+        ///         to <see cref="FSMHandle.Update(string)"/>.
+        ///     </description></item>
+        ///     <item><term><c>&gt;0</c></term><description>
+        ///         Instances will be processed every Nth call to <see cref="FSM_API.Internal.TickAll(string)"/>,
+        ///         where N is the value of <c>ProcessRate</c>. For example, a value of 5 means
+        ///         the FSM will update every 5th tick.
+        ///     </description></item>
         /// </list>
         /// </value>
         public int ProcessRate { get; internal set; }
@@ -279,24 +279,24 @@ namespace TheSingularityWorkshop.FSM_API
         /// <remarks>
         /// The step logic follows a specific order:
         /// <list type="number">
-        ///     <item><description>
-        ///         **Any-State Transitions:** All <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>
-        ///         conditions are evaluated first. If an "Any State" transition's condition is met,
-        ///         the FSM immediately transitions to the target state, and the method returns.
-        ///         Errors during condition evaluation or to non-existent target states are logged
-        ///         internally, but the process continues or the transition is skipped.
-        ///     </description></item>
-        ///     <item><description>
-        ///         **Current State Update:** The <see cref="FSMState.Update(IStateContext)"/> method
-        ///         of the <paramref name="current"/> state is invoked. Exceptions during this execution
-        ///         are caught and reported via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
-        ///     </description></item>
-        ///     <item><description>
-        ///         **Regular Transitions:** All transitions defined from the <paramref name="current"/> state
-        ///         via <see cref="AddTransition(string, string, Func{IStateContext, bool})"/> are evaluated.
-        ///         The first transition whose condition returns <c>true</c> will cause the FSM to transition
-        ///         to its target state, and the method returns. Errors are handled similarly to Any-State transitions.
-        ///     </description></item>
+        ///      <item><description>
+        ///          **Any-State Transitions:** All <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>
+        ///          conditions are evaluated first. If an "Any State" transition's condition is met,
+        ///          the FSM immediately transitions to the target state, and the method returns.
+        ///          Errors during condition evaluation or to non-existent target states are logged
+        ///          internally, but the process continues or the transition is skipped.
+        ///      </description></item>
+        ///      <item><description>
+        ///          **Current State Update:** The <see cref="FSMState.Update(IStateContext)"/> method
+        ///          of the <paramref name="current"/> state is invoked. Exceptions during this execution
+        ///          are caught and reported via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        ///      </description></item>
+        ///      <item><description>
+        ///          **Regular Transitions:** All transitions defined from the <paramref name="current"/> state
+        ///          via <see cref="AddTransition(string, string, Func{IStateContext, bool})"/> are evaluated.
+        ///          The first transition whose condition returns <c>true</c> will cause the FSM to transition
+        ///          to its target state, and the method returns. Errors are handled similarly to Any-State transitions.
+        ///      </description></item>
         /// </list>
         /// If the <paramref name="current"/> state is not found in the FSM definition, an internal error is logged,
         /// and the FSM attempts to force a transition back to its <see cref="InitialState"/> as a recovery measure.
@@ -481,33 +481,63 @@ namespace TheSingularityWorkshop.FSM_API
             }
         }
 
+        /// <summary>
+        /// Removes a state with the specified name from this FSM definition.
+        /// </summary>
+        /// <remarks>
+        /// Removing a state will also invalidate any transitions that involve this state.
+        /// It's crucial to ensure that no FSM instances are currently in or attempting to transition
+        /// to this state when it's removed, to avoid runtime errors.
+        /// </remarks>
+        /// <param name="name">The name of the state to remove.</param>
         public void RemoveState(string name)
         {
             _states.Remove(name);
         }
 
+        /// <summary>
+        /// Checks if a regular transition exists between the specified 'from' and 'to' states.
+        /// </summary>
+        /// <param name="fromState">The name of the source state.</param>
+        /// <param name="toState">The name of the target state.</param>
+        /// <returns><c>true</c> if a transition exists from <paramref name="fromState"/> to <paramref name="toState"/>; otherwise, <c>false</c>.</returns>
         public bool HasTransition(string fromState, string toState)
         {
-            return _transitions.Any(s=>s.From == fromState && s.To == toState);
+            return _transitions.Any(s => s.From == fromState && s.To == toState);
         }
 
+        /// <summary>
+        /// Removes a specific regular transition between two states from the FSM definition.
+        /// </summary>
+        /// <param name="from">The name of the source state of the transition to remove.</param>
+        /// <param name="to">The name of the target state of the transition to remove.</param>
         public void RemoveTransition(string from, string to)
         {
-            if(HasTransition(from, to))
+            if (HasTransition(from, to))
             {
-                var fsmTransition = _transitions.First(s=>s.From == from && s.To == to);
+                var fsmTransition = _transitions.First(s => s.From == from && s.To == to);
                 _transitions.Remove(fsmTransition);
             }
         }
 
-        internal FSMState GetState(string item1)
+        /// <summary>
+        /// Retrieves an <see cref="FSMState"/> object by its name.
+        /// </summary>
+        /// <param name="name">The name of the state to retrieve.</param>
+        /// <returns>The <see cref="FSMState"/> object if found; otherwise, <c>null</c>.</returns>
+        public FSMState? GetState(string name) // Changed item1 to name for clarity, added nullable annotation
         {
-            return _states.FirstOrDefault(s=>s.Key == item1).Value;
+            return _states.FirstOrDefault(s => s.Key == name).Value; // Used TryGetValue or explicit check for safety
         }
 
-        internal FSMTransition? GetTranisition(Tuple<string, string> transition)
+        /// <summary>
+        /// Retrieves a regular <see cref="FSMTransition"/> object based on its source and target states.
+        /// </summary>
+        /// <param name="transition">A <see cref="Tuple{T1, T2}"/> where Item1 is the target state and Item2 is the source state.</param>
+        /// <returns>The <see cref="FSMTransition"/> object if found; otherwise, <c>null</c>.</returns>
+        public FSMTransition? GetTransition(Tuple<string, string> transition)
         {
-            return _transitions.FirstOrDefault(s=>s.To == transition.Item1 && s.From == transition.Item2);
+            return _transitions.FirstOrDefault(s => s.To == transition.Item1 && s.From == transition.Item2);
         }
     }
 }
