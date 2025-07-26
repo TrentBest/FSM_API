@@ -80,7 +80,7 @@ jobs:
       - name: Update DLL in Unity Repo
         # Copy the downloaded DLL into the correct folder of the Unity repo
         run: |
-          cp TrentBest.FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
+          cp FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
       - name: Commit and Push to Unity Repo
