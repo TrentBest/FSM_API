@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -39,3 +38,51 @@ jobs:
     - name: Publish to NuGet.org
       # The output directory 'nuget-packages' is relative to the repository root, so this path is correct.
       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+
+    # NEW: Upload the compiled DLL as an artifact to be used by the next job
+    - name: Upload DLL as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fsm-api-dll
+        # The path to the DLL from the build step's output
+        path: FSM_API/bin/Release/netstandard2.0/TrentBest.FSM_API.dll
+        retention-days: 1
+
+  # NEW JOB: This job runs only after the 'build' job succeeds
+  push_dll:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout Unity Integration Repository
+        # We check out the second repository here, using a PAT for write access
+        uses: actions/checkout@v4
+        with:
+          repository: 'TrentBest/FSM_API_Unity'
+          token: ${{ secrets.PAT }}
+          path: './unity_repo'
+
+      - name: Download FSM_API DLL Artifact
+        # Download the DLL artifact from the previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: fsm-api-dll
+          path: .
+
+      - name: Update DLL in Unity Repo
+        # Copy the downloaded DLL into the correct folder of the Unity repo
+        run: |
+          cp TrentBest.FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
+        shell: bash
+
+      - name: Commit and Push to Unity Repo
+        # Commit the changes and push to the Unity repo
+        run: |
+          cd ./unity_repo
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add Assets/FSM_API/Plugins/TrentBest.FSM_API.dll
+          git commit -m "Automated: Update FSM_API.dll from CI build"
+          git push
+        shell: bash
