@@ -31,15 +31,16 @@ jobs:
 
     # Create the NuGet package (conditional based on secret)
     - name: Pack
-      if: ${{ secrets.NUGET_BUILD == "true" }}
+      if: ${{ secrets.NUGET_BUILD == 'true' }}
       # Specify the path to your .csproj file and the output directory
       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
       
     # Publish to NuGet.org (conditional based on secret)
     - name: Publish to NuGet.org
-      if: ${{ secrets.NUGET_BUILD == "true" }}
+      if: ${{ secrets.NUGET_BUILD == 'true' }}
       # The output directory 'nuget-packages' is relative to the repository root, so this path is correct.
-      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"      
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+      
     # Upload the compiled DLL as an artifact to be used by the next job
     - name: Upload DLL as Artifact
       uses: actions/upload-artifact@v4
@@ -71,7 +72,6 @@ jobs:
           name: fsm-api-dll
           path: .
       
-      # CORRECTED PLACEMENT: Create the target directory before copying the file
       # This step MUST be here, after the Unity repo is checked out.
       - name: Create Plugins directory
         run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
