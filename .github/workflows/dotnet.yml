@@ -47,7 +47,7 @@ jobs:
       with:
         name: fsm-api-dll
         # The path to the DLL from the build step's output
-        path: FSM_API/bin/Release/net8.0/TrentBest.FSM_API.dll
+        path: /home/runner/work/FSM_API/FSM_API/FSM_API/bin/Release/net8.0/FSM_API.dll
         retention-days: 1
 
   # This job runs only after the 'build' job succeeds
