@@ -89,7 +89,7 @@ jobs:
           cd ./unity_repo
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add Assets/FSM_API/Plugins/TrentBest.FSM_API.dll
+          git add Assets/FSM_API/Plugins/FSM_API.dll
           git commit -m "Automated: Update FSM_API.dll from CI build"
           git push
         shell: bash
