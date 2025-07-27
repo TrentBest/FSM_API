@@ -10,7 +10,7 @@
 
 		<IsPackable>true</IsPackable>
 		<PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<Authors>Trent Best</Authors>
 		<Company>The Singularity Workshop</Company>
 		<Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
