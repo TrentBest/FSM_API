@@ -2,8 +2,10 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<!-- CHANGED: Set to disable -->
+		<Nullable>disable</Nullable>
+		<!-- CHANGED: Set to disable -->
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 
 		<IsPackable>true</IsPackable>
@@ -21,12 +23,13 @@
 		<PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
 		<Copyright>Copyright © 2024 The Singularity Workshop. All rights reserved.</Copyright>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<LangVersion>8.0</LangVersion>
-	</PropertyGroup>
-<ItemGroup>
-    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+	<!-- REMOVED: This conditional PropertyGroup is no longer needed -->
+	<!-- <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup> -->
+	<ItemGroup>
+		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
 
-    <None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
-  </ItemGroup>
+		<None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
+	</ItemGroup>
 </Project>
