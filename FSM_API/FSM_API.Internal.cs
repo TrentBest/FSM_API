@@ -678,7 +678,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 // Let's assume for now that the intent is to remove it from its *current* group
                 // wherever that might be.
-                var currentGroupEntry = _buckets.FirstOrDefault(pg => pg.Value.ContainsKey(bucket.Definition!.Name)); // Use ! since we just checked Definition for null
+                var currentGroupEntry = _buckets.FirstOrDefault(pg => pg.Value.ContainsKey(bucket.Definition.Name)); // Use ! since we just checked Definition for null
                 if (currentGroupEntry.Value != null) // Check if FirstOrDefault found an entry
                 {
                     currentGroupEntry.Value.Remove(bucket.Definition.Name);
