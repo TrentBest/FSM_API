@@ -12,53 +12,64 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        # We will build and test against both .NET 8 and .NET 3.1 SDKs to be explicit
+        dotnet-version: [ '8.0.x', '3.1.x' ]
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}
+    
     - name: Restore dependencies
       # Specify the path to your .csproj file
-      run: dotnet restore FSM_API/FSM_API.csproj 
+      run: dotnet restore FSM_API/FSM_API.csproj
+
     - name: Build
       # Specify the path to your .csproj file
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
+    
     - name: Test
       # Specify the path to your .csproj file
       run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
 
-    # Create the NuGet package (conditional based on secret)
-    - name: Pack
-      # if: ${{ secrets.NUGET_BUILD == 'true' }} # Commented out due to validation issues
-      # Specify the path to your .csproj file and the output directory
-      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-      
-    # Publish to NuGet.org (conditional based on secret)
-    - name: Publish to NuGet.org
-      # if: ${{ secrets.NUGET_BUILD == 'true' }} # Commented out due to validation issues
-      # The output directory 'nuget-packages' is relative to the repository root, so this path is correct.
-      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
-      
-    # Upload the compiled DLL as an artifact to be used by the next job
-    - name: Upload DLL as Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: fsm-api-dll
-        # The path to the DLL from the build step's output
-        path: /home/runner/work/FSM_API/FSM_API/FSM_API/bin/Release/net8.0/FSM_API.dll
-        retention-days: 1
-
-  # This job runs only after the 'build' job succeeds
-  push_dll:
+  publish_nuget:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      #- name: Pack
+      #  run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+      
+    #  - name: Publish to NuGet.org
+    #    run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+
+      - name: Upload DLL as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsm-api-dll
+          path: FSM_API/bin/Release/net8.0/FSM_API.dll
+          retention-days: 1
+
+  # This job runs only after the 'publish_nuget' job succeeds
+  push_dll:
+    needs: publish_nuget
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
       - name: Checkout Unity Integration Repository
-        # We check out the second repository here, using a PAT for write access
         uses: actions/checkout@v4
         with:
           repository: 'TrentBest/FSM_API_Unity'
@@ -66,25 +77,21 @@ jobs:
           path: './unity_repo'
 
       - name: Download FSM_API DLL Artifact
-        # Download the DLL artifact from the previous job
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
           path: .
       
-      # This step MUST be here, after the Unity repo is checked out.
       - name: Create Plugins directory
         run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
       - name: Update DLL in Unity Repo
-        # Copy the downloaded DLL into the correct folder of the Unity repo
         run: |
           cp FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
       - name: Commit and Push to Unity Repo
-        # Commit the changes and push to the Unity repo
         run: |
           cd ./unity_repo
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
