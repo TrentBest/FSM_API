@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;netstandard2.0;netcoreapp3.1</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<!-- CHANGED: Set to disable -->
 		<Nullable>disable</Nullable>
@@ -10,7 +10,7 @@
 
 		<IsPackable>true</IsPackable>
 		<PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<Authors>Trent Best</Authors>
 		<Company>The Singularity Workshop</Company>
 		<Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
