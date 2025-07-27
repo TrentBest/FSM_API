@@ -1,7 +1,8 @@
-﻿using System;
+﻿#nullable enable // Explicitly enable nullable reference types for this file
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace TheSingularityWorkshop.FSM_API
 {
@@ -49,20 +50,20 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <value>
         /// <list type="bullet">
-        ///     <item><term><c>-1</c></term><description>
-        ///         Instances will be processed every time the <see cref="FSM_API.Internal.TickAll(string)"/>
-        ///         method is called for this FSM's <see cref="ProcessingGroup"/> (e.g., every frame in a game loop).
-        ///     </description></item>
-        ///     <item><term><c>0</c></term><description>
-        ///         Instances will *not* be automatically ticked by the API's update methods.
-        ///         They must be driven externally via explicit event triggers or manual calls
-        ///         to <see cref="FSMHandle.Update(string)"/>.
-        ///     </description></item>
-        ///     <item><term><c>&gt;0</c></term><description>
-        ///         Instances will be processed every Nth call to <see cref="FSM_API.Internal.TickAll(string)"/>,
-        ///         where N is the value of <c>ProcessRate</c>. For example, a value of 5 means
-        ///         the FSM will update every 5th tick.
-        ///     </description></item>
+        ///      <item><term><c>-1</c></term><description>
+        ///          Instances will be processed every time the <see cref="FSM_API.Internal.TickAll(string)"/>
+        ///          method is called for this FSM's <see cref="ProcessingGroup"/> (e.g., every frame in a game loop).
+        ///      </description></item>
+        ///      <item><term><c>0</c></term><description>
+        ///          Instances will *not* be automatically ticked by the API's update methods.
+        ///          They must be driven externally via explicit event triggers or manual calls
+        ///          to <see cref="FSMHandle.Update(string)"/>.
+        ///      </description></item>
+        ///      <item><term><c>&gt;0</c></term><description>
+        ///          Instances will be processed every Nth call to <see cref="FSM_API.Internal.TickAll(string)"/>,
+        ///          where N is the value of <c>ProcessRate</c>. For example, a value of 5 means
+        ///          the FSM will update every 5th tick.
+        ///      </description></item>
         /// </list>
         /// </value>
         public int ProcessRate { get; internal set; }
@@ -265,8 +266,7 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Initial state '{InitialState}' not found for FSM '{Name}'. This indicates a corrupted FSM definition.",
                     new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState))
                 );
-                // Even though we invoke an error, we still throw to prevent the FSM from operating in an invalid state.
-                //throw new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState));
+                // Even though we invoke an error, we still return to prevent the FSM from operating in an invalid state.
                 return;
             }
             state.Enter(ctx);
@@ -279,24 +279,24 @@ namespace TheSingularityWorkshop.FSM_API
         /// <remarks>
         /// The step logic follows a specific order:
         /// <list type="number">
-        ///      <item><description>
-        ///          **Any-State Transitions:** All <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>
-        ///          conditions are evaluated first. If an "Any State" transition's condition is met,
-        ///          the FSM immediately transitions to the target state, and the method returns.
-        ///          Errors during condition evaluation or to non-existent target states are logged
-        ///          internally, but the process continues or the transition is skipped.
-        ///      </description></item>
-        ///      <item><description>
-        ///          **Current State Update:** The <see cref="FSMState.Update(IStateContext)"/> method
-        ///          of the <paramref name="current"/> state is invoked. Exceptions during this execution
-        ///          are caught and reported via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
-        ///      </description></item>
-        ///      <item><description>
-        ///          **Regular Transitions:** All transitions defined from the <paramref name="current"/> state
-        ///          via <see cref="AddTransition(string, string, Func{IStateContext, bool})"/> are evaluated.
-        ///          The first transition whose condition returns <c>true</c> will cause the FSM to transition
-        ///          to its target state, and the method returns. Errors are handled similarly to Any-State transitions.
-        ///      </description></item>
+        ///     <item><description>
+        ///         **Any-State Transitions:** All <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>
+        ///         conditions are evaluated first. If an "Any State" transition's condition is met,
+        ///         the FSM immediately transitions to the target state, and the method returns.
+        ///         Errors during condition evaluation or to non-existent target states are logged
+        ///         internally, but the process continues or the transition is skipped.
+        ///     </description></item>
+        ///     <item><description>
+        ///         **Current State Update:** The <see cref="FSMState.Update(IStateContext)"/> method
+        ///         of the <paramref name="current"/> state is invoked. Exceptions during this execution
+        ///         are caught and reported via <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        ///     </description></item>
+        ///     <item><description>
+        ///         **Regular Transitions:** All transitions defined from the <paramref name="current"/> state
+        ///         via <see cref="AddTransition(string, string, Func{IStateContext, bool})"/> are evaluated.
+        ///         The first transition whose condition returns <c>true</c> will cause the FSM to transition
+        ///         to its target state, and the method returns. Errors are handled similarly to Any-State transitions.
+        ///     </description></item>
         /// </list>
         /// If the <paramref name="current"/> state is not found in the FSM definition, an internal error is logged,
         /// and the FSM attempts to force a transition back to its <see cref="InitialState"/> as a recovery measure.
@@ -453,7 +453,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 FSM_API.Error.InvokeInternalApiError(
                     $"Attempted to force transition from non-existent state '{from}' for FSM '{Name}'. Exiting original state skipped.",
-                    null
+                    null // Passing null for exception as it's not an exception but a missing state
                 );
             }
 
@@ -463,7 +463,6 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Target state '{to}' for forced transition does not exist in FSM '{Name}'. Forced transition failed.",
                     new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to))
                 );
-                //throw new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to));
                 return;
             }
 
@@ -525,9 +524,14 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <param name="name">The name of the state to retrieve.</param>
         /// <returns>The <see cref="FSMState"/> object if found; otherwise, <c>null</c>.</returns>
-        public FSMState? GetState(string name) // Changed item1 to name for clarity, added nullable annotation
+        public FSMState? GetState(string name)
         {
-            return _states.FirstOrDefault(s => s.Key == name).Value; // Used TryGetValue or explicit check for safety
+            // Corrected to use TryGetValue for efficiency and proper null handling
+            if (_states.TryGetValue(name, out var state))
+            {
+                return state;
+            }
+            return null;
         }
 
         /// <summary>
