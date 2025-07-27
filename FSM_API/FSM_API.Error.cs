@@ -28,8 +28,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public static class Error
         {
-            private static readonly Dictionary<FSMHandle, int> _errorCounts = new();
-            private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new();
+            private static readonly Dictionary<FSMHandle, int> _errorCounts = new Dictionary<FSMHandle, int>();
+            private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new Dictionary<string, int>();
 
             /// <summary>
             /// The maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down.

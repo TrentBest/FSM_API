@@ -60,7 +60,7 @@ namespace TheSingularityWorkshop.FSM_API
                 /// Instances are added to this list upon creation and removed upon unregistration
                 /// or automatic removal due to error thresholds. The list itself is never null.
                 /// </remarks>
-                public List<FSMHandle> Instances = new(); // Correct, initialized to a non-null empty list.
+                public List<FSMHandle> Instances = new List<FSMHandle>(); // Correct, initialized to a non-null empty list.
 
                 /// <summary>
                 /// The desired processing rate for instances of this FSM definition.
@@ -87,7 +87,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// enqueued and processed at safe points in the update cycle (e.g., after all FSMs have ticked).
             /// The queue itself is static and initialized, thus never null.
             /// </remarks>
-            private static readonly Queue<Action> _deferredModifications = new(); // Correct, initialized.
+            private static readonly Queue<Action> _deferredModifications = new Queue<Action>(); // Correct, initialized.
 
             /// <summary>
             /// Stores all FSM definitions and their instances, organized by
@@ -99,7 +99,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// manifestations. Access to this collection should be strictly confined to the single
             /// designated thread where FSM updates occur. The dictionary itself is never null.
             /// </remarks>
-            private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new(); // Correct, initialized.
+            private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new Dictionary<string, Dictionary<string, FsmBucket>>(); // Correct, initialized.
 
             /// <summary>
             /// Represents a default FSM definition for internal API operations.

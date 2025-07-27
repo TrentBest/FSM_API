@@ -91,8 +91,8 @@ namespace TheSingularityWorkshop.FSM_API
 
         private string _fsmName = "UnNamedFSM";
         private int _processRate;
-        private readonly List<FSMState> _states = new();
-        private readonly List<FSMTransition> _transitions = new();
+        private readonly List<FSMState> _states = new List<FSMState>();
+        private readonly List<FSMTransition> _transitions = new List<FSMTransition>();
         private string _initialState;
         private string _processGroup = "Update";
 

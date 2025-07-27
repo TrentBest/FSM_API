@@ -96,9 +96,9 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public const string AnyStateIdentifier = "__ANY_STATE__"; // Using a unique, unlikely string
 
-        private readonly Dictionary<string, FSMState> _states = new();
-        private readonly List<FSMTransition> _transitions = new(); // Regular transitions
-        private readonly List<FSMTransition> _anyStateTransitions = new(); // Any State transitions
+        private readonly Dictionary<string, FSMState> _states = new Dictionary<string, FSMState>();
+        private readonly List<FSMTransition> _transitions = new List<FSMTransition>(); // Regular transitions
+        private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>(); // Any State transitions
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FSM"/> class with default values.
