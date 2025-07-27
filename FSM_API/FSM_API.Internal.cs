@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -49,7 +51,7 @@ namespace TheSingularityWorkshop.FSM_API
                 // FSM? is correct. Given where it's used, it should ideally be non-null once the bucket
                 // is properly constructed for a defined FSM. Let's keep it nullable if there are transient null states,
                 // but ensure it's handled.
-                public FSM? Definition;
+                public FSM Definition;
 
                 /// <summary>
                 /// A list of all active <see cref="FSMHandle"/> instances created from this definition.
@@ -58,7 +60,7 @@ namespace TheSingularityWorkshop.FSM_API
                 /// Instances are added to this list upon creation and removed upon unregistration
                 /// or automatic removal due to error thresholds. The list itself is never null.
                 /// </remarks>
-                public List<FSMHandle> Instances = new(); // Correct, initialized to a non-null empty list.
+                public List<FSMHandle> Instances = new List<FSMHandle>(); // Correct, initialized to a non-null empty list.
 
                 /// <summary>
                 /// The desired processing rate for instances of this FSM definition.
@@ -85,7 +87,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// enqueued and processed at safe points in the update cycle (e.g., after all FSMs have ticked).
             /// The queue itself is static and initialized, thus never null.
             /// </remarks>
-            private static readonly Queue<Action> _deferredModifications = new(); // Correct, initialized.
+            private static readonly Queue<Action> _deferredModifications = new Queue<Action>(); // Correct, initialized.
 
             /// <summary>
             /// Stores all FSM definitions and their instances, organized by
@@ -97,7 +99,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// manifestations. Access to this collection should be strictly confined to the single
             /// designated thread where FSM updates occur. The dictionary itself is never null.
             /// </remarks>
-            private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new(); // Correct, initialized.
+            private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new Dictionary<string, Dictionary<string, FsmBucket>>(); // Correct, initialized.
 
             /// <summary>
             /// Represents a default FSM definition for internal API operations.
@@ -368,7 +370,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// the rate criteria are met. Instances with a <c>ProcessRate</c> of <c>0</c>
             /// (event-driven) are explicitly skipped by this tick mechanism.
             /// Individual FSM instance updates that throw exceptions are caught and
-            /// reported via <see cref="Error.InvokeInstanceError(FSMHandle?, string, Exception, string)"/>, leading
+            /// reported via <see cref="Error.InvokeInstanceError(FSMHandle, string, Exception, string)"/>, leading
             /// to automatic removal if error thresholds are exceeded.
             /// </remarks>
             internal static void TickAll(string processingGroup)
@@ -493,7 +495,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <paramref name="processingGroup"/> does not exist or an FSM with the given <paramref name="name"/>
             /// is not registered within that group. Returns the <see cref="_defaultFSM"/> if the requested FSM or its bucket definition is null.
             /// </returns>
-            internal static FSM? GetFSM(string name, string processingGroup = "Update")
+            internal static FSM GetFSM(string name, string processingGroup = "Update")
             {
                 // Step 1: Safely attempt to get the inner dictionary for the processing group.
                 // Using TryGetValue prevents a KeyNotFoundException if the processingGroup doesn't exist.
@@ -537,7 +539,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// It includes safety checks to prevent <see cref="NullReferenceException"/>
             /// and <see cref="KeyNotFoundException"/> if the specified group or FSM name does not exist.
             /// </remarks>
-            internal static FsmBucket? GetBucket(string fsmName, string processGroup)
+            internal static FsmBucket GetBucket(string fsmName, string processGroup)
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
@@ -552,14 +554,14 @@ namespace TheSingularityWorkshop.FSM_API
 
                 // Try to get the dictionary for the specific processing group
                 // 'groupBuckets' is non-nullable if TryGetValue returns true.
-                if (_buckets.TryGetValue(processGroup, out Dictionary<string, FsmBucket>? groupBuckets))
+                if (_buckets.TryGetValue(processGroup, out Dictionary<string, FsmBucket> groupBuckets))
                 {
                     // REMOVED: if(groupBuckets == null) { return null; }
                     // This check is redundant and incorrect as groupBuckets is guaranteed non-null here.
 
                     // Try to get the specific FsmBucket within that group
                     // 'fsmBucket' is non-nullable if TryGetValue returns true.
-                    if (groupBuckets.TryGetValue(fsmName, out FsmBucket? fsmBucket))
+                    if (groupBuckets.TryGetValue(fsmName, out FsmBucket fsmBucket))
                     {
                         return fsmBucket;
                     }
@@ -676,7 +678,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 // Let's assume for now that the intent is to remove it from its *current* group
                 // wherever that might be.
-                var currentGroupEntry = _buckets.FirstOrDefault(pg => pg.Value.ContainsKey(bucket.Definition!.Name)); // Use ! since we just checked Definition for null
+                var currentGroupEntry = _buckets.FirstOrDefault(pg => pg.Value.ContainsKey(bucket.Definition.Name)); // Use ! since we just checked Definition for null
                 if (currentGroupEntry.Value != null) // Check if FirstOrDefault found an entry
                 {
                     currentGroupEntry.Value.Remove(bucket.Definition.Name);
