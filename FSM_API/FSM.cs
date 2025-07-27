@@ -1,5 +1,4 @@
-﻿#nullable enable // Explicitly enable nullable reference types for this file
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -524,7 +523,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <param name="name">The name of the state to retrieve.</param>
         /// <returns>The <see cref="FSMState"/> object if found; otherwise, <c>null</c>.</returns>
-        public FSMState? GetState(string name)
+        public FSMState GetState(string name)
         {
             // Corrected to use TryGetValue for efficiency and proper null handling
             if (_states.TryGetValue(name, out var state))
@@ -539,7 +538,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <param name="transition">A <see cref="Tuple{T1, T2}"/> where Item1 is the target state and Item2 is the source state.</param>
         /// <returns>The <see cref="FSMTransition"/> object if found; otherwise, <c>null</c>.</returns>
-        public FSMTransition? GetTransition(Tuple<string, string> transition)
+        public FSMTransition GetTransition(Tuple<string, string> transition)
         {
             return _transitions.FirstOrDefault(s => s.To == transition.Item1 && s.From == transition.Item2);
         }
