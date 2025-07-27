@@ -30,16 +30,16 @@ jobs:
       run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
 
     # Create the NuGet package (conditional based on secret)
-  #  - name: Pack
+    - name: Pack
       # if: ${{ secrets.NUGET_BUILD == 'true' }} # Commented out due to validation issues
       # Specify the path to your .csproj file and the output directory
-   #   run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
       
     # Publish to NuGet.org (conditional based on secret)
-   # - name: Publish to NuGet.org
+    - name: Publish to NuGet.org
       # if: ${{ secrets.NUGET_BUILD == 'true' }} # Commented out due to validation issues
       # The output directory 'nuget-packages' is relative to the repository root, so this path is correct.
-   #   run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
       
     # Upload the compiled DLL as an artifact to be used by the next job
     - name: Upload DLL as Artifact
