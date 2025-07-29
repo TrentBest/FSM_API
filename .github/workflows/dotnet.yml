@@ -40,33 +40,47 @@ jobs:
       # Specify the path to your .csproj file
       run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
 
-  publish_nuget:
-    needs: build
-    runs-on: ubuntu-latest 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # Upload the compiled DLL as an artifact so it can be used by subsequent jobs
+    - name: Upload FSM_API DLL Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fsm-api-dll
+        # Path to the compiled DLL after a Release build for .NET 8.0
+        path: FSM_API/bin/Release/net8.0/FSM_API.dll
+        retention-days: 1 # Keep the artifact for 1 day
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
+  # The 'publish_nuget' job is commented out as it should not run with every build.
+  # Uncomment this entire section when you are ready to publish a new NuGet package.
+  # publish_nuget:
+  #   needs: build
+  #   runs-on: ubuntu-latest 
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-      #- name: Pack
-      #  run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Setup .NET
+  #       uses: actions/setup-dotnet@v4
+  #       with:
+  #         dotnet-version: 8.0.x
+
+  #     # Download the DLL artifact uploaded by the 'build' job
+  #     - name: Download FSM_API DLL Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: fsm-api-dll
+  #         path: . # Downloads to the current working directory of this job, usually the root of the workspace
+
+  #     - name: Pack
+  #       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
       
-      # - name: Publish to NuGet.org
-      #   run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+  #     - name: Publish to NuGet.org
+  #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
-      - name: Upload DLL as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: fsm-api-dll
-          path: FSM_API/bin/Release/net8.0/FSM_API.dll
-          retention-days: 1
+  #     # Removed the redundant 'Upload DLL as Artifact' step from here, as it's now done in the 'build' job.
 
   push_dll:
-    needs: publish_nuget
+    # This job now depends directly on 'build' since 'publish_nuget' is commented out.
+    needs: build 
     runs-on: ubuntu-latest 
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
@@ -78,11 +92,12 @@ jobs:
           token: ${{ secrets.PAT }}
           path: './unity_repo'
 
+      # The DLL artifact is now downloaded here, as it was uploaded by the 'build' job
       - name: Download FSM_API DLL Artifact
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
-          path: .
+          path: . # Downloads to the current working directory of this job
       
       - name: Create Plugins directory
         run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
@@ -90,6 +105,7 @@ jobs:
 
       - name: Update DLL in Unity Repo
         run: |
+          # The DLL is downloaded to the current working directory (.), so it's directly accessible
           cp FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
