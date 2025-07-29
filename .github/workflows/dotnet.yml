@@ -17,6 +17,8 @@ jobs:
     strategy:
       matrix:
         # Building only against .NET 8.0.x as requested
+        # NOTE: This matrix entry is for the SDK version used to build, not the target framework.
+        # Your csproj's TargetFrameworks property handles the actual target frameworks.
         dotnet-version: [ '8.0.x' ]
 
     steps:
@@ -45,8 +47,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dll
-        # Path to the compiled DLL after a Release build for .NET 8.0
-        path: FSM_API/bin/Release/net8.0/FSM_API.dll
+        # Path to the compiled DLL after a Release build for .NET Standard 2.0
+        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll # <--- CRITICAL CHANGE HERE
         retention-days: 1 # Keep the artifact for 1 day
 
   # The 'publish_nuget' job is commented out as it should not run with every build.
