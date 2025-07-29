@@ -11,7 +11,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Changed from ubuntu-latest to ubuntu-20.04 for libssl1.1 compatibility with .NET 3.1
+    runs-on: ubuntu-20.04 
     
     strategy:
       matrix:
@@ -25,14 +26,7 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
     
-    # Conditional step to install libssl1.1 for .NET Core 3.1 builds on Ubuntu runners
-    # Newer Ubuntu versions (used by ubuntu-latest) have OpenSSL 3.x, which is incompatible with .NET Core 3.1.
-    # This step ensures the required older libssl is available.
-    - name: Install libssl1.1 for .NET Core 3.1
-      if: matrix.dotnet-version == '3.1.x' && runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libssl1.1
+    # Removed the 'Install libssl1.1' step as ubuntu-20.04 provides it by default.
 
     - name: Restore dependencies
       # Specify the path to your .csproj file
@@ -48,7 +42,8 @@ jobs:
 
   publish_nuget:
     needs: build
-    runs-on: ubuntu-latest
+    # You can keep this on ubuntu-latest if your NuGet publishing only uses .NET 8 (as configured below)
+    runs-on: ubuntu-latest 
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
@@ -74,7 +69,7 @@ jobs:
   # This job runs only after the 'publish_nuget' job succeeds
   push_dll:
     needs: publish_nuget
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Can stay on ubuntu-latest as it only handles artifact pushing
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
