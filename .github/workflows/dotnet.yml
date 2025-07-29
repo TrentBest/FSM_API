@@ -5,15 +5,15 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ] # Assumes your FSM_API repo's main branch is 'master'
   pull_request:
     branches: [ "master" ]
 
 jobs:
   build:
     # Reverted back to ubuntu-latest as only .NET 8.0.x is being built, which is compatible.
-    runs-on: ubuntu-latest 
-    
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         # Building only against .NET 8.0.x as requested
@@ -25,7 +25,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
-    
+
     # The 'Install libssl1.1' step is no longer needed as .NET 3.1.x is removed from the matrix.
 
     - name: Restore dependencies
@@ -35,7 +35,7 @@ jobs:
     - name: Build
       # Specify the path to your .csproj file
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
-    
+
     - name: Test
       # Specify the path to your .csproj file
       run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
@@ -53,7 +53,7 @@ jobs:
   # Uncomment this entire section when you are ready to publish a new NuGet package.
   # publish_nuget:
   #   needs: build
-  #   runs-on: ubuntu-latest 
+  #   runs-on: ubuntu-latest
   #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
   #   steps:
@@ -72,49 +72,85 @@ jobs:
 
   #     - name: Pack
   #       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-      
+
   #     - name: Publish to NuGet.org
   #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
   #     # Removed the redundant 'Upload DLL as Artifact' step from here, as it's now done in the 'build' job.
 
-  push_dll:
-    # This job now depends directly on 'build' since 'publish_nuget' is commented out.
-    needs: build 
-    runs-on: ubuntu-latest 
+  push_dll_to_fsm_api_unity: # Renamed for clarity, this is your original job
+    needs: build
+    runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
-      - name: Checkout Unity Integration Repository
+      - name: Checkout FSM_API_Unity Repository
         uses: actions/checkout@v4
         with:
           repository: 'TrentBest/FSM_API_Unity'
           token: ${{ secrets.PAT }}
-          path: './unity_repo'
+          path: './fsm_api_unity_repo' # Changed path to avoid conflict with raWWar repo checkout
 
-      # The DLL artifact is now downloaded here, as it was uploaded by the 'build' job
-      - name: Download FSM_API DLL Artifact
+      - name: Download FSM_API DLL Artifact for FSM_API_Unity
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
           path: . # Downloads to the current working directory of this job
-      
-      - name: Create Plugins directory
-        run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
+
+      - name: Create Plugins directory in FSM_API_Unity
+        run: mkdir -p ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
-      - name: Update DLL in Unity Repo
+      - name: Update DLL in FSM_API_Unity Repo
         run: |
-          # The DLL is downloaded to the current working directory (.), so it's directly accessible
-          cp FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
+          cp FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
-      - name: Commit and Push to Unity Repo
+      - name: Commit and Push to FSM_API_Unity Repo
         run: |
-          cd ./unity_repo
+          cd ./fsm_api_unity_repo
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git add Assets/FSM_API/Plugins/FSM_API.dll
           git commit -m "Automated: Update FSM_API.dll from CI build"
           git push
+        shell: bash
+
+  push_dll_to_rawwar: # NEW JOB: Pushes DLL to your raWWar repo
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' # Trigger on push to master in FSM_API repo
+
+    steps:
+      - name: Checkout raWWar Repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'TrentBest/raWWar' # Replace with your actual raWWar repo path if different
+          token: ${{ secrets.PAT }} # Reusing the PAT, ensure it has write access to raWWar
+          path: './rawwar_repo'
+          ref: 'Alpha' # Target the Alpha branch for development integration
+
+      - name: Download FSM_API DLL Artifact for raWWar
+        uses: actions/download-artifact@v4
+        with:
+          name: fsm-api-dll
+          path: . # Downloads to the current working directory of this job
+
+      - name: Create Plugins directory in raWWar
+        run: mkdir -p ./rawwar_repo/Assets/Plugins/
+        shell: bash
+
+      - name: Update DLL in raWWar Repo
+        run: |
+          cp FSM_API.dll ./rawwar_repo/Assets/Plugins/
+        shell: bash
+
+      - name: Commit and Push to raWWar Repo
+        run: |
+          cd ./rawwar_repo
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add Assets/Plugins/FSM_API.dll
+          git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
+          git push origin Alpha # Push to the Alpha branch
         shell: bash
