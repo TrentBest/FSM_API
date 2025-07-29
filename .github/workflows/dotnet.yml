@@ -5,13 +5,6 @@ name: .NET
 
 on:
   push:
-    branches: [ # This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
-
-on:
-  push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
@@ -63,7 +56,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x # We want to build for all supported .net, not just 8.0
+          dotnet-version: 8.0.x # Assuming you only want to publish NuGet for the latest .NET version
 
       #- name: Pack
       #  run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
@@ -97,101 +90,6 @@ jobs:
         with:
           name: fsm-api-dll
           path: . # Downloads to the current working directory of this job
-      
-      - name: Create Plugins directory
-        run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
-        shell: bash
-
-      - name: Update DLL in Unity Repo
-        run: |
-          cp FSM_API.dll ./unity_repo/Assets/FSM_API/Plugins/
-        shell: bash
-
-      - name: Commit and Push to Unity Repo
-        run: |
-          cd ./unity_repo
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add Assets/FSM_API/Plugins/FSM_API.dll
-          git commit -m "Automated: Update FSM_API.dll from CI build"
-          git push
-        shell: bash
-"master" ]
-  pull_request:
-    branches: [ "master" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        # We will build and test against both .NET 8 and .NET 3.1 SDKs to be explicit
-        dotnet-version: [ '8.0.x', '3.1.x' ]
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ matrix.dotnet-version }}
-    
-    - name: Restore dependencies
-      # Specify the path to your .csproj file
-      run: dotnet restore FSM_API/FSM_API.csproj
-
-    - name: Build
-      # Specify the path to your .csproj file
-      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
-    
-    - name: Test
-      # Specify the path to your .csproj file
-      run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
-
-  publish_nuget:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      #- name: Pack
-      #  run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-      
-    #  - name: Publish to NuGet.org
-    #    run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
-
-      - name: Upload DLL as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: fsm-api-dll
-          path: FSM_API/bin/Release/net8.0/FSM_API.dll
-          retention-days: 1
-
-  # This job runs only after the 'publish_nuget' job succeeds
-  push_dll:
-    needs: publish_nuget
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-
-    steps:
-      - name: Checkout Unity Integration Repository
-        uses: actions/checkout@v4
-        with:
-          repository: 'TrentBest/FSM_API_Unity'
-          token: ${{ secrets.PAT }}
-          path: './unity_repo'
-
-      - name: Download FSM_API DLL Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: fsm-api-dll
-          path: .
       
       - name: Create Plugins directory
         run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
