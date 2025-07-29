@@ -11,13 +11,13 @@ on:
 
 jobs:
   build:
-    # Changed from ubuntu-latest to ubuntu-20.04 for libssl1.1 compatibility with .NET 3.1
-    runs-on: ubuntu-20.04 
+    # Reverted back to ubuntu-latest as only .NET 8.0.x is being built, which is compatible.
+    runs-on: ubuntu-latest 
     
     strategy:
       matrix:
-        # We will build and test against both .NET 8 and .NET 3.1 SDKs to be explicit
-        dotnet-version: [ '8.0.x', '3.1.x' ]
+        # Building only against .NET 8.0.x as requested
+        dotnet-version: [ '8.0.x' ]
 
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
     
-    # Removed the 'Install libssl1.1' step as ubuntu-20.04 provides it by default.
+    # The 'Install libssl1.1' step is no longer needed as .NET 3.1.x is removed from the matrix.
 
     - name: Restore dependencies
       # Specify the path to your .csproj file
@@ -42,7 +42,6 @@ jobs:
 
   publish_nuget:
     needs: build
-    # You can keep this on ubuntu-latest if your NuGet publishing only uses .NET 8 (as configured below)
     runs-on: ubuntu-latest 
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
@@ -51,7 +50,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x # Assuming you only want to publish NuGet for the latest .NET version
+          dotnet-version: 8.0.x
 
       #- name: Pack
       #  run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
@@ -63,13 +62,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fsm-api-dll
-          path: FSM_API/bin/Release/net8.0/FSM_API.dll # Ensure this path is correct for the .NET 8 build
+          path: FSM_API/bin/Release/net8.0/FSM_API.dll
           retention-days: 1
 
-  # This job runs only after the 'publish_nuget' job succeeds
   push_dll:
     needs: publish_nuget
-    runs-on: ubuntu-latest # Can stay on ubuntu-latest as it only handles artifact pushing
+    runs-on: ubuntu-latest 
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
@@ -84,7 +82,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
-          path: . # Downloads to the current working directory of this job
+          path: .
       
       - name: Create Plugins directory
         run: mkdir -p ./unity_repo/Assets/FSM_API/Plugins/
