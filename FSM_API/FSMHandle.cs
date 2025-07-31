@@ -81,6 +81,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public bool IsValid => Context?.IsValid ?? false;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FSMHandle"/> class.
         /// </summary>
