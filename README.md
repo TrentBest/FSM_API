@@ -4,9 +4,15 @@ The blazing-fast, software-agnostic Finite State Machine system for any C# appli
 
     Designed for flexibility. Built for robustness. Ready for anything.
 
+[![NuGet version](https://img.shields.io/nuget/v/FSM_API?style=flat-square)](https://www.nuget.org/packages/FSM_API/)
+
 🔍 Overview
 
-FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (FSM) system designed to plug directly into any C# application—from enterprise software to games, simulations, robotics, or reactive systems. It provides a powerful and decoupled approach to managing complex state-driven logic, ensuring clarity, consistency, and control across diverse domains.
+FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (FSM) 
+system designed to plug directly into any C# application from enterprise software to 
+games, simulations, robotics, or reactive systems. It provides a powerful and decoupled
+approach to managing complex state-driven logic, ensuring clarity, consistency, and 
+control across diverse domains.
 
     ✅ Thread-safe operations (main thread only, deferred mutation handling)
 
@@ -18,11 +24,16 @@ FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (
 
     🧪 Dynamic update ticking with frame/process throttling
 
-No external dependencies. No frameworks required. No boilerplate setup. Pure C# power for your application's core logic.
+No external dependencies. No frameworks required. No boilerplate setup. Pure C# power for your 
+application's core logic.
+
 
 💡 Why FSM_API?
 
-Traditional FSM systems often suffer from tight coupling to specific environments or force rigid coding patterns. FSM_API liberates your state management:
+
+Traditional FSM systems often suffer from tight coupling to specific environments or force rigid 
+coding patterns. FSM_API liberates your state management:
+
 | Feature                          | FSM_API ✅ | Traditional FSM ❌ |
 |----------------------------------|------------|--------------------|
 | Framework agnostic               | ✅         | ❌                 |
@@ -50,7 +61,7 @@ C#
 // Optional: Create a named processing group for organizing FSM updates
 FSM_API.CreateProcessingGroup("MainLoop");
 
-var fsmDefinition = FSM_API.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
+var fsmDefinition = FSM_API.Create.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
     .State("Off")
         .OnEnter(ctx => { if (ctx is LightSwitch l) l.IsOn = false; }) // Action when entering "Off" state
         .TransitionIf("On", ctx => ctx is LightSwitch l && l.IsOn) // Transition to "On" if IsOn is true
@@ -64,27 +75,37 @@ C#
 ```csharp
 var kitchenLight = new LightSwitch();
 // Associate your context with an FSM instance and assign it to a processing group
-var handle = FSM_API.CreateInstance("LightSwitchFSM", kitchenLight, "MainLoop");
+var handle = FSM_API.Create.CreateInstance("LightSwitchFSM", kitchenLight, "MainLoop");
 ```
 4. Tick the FSM from your application's main loop:
 C#
 ```csharp
 // Process all FSMs in the "MainLoop" group
-FSM_API.Update("MainLoop");
+FSM_API.Interaction.Update("MainLoop");
 ```
 🔧 Core Concepts
 
-    FSMBuilder: Fluently define states, transitions, and associated OnEnter/OnExit actions. This is your declarative interface for FSM construction.
+    FSMBuilder: Fluently define states, transitions, and associated OnEnter/OnExit actions. 
+    This is your declarative interface for FSM construction.
 
-    FSMHandle: Represents a runtime instance of an FSM operating on a specific context. Provides full control over instance lifecycle, including pausing, resetting, and retrieving current state.
+    FSMHandle: Represents a runtime instance of an FSM operating on a specific context. 
+    Provides full control over instance lifecycle, including pausing, resetting, and 
+    retrieving current state.
 
-    IStateContext: The interface your custom data models (Plain Old C# Objects - POCOs) must implement. This ensures clean separation of FSM logic from your application's data.
+    IStateContext: The interface your custom data models (Plain Old C# Objects - POCOs) 
+    must implement. This ensures clean separation of FSM logic from your application's data.
 
-    Processing Groups: Organize and control the update cycles of multiple FSM instances. Ideal for managing FSMs that need to tick together or at different rates (e.g., UI, AI, physics).
+    Processing Groups: Organize and control the update cycles of multiple FSM instances. Ideal 
+    for managing FSMs that need to tick together or at different rates (e.g., UI, AI, physics). 
+     If you were to use the API across multiple threads you would need to ensure context isn't 
+     accessed across different process groups, each process group will itself be sequential...  
 
-    Error Handling: Built-in thresholds and diagnostics prevent runaway logic or invalid state contexts, ensuring application stability without crashing.
+    Error Handling: Built-in thresholds and diagnostics prevent runaway logic or invalid state
+     contexts, ensuring application stability without crashing.
 
-    Thread-Safe by Design: All modifications to FSM definitions and instances are meticulously deferred and processed safely on the main thread post-update, eliminating common concurrency issues.
+    Thread-Safe by Design: All modifications to FSM definitions and instances are meticulously 
+    deferred and processed safely on the main thread post-update, eliminating common concurrency
+     issues.
 
 ## 📦 Features at a Glance
 
@@ -111,15 +132,19 @@ FSM_API.Update("MainLoop");
 
 🤝 Contributing
 
-Contributions welcome! Whether you're integrating FSM_API into your enterprise application, designing new extensions, or just fixing typos, PRs and issues are appreciated.
+Contributions welcome! Whether you're integrating FSM_API into your enterprise application,
+designing new extensions, or just fixing typos, PRs and issues are appreciated.
+
 
 📄 License
 
 MIT License. Use it, hack it, build amazing things with it.
 
+
 🧠 Brought to you by:
 
-The Singularity Workshop — Tools for the curious, the bold, and the systemically inclined.
+
+The Singularity Workshop - Tools for the curious, the bold, and the systemically inclined.
 
 <img src="https://github.com/user-attachments/assets/b94a9412-29f3-4b55-9d07-ddef3b57e082" width="200" alt="Description of the image">
 
