@@ -4,7 +4,7 @@ The blazing-fast, software-agnostic Finite State Machine system for any C# appli
 
     Designed for flexibility. Built for robustness. Ready for anything.
 
-[![NuGet version](https://img.shields.io/nuget/v/FSM_API?style=flat-square)](https://www.nuget.org/packages/FSM_API/)
+[![NuGet version](https://img.shields.io/nuget/v/FSM_API?style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 
 🔍 Overview
 
