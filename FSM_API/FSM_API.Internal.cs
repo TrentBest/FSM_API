@@ -393,7 +393,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 foreach (var bucket in bucketsToTick)
                 {
-                    // Nullability: `bucket` is non-nullable here.
+                    
                     if (bucket.ProcessRate == 0)
                     {
                         continue;
@@ -420,14 +420,10 @@ namespace TheSingularityWorkshop.FSM_API
                         {
                             try
                             {
-                                handle.Update(); // This should be safe now.
+                                handle.Update(); 
                             }
                             catch (Exception ex)
                             {
-                                // Error: The message string here is empty: $""
-                                // This will result in a warning if Error.InvokeInstanceError logs it.
-                                // It should be a descriptive message about the update failure.
-                                // Correct: Passing the handle as FSMHandle? and the exception.
                                 Error.InvokeInstanceError(handle,
                                     $"Error during FSM instance '{handle.Name}' update in state '{handle.CurrentState}'.", // Added a descriptive message
                                     ex, processingGroup);
@@ -435,12 +431,10 @@ namespace TheSingularityWorkshop.FSM_API
                         }
                         else
                         {
-                            // If an instance is null or its context is null/invalid, it should be removed.
-                            // The ternary for `handle==null?null:handle` is correct for passing FSMHandle?
-                            // to InvokeInstanceError.
-                            Error.InvokeInstanceError(handle, // Simpler: `handle` already has proper null state. If it was null, it remains null.
-                                "FSM instance or its context became null/invalid (IsValid returned false). Automatically shutting down due to instability.", // Made message more informative
+                            Error.InvokeInstanceError(handle,
+                                "FSM instance or its context became null/invalid (IsValid returned false). Automatically shutting down due to instability.", 
                                 new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
+
                         }
                     }
                 }
@@ -597,31 +591,20 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 else
                 {
-                    // Iterating over a copy to allow modification (unregistering handles clears them from buckets).
-                    // The .ToList() calls create non-nullable local variables.
-                    var bucks = _buckets.ToList();
-                    foreach (KeyValuePair<string, Dictionary<string, FsmBucket>> processGroupEntry in bucks) // Renamed `processGroup` to `processGroupEntry` for clarity.
+                    foreach (var processGroup in _buckets)
                     {
-                        var buckets = processGroupEntry.Value.Values.ToList();
-                        foreach (FsmBucket bucket in buckets) // `bucket` is non-nullable here.
+                        foreach(var fsmBucket in processGroup.Value)
                         {
-                            var handles = bucket.Instances.ToList(); // Copy to allow modification during iteration.
-                            foreach (var handle in handles) // `handle` is non-nullable here.
+                            foreach (var instance in fsmBucket.Value.Instances)
                             {
-                                // Handle nullability for `handle.Definition`. It's FSM?
-                                // If Definition is null, we can't get InitialState from it.
-                                // We'll use _defaultFSM if bucket.Definition is null.
-                                handle.TransitionTo(handle.Definition?.InitialState ?? _defaultFSM.InitialState);
-                                FSM_API.Interaction.Unregister(handle);
+                                instance.DestroyHandle();
                             }
+                            fsmBucket.Value.Instances.Clear();
                         }
+                        processGroup.Value.Clear();
                     }
-                    // _buckets.Clear() here is correct, as all handles are unregistered, and this
-                    // empties the top-level dictionary of groups and their buckets.
                     _buckets.Clear();
                 }
-                _deferredModifications.Clear();
-                Error.Reset();
             }
 
             // No XML comment needed for the blank line.
@@ -705,6 +688,155 @@ namespace TheSingularityWorkshop.FSM_API
                 // Better way to do this if you just want the keys:
                 return _buckets.Keys.ToList();
             }
+
+            /// <summary>
+            /// Retrieves a specific <see cref="FSMHandle"/> for a given FSM definition, context, and processing group.
+            /// </summary>
+            /// <remarks>
+            /// This method provides a way to get a live handle to an FSM instance using its unique context object.
+            /// It's a useful utility for systems that need to interact directly with a specific FSM instance
+            /// and its state. The method ensures that all components (processing group, FSM definition, and instance)
+            /// exist before returning a valid handle.
+            /// </remarks>
+            /// <param name="fsmDefinitionName">The name of the FSM definition to which the handle belongs.</param>
+            /// <param name="context">The unique context object associated with the FSM instance.</param>
+            /// <param name="processingGroup">The processing group the FSM instance is registered under.</param>
+            /// <returns>
+            /// The <see cref="FSMHandle"/> object if a match is found; otherwise, <c>null</c>.
+            /// </returns>
+            public static FSMHandle GetFSMHandle(string fsmDefinitionName, IStateContext context, string processingGroup)
+            {
+                // Check if the processing group exists first. This is a quick and safe exit.
+                if (_buckets.TryGetValue(processingGroup, out var buckets))
+                {
+                    // Now, try to find the bucket for the specific FSM definition name.
+                    if (buckets.TryGetValue(fsmDefinitionName, out var bucket))
+                    {
+                        // Finally, search for the FSMHandle with the matching context.
+                        // Using FirstOrDefault is a good approach here.
+                        var handle = bucket.Instances.FirstOrDefault(h => h.Context == context);
+
+                        // If a handle is found, return it.
+                        if (handle != null)
+                        {
+                            return handle;
+                        }
+                    }
+                }
+
+                // If any of the checks failed, or no matching handle was found, return null.
+                // This is the "error" or "not found" condition you were missing.
+                return null;
+            }
+
+            /// <summary>
+            /// Destroys a complete FSM definition and all of its active instances.
+            /// </summary>
+            /// <remarks>
+            /// This is a critical method for cleaning up the FSM system. It first gracefully
+            /// shuts down all active instances and then removes the FSM definition itself
+            /// from the API's internal registry.
+            /// <para>
+            /// It avoids the common "collection modified" error by first creating a temporary
+            /// list of all instances to be destroyed, and then iterating over that new list.
+            /// </para>
+            /// </remarks>
+            /// <param name="fsmDefinitionName">The unique name of the FSM definition to destroy.</param>
+            /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
+            public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup)
+            {
+                // Input validation.
+                if (string.IsNullOrWhiteSpace(fsmDefinitionName))
+                {
+                    Error.InvokeInternalApiError("Cannot destroy FSM definition with a null or empty name.", null);
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    Error.InvokeInternalApiError("Cannot destroy FSM definition from a null or empty processing group.", null);
+                    return;
+                }
+
+                // Retrieve the FsmBucket containing the definition and its instances.
+                // Use a try-get pattern to avoid exceptions if the group or FSM doesn't exist.
+                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var groupBuckets) ||
+                    !groupBuckets.TryGetValue(fsmDefinitionName, out var fsmBucket))
+                {
+                    // The FSM doesn't exist, so there's nothing to destroy.
+                    return;
+                }
+
+                // CRITICAL FIX: The `foreach` loop cannot modify the collection it is iterating over.
+                // We create a temporary copy of the instances list to avoid the
+                // `InvalidOperationException` that happens when we call DestroyInstance.
+                var instancesToDestroy = fsmBucket.Instances.ToList();
+
+                // Iterate over the temporary list and destroy each instance.
+                // The DestroyInstance method will remove the handles from the ORIGINAL collection.
+                foreach (var handle in instancesToDestroy)
+                {
+                    DestroyInstance(handle);
+                }
+
+                // After all instances are destroyed, we can safely remove the FSM bucket itself.
+                groupBuckets.Remove(fsmDefinitionName);
+
+                // If the group is now empty, clean it up.
+                if (!groupBuckets.Any())
+                {
+                    Internal.GetBuckets().Remove(processingGroup);
+                }
+
+                // Reset the error count for this definition.
+                Error.ResetDefinitionErrorCount(fsmDefinitionName);
+            }
+
+            /// <summary>
+            /// Safely and efficiently destroys a single FSM instance using its handle.
+            /// </summary>
+            /// <remarks>
+            /// This method directly indexes into the internal data structures using
+            /// the FSMHandle's metadata to avoid inefficient and unsafe collection
+            /// enumeration. It performs the necessary cleanup actions such as
+            /// invoking the OnExit state logic and clearing error counts.
+            /// </remarks>
+            /// <param name="handle">The FSMHandle instance to destroy.</param>
+            public static void DestroyInstance(FSMHandle handle)
+            {
+                if (handle == null)
+                {
+                    Error.InvokeInternalApiError("Cannot destroy a null FSMHandle instance.", null);
+                    return;
+                }
+
+                try
+                {
+                    var bucket = Internal.GetBuckets()[handle.Definition.ProcessingGroup][handle.Definition.Name];
+                    if (bucket.Instances.Remove(handle))
+                    {
+                        handle.DestroyHandle();
+                        Error.GetErrorCounts().Remove(handle);
+                    }
+                    else
+                    {
+                        Error.InvokeInternalApiError(
+                            $"FSMHandle '{handle.Name}' was not found in its expected bucket " +
+                            $"'{handle.Definition.Name}' within processing group '{handle.Definition.ProcessingGroup}'. " +
+                            "It may have already been unregistered.",
+                            null
+                        );
+                    }
+                }
+                catch (KeyNotFoundException)
+                {
+                    Error.InvokeInternalApiError(
+                        $"FSM definition or processing group for instance '{handle.Name}' could not be found. " +
+                        "The instance may have already been unregistered.",
+                        null
+                    );
+                }
+            }
         }
     }
+    
 }

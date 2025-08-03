@@ -69,11 +69,11 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
                 }
 
-                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
+                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var bucket))
                 {
                     return false;
                 }
-                return categoryBuckets.ContainsKey(fsmName);
+                return bucket.ContainsKey(fsmName);
             }
 
             /// <summary>
@@ -232,7 +232,7 @@ namespace TheSingularityWorkshop.FSM_API
                         // Explicitly shut down each instance before clearing
                         foreach (var instance in bucket.Instances)
                         {
-                            instance.ShutDown(); // Call ShutDown to trigger OnExit logic
+                            instance.DestroyHandle(); // Call DestroyHandle to trigger OnExit logic
                             Error.GetErrorCounts().Remove(instance);
                         }
                         bucket.Instances.Clear();
@@ -253,7 +253,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             /// <remarks>
             /// This is a **destructive operation** for a specific FSM type. All current instances
-            /// of this FSM definition will cease to be managed by the API. Their <see cref="FSMHandle.ShutDown"/>
+            /// of this FSM definition will cease to be managed by the API. Their <see cref="FSMHandle.DestroyHandle"/>
             /// method will be called to ensure proper <c>OnExit</c> logic is executed.
             /// Memory will then be eligible for garbage collection once all external references are released.
             /// If the FSM definition or group does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
@@ -291,10 +291,10 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                // Call ShutDown on all instances before clearing
+                // Call DestroyHandle on all instances before clearing
                 foreach (var instance in bucket.Instances)
                 {
-                    instance.ShutDown(); // Call ShutDown to trigger OnExit logic
+                    instance.DestroyHandle(); // Call DestroyHandle to trigger OnExit logic
                     Error.GetErrorCounts().Remove(instance);
                 }
                 bucket.Instances.Clear();
@@ -315,7 +315,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// or is being destroyed (e.g., a game object being despawned), but its FSM definition
             /// might still be in use by other instances.
             /// <para>
-            /// The instance's <see cref="FSMHandle.ShutDown"/> method will be called to ensure
+            /// The instance's <see cref="FSMHandle.DestroyHandle"/> method will be called to ensure
             /// any <c>OnExit</c> logic for its current state is executed before it is removed
             /// from management.
             /// </para>
@@ -328,41 +328,43 @@ namespace TheSingularityWorkshop.FSM_API
             /// <exception cref="ArgumentNullException">
             /// Thrown if the provided <paramref name="instance"/> is <c>null</c>.
             /// </exception>
-            public static void Unregister(FSMHandle instance)
+            public static void DestroyInstance(FSMHandle instance)
             {
                 if (instance == null)
                 {
                     throw new ArgumentNullException(nameof(instance), "Cannot unregister a null FSM instance.");
                 }
 
-                bool removed = false;
-                // Iterate through all processing groups
-                foreach (var categoryKvp in Internal.GetBuckets())
-                {
-                    // Iterate through all FSM definitions within each processing group
-                    foreach (var fsmBucket in categoryKvp.Value.Values)
-                    {
-                        // Attempt to remove the instance from the processGroup's list of instances
-                        if (fsmBucket.Instances.Remove(instance))
-                        {
-                            removed = true;
-                            // Call ShutDown to trigger OnExit logic
-                            instance.ShutDown();
-                            // Also remove its error count entry if it exists
-                            Error.GetErrorCounts().Remove(instance);
-                            return; // Instance found and removed, exit early.
-                        }
-                    }
-                }
+                Internal.DestroyInstance(instance);
 
-                if (!removed)
-                {
-                    // Log a warning if the instance wasn't found, indicating it might have already been removed.
-                    Error.InvokeInternalApiError(
-                        $"FSMHandle '{instance.Name}' not found in any registered FSM in any group for unregistration. It might have already been unregistered or was never registered.",
-                        null
-                    );
-                }
+                //bool removed = false;
+                //// Iterate through all processing groups
+                //foreach (var processingGroup in Internal.GetBuckets())
+                //{
+                //    // Iterate through all FSM definitions within each processing group
+                //    foreach (var fsmBucket in processingGroup.Value.Values)
+                //    {
+                //        // Attempt to remove the instance from the processGroup's list of instances
+                //        if (fsmBucket.Instances.Remove(instance))
+                //        {
+                //            removed = true;
+                //            // Call DestroyHandle to trigger OnExit logic
+                //            instance.DestroyHandle();
+                //            // Also remove its error count entry if it exists
+                //            Error.GetErrorCounts().Remove(instance);
+                //            return; // Instance found and removed, exit early.
+                //        }
+                //    }
+                //}
+
+                //if (!removed)
+                //{
+                //    // Log a warning if the instance wasn't found, indicating it might have already been removed.
+                //    Error.InvokeInternalApiError(
+                //        $"FSMHandle '{instance.Name}' not found in any registered FSM in any group for unregistration. It might have already been unregistered or was never registered.",
+                //        null
+                //    );
+                //}
             }
 
 
@@ -644,6 +646,28 @@ namespace TheSingularityWorkshop.FSM_API
                 
                 new FSMModifier(fsm).WithoutTransition(fromState, toState)
                    .ModifyDefinition();
+            }
+
+            /// <summary>
+            /// Retrieves a live <see cref="FSMHandle"/> for a specific FSM instance.
+            /// </summary>
+            /// <remarks>
+            /// This is the primary public method to access an existing, running FSM instance.
+            /// It uses the provided FSM name, the unique context object associated with the instance,
+            /// and its processing group to locate and return the correct handle. This allows you
+            /// to check the FSM's current state or manually trigger a transition from outside
+            /// of the FSM's own logic.
+            /// </remarks>
+            /// <param name="fsmDefinitionName">The name of the FSM blueprint, e.g., "PlayerMovementFSM".</param>
+            /// <param name="context">The unique context object (e.g., your character controller or enemy AI object)
+            /// that identifies a specific FSM instance.</param>
+            /// <param name="processingGroup">The name of the group that this FSM instance belongs to.</param>
+            /// <returns>
+            /// A valid <see cref="FSMHandle"/> if a matching instance is found; otherwise, <c>null</c>.
+            /// </returns>
+            public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processGroup)
+            {             
+                return Internal.GetFSMHandle(testFsmName, context, processGroup);
             }
 
 

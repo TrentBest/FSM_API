@@ -125,7 +125,7 @@ namespace TheSingularityWorkshop.FSM_API
                         );
                         // Record a definition error before shutting down the instance
                         InvokeDefinitionError(handle.Definition.Name, processGroup);
-                        handle.ShutDown(); // This will unregister the handle
+                        handle.DestroyHandle(); // This will unregister the handle
                         _errorCounts.Remove(handle); // Clean up error count for this handle
                     });
                 }

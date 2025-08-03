@@ -399,5 +399,7 @@ namespace MyReviewerShowcaseFSM
             }
             Console.Write("Your action: ");
         }
+
+        public bool HasEntered { get; set; }
     }
 }

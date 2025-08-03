@@ -4,114 +4,143 @@ using System.Linq;
 namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
-    /// Represents a live, lightweight accessor to a running Finite State Machine (FSM) instance.
-    /// <para>
-    /// This handle is the primary interface for external systems to interact with a specific FSM instance.
-    /// It allows you to query the FSM's <see cref="CurrentState"/>, trigger manual transitions,
-    /// and manage its lifecycle. It also provides direct access to the underlying <see cref="IStateContext"/>
-    /// for scenarios where explicit manipulation by a controlling script is necessary.
-    /// </para>
+    /// This is your direct link, or **"handle,"** to a specific, live FSM (Finite State Machine) instance. 🎮
+    /// Think of it as the remote control for one particular character or object that's using an FSM.
     /// </summary>
     /// <remarks>
-    /// **Preferred Usage Pattern (Lower Risk):**
-    /// For most FSM interactions, it is highly recommended to primarily query the FSM's behavior
-    /// by checking its <see cref="CurrentState"/> (e.g., <c>if (handle.CurrentState == "Init") { /* ... */ }</c>).
-    /// This approach maintains the FSM's internal control over state transitions and context modifications.
-    ///
-    /// **Direct Context Access (Higher Risk / Advanced Use):**
-    /// While direct access to the <see cref="Context"/> property is provided (e.g., <c>handle.Context.SomeProperty = value;</c>),
-    /// this is intended for specific "controlling script" scenarios where direct manipulation or
-    /// even reassignment of the context object is required. Be aware that modifying the context
-    /// directly outside of the FSM's defined state actions (<c>OnEnter</c>, <c>OnUpdate</c>, <c>OnExit</c>)
-    /// can bypass intended FSM logic and potentially lead to unexpected behavior if not managed carefully.
+    /// This handle is how you, as a game designer or system integrator, will typically interact with an FSM
+    /// that's currently running. It allows you to:
+    /// <list type="bullet">
+    ///     <item>Find out **what state** the FSM is currently in (<see cref="CurrentState"/>).</item>
+    ///     <item>Tell the FSM to **change states immediately** (<see cref="TransitionTo(string)"/>).</item>
+    ///     <item>And generally **manage** its life (like starting or stopping it).</item>
+    /// </list>
+    /// <para>
+    /// It also gives you access to the FSM's <see cref="IStateContext"/>, which holds all the unique data
+    /// for *this specific FSM instance*.
+    /// </para>
+    /// 
+    /// **Tips for Using Your FSM Handle:**
+    /// <list type="bullet">
+    ///     <item>
+    ///         ✅ **Safest Way:** Mostly, you'll just want to **check the FSM's <see cref="CurrentState"/>**.
+    ///         For example: `if (myCharacter.CurrentState == "Idle") { /* do something */ }`.
+    ///         This lets the FSM handle its own internal changes, which is generally best.
+    ///     </item>
+    ///     <item>
+    ///         ⚠️ **Advanced Use (Use with Care!):** You *can* directly access and change the
+    ///         <see cref="Context"/> (e.g., `myCharacter.Context.Health = 10;`). This is powerful,
+    ///         but it means you're stepping outside the FSM's own defined rules, so be careful not to
+    ///         break its intended behavior! Usually, context changes happen *inside* your FSM's
+    ///         state actions (<c>OnEnter</c>, <c>OnUpdate</c>, <c>OnExit</c>).
+    ///     </item>
+    /// </list>
     /// </remarks>
     public class FSMHandle
     {
         /// <summary>
-        /// Gets the underlying Finite State Machine definition this handle refers to.
-        /// This provides access to the FSM's immutable structure (states, transitions).
+        /// This is the original **blueprint (definition)** of the FSM that this handle is controlling.
         /// </summary>
         /// <remarks>
-        /// This is a read-only field, set once at the time of instance creation.
-        /// While providing access to the FSM's definition, typical interaction should
-        /// be via this <see cref="FSMHandle"/> instance.
+        /// It's like having the architectural plans for a house. You can look at them to understand
+        /// the house's design (its states and transitions), but you can't change the house by
+        /// drawing on these plans here. This is set when the FSM instance is first created.
         /// </remarks>
 
         public readonly FSM Definition;
 
         /// <summary>
-        /// Gets or sets the context object associated with this FSM instance.
-        /// The context object holds the application-specific data and methods that the FSM operates on.
-        /// It must implement the <see cref="IStateContext"/> interface.
+        /// This is the **data bag** 🎒 (context) specific to *this particular* FSM instance.
         /// </summary>
         /// <remarks>
-        /// This property allows direct access to, and even reassignment of, the <see cref="IStateContext"/>
-        /// instance. While powerful for "controlling scripts" that need to explicitly manage the context,
-        /// it is generally recommended that modifications to the context's *data* are performed by
-        /// the FSM's state actions (<c>OnEnter</c>, <c>OnUpdate</c>, <c>OnExit</c> methods within your
-        /// <see cref="FSMState"/> definitions). Direct external manipulation of the context
-        /// can bypass the FSM's intended flow and should be used with caution and a clear understanding
-        /// of its implications on the FSM's integrity.
+        /// It holds all the changing information that your FSM's actions need to read from or write to
+        /// (like a character's health, speed, or inventory). This "data bag" must follow the rules
+        /// of the <see cref="IStateContext"/> interface.
+        /// <para>
+        /// You *can* directly change this context data here (e.g., `handle.Context.Score = 100;`).
+        /// However, it's generally safer and clearer if these changes happen through the
+        /// FSM's own `OnEnter`, `OnUpdate`, or `OnExit` actions for each state.
+        /// Changing it directly from outside might bypass your FSM's carefully planned logic!
+        /// </para>
         /// </remarks>
-
         public IStateContext Context { get; set; }
 
         /// <summary>
-        /// Gets the current state of this FSM instance.
-        /// <para>
-        /// **This is the preferred and safest way to query the FSM's current behavior.**
-        /// It allows you to react to the FSM's state without directly manipulating its context.
-        /// </para>
+        /// This tells you the **current state name** of this FSM instance.
         /// </summary>
         /// <remarks>
-        /// This property is updated internally by the FSM's <see cref="Update"/> and <see cref="TransitionTo"/> methods.
+        /// For example, if your FSM is for a character, this might tell you "Idle," "Walking," or "Jumping."
+        /// This is the **best and safest way** to check what your FSM is doing.
+        /// This state name is updated automatically when the FSM moves between states.
         /// </remarks>
         public string CurrentState { get; private set; }
 
         /// <summary>
-        /// Gets the name of the FSM definition that this handle is an instance of.
-        /// This is a convenience property that retrieves the name directly from the underlying FSM definition.
+        /// This is the **name of the FSM blueprint** that this handle is using.
         /// </summary>
+        /// <remarks>
+        /// It's a quick way to get the name from the <see cref="Definition"/> blueprint itself.
+        /// </remarks>
         public string Name => Definition.Name;
 
         /// <summary>
-        /// Gets a value indicating whether this FSMHandle is currently valid and active.
-        /// Validity is determined by whether its <see cref="Context"/> is not null and its
-        /// <see cref="IStateContext.IsValid"/> property returns <c>true</c>.
+        /// Tells you if this FSM handle is currently **active and ready to be used**.
         /// </summary>
+        /// <remarks>
+        /// It's considered `true` if its <see cref="Context"/> (data bag) is not empty
+        /// and that context itself reports that it's valid.
+        /// </remarks>
         public bool IsValid => Context?.IsValid ?? false;
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FSMHandle"/> class.
+        /// Sets up a new FSM handle, linking it to an FSM blueprint and its specific data.
         /// </summary>
-        /// <param name="definition">The <see cref="FSM"/> definition this handle will represent.</param>
-        /// <param name="context">The <see cref="IStateContext"/> object that this FSM instance will operate on.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="definition"/> or <paramref name="context"/> is null.</exception>
+        /// <remarks>
+        /// When you create an FSM handle:
+        /// <list type="bullet">
+        ///     <item>It needs an `FSM` <paramref name="definition"/> (the blueprint).</item>
+        ///     <item>It needs a `context` (the data bag) specific to this running instance.</item>
+        /// </list>
+        /// The FSM will immediately enter its <see cref="FSM.InitialState"/> as defined in its blueprint.
+        /// </remarks>
+        /// <param name="definition">The blueprint (<see cref="FSM"/>) for this FSM instance.</param>
+        /// <param name="context">The data bag (<see cref="IStateContext"/>) for this specific FSM instance.</param>
+        /// <exception cref="ArgumentNullException">
+        /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
+        /// or without a data bag (`context` is `null`).
+        /// </exception>
         public FSMHandle(FSM definition, IStateContext context)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition), "FSM definition cannot be null for FSMHandle.");
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");
 
             CurrentState = Definition.InitialState;
-            Definition.EnterInitial(Context);
+            //Definition.EnterInitial(Context);
         }
 
         /// <summary>
-        /// Advances the FSM instance by one logical step. This involves executing the 'OnUpdate'
-        /// action of the <see cref="CurrentState"/> and evaluating all defined transitions
-        /// from the <see cref="CurrentState"/>. If a valid transition is found, the FSM will
-        /// move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.
+        /// Tells this FSM instance to take one **"step"** or "tick" forward. 🏃
         /// </summary>
-        /// <param name="processGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
         /// <remarks>
-        /// **CAUTION:** This method is primarily intended to be called by the FSM_API's internal
-        /// tick loop or an equivalent periodic update mechanism within your application.
-        /// Directly calling <c>Update()</c> manually should only be done by those who
-        /// have a deep understanding of the FSM's internal processing and lifecycle.
-        /// Incorrect manual invocation can lead to unexpected state behavior or performance issues.
-        /// Use with extreme care and only when building a highly customized update scheduler.
+        /// During this step:
+        /// <list type="bullet">
+        ///     <item>The `OnUpdate` action of its <see cref="CurrentState"/> will run.</item>
+        ///     <item>It will then check if any transition rules are met to move to a new state.</item>
+        /// </list>
+        /// If a transition rule is met, the FSM will exit its current state and enter the new one,
+        /// and its <see cref="CurrentState"/> will be updated.
+        /// <para>
+        /// **IMPORTANT: Usually, you won't call this directly!** This method is typically called
+        /// automatically by the FSM_API's internal system on a regular schedule (like every frame in a game).
+        /// Only call this manually if you're building a very specific or custom update system for your FSMs.
+        /// Calling it incorrectly can lead to unexpected behavior.
+        /// </para>
         /// </remarks>
+        /// <param name="processGroup">
+        /// An optional name for the group this FSM belongs to, mainly used for error reporting.
+        /// It defaults to "Update".
+        /// </param>
         public void Update(string processGroup = "Update")
         {
             try
@@ -129,18 +158,27 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Forces an immediate transition of the FSM to a specified state,
-        /// bypassing normal transition conditions.
+        /// **Forces** this FSM instance to immediately change to a specific state,
+        /// ignoring any normal transition rules. 🛑
         /// </summary>
-        /// <param name="nextStateName">The name of the state to transition to.</param>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="nextStateName"/> is null or empty,
-        /// or if the target state does not exist within the FSM definition.</exception>
         /// <remarks>
-        /// Use this method with caution, as forcing a transition may bypass intended FSM logic
-        /// and potentially put the FSM into an unexpected state if conditions are not met.
-        /// This method will execute the 'Exit' action of the current state and
-        /// the 'Enter' action of the target state.
+        /// Use this when you need absolute control, like manually setting a character's
+        /// state to "Dead" regardless of what they were doing.
+        /// <para>
+        /// When you force a transition, the FSM will:
+        /// <list type="bullet">
+        ///     <item>Run the `OnExit` action of its current state.</item>
+        ///     <item>Immediately run the `OnEnter` action of the <paramref name="nextStateName"/>.</item>
+        /// </list>
+        /// </para>
+        /// **Caution:** Bypassing normal FSM logic can sometimes lead to unexpected results
+        /// if the target state isn't ready for a sudden jump.
         /// </remarks>
+        /// <param name="nextStateName">The name of the state you want the FSM to jump to.</param>
+        /// <exception cref="ArgumentException">
+        /// This happens if the `nextStateName` is empty, or if that state doesn't exist
+        /// in your FSM's blueprint.
+        /// </exception>
         public void TransitionTo(string nextStateName)
         {
             if (string.IsNullOrWhiteSpace(nextStateName))
@@ -164,12 +202,16 @@ namespace TheSingularityWorkshop.FSM_API
 
 
         /// <summary>
-        /// Resets the FSM instance to its initial state as defined by its <see cref="FSM.InitialState"/>.
+        /// Resets this FSM instance back to its **very first state** (the <see cref="FSM.InitialState"/>)
+        /// as defined in its blueprint. ↩️
         /// </summary>
         /// <remarks>
-        /// This method forces a transition from the current state to the FSM's initial state,
-        /// triggering the 'Exit' action of the current state and the 'Enter' action of the initial state.
-        /// It effectively restarts the FSM's state machine logic, useful for resetting complex behaviors.
+        /// This is like pressing a "restart" button for this specific FSM. It will:
+        /// <list type="bullet">
+        ///     <item>Run the `OnExit` action of its current state.</item>
+        ///     <item>Then run the `OnEnter` action of its initial state.</item>
+        /// </list>
+        /// This is very useful for getting a complex FSM back to a known starting point.
         /// </remarks>
         public void ResetFSMInstance()
         {
@@ -178,32 +220,50 @@ namespace TheSingularityWorkshop.FSM_API
 
 
         /// <summary>
-        /// Shuts down and unregisters this FSM instance from the API's internal management system.
+        /// Shuts down this FSM instance, removing it from the API's internal system. 🚫
         /// </summary>
         /// <remarks>
-        /// This method is crucial for proper resource management, especially in long-running applications
-        /// or scenarios with many FSM instances. It ensures that the FSM is no longer processed by any
-        /// internal update loops and is removed from memory. After calling <c>ShutDown()</c>, this
-        /// <see cref="FSMHandle"/> instance should be considered invalid and should not be used for
-        /// further operations. It delegates the actual unregistration and cleanup to
-        /// <see cref="FSM_API.Interaction.Unregister(FSMHandle)"/>.
+        /// This is extremely important for cleaning up and freeing up computer resources,
+        /// especially if you have many FSMs running or if your application runs for a long time.
+        /// After you call `DestroyHandle()`, this FSM handle will no longer be active or managed
+        /// by the FSM_API, and you should not try to use it anymore.
+        /// It tells the <see cref="FSM_API.Interaction.DestroyInstance(FSMHandle)"/> system to do the actual cleanup.
         /// </remarks>
-        internal void ShutDown()
+        internal void DestroyHandle()
         {
-            FSM_API.Interaction.Unregister(this);
+            if (Definition != null && !string.IsNullOrEmpty(CurrentState))
+            {
+                // Try to get the current state object.
+                var currentStateObject = Definition.GetState(CurrentState);
+
+                // If the state object is found, call its Exit method.
+                // This handles cases where an instance's state might be
+                // a stale string name for a state that no longer exists in the definition.
+                if (currentStateObject != null)
+                {
+                    currentStateObject.Exit(Context);
+                }
+            }
+
+            // Always invalidate the context, regardless of whether a state was successfully exited.
+            // We add a null check for Context just in case.
+            if (Context != null)
+            {
+                Context.IsValid = false;
+            }
         }
 
         /// <summary>
-        /// Explicitly evaluates the outgoing transition conditions from the FSM instance's current state.
+        /// Manually checks all the rules (conditions) for leaving the FSM's <see cref="CurrentState"/>.
         /// </summary>
         /// <remarks>
-        /// This method is intended for manual or event-driven FSM progression,
-        /// especially when the FSM's <see cref="FSMModifier.WithProcessRate"/> is set to <c>0</c> (event-driven).
+        /// This method is particularly useful if your FSM is set up to *not* automatically update
+        /// (meaning its `ProcessRate` in the FSM blueprint is set to `0`). In such cases,
+        /// you would call `EvaluateConditions()` yourself whenever something happens that
+        /// might cause a state change (like a player pressing a button, or an enemy seeing you).
         /// <para>
-        /// It iterates through all transitions originating from the <see cref="CurrentState"/> and
-        /// attempts to execute the first transition whose condition evaluates to <c>true</c>.
-        /// If a transition occurs, the FSM instance's <see cref="CurrentState"/> will change,
-        /// and the corresponding <c>OnExit</c> and <c>OnEnter</c> actions will be invoked.
+        /// If a transition's condition is met, the FSM will move to that new state.
+        /// Only the *first* transition whose condition is true will be taken in a single evaluation.
         /// </para>
         /// </remarks>
         public void EvaluateConditions()

@@ -5,47 +5,35 @@ using System.Linq;
 namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
-    /// Provides a highly intuitive and fluent API for defining the structure and behavior of a Finite State Machine (FSM).
+    /// This is your **primary tool for creating and setting up new FSMs (Finite State Machines)**. 🛠️
+    /// Think of it as a special "construction kit" that lets you easily build complex FSM blueprints step-by-step.
     /// </summary>
     /// <remarks>
-    /// The <see cref="FSMBuilder"/> serves as the cornerstone for crafting your FSM definitions.
-    /// It embodies a **primary core user-friendly approach**, allowing for the very easy and intuitive
-    /// expression of complex FSM logic. Its design enables a **non-coder to actually derive the definitions
-    /// and scaffold the state methods**, making powerful state machine design accessible to a wider audience.
+    /// The <see cref="FSMBuilder"/> is designed to be very **user-friendly**, allowing you to define
+    /// how your FSM works in a clear, flowing way (this is called a "fluent API").
+    /// Even if you're not a seasoned coder, you can use this builder to:
+    /// <list type="bullet">
+    ///     <item>Define each **state** the FSM can be in (like "Idle" or "Running").</item>
+    ///     <item>Set up the **rules (transitions)** for moving between these states.</item>
+    ///     <item>Choose the FSM's **starting state**.</item>
+    ///     <item>And decide **how often** the FSM should check its rules.</item>
+    /// </list>
     /// <para>
-    /// FSM definitions are typically established during an application's initialization phase. It's a common pattern
-    /// to first check if an FSM by a specific name already <see cref="FSM_API.Interaction.Exists(string,string)"/>; if not, you
-    /// then proceed to define it using this builder. Once an FSM is defined, it exists as an "Idea" or a
-    /// blueprint. Nothing happens until you explicitly create instances of it by obtaining <see cref="FSMHandle"/>s
-    /// for specific contexts (e.g., your game entities).
+    /// You typically use this builder once during your application's setup to create the FSM's blueprint.
+    /// After the blueprint is built, you then create **instances** of that FSM using an <see cref="FSMHandle"/>
+    /// to actually make things happen in your game or application.
     /// </para>
     /// <para>
-    /// Through its fluent API, you can incrementally add states, define precise transitions between them,
-    /// set the FSM's initial starting state, and configure crucial runtime parameters. The method chaining
-    /// results in highly readable and self-documenting FSM blueprints, clearly articulating "what" your
-    /// system does at each stage. Runtime definition or modification of FSMs is also perfectly supported.
-    /// </para>
-    /// <para>
-    /// Once fully configured, the <see cref="BuildDefinition"/> method finalizes this blueprint and
-    /// registers it with the <see cref="FSM_API"/> system. This registration makes your FSM ready to be
-    /// instantiated into live, operational FSM instances that drive your application's logic.
-    /// When an <see cref="FSMHandle"/> is created from a defined FSM, the <see cref="State(string, Action{IStateContext}, Action{IStateContext}, Action{IStateContext})"/>'s
-    /// `onEnter` method for its initial state is immediately invoked.
-    /// </para>
-    /// <para>
-    /// Instances of this builder are typically obtained through the convenient factory methods
-    /// provided by <see cref="FSM_API.Create"/>, such as
-    /// <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/> for new definitions,
-    /// or by initializing with an existing <see cref="FSM"/> definition using <see cref="FSMBuilder.FSMBuilder(FSM)"/>
-    /// to alter existing ones.
-    /// For FSMs that are no longer needed, use <see cref="FSM_API.Interaction.DestroyFiniteStateMachine(string, string)"/> to remove the definition
-    /// and any associated handles. Individual handles can be <see cref="FSM_API.Interaction.Unregister(FSMHandle)"/>ed.
+    /// The methods in this builder are designed to be "chained" together, making your FSM definitions
+    /// very readable, almost like telling a story of how your FSM behaves.
+    /// Once you're done setting everything up, you call <see cref="BuildDefinition"/> to save your
+    /// FSM blueprint and make it available for use.
     /// </para>
     /// <example>
-    /// A simple FSM definition using the <see cref="FSMBuilder"/> to model player states:
+    /// Here's a simple example of building an FSM for a player character, showing how readable it can be:
     /// <code><![CDATA[
-    /// // Define a custom context for player-specific data that states and transitions can access.
-    /// // This is how state-specific logic can interact with the broader game world/object.
+    /// // First, define a "context" (a data bag) for your player FSM.
+    /// // This is where you'll store specific player information like if they are moving or jumping.
     /// public class PlayerContext : IStateContext
     /// {
     ///     public string PlayerName { get; set; } = "Hero";
@@ -53,36 +41,37 @@ namespace TheSingularityWorkshop.FSM_API
     ///     public bool HasJumped { get; set; } = false;
     /// }
     ///
-    /// // Example usage: Define a "PlayerFSM" that updates 60 times per second
-    /// // and belongs to the "GameLoop" processing group.
+    /// // Now, use the FSMBuilder to create your "PlayerFSM" blueprint.
+    /// // We want it to update 60 times per second and be part of the "GameLoop" group.
     /// FSM_API.Create.CreateFiniteStateMachine("PlayerFSM", 60, "GameLoop")
-    ///     // Define the "Idle" state and its behaviors
+    ///     // Define the "Idle" state: what happens when entering, during updates, and when exiting.
     ///     .State("Idle",
     ///         onEnter: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} is now Idle."),
-    ///         onUpdate: (ctx) => { /* Logic to check for player input to move or jump */ },
+    ///         onUpdate: (ctx) => { /* Check for player input to move or jump */ },
     ///         onExit: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} stopped being Idle."))
-    ///     // Define the "Moving" state
+    ///     // Define the "Moving" state.
     ///     .State("Moving",
     ///         onEnter: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} started Moving."),
     ///         onUpdate: (ctx) => { /* Handle continuous movement, check if player stops or jumps */ },
     ///         onExit: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} stopped Moving."))
-    ///     // Define the "Jumping" state
+    ///     // Define the "Jumping" state.
     ///     .State("Jumping",
     ///         onEnter: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} is Jumping!"),
     ///         onUpdate: (ctx) => { /* Apply jump physics, check for landing */ },
     ///         onExit: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} landed."))
-    ///     // Set the starting state for any new FSM instance based on this blueprint
+    ///     // Tell the FSM that "Idle" is the very first state a new instance will start in.
     ///     .WithInitialState("Idle")
-    ///     // Define transitions based on conditions evaluated against the PlayerContext
+    ///     // Set up the rules (transitions) for how the FSM moves between states.
+    ///     // These conditions check the player's data in the PlayerContext.
     ///     .Transition("Idle", "Moving", (ctx) => ((PlayerContext)ctx).IsMoving)
     ///     .Transition("Moving", "Idle", (ctx) => !((PlayerContext)ctx).IsMoving)
     ///     .Transition("Moving", "Jumping", (ctx) => ((PlayerContext)ctx).HasJumped)
     ///     .Transition("Idle", "Jumping", (ctx) => ((PlayerContext)ctx).HasJumped)
-    ///     // An 'Any-State' transition: from *any* current state, transition to "Idle"
-    ///     // if the player has jumped AND is no longer moving (e.g., they landed and stopped)
+    ///     // This is an "Any-State" transition: from *any* current state, if the player
+    ///     // has jumped AND is no longer moving, transition back to "Idle" (e.g., they landed).
     ///     .Transition(FSM.AnyStateIdentifier, "Idle", (ctx) => ((PlayerContext)ctx).HasJumped && !((PlayerContext)ctx).IsMoving)
-    ///     // Finalize the definition and register it with the FSM system
-    ///     .ModifyDefinition();
+    ///     // Finish building and save this FSM blueprint so you can create live instances from it.
+    ///     .BuildDefinition();
     /// ]]></code>
     /// </example>
     /// </remarks>
@@ -95,21 +84,18 @@ namespace TheSingularityWorkshop.FSM_API
         private readonly List<FSMTransition> _transitions = new List<FSMTransition>();
         private string _initialState;
         private string _processGroup = "Update";
+        private readonly List<FSMTransition> _anyTransitions = new List<FSMTransition>();
 
         /// <summary>
-        /// Initializes a new <see cref="FSMBuilder"/> instance for creating a fresh FSM definition.
+        /// Starts a new <see cref="FSMBuilder"/> to help you create a brand-new FSM blueprint.
         /// </summary>
         /// <remarks>
-        /// This constructor is primarily intended for internal API use and is invoked by
-        /// methods like <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/>.
-        /// Users typically do not call this constructor directly.
+        /// You usually won't call this directly. Instead, you'll use a helper method like
+        /// <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/>, which then uses this behind the scenes.
         /// </remarks>
-        /// <param name="fsmName">The unique name for the FSM definition. This name will be used to
-        /// register and retrieve the FSM within the <see cref="FSM_API"/> system.</param>
-        /// <param name="processRate">The default processing rate for instances of this FSM.
-        /// Refer to <see cref="FSM.ProcessRate"/> for details on valid values.</param>
-        /// <param name="processingGroup">The update category this FSM belongs to, influencing
-        /// when and how its instances are ticked. Refer to <see cref="FSM.ProcessingGroup"/> for details.</param>
+        /// <param name="fsmName">The unique name for your new FSM blueprint (e.g., "PlayerMovementFSM").</param>
+        /// <param name="processRate">How often instances of this FSM should automatically update. See <see cref="FSM.ProcessRate"/> for details.</param>
+        /// <param name="processingGroup">A name for a group this FSM belongs to, which helps organize updates. See <see cref="FSM.ProcessingGroup"/> for details.</param>
         public FSMBuilder(string fsmName, int processRate = 0, string processingGroup = "Update")
         {
             _fsmName = fsmName;
@@ -119,22 +105,16 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Initializes an <see cref="FSMBuilder"/> for an already existing FSM definition,
-        /// allowing it to be modified or extended.
+        /// Starts an <see cref="FSMBuilder"/> with an **existing FSM blueprint** loaded into it.
+        /// This lets you make changes or add new features to an FSM that's already defined.
         /// </summary>
         /// <remarks>
-        /// This constructor is intended for internal API use, typically called by
-        /// methods that allow modification of existing FSMs (e.g., in a future
-        /// `FSM_API.Interaction.ModifyFiniteStateMachine` if one were to be added).
-        /// When using this constructor, the builder is pre-populated with the existing
-        /// states and transitions of the provided <paramref name="fsm"/> definition,
-        /// allowing for seamless modification via the fluent API.
-        /// Note: The name of the FSM will default to a modified version of the original
-        /// (e.g., "OriginalName2") to prevent accidental overwriting if the user intends
-        /// to create a new FSM based on an existing one without explicitly renaming it.
+        /// This is for advanced use when you need to modify an FSM blueprint after it's been created.
+        /// The builder will be pre-filled with all the states and transitions from the <paramref name="fsm"/>
+        /// you provide, so you can continue building on it.
         /// </remarks>
-        /// <param name="fsm">The existing <see cref="FSM"/> definition to load and potentially modify.</param>
-        /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="fsm"/> is <c>null</c>.</exception>
+        /// <param name="fsm">The existing FSM blueprint you want to load and modify.</param>
+        /// <exception cref="ArgumentNullException">Happens if you try to load a `null` FSM blueprint.</exception>
         public FSMBuilder(FSM fsm)
         {
             if (fsm == null)
@@ -162,28 +142,30 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Adds or updates a state definition within the FSM. This is a core method for
-        /// defining the FSM's behavior.
+        /// Adds or updates a **"state"** for your FSM blueprint. This is where you define what happens
+        /// when your FSM is in a particular condition or mode.
         /// </summary>
         /// <remarks>
-        /// Each state is uniquely identified by its <paramref name="name"/>. If a state
-        /// with the same name is added multiple times, an <see cref="ArgumentException"/>
-        /// will be thrown. The `onEnter`, `onUpdate`, and `onExit` actions define the
-        /// specific behavior of the FSM when it enters, stays in, and leaves this state, respectively.
-        /// These actions provide the hooks for implementing your FSM's specific logic, and they
-        /// receive an <see cref="IStateContext"/> instance, which is how you pass and access
-        /// per-FSM-instance data.
+        /// Each state needs a unique <paramref name="name"/>. If you try to add a state with the same
+        /// name twice, you'll get an error.
+        /// <para>
+        /// You also define three key actions for each state:
+        /// <list type="bullet">
+        ///     <item><term><paramref name="onEnter"/>:</term><description>What happens **when the FSM first enters** this state.</description></item>
+        ///     <item><term><paramref name="onUpdate"/>:</term><description>What happens **repeatedly while the FSM is in** this state.</description></item>
+        ///     <item><term><paramref name="onExit"/>:</term><description>What happens **just before the FSM leaves** this state.</description></item>
+        /// </list>
+        /// </para>
+        /// These actions receive a `context` (your <see cref="IStateContext"/> data bag)
+        /// which lets them interact with the specific object or system that this FSM instance belongs to.
+        /// You can provide `null` for any action if nothing specific needs to happen at that point.
         /// </remarks>
-        /// <param name="name">The unique name of the state (e.g., "Idle", "Attacking", "Loading").</param>
-        /// <param name="onEnter">An <see cref="Action{IStateContext}"/> invoked when the FSM
-        /// transitions *into* this state. This is where you typically initialize state-specific behaviors.</param>
-        /// <param name="onUpdate">An <see cref="Action{IStateContext}"/> invoked every time
-        /// the FSM instance is processed while *in* this state. This is for continuous, per-tick logic.</param>
-        /// <param name="onExit">An <see cref="Action{IStateContext}"/> invoked when the FSM
-        /// transitions *out of* this state. This is where you typically clean up state-specific resources or stop behaviors.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
-        /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is null, empty,
-        /// whitespace, or if a state with the same name already exists in this builder.</exception>
+        /// <param name="name">The unique name for this state (e.g., "Idle", "Attacking").</param>
+        /// <param name="onEnter">An optional action to run when entering this state.</param>
+        /// <param name="onUpdate">An optional action to run repeatedly while in this state.</param>
+        /// <param name="onExit">An optional action to run when exiting this state.</param>
+        /// <returns>The builder itself, so you can chain more commands.</returns>
+        /// <exception cref="ArgumentException">Happens if the state `name` is empty or a state with that name already exists.</exception>
         public FSMBuilder State(string name, Action<IStateContext> onEnter, Action<IStateContext> onUpdate, Action<IStateContext> onExit)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -202,16 +184,18 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Sets the automatic processing rate for instances of this FSM definition.
+        /// Sets how often instances of this FSM blueprint should automatically check and update themselves.
         /// </summary>
         /// <remarks>
-        /// This controls how frequently the FSM's <see cref="FSM.Step"/> method will be
-        /// automatically called when its <see cref="_processGroup"/> is updated.
-        /// Refer to <see cref="FSM.ProcessRate"/> for a detailed explanation of valid values
-        /// (-1, 0, or positive integers).
+        /// This controls the **"Process Rate"**. See <see cref="FSM.ProcessRate"/> for a detailed explanation:
+        /// <list type="bullet">
+        ///     <item><term><c>-1</c></term><description>Update **every single time** the FSM's group is processed.</description></item>
+        ///     <item><term><c>0</c></term><description>Update **only when you manually tell it to** (no automatic updates).</description></item>
+        ///     <item><term><c>&gt;0</c></term><description>Update **every Nth time** the FSM's group is processed (e.g., 5 means every 5th update).</description></item>
+        /// </list>
         /// </remarks>
-        /// <param name="rate">The desired processing rate.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
+        /// <param name="rate">The desired update rate.</param>
+        /// <returns>The builder itself, for chaining.</returns>
         public FSMBuilder WithProcessRate(int rate)
         {
             _processRate = rate;
@@ -219,17 +203,15 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Assigns a unique name to this FSM definition.
+        /// Sets a new **name** for this FSM blueprint.
         /// </summary>
         /// <remarks>
-        /// This name is crucial for registering and later retrieving the FSM blueprint
-        /// from the <see cref="FSM_API"/> system. It should be unique across all FSM definitions.
-        /// If this builder was initialized to modify an existing FSM (e.g., via <see cref="FSMBuilder.FSMBuilder(FSM)"/>),
-        /// calling `WithName` allows you to explicitly rename the FSM.
+        /// This is useful if you used the constructor that loads an existing FSM (<see cref="FSMBuilder(FSM)"/>)
+        /// and want to give it a proper new name, or simply rename an FSM you're building.
         /// </remarks>
-        /// <param name="name">The unique name for the FSM definition.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
-        /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is null, empty, or whitespace.</exception>
+        /// <param name="name">The new unique name for the FSM blueprint.</param>
+        /// <returns>The builder itself, for chaining.</returns>
+        /// <exception cref="ArgumentException">Happens if the <paramref name="name"/> is empty.</exception>
         public FSMBuilder WithName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -241,56 +223,39 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Specifies the initial state for new instances of this FSM definition.
+        /// Sets the **starting state** for any new FSM instance created from this blueprint.
         /// </summary>
         /// <remarks>
-        /// When an <see cref="FSMHandle"/> is created from this definition, it will
-        /// immediately enter the state specified by <paramref name="name"/>.
-        /// It is crucial that the state specified here has been previously defined
-        /// using the <see cref="State"/> method. If not explicitly set, the first
-        /// state added to the builder will be automatically chosen as the initial state
-        /// during <see cref="BuildDefinition"/>. Therefore, the order in which states
-        /// are added using <see cref="State"/> can matter if no explicit initial state is set.
+        /// When an FSM instance is first created, it will immediately enter this state.
+        /// Make sure you've already defined this state using the <see cref="State(string, Action{IStateContext}, Action{IStateContext}, Action{IStateContext})"/> method.
         /// </remarks>
-        /// <param name="name">The name of the state that will be the initial state.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
-        /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is null, empty, or whitespace.</exception>
-        public FSMBuilder WithInitialState(string name)
+        /// <param name="stateName">The name of the state that new FSM instances should start in.</param>
+        /// <returns>The builder itself, for chaining.</returns>
+        /// <exception cref="ArgumentException">Happens if the <paramref name="stateName"/> is empty.</exception>
+        public FSMBuilder WithInitialState(string stateName)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(stateName))
             {
-                throw new ArgumentException("Initial state name cannot be null or empty.", nameof(name));
+                throw new ArgumentException("Initial state name cannot be null or empty.", nameof(stateName));
             }
-            _initialState = name;
+            _initialState = stateName;
             return this;
         }
 
         /// <summary>
-        /// Adds a transition rule between two specific states.
+        /// Defines a **rule (transition)** for your FSM to move from one specific state to another.
         /// </summary>
         /// <remarks>
-        /// A regular transition defines that the FSM can move from the <paramref name="from"/> state
-        /// to the <paramref name="to"/> state only if the <paramref name="condition"/>
-        /// evaluates to <c>true</c> while the FSM is currently in the <paramref name="from"/> state.
-        /// <para>
-        /// **Important for Definition Order:** While the <paramref name="to"/> state does not
-        /// strictly need to be defined (via <see cref="State"/>) before a transition is added,
-        /// it is **critical** that the <paramref name="from"/> state *is* defined in the builder
-        /// chain *before* its transitions are declared. If a transition refers to a 'from' state
-        /// that does not exist by the time <see cref="BuildDefinition"/> is called, that specific
-        /// transition may be ignored or cause an error depending on the underlying FSM implementation.
-        /// </para>
-        /// For global transitions that can fire from *any* state, use <see cref="FSM.AnyStateIdentifier"/>
-        /// as the <paramref name="from"/> parameter.
+        /// This transition rule will only be considered when the FSM is currently in the `from` state.
+        /// If you define multiple transitions between the exact same `from` and `to` states,
+        /// the last one you define will replace any earlier ones.
         /// </remarks>
-        /// <param name="from">The name of the source state from which the transition can occur. Use <see cref="FSM.AnyStateIdentifier"/> for global (any-state) transitions.</param>
-        /// <param name="to">The name of the target state to which the FSM will transition.</param>
-        /// <param name="condition">A <see cref="Func{T, TResult}"/> delegate that takes an <see cref="IStateContext"/>
-        /// and returns <c>true</c> if the transition should occur, <c>false</c> otherwise.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="from"/> or <paramref name="to"/>
-        /// state names are null, empty, or whitespace.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="condition"/> function is <c>null</c>.</exception>
+        /// <param name="from">The name of the state where this transition starts.</param>
+        /// <param name="to">The name of the state where this transition leads to.</param>
+        /// <param name="condition">A function (rule) that must return `true` for this transition to happen.
+        /// This function receives the <see cref="IStateContext"/> (your FSM's data bag).</param>
+        /// <returns>The builder itself, for chaining.</returns>
+        /// <exception cref="ArgumentException">Happens if `from` or `to` state names are empty, or if the `condition` is `null`.</exception>
         public FSMBuilder Transition(string from, string to, Func<IStateContext, bool> condition)
         {
             if (string.IsNullOrWhiteSpace(from))
@@ -311,61 +276,42 @@ namespace TheSingularityWorkshop.FSM_API
             return this;
         }
 
-        /// <summary>
-        /// Assigns this FSM definition to a specific processing group (update category).
-        /// </summary>
-        /// <remarks>
-        /// This property allows you to organize FSMs into logical groups, giving you granular
-        /// control over when and how they are updated. For example, you might have "PhysicsUpdate"
-        /// or "AnimationUpdate" groups. Updates for these groups are typically triggered
-        /// manually by calling <see cref="FSM_API.Interaction.Update(string)"/>.
-        /// <para>
-        /// A powerful feature of this system is that **each processing group can maintain its own
-        /// unique copy of the same FSM definition**. If an <see cref="FSMHandle"/> (and its associated
-        /// context) is migrated to a different processing group, the system will seamlessly
-        /// create a dedicated copy of the FSM definition within that new group, ensuring isolated
-        /// and optimized processing without affecting other groups.
-        /// </para>
-        /// This feature also enables complex hierarchical FSM systems, where one FSM's state
-        /// logic might trigger the update of another FSM's processing group.
-        /// </remarks>
-        /// <param name="category">The name of the processing group (e.g., "Update", "GameLogic", "AI").</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance, allowing for fluent chaining.</returns>
-        /// <exception cref="ArgumentException">Thrown if the <paramref name="category"/> is null, empty, or whitespace.</exception>
-        public FSMBuilder WithUpdateCategory(string category)
+
+        public FSMBuilder AnyTransition(string to, Func<IStateContext, bool> condition)
         {
-            if (string.IsNullOrWhiteSpace(category))
+            if (string.IsNullOrWhiteSpace(to))
             {
-                throw new ArgumentException("Update category cannot be null or empty.", nameof(category));
+                throw new ArgumentException("'To' state name cannot be null or empty.", nameof(to));
             }
-            _processGroup = category;
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition), "Transition condition cannot be null.");
+            }
+            _anyTransitions.Add(new FSMTransition("*", to, condition));
+
             return this;
         }
 
+
         /// <summary>
-        /// Finalizes the FSM definition and registers it with the <see cref="FSM_API"/> system.
+        /// Finalizes your FSM blueprint and **registers it** with the FSM system. ✅
         /// </summary>
         /// <remarks>
-        /// This is the terminal step in defining an FSM. Calling this method performs
-        /// crucial validations (e.g., ensuring at least one state exists, and the initial state is valid)
-        /// and then constructs the immutable <see cref="FSM"/> object based on the
-        /// builder's configuration. The resulting <see cref="FSM"/> blueprint is then
-        /// registered with the global <see cref="FSM_API.Internal.Register(string, FSM, int, string)"/>
-        /// system, making it available for instantiation into live <see cref="FSMHandle"/> objects.
+        /// After calling this, your FSM blueprint is complete and saved. You can then start
+        /// creating live instances of it using <see cref="FSM_API.Create.CreateInstance(string, IStateContext, string)"/>.
         /// <para>
-        /// If an FSM definition with the same name already exists within its specified <see cref="WithUpdateCategory(string)"/>,
-        /// this operation will overwrite (update) that existing definition.
+        /// This method checks for common mistakes like:
+        /// <list type="bullet">
+        ///     <item>If the FSM `Name` is empty.</item>
+        ///     <item>If no states have been added.</item>
+        ///     <item>If the `InitialState` you set actually exists.</item>
+        /// </list>
+        /// If you're building on an existing FSM blueprint (using <see cref="FSMBuilder(FSM)"/>),
+        /// this method will update the existing definition or create a new one if the name changed.
         /// </para>
-        /// After <see cref="BuildDefinition"/> is called, the builder's internal state
-        /// is cleared, making it ready to define a new FSM or be re-used. The FSM definition, once built,
-        /// can be managed and potentially <see cref="FSM_API.Interaction.DestroyFiniteStateMachine(string, string)"/>ed if no longer needed.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if no states have been defined using <see cref="State(string, Action{IStateContext}, Action{IStateContext}, Action{IStateContext})"/>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if the specified initial state does not exist among the defined states.
-        /// </exception>
+        /// <returns>The completed <see cref="FSM"/> blueprint.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the FSM has no name, no states, or the initial state doesn't exist.</exception>
         public void BuildDefinition()
         {
             // --- Validation before building ---
@@ -408,6 +354,10 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 machine.AddState(s);
             }
+            foreach (var anyT in _anyTransitions)
+            {
+                machine.AddAnyStateTransition(anyT);
+            }
             foreach (var t in _transitions)
             {
                 machine.AddTransition(t.From, t.To, t.Condition);
@@ -429,65 +379,23 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Removes a state from the FSM definition being built by this builder.
+        /// Sets the **"processing group"** name for this FSM blueprint.
         /// </summary>
         /// <remarks>
-        /// This method removes the specified state from the internal list of states managed by the builder.
-        /// When <see cref="BuildDefinition"/> is called, the FSM will be constructed without this state.
-        /// <para>
-        /// If you are modifying an existing FSM definition at runtime and need to handle
-        /// active instances currently in the state being removed, you should use
-        /// <see cref="FSM_API.Interaction.RemoveStateFromFSM(string, string, string, string)"/>,
-        /// which wraps this builder method and manages instance transitions.
-        /// </para>
-        /// If the state does not exist in the builder's current definition, no action is taken.
+        /// This helps organize your FSMs into categories. You can then tell the FSM system
+        /// to update all FSMs in a specific group at once.
+        /// See <see cref="FSM.ProcessingGroup"/> for more context.
         /// </remarks>
-        /// <param name="stateName">The name of the state to remove.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance for fluent chaining.</returns>
-        public FSMBuilder Without(string stateName)
+        /// <param name="groupName">The name of the processing group (e.g., "GameLoop", "UIA", "PhysicsUpdate").</param>
+        /// <returns>The builder itself, for chaining.</returns>
+        /// <exception cref="ArgumentException">Happens if the `groupName` is empty.</exception>
+        public FSMBuilder WithProcessingGroup(string groupName)
         {
-            var state = _states.FirstOrDefault(s => s.Name == stateName);
-            if (state != null)
+            if (string.IsNullOrWhiteSpace(groupName))
             {
-                var handles = FSM_API.Internal.GetBucket(_fsmName, _processGroup);
-                if (handles != null)
-                {
-                    var handlesInState = handles.Instances.Where(s => s.CurrentState == stateName);
-                    foreach (var handleInState in handlesInState)
-                    {
-                        handleInState.TransitionTo(_initialState);
-                    }
-                    _states.Remove(state);
-                }
+                throw new ArgumentException("Processing group name cannot be null or empty.", nameof(groupName));
             }
-            return this;
-        }
-
-        /// <summary>
-        /// Removes a specific transition from the FSM definition being built by this builder.
-        /// </summary>
-        /// <remarks>
-        /// This method removes the specified transition from the internal list of transitions managed by the builder.
-        /// When <see cref="BuildDefinition"/> is called, the FSM will be constructed without this transition.
-        /// <para>
-        /// This is useful for dynamically adjusting FSM behavior by removing paths. If the transition
-        /// does not exist in the builder's current definition, no action is taken.
-        /// </para>
-        /// If you are modifying an existing FSM definition at runtime and wish to remove a transition,
-        /// you should typically use <see cref="FSM_API.Interaction.RemoveTransition(string,string,string,string)"/>,
-        /// which wraps this builder method.
-        /// </remarks>
-        /// <param name="fromState">The name of the state from which the transition originates.
-        /// This can be <see cref="FSM.AnyStateIdentifier"/> for 'Any State' transitions.</param>
-        /// <param name="toState">The name of the state to which the transition leads.</param>
-        /// <returns>The current <see cref="FSMBuilder"/> instance for fluent chaining.</returns>
-        public FSMBuilder WithoutTransition(string fromState, string toState)
-        {
-            var transition = _transitions.FirstOrDefault(s => s.From == fromState && s.To == toState);
-            if (transition != null)
-            {
-                _transitions.Remove(transition);
-            }
+            _processGroup = groupName;
             return this;
         }
     }

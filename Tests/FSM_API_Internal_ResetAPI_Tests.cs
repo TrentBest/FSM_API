@@ -88,5 +88,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     {
         public bool IsValid { get; set; } = true;
         public string Name { get; set; } = "TestContext";
+        public bool HasEntered { get; set; }
     }
 }

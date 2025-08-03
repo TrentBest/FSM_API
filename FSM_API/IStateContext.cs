@@ -46,5 +46,6 @@
         /// <value><c>true</c> if the context is valid and active; otherwise, <c>false</c>.</value>
 
         bool IsValid { get; set; }
+        bool HasEntered { get; set; }
     }
 }

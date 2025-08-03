@@ -3,49 +3,67 @@
 namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
-    /// Represents a single transition rule within a Finite State Machine (FSM) definition.
-    /// <para>
-    /// This class defines the fundamental elements of how an FSM moves from one state to another:
-    /// a source state, a target state, and a dynamic condition that must evaluate to true for the transition to occur.
-    /// </para>
-    /// <para>
-    /// While often created indirectly via fluent builders, this class is publicly exposed for advanced
-    /// scenarios requiring direct manipulation, custom definition loading, or high-performance optimizations.
-    /// </para>
+    /// This class represents a single **"transition rule"** in your FSM (Finite State Machine) blueprint.
+    /// Think of it as a specific pathway 🛤️ that tells your FSM how to move from one "state"
+    /// (like "Idle") to another "state" (like "Running").
     /// </summary>
     /// <remarks>
-    /// An <c>FSMTransition</c> object is immutable after construction in typical usage, though its properties
-    /// are exposed for flexibility in specialized scenarios.
+    /// Each transition rule has three main parts:
+    /// <list type="bullet">
+    ///     <item><term>From:</term><description>The starting state.</description></item>
+    ///     <item><term>To:</term><description>The ending state.</description></item>
+    ///     <item><term>Condition:</term><description>A special check that must be true for the transition to happen.</description></item>
+    /// </list>
+    /// <para>
+    /// While you'll often create these transitions easily using the FSMBuilder,
+    /// this class is made public for more advanced users who might need to
+    /// load FSM definitions from files or perform very specific tweaks.
+    /// </para>
     /// </remarks>
     public class FSMTransition
     {
         /// <summary>
-        /// Gets the name of the source state from which this transition originates.
+        /// This is the **name of the state** where this transition starts.
         /// </summary>
         public string From { get; set; }
 
         /// <summary>
-        /// Gets the name of the target state to which this transition leads.
+        /// This is the **name of the state** where this transition leads to.
         /// </summary>
         public string To { get; set; }
 
         /// <summary>
-        /// Gets the condition function that must return true for this transition to be taken.
-        /// The function receives an <see cref="IStateContext"/> to provide context-specific data.
+        /// This is the **condition** (a function that returns `true` or `false`)
+        /// that must be true for this transition to actually happen.
         /// </summary>
+        /// <remarks>
+        /// This function receives an <see cref="IStateContext"/>, which provides
+        /// important information about the FSM's current situation,
+        /// helping the condition decide if the transition should occur.
+        /// </remarks>
         public Func<IStateContext, bool> Condition { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FSMTransition"/> class.
+        /// Creates a new transition rule for your FSM blueprint.
         /// </summary>
-        /// <param name="from">The name of the source state.</param>
-        /// <param name="to">The name of the target state.</param>
-        /// <param name="condition">The function that defines the condition for this transition.</param>
+        /// <remarks>
+        /// When you create a transition, you must tell it:
+        /// <list type="bullet">
+        ///     <item><term>Where it starts (`from`):</term><description>The state you're leaving.</description></item>
+        ///     <item><term>Where it goes (`to`):</term><description>The state you're entering.</description></item>
+        ///     <item><term>What makes it happen (`condition`):</term><description>The rule that must be true.</description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="from">The name of the state this transition starts from.</param>
+        /// <param name="to">The name of the state this transition moves to.</param>
+        /// <param name="condition">The function that decides if this transition should happen.</param>
         /// <exception cref="ArgumentException">
-        /// Thrown if 'from' or 'to' state names are null, empty, or whitespace.
+        /// This happens if the `from` or `to` state names are empty or just spaces.
+        /// It means you haven't given valid names for the states.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if the 'condition' function is null.
+        /// This happens if you don't provide a `condition` (it's `null`).
+        /// A transition always needs a rule to decide when to move.
         /// </exception>
         public FSMTransition(string from, string to, Func<IStateContext, bool> condition)
         {
@@ -68,9 +86,12 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Returns a string representation of the FSMTransition.
+        /// Gives a simple text description of this transition rule.
         /// </summary>
-        /// <returns>A string in the format "FromState --[Condition]--> ToState".</returns>
+        /// <returns>
+        /// A string that looks like "StartingState --[Condition]--> EndingState".
+        /// It helps you quickly see what the transition does.
+        /// </returns>
         public override string ToString()
         {
             // We can't easily print the condition's internal details for Func<T, bool>,
