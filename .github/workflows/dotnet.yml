@@ -31,7 +31,7 @@ jobs:
     # We need this to pass before attempting code coverage.
     - name: Test Projects
       working-directory: ${{ github.workspace }}
-      run: dotnet test FSM_API.sln --no-build
+      run: dotnet test Tests/FSM_API.Tests.csproj --no-build
     
     # --- Code Coverage Steps (Temporarily Disabled for Debugging) ---
     # We will re-enable and refine these once 'Test Projects' succeeds.
