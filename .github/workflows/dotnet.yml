@@ -33,38 +33,53 @@ jobs:
       working-directory: ${{ github.workspace }}
       run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
-    # --- Code Coverage Steps START ---
+    # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
+    # - name: Install dotnet-coverage tool
+    #   run: dotnet tool install --global dotnet-coverage
 
-    - name: Install dotnet-coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Run Tests with Code Coverage
-      working-directory: ${{ github.workspace }}
-      run: |
-        echo "Verifying test DLL existence and path:"
-        ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
+    # - name: Run Tests with Code Coverage
+    #   working-directory: ${{ github.workspace }}
+    #   run: |
+    #     echo "Verifying test DLL existence and path:"
+    #     ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
         
-        echo "Current working directory for dotnet-coverage: $(pwd)"
+    #     echo "Current working directory for dotnet-coverage: $(pwd)"
+    #     # Original attempt that failed
+    #     # dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
+    #     #   -f xml \
+    #     #   -o "coverage.xml" \
+    #     #   --include-by-assembly FSM_API
+
+    #     # Attempt to pass arguments separately (also failed to run)
+    #     # dotnet-coverage collect \
+    #     #   "dotnet" \
+    #     #   "test" \
+    #     #   "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
+    #     #   "--no-build" \
+    #     #   "--collect:\"Code Coverage\"" \
+    #     #   -f xml \
+    #     #   -o "coverage.xml" \
+    #     #   --include-by-assembly FSM_API
         
-        # CRITICAL FIX: Use '--' to separate dotnet-coverage arguments from dotnet test arguments.
-        # This prevents dotnet-coverage from misinterpreting the 'dotnet test' command's internal arguments.
-        dotnet-coverage collect \
-          --output "coverage.xml" \
-          --format "xml" \
-          --include-by-assembly "FSM_API" \
-          -- \
-          dotnet test "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-          --no-build \
-          --collect:"Code Coverage" # Keep --collect for the VSTest profiler
+    #     # Most recent attempt with -- (also failed to run)
+    #     # dotnet-coverage collect \
+    #     #   --output "coverage.xml" \
+    #     #   --format "xml" \
+    #     #   --include-by-assembly "FSM_API" \
+    #     #   -- \
+    #     #   dotnet test "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
+    #     #   --no-build \
+    #     #   --collect:"Code Coverage"
+        
+    #     echo "Skipping dotnet-coverage execution for now as requested."
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        files: ./coverage.xml
-        token: ${{ secrets.CODECOV_TOKEN }}
-        verbose: true
-
-    # --- Code Coverage Steps END ---
+    # - name: Upload coverage reports to Codecov
+    #   uses: codecov/codecov-action@v5
+    #   with:
+    #     files: ./coverage.xml
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     verbose: true
+    # -------------------------------------------------------------
     
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
