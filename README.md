@@ -1,5 +1,6 @@
 FSM_API
-https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API
+
+[![NuGet Downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 
 
 The blazing-fast, software-agnostic Finite State Machine system for any C# application.
