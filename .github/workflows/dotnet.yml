@@ -41,17 +41,20 @@ jobs:
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        # Diagnostic: List the contents of the test DLL directory right before execution
         echo "Verifying test DLL existence and path:"
         ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
         
-        # Diagnostic: Print the working directory and the exact command being passed
         echo "Current working directory for dotnet-coverage: $(pwd)"
-        TEST_COMMAND="dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\""
-        echo "Command passed to dotnet-coverage: ${TEST_COMMAND}"
         
-        # Now, execute dotnet-coverage
-        dotnet-coverage collect "${TEST_COMMAND}" \
+        # CRITICAL FIX: Pass dotnet test and its arguments as separate parameters
+        # to dotnet-coverage's 'collect' command. This avoids shell parsing issues
+        # with the nested quotes and spaces in "--collect "Code Coverage"".
+        dotnet-coverage collect \
+          "dotnet" \
+          "test" \
+          "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
+          "--no-build" \
+          "--collect:\"Code Coverage\"" \
           -f xml \
           -o "coverage.xml" \
           --include-by-assembly FSM_API
@@ -59,9 +62,9 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
-        files: ./coverage.xml 
-        token: ${{ secrets.CODECOV_TOKEN }} 
-        verbose: true 
+        files: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true
 
     # --- Code Coverage Steps END ---
     
