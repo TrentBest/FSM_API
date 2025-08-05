@@ -1,11 +1,8 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET
 
 on:
   push:
-    branches: [ "master" ] # Assumes your FSM_API repo's main branch is 'master'
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -15,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        dotnet-version: [ '8.0.x' ] # Ensure this matches your project's .NET SDK version
+        dotnet-version: [ '8.0.x' ]
 
     steps:
     - uses: actions/checkout@v4
@@ -24,53 +21,46 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
-    # The 'Install libssl1.1' step is no longer needed as .NET 3.1.x is removed from the matrix.
-
     - name: Restore dependencies
-      # Restore for the entire solution if you have a solution file in the root,
-      # or specify the main project if that's how you manage it.
-      # Assuming your solution file is in the root, or this path is correct for main project.
       run: dotnet restore FSM_API/FSM_API.csproj
 
     - name: Build
-      # Build your main library project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
-    - name: Install dotnet-coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Run Tests with Code Coverage
-      # Set the working directory explicitly to the repository root.
-      # This ensures all paths within this step are relative to the repo root.
+    # This step is for debugging. It checks if dotnet test can run the solution directly.
+    # We need this to pass before attempting code coverage.
+    - name: Test Projects
       working-directory: ${{ github.workspace }}
-      run: |
-        # Collect code coverage by running dotnet test on your solution file.
-        # Use $(pwd) to ensure the full absolute path to the solution is used.
-        # This bypasses any potential internal path resolution issues with dotnet-coverage.
-        # -f xml: Output format as XML (required by Codecov).
-        # -o "coverage.xml": Output file name for the coverage report.
-        # --include-by-assembly FSM_API: Crucially, this tells dotnet-coverage to only
-        #   include coverage for your main FSM_API assembly, ignoring test assemblies.
-        dotnet-coverage collect "dotnet test $(pwd)/FSM_API.sln --no-build" \
-          -f xml \
-          -o "coverage.xml" \
-          --include-by-assembly FSM_API
+      run: dotnet test FSM_API.sln --no-build
+    
+    # --- Code Coverage Steps (Temporarily Disabled for Debugging) ---
+    # We will re-enable and refine these once 'Test Projects' succeeds.
+    # - name: Install dotnet-coverage tool
+    #   run: dotnet tool install --global dotnet-coverage
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        files: ./coverage.xml # Path to the generated coverage report file (relative to working-directory)
-        token: ${{ secrets.CODECOV_TOKEN }} # Retrieves your Codecov token from GitHub Secrets
-        verbose: true # Optional: enable verbose logging for debugging
-        
-    # Upload the compiled DLL as an artifact so it can be used by subsequent jobs
+    # - name: Run Tests with Code Coverage
+    #   working-directory: ${{ github.workspace }}
+    #   run: |
+    #     dotnet-coverage collect "dotnet test $(pwd)/FSM_API.sln --no-build" \
+    #       -f xml \
+    #       -o "coverage.xml" \
+    #       --include-by-assembly FSM_API
+
+    # - name: Upload coverage reports to Codecov
+    #   uses: codecov/codecov-action@v5
+    #   with:
+    #     files: ./coverage.xml
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     verbose: true
+    # -------------------------------------------------------------
+    
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dll
-        # Path to the compiled DLL after a Release build for .NET Standard 2.0
-        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll # <--- CRITICAL CHANGE HERE
-        retention-days: 1 # Keep the artifact for 1 day
+        # Path to the compiled DLL for .NET Standard 2.0 after a Release build
+        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
+        retention-days: 1
 
   # The 'publish_nuget' job is commented out as it should not run with every build.
   # Uncomment this entire section when you are ready to publish a new NuGet package.
@@ -86,12 +76,11 @@ jobs:
   #       with:
   #         dotnet-version: 8.0.x
 
-  #     # Download the DLL artifact uploaded by the 'build' job
   #     - name: Download FSM_API DLL Artifact
   #       uses: actions/download-artifact@v4
   #       with:
   #         name: fsm-api-dll
-  #         path: . # Downloads to the current working directory of this job, usually the root of the workspace
+  #         path: .
 
   #     - name: Pack
   #       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
@@ -99,9 +88,7 @@ jobs:
   #     - name: Publish to NuGet.org
   #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
-  #     # Removed the redundant 'Upload DLL as Artifact' step from here, as it's now done in the 'build' job.
-
-  push_dll_to_fsm_api_unity: # Renamed for clarity, this is your original job
+  push_dll_to_fsm_api_unity:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -112,13 +99,13 @@ jobs:
         with:
           repository: 'TrentBest/FSM_API_Unity'
           token: ${{ secrets.PAT }}
-          path: './fsm_api_unity_repo' # Changed path to avoid conflict with raWWar repo checkout
+          path: './fsm_api_unity_repo'
 
       - name: Download FSM_API DLL Artifact for FSM_API_Unity
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
-          path: . # Downloads to the current working directory of this job
+          path: .
 
       - name: Create Plugins directory in FSM_API_Unity
         run: mkdir -p ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
@@ -139,25 +126,25 @@ jobs:
           git push
         shell: bash
 
-  push_dll_to_rawwar: # NEW JOB: Pushes DLL to your raWWar repo
+  push_dll_to_rawwar:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' # Trigger on push to master in FSM_API repo
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
       - name: Checkout raWWar Repository
         uses: actions/checkout@v4
         with:
-          repository: 'TrentBest/raWWar' # Replace with your actual raWWar repo path if different
-          token: ${{ secrets.PAT }} # Reusing the PAT, ensure it has write access to raWWar
+          repository: 'TrentBest/raWWar'
+          token: ${{ secrets.PAT }}
           path: './rawwar_repo'
-          ref: 'Alpha' # Target the Alpha branch for development integration
+          ref: 'Alpha'
 
       - name: Download FSM_API DLL Artifact for raWWar
         uses: actions/download-artifact@v4
         with:
           name: fsm-api-dll
-          path: . # Downloads to the current working directory of this job
+          path: .
 
       - name: Create Plugins directory in raWWar
         run: mkdir -p ./rawwar_repo/Assets/Plugins/
@@ -175,5 +162,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git add Assets/Plugins/FSM_API.dll
           git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
-          git push origin Alpha # Push to the Alpha branch
+          git push origin Alpha
         shell: bash
