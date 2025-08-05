@@ -38,7 +38,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// of FSMs once they have been defined and instantiated. It serves as the primary
         /// interface for monitoring and controlling your FSMs after their initial setup.
         /// </remarks>
-        public static class Interaction
+        public static partial class Interaction
         {
             /// <summary>
             /// Checks if an FSM definition with the given name exists within the specified processing group.
@@ -158,7 +158,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// from the <see cref="FSMHandle.CurrentState"/>. If a valid transition is found, the FSM will
             /// move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.
             /// </summary>
-            /// <param name="processGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
+            /// <param name="processingGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
             /// <remarks>
             /// **The Crucial Step for FSM Processing:**
             /// This <c>Update()</c> method is fundamental to the operation of an FSM instance. Without
@@ -184,10 +184,10 @@ namespace TheSingularityWorkshop.FSM_API
             /// </list>
             /// Use with extreme care and only when building a highly customized, self-managed FSM update system.
             /// </remarks>
-            public static void Update(string processGroup = "Update")
+            public static void Update(string processingGroup = "Update")
             {
                 var sw = Stopwatch.StartNew();
-                Internal.TickAll(processGroup);
+                Internal.TickAll(processingGroup);
                 Internal.ProcessDeferredModifications();
                 sw.Stop();
                 if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
@@ -344,7 +344,7 @@ namespace TheSingularityWorkshop.FSM_API
                 //    // Iterate through all FSM definitions within each processing group
                 //    foreach (var fsmBucket in processingGroup.Value.Values)
                 //    {
-                //        // Attempt to remove the instance from the processGroup's list of instances
+                //        // Attempt to remove the instance from the processingGroup's list of instances
                 //        if (fsmBucket.Instances.Remove(instance))
                 //        {
                 //            removed = true;
@@ -668,139 +668,6 @@ namespace TheSingularityWorkshop.FSM_API
             public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processingGroup)
             {             
                 return Internal.GetFSMHandle(testFsmName, context, processingGroup);
-            }
-
-
-            /// <summary>
-            /// Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds)
-            /// and integer increments (e.g., frames or discrete steps).
-            /// <para>
-            /// This class is designed to be time-agnostic; it does not acquire time itself but relies on the
-            /// calling application to provide delta time (<c>dt</c>) and delta integer (<c>di</c>) values.
-            /// It serves as a convenience for implementing frequency-based updates or delays, complementing
-            /// the FSM API's core, untimed step mechanism.
-            /// </para>
-            /// </summary>
-            /// <remarks>
-            /// Users are responsible for integrating <c>UpdateTimers</c> into their application's main loop
-            /// and for providing accurate time deltas. Timers must be manually added and checked for expiration.
-            /// </remarks>
-            public static class FSMTimers
-            {
-                /// <summary>
-                /// Gets a dictionary of float-based timers, keyed by a string name.
-                /// These timers are typically used for time-based delays or frequencies (e.g., seconds).
-                /// </summary>
-                public static Dictionary<string, float> FloatTimers { get; } = new Dictionary<string, float>();
-
-                /// <summary>
-                /// Gets a dictionary of integer-based timers, keyed by a string name.
-                /// These timers are typically used for frame-based or discrete step delays/frequencies.
-                /// </summary>
-                public static Dictionary<string, int> IntTimers { get; } = new Dictionary<string, int>();
-
-                /// <summary>
-                /// Stores the last float time value passed to <see cref="UpdateTimers"/>.
-                /// This can be used to track total elapsed time or for debugging purposes.
-                /// </summary>
-                public static float LastFloatTime { get; set; } = 0;
-
-                /// <summary>
-                /// Stores the last integer time value passed to <see cref="UpdateTimers"/>.
-                /// This can be used to track total elapsed frames/steps or for debugging purposes.
-                /// </summary>
-                public static int LastIntTime { get; set; } = 0;
-
-                /// <summary>
-                /// Updates all registered float and integer timers by subtracting the provided delta values.
-                /// </summary>
-                /// <param name="dt">The delta float time (e.g., seconds since last update) to subtract from float timers.</param>
-                /// <param name="di">The delta integer (e.g., frames since last update) to subtract from integer timers.</param>
-                /// <remarks>
-                /// This method simply decrements all active timers. It does not check if timers have reached
-                /// zero or perform any actions based on timer expiration. It is up to the calling code
-                /// to query individual timers (e.g., <c>FSMTimers.FloatTimers["MyTimer"] &lt;= 0f</c>)
-                /// and trigger relevant FSM updates or other logic.
-                /// </remarks>
-                public static void UpdateTimers(float dt, int di)
-                {
-                    foreach (var timer in FloatTimers.ToArray())
-                    {
-                        FloatTimers[timer.Key] -= dt;
-                        LastFloatTime = FloatTimers[timer.Key];
-                    }
-                    foreach (var timer in IntTimers.ToArray())
-                    {
-                        IntTimers[timer.Key] -= di;
-                        LastIntTime = IntTimers[timer.Key];
-                    }
-                }
-
-                /// <summary>
-                /// Resets a specific float timer to its <paramref name="setPoint"/> value.
-                /// If the timer does not exist, no action is taken.
-                /// </summary>
-                /// <param name="timerName">The name of the float timer to reset.</param>
-                /// <param name="setPoint">The value to reset the timer to (defaults to 1.0f).</param>
-
-                public static void ResetFloatTimer(string timerName, float setPoint = 1f)
-                {
-                    if (FloatTimers.ContainsKey(timerName))
-                        FloatTimers[timerName] = setPoint;
-                }
-
-                /// <summary>
-                /// Resets a specific integer timer to its <paramref name="setPoint"/> value.
-                /// If the timer does not exist, no action is taken.
-                /// </summary>
-                /// <param name="timerName">The name of the integer timer to reset.</param>
-                /// <param name="setPoint">The value to reset the timer to (defaults to 1).</param>
-
-                public static void ResetIntTimer(string timerName, int setPoint = 1)
-                {
-                    if (IntTimers.ContainsKey(timerName))
-                        IntTimers[timerName] = setPoint;
-                }
-
-                /// <summary>
-                /// Adds a new float timer or updates an existing one with an initial value.
-                /// </summary>
-                /// <param name="timerName">The name of the timer to add or update.</param>
-                /// <param name="initialValue">The initial value for the timer.</param>
-                public static void AddOrSetFloatTimer(string timerName, float initialValue)
-                {
-                    FloatTimers[timerName] = initialValue;
-                }
-
-                /// <summary>
-                /// Adds a new integer timer or updates an existing one with an initial value.
-                /// </summary>
-                /// <param name="timerName">The name of the timer to add or update.</param>
-                /// <param name="initialValue">The initial value for the timer.</param>
-                public static void AddOrSetIntTimer(string timerName, int initialValue)
-                {
-                    IntTimers[timerName] = initialValue;
-                }
-
-                /// <summary>
-                /// Removes a float timer.
-                /// </summary>
-                /// <param name="timerName">The name of the timer to remove.</param>
-                /// <returns><c>true</c> if the timer was successfully found and removed; otherwise, <c>false</c>.</returns>
-                public static bool RemoveFloatTimer(string timerName)
-                {
-                    return FloatTimers.Remove(timerName);
-                }
-
-                /// <summary>
-                /// Removes an integer timer.
-                /// </summary>
-                /// <param name="timerName">The name of the timer to remove.</param>
-                /// <returns><c>true</c> if the timer was successfully found and removed; otherwise, <c>false</c>.</returns>
-                public static bool RemoveIntTimer(string timerName)
-                {
-                    return IntTimers.Remove(timerName);
-                }
             }
         }
 
