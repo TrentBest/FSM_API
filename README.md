@@ -1,6 +1,7 @@
 FSM_API
 
-https://github.com/TrentBest/FSM_API/actions
+[https://github.com/TrentBest/FSM_API/actions](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API
+)
 
 The blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
