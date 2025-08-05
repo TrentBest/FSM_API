@@ -22,8 +22,6 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
 
     - name: Restore Solution Dependencies
-      # CRITICAL FIX: Restore all dependencies for the entire solution.
-      # This ensures project.assets.json is generated for all projects, including tests.
       working-directory: ${{ github.workspace }}
       run: dotnet restore FSM_API.sln
 
@@ -32,8 +30,6 @@ jobs:
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
     - name: Build Test Project
-      # Explicitly build the test project in Release configuration.
-      # --no-restore is used here because we just did a full solution restore.
       working-directory: ${{ github.workspace }}
       run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
@@ -45,9 +41,17 @@ jobs:
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        # Target the COMPILED TEST DLL directly with --collect "Code Coverage".
-        # This is now possible because the test project should be built.
-        dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
+        # Diagnostic: List the contents of the test DLL directory right before execution
+        echo "Verifying test DLL existence and path:"
+        ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
+        
+        # Diagnostic: Print the working directory and the exact command being passed
+        echo "Current working directory for dotnet-coverage: $(pwd)"
+        TEST_COMMAND="dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\""
+        echo "Command passed to dotnet-coverage: ${TEST_COMMAND}"
+        
+        # Now, execute dotnet-coverage
+        dotnet-coverage collect "${TEST_COMMAND}" \
           -f xml \
           -o "coverage.xml" \
           --include-by-assembly FSM_API
