@@ -40,22 +40,13 @@ jobs:
 
     - name: Install dotnet-coverage tool
       run: dotnet tool install --global dotnet-coverage
-    - name: List Repository Contents
-      run: |
-        echo "Listing contents of current directory:"
-        ls -F .
-        echo "Listing contents of FSM_API directory:"
-        ls -F FSM_API/
-        echo "Listing contents of Tests directory:"
-        ls -F Tests/
-      shell: bash
+   
     - name: Run Tests with Code Coverage
       # CRITICAL FIX: Target your TEST PROJECT'S .csproj file.
       # The '-s "FSM_API/"' parameter tells dotnet-coverage which SOURCE CODE folder
       # to report coverage for (your main library project).
       run: |
-        dotnet-coverage collect "dotnet test Tests/FSM_API.Tests.csproj --no-build" -f xml -o "coverage.xml" -s "FSM_API/" --settings-format coverage
-
+        dotnet-coverage collect "dotnet test FSM_API.sln --no-build" -f xml -o "coverage.xml" -s "FSM_API/"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
