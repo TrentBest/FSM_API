@@ -168,15 +168,3 @@ jobs:
           git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
           git push origin Alpha
         shell: bash
-
----
-
-### Next Steps:
-
-1.  **Replace the entire content of your `.github/workflows/dotnet.yml`** with the YAML provided above.
-2.  **Verify the `dotnet-version`**: Ensure `8.0.x` matches your project's target .NET SDK version.
-3.  **Confirm the DLL path**: Double-check that `Tests/bin/Release/net8.0/FSM_API.Tests.dll` is the correct relative path to your **compiled NUnit test assembly** from your repository root. Pay attention to `Release` vs `Debug` and the target framework (`net8.0`).
-4.  **Ensure `CODECOV_TOKEN` Secret Exists**: Confirm you've added the `CODECOV_TOKEN` secret to your GitHub repository settings.
-5.  **Commit and Push**: Save the changes and push them to your `master` branch.
-
-This approach should finally get your tests running with code coverage. Let's see how this run goes! 🤞
