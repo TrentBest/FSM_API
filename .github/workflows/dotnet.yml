@@ -52,7 +52,7 @@ jobs:
       # 'FSM_API/FSM_API.csproj' is used as the test target, as per your existing Test step.
       # The '-s FSM_API/' ensures source mapping works correctly for your project structure.
       run: |
-        dotnet-coverage collect "dotnet test FSM_API/FSM_API.csproj --no-build" -f xml -o "coverage.xml" -s "FSM_API/" --settings-format coverage
+        dotnet-coverage collect "dotnet test FSM_API.csproj --no-build" -f xml -o "coverage.xml" -s "FSM_API/" --settings-format coverage
 
     - name: Upload coverage reports to Codecov
       # This action uploads the generated coverage.xml to Codecov.io.
