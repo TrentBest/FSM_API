@@ -236,6 +236,20 @@ namespace TheSingularityWorkshop.FSM_API
             _anyStateTransitions.Add(new FSMTransition(AnyStateIdentifier, to, cond));
         }
 
+
+        /// <summary>
+        /// Adds a global "Any State" transition to your FSM blueprint using an existing <see cref="FSMTransition"/> object.
+        /// </summary>
+        /// <remarks>
+        /// This method allows for adding or updating "Any State" transitions, which are evaluated
+        /// regardless of the FSM's current state. If a transition to the same <see cref="FSMTransition.To"/>
+        /// state already exists as an "Any State" transition, it will be replaced by the provided <paramref name="transition"/>.
+        /// </remarks>
+        /// <param name="transition">The <see cref="FSMTransition"/> object representing the "Any State" transition to add.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if the provided <paramref name="transition"/> is `null`.
+        /// An internal API error will also be triggered.
+        /// </exception>
         public void AddAnyStateTransition(FSMTransition transition)
         {
             if (transition == null)
@@ -246,6 +260,15 @@ namespace TheSingularityWorkshop.FSM_API
             _anyStateTransitions.RemoveAll(t => t.To == transition.To);
             _anyStateTransitions.Add(transition);
         }
+
+        /// <summary>
+        /// Retrieves a list of all "Any State" transitions defined for this FSM blueprint.
+        /// </summary>
+        /// <remarks>
+        /// These transitions are special as they are evaluated irrespective of the FSM's
+        /// current state.
+        /// </remarks>
+        /// <returns>A <see cref="List{FSMTransition}"/> containing all "Any State" transitions. Returns an empty list if none are defined.</returns>
 
         public List<FSMTransition> GetAnyStateTransitions()
         {

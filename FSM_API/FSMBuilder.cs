@@ -276,6 +276,23 @@ namespace TheSingularityWorkshop.FSM_API
             return this;
         }
 
+        /// <summary>
+        /// Adds a **global "Any State" transition** to your FSM blueprint. 🌍
+        /// </summary>
+        /// <remarks>
+        /// An "Any State" transition is unique because its <paramref name="condition"/> is checked
+        /// **regardless of which state the FSM is currently in**. If the condition returns `true`,
+        /// the FSM will immediately transition to the specified <paramref name="to"/> state.
+        /// These transitions are typically evaluated before regular, state-specific transitions.
+        /// If you add multiple "Any State" transitions that lead to the same <paramref name="to"/> state,
+        /// the last one added will replace any previous ones leading to that same target.
+        /// </remarks>
+        /// <param name="to">The name of the state the FSM will move to if this "Any State" transition's condition is met.</param>
+        /// <param name="condition">A function (rule) that must return `true` for this global transition to occur.
+        /// This function receives the <see cref="IStateContext"/> (your FSM's data bag) to evaluate the condition.</param>
+        /// <returns>The builder itself, for chaining more commands.</returns>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="to"/> state name is empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="condition"/> function is `null`.</exception>
 
         public FSMBuilder AnyTransition(string to, Func<IStateContext, bool> condition)
         {
