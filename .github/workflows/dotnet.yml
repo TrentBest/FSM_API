@@ -36,20 +36,22 @@ jobs:
       # Build your main library project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
-    # --- Code Coverage Steps START ---
-
-    - name: Install dotnet-coverage tool
+   - name: Install dotnet-coverage tool
       run: dotnet tool install --global dotnet-coverage
-   
+
     - name: Run Tests with Code Coverage
+      # Set the working directory explicitly to the repository root.
+      # This ensures all paths within this step are relative to the repo root.
       working-directory: ${{ github.workspace }}
       run: |
         # Collect code coverage by running dotnet test on your solution file.
+        # Use $(pwd) to ensure the full absolute path to the solution is used.
+        # This bypasses any potential internal path resolution issues with dotnet-coverage.
         # -f xml: Output format as XML (required by Codecov).
         # -o "coverage.xml": Output file name for the coverage report.
         # --include-by-assembly FSM_API: Crucially, this tells dotnet-coverage to only
         #   include coverage for your main FSM_API assembly, ignoring test assemblies.
-        dotnet-coverage collect "dotnet test FSM_API.sln --no-build" \
+        dotnet-coverage collect "dotnet test $(pwd)/FSM_API.sln --no-build" \
           -f xml \
           -o "coverage.xml" \
           --include-by-assembly FSM_API
