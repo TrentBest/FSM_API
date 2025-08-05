@@ -46,18 +46,16 @@ jobs:
         
         echo "Current working directory for dotnet-coverage: $(pwd)"
         
-        # CRITICAL FIX: Pass dotnet test and its arguments as separate parameters
-        # to dotnet-coverage's 'collect' command. This avoids shell parsing issues
-        # with the nested quotes and spaces in "--collect "Code Coverage"".
+        # CRITICAL FIX: Use '--' to separate dotnet-coverage arguments from dotnet test arguments.
+        # This prevents dotnet-coverage from misinterpreting the 'dotnet test' command's internal arguments.
         dotnet-coverage collect \
-          "dotnet" \
-          "test" \
-          "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-          "--no-build" \
-          "--collect:\"Code Coverage\"" \
-          -f xml \
-          -o "coverage.xml" \
-          --include-by-assembly FSM_API
+          --output "coverage.xml" \
+          --format "xml" \
+          --include-by-assembly "FSM_API" \
+          -- \
+          dotnet test "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
+          --no-build \
+          --collect:"Code Coverage" # Keep --collect for the VSTest profiler
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
