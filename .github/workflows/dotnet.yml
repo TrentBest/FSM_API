@@ -175,3 +175,12 @@ jobs:
           git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
           git push origin Alpha
         shell: bash
+
+---
+
+### Next Steps:
+
+1.  **Replace the entire content of your `.github/workflows/dotnet.yml`** with the YAML provided above.
+2.  **Commit and Push** these changes to your `master` branch.
+
+This change aims to properly structure the command for `dotnet-coverage`. If this resolves the "No such file or directory" and profiler issues, your CI will be fully established, which is a major step towards feeding your AnyApp integration and preparing your Unity asset store package! 🚀
