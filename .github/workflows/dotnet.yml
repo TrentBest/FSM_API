@@ -22,37 +22,41 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
 
     - name: Restore dependencies
+      # Restore for the entire solution if you have a solution file in the root,
+      # or specify the main project if that's how you manage it.
       run: dotnet restore FSM_API/FSM_API.csproj
 
     - name: Build
+      # Build your main library project and the test project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
-    # This step is for debugging. It checks if dotnet test can run the solution directly.
-    # We need this to pass before attempting code coverage.
-    - name: Test Projects
+    # --- Code Coverage Steps START ---
+
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install --global dotnet-coverage
+
+    - name: Run Tests with Code Coverage
+      # Set the working directory explicitly to the repository root.
+      # This ensures all paths within this step are relative to the repo root.
       working-directory: ${{ github.workspace }}
-      run: dotnet test Tests/FSM_API.Tests.csproj --no-build
-    
-    # --- Code Coverage Steps (Temporarily Disabled for Debugging) ---
-    # We will re-enable and refine these once 'Test Projects' succeeds.
-    # - name: Install dotnet-coverage tool
-    #   run: dotnet tool install --global dotnet-coverage
+      run: |
+        # CRITICAL FIX: Target the COMPILED TEST DLL directly.
+        # This bypasses dotnet test's project resolution and directly executes tests from the assembly.
+        # --collect "Code Coverage" enables the built-in coverage data collection.
+        # --include-by-assembly FSM_API: Tells dotnet-coverage to only include coverage for your FSM_API library.
+        dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
+          -f xml \
+          -o "coverage.xml" \
+          --include-by-assembly FSM_API
 
-    # - name: Run Tests with Code Coverage
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     dotnet-coverage collect "dotnet test $(pwd)/FSM_API.sln --no-build" \
-    #       -f xml \
-    #       -o "coverage.xml" \
-    #       --include-by-assembly FSM_API
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        files: ./coverage.xml # Path to the generated coverage report file (relative to working-directory)
+        token: ${{ secrets.CODECOV_TOKEN }} # Retrieves your Codecov token from GitHub Secrets
+        verbose: true # Optional: enable verbose logging for debugging
 
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v5
-    #   with:
-    #     files: ./coverage.xml
-    #     token: ${{ secrets.CODECOV_TOKEN }}
-    #     verbose: true
-    # -------------------------------------------------------------
+    # --- Code Coverage Steps END ---
     
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
@@ -164,3 +168,15 @@ jobs:
           git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
           git push origin Alpha
         shell: bash
+
+---
+
+### Next Steps:
+
+1.  **Replace the entire content of your `.github/workflows/dotnet.yml`** with the YAML provided above.
+2.  **Verify the `dotnet-version`**: Ensure `8.0.x` matches your project's target .NET SDK version.
+3.  **Confirm the DLL path**: Double-check that `Tests/bin/Release/net8.0/FSM_API.Tests.dll` is the correct relative path to your **compiled NUnit test assembly** from your repository root. Pay attention to `Release` vs `Debug` and the target framework (`net8.0`).
+4.  **Ensure `CODECOV_TOKEN` Secret Exists**: Confirm you've added the `CODECOV_TOKEN` secret to your GitHub repository settings.
+5.  **Commit and Push**: Save the changes and push them to your `master` branch.
+
+This approach should finally get your tests running with code coverage. Let's see how this run goes! 🤞
