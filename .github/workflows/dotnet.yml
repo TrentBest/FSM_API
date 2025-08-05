@@ -11,15 +11,11 @@ on:
 
 jobs:
   build:
-    # Reverted back to ubuntu-latest as only .NET 8.0.x is being built, which is compatible.
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        # Building only against .NET 8.0.x as requested
-        # NOTE: This matrix entry is for the SDK version used to build, not the target framework.
-        # Your csproj's TargetFrameworks property handles the actual target frameworks.
-        dotnet-version: [ '8.0.x' ]
+        dotnet-version: [ '8.0.x' ] # Ensure this matches your project's .NET SDK version
 
     steps:
     - uses: actions/checkout@v4
@@ -31,16 +27,14 @@ jobs:
     # The 'Install libssl1.1' step is no longer needed as .NET 3.1.x is removed from the matrix.
 
     - name: Restore dependencies
-      # Specify the path to your .csproj file
+      # Restore for the entire solution if you have a solution file in the root,
+      # or specify the main project if that's how you manage it.
+      # Assuming your solution file is in the root, or this path is correct for main project.
       run: dotnet restore FSM_API/FSM_API.csproj
 
     - name: Build
-      # Specify the path to your .csproj file
+      # Build your main library project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
-
-    - name: Test
-      # Specify the path to your .csproj file
-      run: dotnet test FSM_API/FSM_API.csproj --no-build --verbosity normal
 
     # --- Code Coverage Steps START ---
 
@@ -48,14 +42,13 @@ jobs:
       run: dotnet tool install --global dotnet-coverage
 
     - name: Run Tests with Code Coverage
-      # This command runs your tests and generates a coverage.xml report.
-      # 'FSM_API/FSM_API.csproj' is used as the test target, as per your existing Test step.
-      # The '-s FSM_API/' ensures source mapping works correctly for your project structure.
+      # CRITICAL FIX: Target your TEST PROJECT'S .csproj file.
+      # The '-s "FSM_API/"' parameter tells dotnet-coverage which SOURCE CODE folder
+      # to report coverage for (your main library project).
       run: |
-        dotnet-coverage collect "dotnet test ../Tests/FSM_API.Tests.csproj --no-build" -f xml -o "coverage.xml" -s "../FSM_API/"
+        dotnet-coverage collect "dotnet test Tests/FSM_API.Tests.csproj --no-build" -f xml -o "coverage.xml" -s "FSM_API/" --settings-format coverage
 
     - name: Upload coverage reports to Codecov
-      # This action uploads the generated coverage.xml to Codecov.io.
       uses: codecov/codecov-action@v5
       with:
         files: ./coverage.xml # Path to the generated coverage report file
