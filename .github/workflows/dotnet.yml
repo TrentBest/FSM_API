@@ -24,48 +24,36 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore FSM_API/FSM_API.csproj
 
-    - name: Build
+    - name: Build Main Project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
-    # --- Diagnostic Steps Start ---
-    # List the contents of the expected test project output directory
-    - name: List Test Project Output
+    # CRITICAL ADDITION: Build the Test Project explicitly
+    - name: Build Test Project
+      run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
+
+    # --- Code Coverage Steps START ---
+
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install --global dotnet-coverage
+
+    - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        echo "Listing contents of Tests/bin/Release/net8.0/ (where test DLL should be):"
-        ls -F Tests/bin/Release/net8.0/ || echo "Directory does not exist or is empty."
-      shell: bash
+        # Target the COMPILED TEST DLL directly with --collect "Code Coverage".
+        # This is now possible because the test project should be built.
+        dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
+          -f xml \
+          -o "coverage.xml" \
+          --include-by-assembly FSM_API
 
-    # Attempt to run tests with verbose diagnostics
-    # This is critical to understand why dotnet test is failing.
-    - name: Run Tests with Diagnostics
-      working-directory: ${{ github.workspace }}
-      run: dotnet test FSM_API.sln --no-build --diag diag.log
-      # The '--diag diag.log' will create a detailed log file in the working directory.
-      # You can later download this log from the workflow artifacts if needed,
-      # but the relevant parts might be printed directly to the console output.
-    # --- Diagnostic Steps End ---
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        files: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true
 
-    # --- Code Coverage Steps (Temporarily Disabled for Debugging) ---
-    # We will re-enable and refine these once 'Run Tests with Diagnostics' succeeds.
-    # - name: Install dotnet-coverage tool
-    #   run: dotnet tool install --global dotnet-coverage
-
-    # - name: Run Tests with Code Coverage
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
-    #       -f xml \
-    #       -o "coverage.xml" \
-    #       --include-by-assembly FSM_API
-
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v5
-    #   with:
-    #     files: ./coverage.xml
-    #     token: ${{ secrets.CODECOV_TOKEN }}
-    #     verbose: true
-    # -------------------------------------------------------------
+    # --- Code Coverage Steps END ---
     
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
@@ -73,32 +61,6 @@ jobs:
         name: fsm-api-dll
         path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
-
-  # The 'publish_nuget' job is commented out as it should not run with every build.
-  # Uncomment this entire section when you are ready to publish a new NuGet package.
-  # publish_nuget:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Setup .NET
-  #       uses: actions/setup-dotnet@v4
-  #       with:
-  #         dotnet-version: 8.0.x
-
-  #     - name: Download FSM_API DLL Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: fsm-api-dll
-  #         path: .
-
-  #     - name: Pack
-  #       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-
-  #     - name: Publish to NuGet.org
-  #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
   push_dll_to_fsm_api_unity:
     needs: build
