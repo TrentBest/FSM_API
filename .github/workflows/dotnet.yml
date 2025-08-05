@@ -42,20 +42,25 @@ jobs:
       run: dotnet tool install --global dotnet-coverage
    
     - name: Run Tests with Code Coverage
-      # CRITICAL FIX: Target your TEST PROJECT'S .csproj file.
-      # The '-s "FSM_API/"' parameter tells dotnet-coverage which SOURCE CODE folder
-      # to report coverage for (your main library project).
+      working-directory: ${{ github.workspace }}
       run: |
-        dotnet-coverage collect "dotnet test FSM_API.sln --no-build" -f xml -o "coverage.xml" -s "FSM_API/"
+        # Collect code coverage by running dotnet test on your solution file.
+        # -f xml: Output format as XML (required by Codecov).
+        # -o "coverage.xml": Output file name for the coverage report.
+        # --include-by-assembly FSM_API: Crucially, this tells dotnet-coverage to only
+        #   include coverage for your main FSM_API assembly, ignoring test assemblies.
+        dotnet-coverage collect "dotnet test FSM_API.sln --no-build" \
+          -f xml \
+          -o "coverage.xml" \
+          --include-by-assembly FSM_API
+
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
-        files: ./coverage.xml # Path to the generated coverage report file
+        files: ./coverage.xml # Path to the generated coverage report file (relative to working-directory)
         token: ${{ secrets.CODECOV_TOKEN }} # Retrieves your Codecov token from GitHub Secrets
         verbose: true # Optional: enable verbose logging for debugging
-
-    # --- Code Coverage Steps END ---
-
+        
     # Upload the compiled DLL as an artifact so it can be used by subsequent jobs
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
