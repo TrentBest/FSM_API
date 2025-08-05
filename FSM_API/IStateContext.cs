@@ -46,6 +46,13 @@
         /// <value><c>true</c> if the context is valid and active; otherwise, <c>false</c>.</value>
 
         bool IsValid { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the FSM instance associated with this context
+        /// has successfully entered its initial state. This is used internally to manage
+        /// the FSM's lifecycle, particularly for ensuring 'OnEnter' actions are called only once
+        /// upon initial state entry.
+        /// </summary>
         bool HasEntered { get; set; }
     }
 }

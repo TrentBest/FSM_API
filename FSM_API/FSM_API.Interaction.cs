@@ -658,16 +658,16 @@ namespace TheSingularityWorkshop.FSM_API
             /// to check the FSM's current state or manually trigger a transition from outside
             /// of the FSM's own logic.
             /// </remarks>
-            /// <param name="fsmDefinitionName">The name of the FSM blueprint, e.g., "PlayerMovementFSM".</param>
+            /// <param name="testFsmName">The name of the FSM blueprint, e.g., "PlayerMovementFSM".</param>
             /// <param name="context">The unique context object (e.g., your character controller or enemy AI object)
             /// that identifies a specific FSM instance.</param>
             /// <param name="processingGroup">The name of the group that this FSM instance belongs to.</param>
             /// <returns>
             /// A valid <see cref="FSMHandle"/> if a matching instance is found; otherwise, <c>null</c>.
             /// </returns>
-            public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processGroup)
+            public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processingGroup)
             {             
-                return Internal.GetFSMHandle(testFsmName, context, processGroup);
+                return Internal.GetFSMHandle(testFsmName, context, processingGroup);
             }
 
 
