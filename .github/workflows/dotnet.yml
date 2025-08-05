@@ -22,47 +22,55 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
 
     - name: Restore dependencies
-      # Restore for the entire solution if you have a solution file in the root,
-      # or specify the main project if that's how you manage it.
       run: dotnet restore FSM_API/FSM_API.csproj
 
     - name: Build
-      # Build your main library project and the test project
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
-    # --- Code Coverage Steps START ---
-
-    - name: Install dotnet-coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Run Tests with Code Coverage
-      # Set the working directory explicitly to the repository root.
-      # This ensures all paths within this step are relative to the repo root.
+    # --- Diagnostic Steps Start ---
+    # List the contents of the expected test project output directory
+    - name: List Test Project Output
       working-directory: ${{ github.workspace }}
       run: |
-        # CRITICAL FIX: Target the COMPILED TEST DLL directly.
-        # This bypasses dotnet test's project resolution and directly executes tests from the assembly.
-        # --collect "Code Coverage" enables the built-in coverage data collection.
-        # --include-by-assembly FSM_API: Tells dotnet-coverage to only include coverage for your FSM_API library.
-        dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
-          -f xml \
-          -o "coverage.xml" \
-          --include-by-assembly FSM_API
+        echo "Listing contents of Tests/bin/Release/net8.0/ (where test DLL should be):"
+        ls -F Tests/bin/Release/net8.0/ || echo "Directory does not exist or is empty."
+      shell: bash
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        files: ./coverage.xml # Path to the generated coverage report file (relative to working-directory)
-        token: ${{ secrets.CODECOV_TOKEN }} # Retrieves your Codecov token from GitHub Secrets
-        verbose: true # Optional: enable verbose logging for debugging
+    # Attempt to run tests with verbose diagnostics
+    # This is critical to understand why dotnet test is failing.
+    - name: Run Tests with Diagnostics
+      working-directory: ${{ github.workspace }}
+      run: dotnet test FSM_API.sln --no-build --diag diag.log
+      # The '--diag diag.log' will create a detailed log file in the working directory.
+      # You can later download this log from the workflow artifacts if needed,
+      # but the relevant parts might be printed directly to the console output.
+    # --- Diagnostic Steps End ---
 
-    # --- Code Coverage Steps END ---
+    # --- Code Coverage Steps (Temporarily Disabled for Debugging) ---
+    # We will re-enable and refine these once 'Run Tests with Diagnostics' succeeds.
+    # - name: Install dotnet-coverage tool
+    #   run: dotnet tool install --global dotnet-coverage
+
+    # - name: Run Tests with Code Coverage
+    #   working-directory: ${{ github.workspace }}
+    #   run: |
+    #     dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
+    #       -f xml \
+    #       -o "coverage.xml" \
+    #       --include-by-assembly FSM_API
+
+    # - name: Upload coverage reports to Codecov
+    #   uses: codecov/codecov-action@v5
+    #   with:
+    #     files: ./coverage.xml
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     verbose: true
+    # -------------------------------------------------------------
     
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dll
-        # Path to the compiled DLL for .NET Standard 2.0 after a Release build
         path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
 
