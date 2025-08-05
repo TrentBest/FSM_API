@@ -40,7 +40,15 @@ jobs:
 
     - name: Install dotnet-coverage tool
       run: dotnet tool install --global dotnet-coverage
-
+    - name: List Repository Contents
+      run: |
+        echo "Listing contents of current directory:"
+        ls -F .
+        echo "Listing contents of FSM_API directory:"
+        ls -F FSM_API/
+        echo "Listing contents of Tests directory:"
+        ls -F Tests/
+      shell: bash
     - name: Run Tests with Code Coverage
       # CRITICAL FIX: Target your TEST PROJECT'S .csproj file.
       # The '-s "FSM_API/"' parameter tells dotnet-coverage which SOURCE CODE folder
