@@ -96,29 +96,29 @@ jobs:
 
   # The 'publish_nuget' job is commented out as it should not run with every build.
   # Uncomment this entire section when you are ready to publish a new NuGet package.
-  # publish_nuget:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  publish_nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Setup .NET
-  #       uses: actions/setup-dotnet@v4
-  #       with:
-  #         dotnet-version: 8.0.x
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-  #     - name: Download FSM_API DLL Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: fsm-api-dll
-  #         path: .
+      - name: Download FSM_API DLL Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fsm-api-dll
+          path: .
 
-  #     - name: Pack
-  #       run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+      - name: Pack
+        run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
 
-  #     - name: Publish to NuGet.org
-  #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+      - name: Publish to NuGet.org
+        run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
   push_dll_to_fsm_api_unity:
     needs: build
