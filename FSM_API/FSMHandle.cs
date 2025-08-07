@@ -92,6 +92,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public bool IsValid => Context?.IsValid ?? false;
 
+        public bool HasEnteredCurrentState { get; internal set; }
+
 
         /// <summary>
         /// Sets up a new FSM handle, linking it to an FSM blueprint and its specific data.
@@ -116,7 +118,7 @@ namespace TheSingularityWorkshop.FSM_API
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");
 
             CurrentState = Definition.InitialState;
-            //Definition.EnterInitial(Context);
+
         }
 
         /// <summary>

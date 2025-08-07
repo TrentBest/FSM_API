@@ -40,7 +40,7 @@ namespace MyReviewerShowcaseFSM
         {
             ReviewProcessGroup = reviewProcessGroup;
             Name = "PortfolioViewerFSM";
-
+            CandidateProfile = new CandidateProfile();
             if (!FSM_API.Interaction.Exists(Name))
             {
                 FSM_API.Create.CreateFiniteStateMachine(Name, -1, reviewProcessGroup)
@@ -121,7 +121,11 @@ namespace MyReviewerShowcaseFSM
             if (context is PortfolioViewer viewer)
             {
                 DisplayOptions(viewer);
-                string input = Console.ReadLine()?.ToLower();
+                string? input = Console.ReadLine();
+                if(input != null)
+                {
+                    input.ToLower();
+                }
                 viewer.Input = input; // Set input for transitions
             }
         }

@@ -1,4 +1,4 @@
-namespace TheSingularityWorkshop.FSM_API
+namespace TheSingularityWorkshop.FSM_API.Tests
 {
     [TestFixture]
     public class FSM_API_Create_CreateProcessingGroupTests

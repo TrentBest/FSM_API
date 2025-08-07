@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
     [TestFixture]
-    public class FSM_API_InteractionAddTransitionTests
+    public class FSM_API_ErrorAPITests
     {
         [SetUp]
         public void Setup()

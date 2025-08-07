@@ -116,7 +116,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Act 3: Trigger transition and update again (Third update tick)
             // This time, the transition condition will be true, leading to a state change.
-            ctx.ShouldTransition = true;
+            handle.TransitionTo("StateB");
             FSM_API.Interaction.Update(_testProcessingGroup);
 
             // Assert

@@ -431,7 +431,6 @@ namespace TheSingularityWorkshop.FSM_API
                     if (t.Condition(ctx))
                     {
                         currentState.Exit(ctx);
-                        //_states[t.To].Enter(ctx);
                         next = t.To;
                         return; // Transition occurred, exit
                     }
@@ -446,9 +445,9 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-            // 2. Enter the state if it's unentered
-            if(!ctx.HasEntered)
-                currentState.Enter(ctx);
+            //// 2. Enter the state if it's unentered
+            //if(!ctx.HasEntered)
+            //    currentState.Enter(ctx);
 
             // 3. Execute current state's Update logic
             try

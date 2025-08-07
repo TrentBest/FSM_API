@@ -342,7 +342,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// have completed their processing.
             /// Errors during deferred actions are reported via <see cref="Error.OnInternalApiError"/>.
             /// </remarks>
-            internal static void ProcessDeferredModifications()
+            public static void ProcessDeferredModifications()
             {
                 while (_deferredModifications.Count > 0)
                 {
@@ -382,7 +382,6 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                // Correct. TryGetValue makes 'fsmDefinitionsForCategory' non-null if true.
                 if (!_buckets.TryGetValue(processingGroup, out var fsmDefinitionsForCategory))
                 {
                     return;
@@ -420,7 +419,13 @@ namespace TheSingularityWorkshop.FSM_API
                         {
                             try
                             {
-                                handle.Update(); 
+                                if (!handle.HasEnteredCurrentState)
+                                {
+                                    bucket.Definition.GetState(bucket.Definition.InitialState).Enter(handle.Context);
+                                    handle.HasEnteredCurrentState = true;
+                                }
+                                bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
+                                
                             }
                             catch (Exception ex)
                             {
@@ -533,7 +538,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// It includes safety checks to prevent <see cref="NullReferenceException"/>
             /// and <see cref="KeyNotFoundException"/> if the specified group or FSM name does not exist.
             /// </remarks>
-            internal static FsmBucket GetBucket(string fsmName, string processGroup)
+            public static FsmBucket GetBucket(string fsmName, string processGroup)
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {

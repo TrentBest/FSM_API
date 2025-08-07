@@ -114,7 +114,7 @@ namespace TheSingularityWorkshop.FSM_API
         public void Enter(IStateContext c)
         {
             _onEnter.Invoke(c); // Guaranteed not to be null due to constructor and SetOnX methods
-            c.HasEntered = true;
+            
         }
 
         /// <summary>
