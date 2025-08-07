@@ -73,7 +73,7 @@ jobs:
           exit 1
         fi
         echo "Found coverage file: $COVERAGE_FILE"
-        echo "coverage_file=$COVERAGE_OUTPUT" >> $GITHUB_OUTPUT
+        echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Upload coverage reports to Codecov
@@ -111,7 +111,7 @@ jobs:
         run: dotnet restore FSM_API.sln
 
       - name: Pack
-        run: dotnet pack FSM_API/FSM_API.csproj --configuration Release -o nuget-packages
+        run: dotnet pack FSM_API.sln --configuration Release -o nuget-packages
 
       - name: Publish to NuGet.org
         run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
