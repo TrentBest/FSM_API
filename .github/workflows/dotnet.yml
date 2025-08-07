@@ -23,7 +23,7 @@ jobs:
 
     - name: Restore Solution Dependencies
       working-directory: ${{ github.workspace }}
-      run: dotnet restore FSM_API/FSM_API/FSM_API.sln
+      run: dotnet restore /FSM_API.sln
 
     - name: Build Main Project
       working-directory: ${{ github.workspace }}
