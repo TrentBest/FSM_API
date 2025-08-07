@@ -23,27 +23,28 @@ jobs:
 
     - name: Restore Solution Dependencies
       working-directory: ${{ github.workspace }}
-      run: dotnet restore FSM_API.sln
+      run: dotnet restore FSM_API/FSM_API/FSM_API.sln
 
     - name: Build Main Project
       working-directory: ${{ github.workspace }}
-      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
+      run: dotnet build FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-restore --configuration Release
 
     - name: Build Test Project
       working-directory: ${{ github.workspace }}
-      run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
+      run: dotnet build FSM_API/FSM_API/Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
+    # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        dotnet test Tests/FSM_API.Tests.csproj `
-          --no-build `
-          --no-restore `
-          --configuration Release `
-          --collect:"XPlat Code Coverage" `
-          --results-directory ./TestResults `
-          --logger "trx;LogFileName=testresults.trx" `
-          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura `
+        dotnet test FSM_API/FSM_API/Tests/FSM_API.Tests.csproj \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --logger "trx;LogFileName=testresults.trx" \
+          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
           --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.FileName=coverage.cobertura.xml
     - name: Find coverage report path
       id: find_coverage_path
@@ -55,7 +56,7 @@ jobs:
           exit 1
         fi
         echo "Found coverage file: $COVERAGE_FILE"
-        echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
+        echo "coverage_file=$COVERAGE_OUTPUT_PATH" >> $GITHUB_OUTPUT
       shell: bash
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
@@ -72,7 +73,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dll
-        path: FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll
+        path: FSM_API/FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
 
   # The 'publish_nuget' job is commented out as it should not run with every build.
@@ -96,7 +97,7 @@ jobs:
   #         path: .
 
   #     - name: Pack
-  #       run: dotnet pack FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+  #       run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
 
   #     - name: Publish to NuGet.org
   #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
