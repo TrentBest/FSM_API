@@ -36,7 +36,7 @@ jobs:
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        dotnet test FSM_API/FSM_API/Tests/FSM_API.Tests.csproj `
+        dotnet test Tests/FSM_API.Tests.csproj `
           --no-build `
           --no-restore `
           --configuration Release `
