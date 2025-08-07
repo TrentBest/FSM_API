@@ -34,52 +34,44 @@ jobs:
       run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
     # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
-    # - name: Install dotnet-coverage tool
-    #   run: dotnet tool install --global dotnet-coverage
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install --global dotnet-coverage
 
-    # - name: Run Tests with Code Coverage
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     echo "Verifying test DLL existence and path:"
-    #     ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
-        
-    #     echo "Current working directory for dotnet-coverage: $(pwd)"
-    #     # Original attempt that failed
-    #     # dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
-    #     #   -f xml \
-    #     #   -o "coverage.xml" \
-    #     #   --include-by-assembly FSM_API
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install --global dotnet-coverage
 
-    #     # Attempt to pass arguments separately (also failed to run)
-    #     # dotnet-coverage collect \
-    #     #   "dotnet" \
-    #     #   "test" \
-    #     #   "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-    #     #   "--no-build" \
-    #     #   "--collect:\"Code Coverage\"" \
-    #     #   -f xml \
-    #     #   -o "coverage.xml" \
-    #     #   --include-by-assembly FSM_API
-        
-    #     # Most recent attempt with -- (also failed to run)
-    #     # dotnet-coverage collect \
-    #     #   --output "coverage.xml" \
-    #     #   --format "xml" \
-    #     #   --include-by-assembly "FSM_API" \
-    #     #   -- \
-    #     #   dotnet test "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-    #     #   --no-build \
-    #     #   --collect:"Code Coverage"
-        
-    #     echo "Skipping dotnet-coverage execution for now as requested."
+    - name: Run Tests with Code Coverage
+      working-directory: ${{ github.workspace }} # This is important: run from the repo root
+      run: |
+        # Verify test DLL exists at its expected build path
+        TEST_DLL_PATH="Tests/bin/Release/net8.0/FSM_API.Tests.dll"
+        if [ ! -f "$TEST_DLL_PATH" ]; then
+          echo "ERROR: Test DLL not found at $TEST_DLL_PATH"
+          exit 1
+        fi
 
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v5
-    #   with:
-    #     files: ./coverage.xml
-    #     token: ${{ secrets.CODECOV_TOKEN }}
-    #     verbose: true
-    # -------------------------------------------------------------
+        # Execute dotnet-coverage. Note the use of -- for argument separation.
+        # Ensure the test project's output DLL is correctly targeted.
+        dotnet-coverage collect \
+          --output "coverage.xml" \
+          --format "cobertura" \
+          --include-by-assembly "FSM_API" \
+          -- \
+          dotnet test "${TEST_DLL_PATH}" \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --logger "trx;LogFileName=testresults.trx" # Optional: if you also want TRX results
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4 # Use version 4 or newer
+      with:
+        files: ./coverage.xml # Path to the generated coverage report relative to github.workspace
+        token: ${{ secrets.CODECOV_TOKEN }} # Ensure this secret is configured in your repo
+        flags: unittests
+        name: FSM-API-Codecov
+        fail_ci_if_error: true
+        verbose: true
     
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
