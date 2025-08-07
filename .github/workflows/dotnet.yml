@@ -33,54 +33,60 @@ jobs:
       working-directory: ${{ github.workspace }}
       run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
-    # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
-    # - name: Install dotnet-coverage tool
-    #   run: dotnet tool install --global dotnet-coverage
+    # --- Code Coverage Steps ---
+    # We now create a runsettings file to properly configure the code coverage collector.
+    - name: Create Coverlet Runsettings File
+      run: |
+        echo '<RunSettings>' > coverlet.runsettings
+        echo '  <DataCollectionRunSettings>' >> coverlet.runsettings
+        echo '    <DataCollectors>' >> coverlet.runsettings
+        echo '      <DataCollector friendlyName="XPlat Code Coverage" uri="ms-dotnet-coverage://microsoft.com/CodeCoverage/v1" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.NetCore.DataCollector.CoverageDataCollector, Microsoft.VisualStudio.Coverage.NetCore.DataCollector, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">' >> coverlet.runsettings
+        echo '        <Configuration>' >> coverlet.runsettings
+        echo '          <Format>cobertura</Format>' >> coverlet.runsettings
+        echo '          <FileName>coverage.cobertura.xml</FileName>' >> coverlet.runsettings
+        echo '        </Configuration>' >> coverlet.runsettings
+        echo '      </DataCollector>' >> coverlet.runsettings
+        echo '    </DataCollectors>' >> coverlet.runsettings
+        echo '  </DataCollectionRunSettings>' >> coverlet.runsettings
+        echo '</RunSettings>' >> coverlet.runsettings
 
-    # - name: Run Tests with Code Coverage
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     echo "Verifying test DLL existence and path:"
-    #     ls -l Tests/bin/Release/net8.0/FSM_API.Tests.dll || { echo "ERROR: Test DLL not found at expected path prior to dotnet-coverage!"; exit 1; }
-        
-    #     echo "Current working directory for dotnet-coverage: $(pwd)"
-    #     # Original attempt that failed
-    #     # dotnet-coverage collect "dotnet test Tests/bin/Release/net8.0/FSM_API.Tests.dll --no-build --collect \"Code Coverage\"" \
-    #     #   -f xml \
-    #     #   -o "coverage.xml" \
-    #     #   --include-by-assembly FSM_API
+    - name: Run Tests with Code Coverage
+      working-directory: ${{ github.workspace }}
+      run: |
+        dotnet test Tests/FSM_API.Tests.csproj \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --logger "trx;LogFileName=testresults.trx" \
+          --settings coverlet.runsettings
+      shell: bash
 
-    #     # Attempt to pass arguments separately (also failed to run)
-    #     # dotnet-coverage collect \
-    #     #   "dotnet" \
-    #     #   "test" \
-    #     #   "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-    #     #   "--no-build" \
-    #     #   "--collect:\"Code Coverage\"" \
-    #     #   -f xml \
-    #     #   -o "coverage.xml" \
-    #     #   --include-by-assembly FSM_API
-        
-    #     # Most recent attempt with -- (also failed to run)
-    #     # dotnet-coverage collect \
-    #     #   --output "coverage.xml" \
-    #     #   --format "xml" \
-    #     #   --include-by-assembly "FSM_API" \
-    #     #   -- \
-    #     #   dotnet test "Tests/bin/Release/net8.0/FSM_API.Tests.dll" \
-    #     #   --no-build \
-    #     #   --collect:"Code Coverage"
-        
-    #     echo "Skipping dotnet-coverage execution for now as requested."
+    - name: Find coverage report path
+      id: find_coverage_path
+      working-directory: ${{ github.workspace }}
+      run: |
+        COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
+        if [ -z "$COVERAGE_FILE" ]; then
+          echo "ERROR: Code coverage file 'coverage.cobertura.xml' not found!"
+          exit 1
+        fi
+        echo "Found coverage file: $COVERAGE_FILE"
+        echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
+      shell: bash
 
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v5
-    #   with:
-    #     files: ./coverage.xml
-    #     token: ${{ secrets.CODECOV_TOKEN }}
-    #     verbose: true
-    # -------------------------------------------------------------
-    
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ${{ steps.find_coverage_path.outputs.coverage_file }}
+        flags: unittests
+        name: FSM-API-Codecov
+        fail_ci_if_error: true
+        verbose: true
+# -------------------------------------------------------------
+
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -109,7 +115,7 @@ jobs:
   #         path: .
 
   #     - name: Pack
-  #       run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+  #       run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
 
   #     - name: Publish to NuGet.org
   #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
