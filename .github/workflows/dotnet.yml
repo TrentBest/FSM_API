@@ -1,5 +1,4 @@
-_API DLL Artifact
-  #       uses: actions/downname: .NET
+name: .NET
 
 on:
   push:
@@ -35,8 +34,6 @@ jobs:
       run: dotnet build FSM_API/Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
     # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
-    # The `dotnet-coverage` tool was causing issues, so these steps are disabled.
-    # We will re-enable a new approach using the `coverlet.collector` package directly.
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
@@ -93,7 +90,8 @@ jobs:
   #       with:
   #         dotnet-version: 8.0.x
 
-  #     - name: Download FSMload-artifact@v4
+  #     - name: Download FSM_API DLL Artifact
+  #       uses: actions/download-artifact@v4
   #       with:
   #         name: fsm-api-dll
   #         path: .
