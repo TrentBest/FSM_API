@@ -1,4 +1,5 @@
-name: .NET
+_API DLL Artifact
+  #       uses: actions/downname: .NET
 
 on:
   push:
@@ -31,15 +32,15 @@ jobs:
 
     - name: Build Test Project
       working-directory: ${{ github.workspace }}
-      run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
+      run: dotnet build FSM_API/Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
     # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
-   - name: Run Tests with Code Coverage
+    # The `dotnet-coverage` tool was causing issues, so these steps are disabled.
+    # We will re-enable a new approach using the `coverlet.collector` package directly.
+    - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
-        # Run tests and collect coverage using coverlet.collector directly via dotnet test
-        # Output will be in TestResults/<GUID>/coverage.cobertura.xml
-        dotnet test FSM_API/Tests/FSM_API.Tests.csproj ` # Path updated here
+        dotnet test FSM_API/Tests/FSM_API.Tests.csproj `
           --no-build `
           --no-restore `
           --configuration Release `
@@ -48,32 +49,27 @@ jobs:
           --logger "trx;LogFileName=testresults.trx" `
           --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura `
           --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.FileName=coverage.cobertura.xml
-
     - name: Find coverage report path
-      id: find_coverage_path # Give this step an ID to reference its outputs
+      id: find_coverage_path
       working-directory: ${{ github.workspace }}
       run: |
-        # coverlet.collector places the coverage.cobertura.xml inside a GUID folder
-        # We need to find this file dynamically.
         COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
         if [ -z "$COVERAGE_FILE" ]; then
           echo "ERROR: Code coverage file 'coverage.cobertura.xml' not found!"
           exit 1
         fi
         echo "Found coverage file: $COVERAGE_FILE"
-        # Set the found path as an output variable for subsequent steps
         echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
-      shell: bash # Ensure bash is used for find command
-
+      shell: bash
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4 # Use version 4 or newer for compatibility
+      uses: codecov/codecov-action@v4
       with:
-        token: ${{ secrets.CODECOV_TOKEN }} # Ensure this secret is configured in your repo
-        file: ${{ steps.find_coverage_path.outputs.coverage_file }} # Use the dynamically found path
-        flags: unittests # Optional: labels for your coverage report on Codecov
-        name: FSM-API-Codecov # Optional: name for the upload
-        fail_ci_if_error: true # Recommended: fail CI if Codecov upload fails
-        verbose: true # Optional: enable verbose logging for debugging
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ${{ steps.find_coverage_path.outputs.coverage_file }}
+        flags: unittests
+        name: FSM-API-Codecov
+        fail_ci_if_error: true
+        verbose: true
 # -------------------------------------------------------------
 
     - name: Upload FSM_API DLL Artifact
@@ -82,7 +78,7 @@ jobs:
         name: fsm-api-dll
         path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
-        
+
   # The 'publish_nuget' job is commented out as it should not run with every build.
   # Uncomment this entire section when you are ready to publish a new NuGet package.
   # publish_nuget:
@@ -97,8 +93,7 @@ jobs:
   #       with:
   #         dotnet-version: 8.0.x
 
-  #     - name: Download FSM_API DLL Artifact
-  #       uses: actions/download-artifact@v4
+  #     - name: Download FSMload-artifact@v4
   #       with:
   #         name: fsm-api-dll
   #         path: .
