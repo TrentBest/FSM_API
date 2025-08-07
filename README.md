@@ -14,7 +14,6 @@ FSM_API
 
 
 [![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/your-project-id)](https://www.codacy.com/gh/TrentBest/FSM_API/dashboard?utm_source=github.com&utm_medium=referral&utm_content=TrentBest/FSM_API&utm_campaign=Badge_Grade)
 
 Blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
