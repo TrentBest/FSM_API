@@ -23,7 +23,7 @@ jobs:
 
     - name: Restore Solution Dependencies
       working-directory: ${{ github.workspace }}
-      run: dotnet restore FSM_API/FSM_API.sln
+      run: dotnet restore FSM_API.sln
 
     - name: Build Main Project
       working-directory: ${{ github.workspace }}
@@ -31,9 +31,8 @@ jobs:
 
     - name: Build Test Project
       working-directory: ${{ github.workspace }}
-      run: dotnet build FSM_API/Tests/FSM_API.Tests.csproj --no-restore --configuration Release
+      run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
-    # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
