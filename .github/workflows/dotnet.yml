@@ -49,7 +49,6 @@ jobs:
         echo '    </DataCollectors>' >> coverlet.runsettings
         echo '  </DataCollectionRunSettings>' >> coverlet.runsettings
         echo '</RunSettings>' >> coverlet.runsettings
-
     - name: Run Tests with Code Coverage
       working-directory: ${{ github.workspace }}
       run: |
@@ -87,36 +86,38 @@ jobs:
         verbose: true
 # -------------------------------------------------------------
 
-    - name: Upload FSM_API Artifact
+    - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: fsm-api-artifact
-        path: FSM_API/
+        name: fsm-api-dll
+        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
 
-  publish_nuget:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  # The 'publish_nuget' job is commented out as it should not run with every build.
+  # Uncomment this entire section when you are ready to publish a new NuGet package.
+  # publish_nuget:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      
-      - name: Download FSM_API Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: fsm-api-artifact
-          path: FSM_API/
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Setup .NET
+  #       uses: actions/setup-dotnet@v4
+  #       with:
+  #         dotnet-version: 8.0.x
 
-      - name: Pack
-        run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+  #     - name: Download FSM_API DLL Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: fsm-api-dll
+  #         path: .
 
-      - name: Publish to NuGet.org
-        run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+  #     - name: Pack
+  #       run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+
+  #     - name: Publish to NuGet.org
+  #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
 
   push_dll_to_fsm_api_unity:
     needs: build
@@ -131,10 +132,10 @@ jobs:
           token: ${{ secrets.PAT }}
           path: './fsm_api_unity_repo'
 
-      - name: Download FSM_API Artifact for FSM_API_Unity
+      - name: Download FSM_API DLL Artifact for FSM_API_Unity
         uses: actions/download-artifact@v4
         with:
-          name: fsm-api-artifact
+          name: fsm-api-dll
           path: .
 
       - name: Create Plugins directory in FSM_API_Unity
@@ -143,7 +144,7 @@ jobs:
 
       - name: Update DLL in FSM_API_Unity Repo
         run: |
-          cp FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
+          cp FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
       - name: Commit and Push to FSM_API_Unity Repo
@@ -170,10 +171,10 @@ jobs:
           path: './rawwar_repo'
           ref: 'Alpha'
 
-      - name: Download FSM_API Artifact for raWWar
+      - name: Download FSM_API DLL Artifact for raWWar
         uses: actions/download-artifact@v4
         with:
-          name: fsm-api-artifact
+          name: fsm-api-dll
           path: .
 
       - name: Create Plugins directory in raWWar
@@ -182,7 +183,7 @@ jobs:
 
       - name: Update DLL in raWWar Repo
         run: |
-          cp FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll ./rawwar_repo/Assets/Plugins/
+          cp FSM_API.dll ./rawwar_repo/Assets/Plugins/
         shell: bash
 
       - name: Commit and Push to raWWar Repo
