@@ -1,35 +1,30 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0;netstandard2.0;netcoreapp3.1</TargetFrameworks>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<!-- CHANGED: Set to disable -->
-		<Nullable>disable</Nullable>
-		<!-- CHANGED: Set to disable -->
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;netstandard2.1</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-		<IsPackable>true</IsPackable>
-		<PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-		<Version>1.0.6</Version>
-		<Authors>Trent Best</Authors>
-		<Company>The Singularity Workshop</Company>
-		<Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
-		<RepositoryUrl>https://github.com/TrentBest/FSM_API</RepositoryUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageTags>fsm;state-machine;unity;net;Finite State Machine</PackageTags>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
-		<PackageIcon>TheSingularityWorkshop.jpg</PackageIcon>
-		<PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
-		<Copyright>Copyright © 2024 The Singularity Workshop. All rights reserved.</Copyright>
-	</PropertyGroup>
-	<!-- REMOVED: This conditional PropertyGroup is no longer needed -->
-	<!-- <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup> -->
-	<ItemGroup>
-		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+    <IsPackable>true</IsPackable>
+    <PackageId>TheSingularityWorkshop.FSM_API</PackageId>
+    <Version>1.0.6</Version>
+    <Authors>Trent Best</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
+    <RepositoryUrl>https://github.com/TrentBest/FSM_API</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>fsm;state-machine;unity;net;Finite State Machine</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
+    <PackageIcon>TheSingularityWorkshop.jpg</PackageIcon>
+    <PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
+    <Copyright>Copyright � 2024 The Singularity Workshop. All rights reserved.</Copyright>
+  </PropertyGroup>
 
-		<None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+    <None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
+  </ItemGroup>
+
 </Project>
