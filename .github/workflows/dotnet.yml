@@ -87,11 +87,11 @@ jobs:
         verbose: true
 # -------------------------------------------------------------
 
-    - name: Upload FSM_API DLL Artifact
+    - name: Upload FSM_API Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: fsm-api-dll
-        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
+        name: fsm-api-artifact
+        path: FSM_API/
         retention-days: 1
 
   publish_nuget:
@@ -106,12 +106,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
       
-      - name: Restore Solution Dependencies
-        working-directory: ${{ github.workspace }}
-        run: dotnet restore FSM_API.sln
+      - name: Download FSM_API Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fsm-api-artifact
+          path: FSM_API/
 
       - name: Pack
-        run: dotnet pack FSM_API.sln --configuration Release -o nuget-packages
+        run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
 
       - name: Publish to NuGet.org
         run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
@@ -129,10 +131,10 @@ jobs:
           token: ${{ secrets.PAT }}
           path: './fsm_api_unity_repo'
 
-      - name: Download FSM_API DLL Artifact for FSM_API_Unity
+      - name: Download FSM_API Artifact for FSM_API_Unity
         uses: actions/download-artifact@v4
         with:
-          name: fsm-api-dll
+          name: fsm-api-artifact
           path: .
 
       - name: Create Plugins directory in FSM_API_Unity
@@ -141,7 +143,7 @@ jobs:
 
       - name: Update DLL in FSM_API_Unity Repo
         run: |
-          cp FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
+          cp FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
         shell: bash
 
       - name: Commit and Push to FSM_API_Unity Repo
@@ -168,10 +170,10 @@ jobs:
           path: './rawwar_repo'
           ref: 'Alpha'
 
-      - name: Download FSM_API DLL Artifact for raWWar
+      - name: Download FSM_API Artifact for raWWar
         uses: actions/download-artifact@v4
         with:
-          name: fsm-api-dll
+          name: fsm-api-artifact
           path: .
 
       - name: Create Plugins directory in raWWar
@@ -180,7 +182,7 @@ jobs:
 
       - name: Update DLL in raWWar Repo
         run: |
-          cp FSM_API.dll ./rawwar_repo/Assets/Plugins/
+          cp FSM_API/FSM_API/bin/Release/netstandard2.0/FSM_API.dll ./rawwar_repo/Assets/Plugins/
         shell: bash
 
       - name: Commit and Push to raWWar Repo
