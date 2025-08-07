@@ -34,52 +34,55 @@ jobs:
       run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
 
     # --- Code Coverage Steps (ABANDONED FOR NOW - Will re-enable and fix tomorrow) ---
-    - name: Install dotnet-coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Install dotnet-coverage tool
-      run: dotnet tool install --global dotnet-coverage
-
-    - name: Run Tests with Code Coverage
-      working-directory: ${{ github.workspace }} # This is important: run from the repo root
+   - name: Run Tests with Code Coverage
+      working-directory: ${{ github.workspace }}
       run: |
-        # Verify test DLL exists at its expected build path
-        TEST_DLL_PATH="Tests/bin/Release/net8.0/FSM_API.Tests.dll"
-        if [ ! -f "$TEST_DLL_PATH" ]; then
-          echo "ERROR: Test DLL not found at $TEST_DLL_PATH"
+        # Run tests and collect coverage using coverlet.collector directly via dotnet test
+        # Output will be in TestResults/<GUID>/coverage.cobertura.xml
+        dotnet test FSM_API/Tests/FSM_API.Tests.csproj ` # Path updated here
+          --no-build `
+          --no-restore `
+          --configuration Release `
+          --collect:"XPlat Code Coverage" `
+          --results-directory ./TestResults `
+          --logger "trx;LogFileName=testresults.trx" `
+          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura `
+          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.FileName=coverage.cobertura.xml
+
+    - name: Find coverage report path
+      id: find_coverage_path # Give this step an ID to reference its outputs
+      working-directory: ${{ github.workspace }}
+      run: |
+        # coverlet.collector places the coverage.cobertura.xml inside a GUID folder
+        # We need to find this file dynamically.
+        COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
+        if [ -z "$COVERAGE_FILE" ]; then
+          echo "ERROR: Code coverage file 'coverage.cobertura.xml' not found!"
           exit 1
         fi
-
-        # Execute dotnet-coverage. Note the use of -- for argument separation.
-        # Ensure the test project's output DLL is correctly targeted.
-        dotnet-coverage collect \
-          --output "coverage.xml" \
-          --format "cobertura" \
-          --include-by-assembly "FSM_API" \
-          -- \
-          dotnet test "${TEST_DLL_PATH}" \
-          --no-build \
-          --no-restore \
-          --configuration Release \
-          --logger "trx;LogFileName=testresults.trx" # Optional: if you also want TRX results
+        echo "Found coverage file: $COVERAGE_FILE"
+        # Set the found path as an output variable for subsequent steps
+        echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
+      shell: bash # Ensure bash is used for find command
 
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4 # Use version 4 or newer
+      uses: codecov/codecov-action@v4 # Use version 4 or newer for compatibility
       with:
-        files: ./coverage.xml # Path to the generated coverage report relative to github.workspace
         token: ${{ secrets.CODECOV_TOKEN }} # Ensure this secret is configured in your repo
-        flags: unittests
-        name: FSM-API-Codecov
-        fail_ci_if_error: true
-        verbose: true
-    
+        file: ${{ steps.find_coverage_path.outputs.coverage_file }} # Use the dynamically found path
+        flags: unittests # Optional: labels for your coverage report on Codecov
+        name: FSM-API-Codecov # Optional: name for the upload
+        fail_ci_if_error: true # Recommended: fail CI if Codecov upload fails
+        verbose: true # Optional: enable verbose logging for debugging
+# -------------------------------------------------------------
+
     - name: Upload FSM_API DLL Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dll
         path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
         retention-days: 1
-
+        
   # The 'publish_nuget' job is commented out as it should not run with every build.
   # Uncomment this entire section when you are ready to publish a new NuGet package.
   # publish_nuget:
