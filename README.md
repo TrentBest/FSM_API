@@ -8,6 +8,7 @@ FSM_API
 [![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
 [![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
 [![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
+[![Code Coverage](https://raw.githubusercontent.com/TrentBest/FSM_API/master/coverage/badge.svg)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amain)
 
 Blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
