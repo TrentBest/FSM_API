@@ -27,7 +27,7 @@ jobs:
 
     - name: Build Main Project
       working-directory: ${{ github.workspace }}
-      run: dotnet build FSM_API/FSM_API/FSM_API.csproj --no-restore --configuration Release
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
 
     - name: Build Test Project
       working-directory: ${{ github.workspace }}
