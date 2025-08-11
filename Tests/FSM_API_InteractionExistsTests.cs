@@ -76,7 +76,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             bool exists = FSM_API.Interaction.Exists(nonExistentFsmName);
 
             // Assert
-            Assert.That(exists, Is.True, $"Expected FSM '{nonExistentFsmName}' to not exist.");
+            Assert.That(exists, Is.False, $"Expected FSM '{nonExistentFsmName}' to not exist.");
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             bool exists = FSM_API.Interaction.Exists(fsmName, group2);
 
             // Assert
-            Assert.That(exists, Is.True, $"Expected FSM '{fsmName}' to not exist in '{group2}' when it's only in '{group1}'.");
+            Assert.That(exists, Is.False, $"Expected FSM '{fsmName}' to not exist in '{group2}' when it's only in '{group1}'.");
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             bool exists = FSM_API.Interaction.Exists(fsmName, nonExistentProcessingGroup);
 
             // Assert
-            Assert.That(exists, Is.True, $"Expected FSM '{fsmName}' to not exist in a non-existent processing group '{nonExistentProcessingGroup}'.");
+            Assert.That(exists, Is.False, $"Expected FSM '{fsmName}' to not exist in a non-existent processing group '{nonExistentProcessingGroup}'.");
         }
 
         /// <summary>

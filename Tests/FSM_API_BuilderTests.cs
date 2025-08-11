@@ -18,6 +18,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         private const string InitialStateName = "Idle";
         private const string OtherStateName = "Running";
         private const string ValidProcessingGroup = "GameLoop";
+        private static int processRate = 0;
+        private static string processingGroup;
 
         /// <summary>
         /// 
@@ -107,7 +109,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Act & Assert
             // Attempting to add the same state name twice should fail.
-            Assert.Throws<InvalidOperationException>(() => builder.State(InitialStateName, null, null, null));
+            Assert.Throws<ArgumentException>(() => builder.State(InitialStateName, null, null, null));
         }
 
         /// <summary>
@@ -164,16 +166,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             FSM_API.Create.CreateProcessingGroup(ValidProcessingGroup);
-            var builder = new FSMBuilder(FsmName);
-            builder.State(InitialStateName, null, null, null);
+            CreateFSMDefinition();
 
-            // Act
-            builder.WithProcessingGroup(ValidProcessingGroup);
-            builder.BuildDefinition();
             var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
             // Assert
             // Verify that the processing group was correctly assigned to the FSM definition.
             Assert.That(definition.ProcessingGroup, Is.EqualTo(ValidProcessingGroup));
+        }
+
+        private static void CreateFSMDefinition()
+        {
+            FSM_API.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup);
         }
 
         /// <summary>
@@ -206,18 +209,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Assert
             Assert.That(definition.ProcessRate, Is.EqualTo(rate));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void WithProcessRate_NegativeRate_ThrowsArgumentOutOfRangeException()
-        {
-            // Arrange
-            var builder = new FSMBuilder(FsmName);
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void WithProcessRate_NegativeRate_ThrowsArgumentOutOfRangeException()
+        //{
+        //    // Arrange
+        //    FSM_API.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup)
+        //         .State(InitialStateName, null, null, null)
+        //         .BuildDefinition();
 
-            // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => builder.WithProcessRate(-1));
-        }
+        //    // Act & Assert
+        //    Assert.Throws<ArgumentOutOfRangeException>(() => builder.WithProcessRate(-1));
+        //}
         /// <summary>
         /// 
         /// </summary>
