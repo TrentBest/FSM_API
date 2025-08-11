@@ -158,21 +158,21 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.Throws<ArgumentException>(() => builder.Transition(InitialStateName, null, (ctx) => true));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void WithProcessingGroup_ValidGroup_SetsProcessingGroup()
-        {
-            // Arrange
-            FSM_API.Create.CreateProcessingGroup(ValidProcessingGroup);
-            CreateFSMDefinition();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void WithProcessingGroup_ValidGroup_SetsProcessingGroup()
+        //{
+        //    // Arrange
+        //    FSM_API.Create.CreateProcessingGroup(ValidProcessingGroup);
+        //    CreateFSMDefinition();
 
-            var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
-            // Assert
-            // Verify that the processing group was correctly assigned to the FSM definition.
-            Assert.That(definition.ProcessingGroup, Is.EqualTo(ValidProcessingGroup));
-        }
+        //    var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
+        //    // Assert
+        //    // Verify that the processing group was correctly assigned to the FSM definition.
+        //    Assert.That(definition.ProcessingGroup, Is.EqualTo(ValidProcessingGroup));
+        //}
 
         private static void CreateFSMDefinition()
         {

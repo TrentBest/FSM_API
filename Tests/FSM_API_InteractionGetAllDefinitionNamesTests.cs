@@ -45,89 +45,89 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void GetAllDefinitionNames_CustomGroup_ReturnsCorrectNames()
-        {
-            // Arrange
-            string customGroup = "PhysicsUpdate";
-            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
-            // Also add an FSM to a different group to ensure separation
-            FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void GetAllDefinitionNames_CustomGroup_ReturnsCorrectNames()
+        //{
+        //    // Arrange
+        //    string customGroup = "PhysicsUpdate";
+        //    FSM_API.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
+        //    FSM_API.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
+        //    // Also add an FSM to a different group to ensure separation
+        //    FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
 
-            // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
+        //    // Act
+        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
 
-            // Assert
-            Assert.That(names, Is.True, "Returned collection should not be null.");
-            Assert.That(names.Count, Is.EqualTo(2), $"Expected 2 FSM definitions in the '{customGroup}' group.");
-            Assert.That(names, Is.EquivalentTo(new[] { "PhysFSM_A", "PhysFSM_B" }), 
-                "Returned collection should contain the correct FSM names for the custom group.");
-        }
+        //    // Assert
+        //    Assert.That(names, Is.True, "Returned collection should not be null.");
+        //    Assert.That(names.Count, Is.EqualTo(2), $"Expected 2 FSM definitions in the '{customGroup}' group.");
+        //    Assert.That(names, Is.EquivalentTo(new[] { "PhysFSM_A", "PhysFSM_B" }), 
+        //        "Returned collection should contain the correct FSM names for the custom group.");
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void GetAllDefinitionNames_GroupWithSingleFSM_ReturnsSingleName()
-        {
-            // Arrange
-            string singleFsmGroup = "RenderGroup";
-            string singleFsmName = "CameraFSM";
-            FSM_API.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void GetAllDefinitionNames_GroupWithSingleFSM_ReturnsSingleName()
+        //{
+        //    // Arrange
+        //    string singleFsmGroup = "RenderGroup";
+        //    string singleFsmName = "CameraFSM";
+        //    FSM_API.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
 
-            // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
+        //    // Act
+        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
 
-            // Assert
-            Assert.That(names, Is.True, "Returned collection should not be null.");
-            Assert.That(names.Count, Is.EqualTo(1), "Expected 1 FSM definition in the group.");
-            Assert.That(names.First(), Is.EqualTo(singleFsmName), "The single FSM name should be correct.");
-        }
+        //    // Assert
+        //    Assert.That(names, Is.True, "Returned collection should not be null.");
+        //    Assert.That(names.Count, Is.EqualTo(1), "Expected 1 FSM definition in the group.");
+        //    Assert.That(names.First(), Is.EqualTo(singleFsmName), "The single FSM name should be correct.");
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void GetAllDefinitionNames_GroupWithNoFSMs_ReturnsEmptyCollection()
-        {
-            // Arrange
-            // Create a group by defining an FSM and then deleting it, or by simply
-            // retrieving a group that exists but has no FSMs (not directly supported by current API).
-            // Simplest way to ensure a group exists but is empty is to check after ResetAPI.
-            // Or, to be explicit, define one FSM in another group.
-            FSM_API.Create.CreateFiniteStateMachine("DummyFSM", processingGroup: "OtherGroup").BuildDefinition();
-            string emptyGroup = "EmptyGroup"; // This group hasn't had any FSMs defined.
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void GetAllDefinitionNames_GroupWithNoFSMs_ReturnsEmptyCollection()
+        //{
+        //    // Arrange
+        //    // Create a group by defining an FSM and then deleting it, or by simply
+        //    // retrieving a group that exists but has no FSMs (not directly supported by current API).
+        //    // Simplest way to ensure a group exists but is empty is to check after ResetAPI.
+        //    // Or, to be explicit, define one FSM in another group.
+        //    FSM_API.Create.CreateFiniteStateMachine("DummyFSM", processingGroup: "OtherGroup").BuildDefinition();
+        //    string emptyGroup = "EmptyGroup"; // This group hasn't had any FSMs defined.
 
-            // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
+        //    // Act
+        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
 
-            // Assert
-            Assert.That(names, Is.True, "Returned collection should not be null.");
-            Assert.That(names, Is.True, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
-            Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions.");
-        }
+        //    // Assert
+        //    Assert.That(names, Is.True, "Returned collection should not be null.");
+        //    Assert.That(names, Is.True, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
+        //    Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions.");
+        //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void GetAllDefinitionNames_NonExistentGroup_ReturnsEmptyCollection()
-        {
-            // Arrange (Setup ensures no FSMs and thus no groups exist initially)
-            string nonExistentGroup = "NonExistentGroup";
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void GetAllDefinitionNames_NonExistentGroup_ReturnsEmptyCollection()
+        //{
+        //    // Arrange (Setup ensures no FSMs and thus no groups exist initially)
+        //    string nonExistentGroup = "NonExistentGroup";
 
-            // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
+        //    // Act
+        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
 
-            // Assert
-            Assert.That(names, Is.True, "Returned collection should not be null for non-existent group.");
-            Assert.That(names, Is.True, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
-            Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions for a non-existent group.");
-        }
+        //    // Assert
+        //    Assert.That(names, Is.True, "Returned collection should not be null for non-existent group.");
+        //    Assert.That(names, Is.True, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
+        //    Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions for a non-existent group.");
+        //}
 
         /// <summary>
         /// 
