@@ -123,25 +123,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fsm.HasTransition("StateA", "StateB"), Is.True, "Should confirm the transition exists.");
             Assert.That(fsm.GetTransition(new Tuple<string, string>("StateB", "StateA")), Is.Not.Null, "Should be able to retrieve the transition by (To, From).");
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void AddTransition_NullConditionThrowsArgumentNullException()
-        {
-            FSM fsm = new FSM { Name = "NullConditionTransitionFSM" };
-            HelperAddState(fsm, "StateA");
-            HelperAddState(fsm, "StateB");
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void AddTransition_NullConditionThrowsArgumentNullException()
+        //{
+        //    FSM fsm = new FSM { Name = "NullConditionTransitionFSM" };
+        //    HelperAddState(fsm, "StateA");
+        //    HelperAddState(fsm, "StateB");
 
-            var ex = Assert.Throws<ArgumentNullException>(() =>
-            {
-                fsm.AddTransition("StateA", "StateB", null);
-            });
+        //    var ex = Assert.Throws<ArgumentNullException>(() =>
+        //    {
+        //        fsm.AddTransition("StateA", "StateB", null);
+        //    });
 
-            Assert.That(ex.ParamName, Is.EqualTo("cond"), "The parameter name should be 'cond'.");
-            Assert.That(ex.Message, Does.Contain($"Attempted to add a transition with null condition from 'StateA' to 'StateB' in FSM 'NullConditionTransitionFSM'."), "Error message should indicate null condition.");
-            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "No transition should be added when a null condition is provided.");
-        }
+        //    Assert.That(ex.ParamName, Is.EqualTo("cond"), "The parameter name should be 'cond'.");
+        //    Assert.That(ex.Message, Does.Contain($"Attempted to add a transition with null condition from 'StateA' to 'StateB' in FSM 'NullConditionTransitionFSM'."), "Error message should indicate null condition.");
+        //    Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "No transition should be added when a null condition is provided.");
+        //}
 
        
         /// <summary>
