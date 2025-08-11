@@ -47,9 +47,6 @@
 
         bool IsValid { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        bool HasEnteredCurrentState { get; set; }
+
     }
 }

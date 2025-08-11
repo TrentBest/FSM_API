@@ -16,16 +16,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// </summary>
     public class MockStateContext : IStateContext
     {
+
         /// <summary>
         /// Mock Constructor
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
+
         public MockStateContext(string value = "TestValue", string name = "TestName")
         {
             Value = value;
             Name = name;
         }
+
 
         /// <summary>
         /// Mock Data
@@ -54,6 +57,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         /// 
         /// </summary>
         public bool CanTransitionToB { get; internal set; }
+
     }
 
     /// <summary>
@@ -86,9 +90,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         /// <summary>
         /// Setup for tests, resets the API and creates a predefined FSM for testing.
         /// </summary>
+
         [SetUp]
         public void Setup()
         {
+            // Reset the API for a clean test environment before each test.
             FSM_API.Internal.ResetAPI(true);
             FSM_Setup();
         }
