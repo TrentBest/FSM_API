@@ -83,7 +83,7 @@ namespace TheSingularityWorkshop.FSM_API
                 if (buckets.TryGetValue(fsmName, out var existingBucket))
                 {
                    
-                    return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition : FSM_API.Internal.GetDefaultFSM());
+                    return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition.Name : FSM_API.Internal.GetDefaultFSM().Name);
                 }
 
                 return new FSMBuilder(fsmName, processRate, processingGroup);

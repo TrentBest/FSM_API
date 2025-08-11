@@ -658,5 +658,55 @@ namespace TheSingularityWorkshop.FSM_API
         {
             return _transitions.FirstOrDefault(s => s.To == transition.Item1 && s.From == transition.Item2);
         }
+
+        /// <summary>
+        ///  Custom string output for presenting the FSM
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.AppendLine($"--- FSM Blueprint: {Name} ---");
+            sb.AppendLine($"  Initial State: {InitialState}");
+            sb.AppendLine($"  Processing Group: {ProcessingGroup}");
+            sb.AppendLine($"  Process Rate: {(ProcessRate == -1 ? "Every Tick" : (ProcessRate == 0 ? "Manual" : $"Every {ProcessRate} Ticks"))}");
+
+            sb.AppendLine("\n  States:");
+            if (_states.Any())
+            {
+                foreach (var state in _states.Values)
+                {
+                    sb.AppendLine($"    - {state.Name}");
+                }
+            }
+            else
+            {
+                sb.AppendLine("    (No states defined)");
+            }
+
+            sb.AppendLine("\n  Transitions:");
+            var allTransitions = GetAllTransitions(); // Use the existing method to get all transitions
+            if (allTransitions.Any())
+            {
+                foreach (var transition in allTransitions)
+                {
+                    if (transition.From == AnyStateIdentifier)
+                    {
+                        sb.AppendLine($"    - Any State -> {transition.To}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"    - {transition.From} -> {transition.To}");
+                    }
+                }
+            }
+            else
+            {
+                sb.AppendLine("    (No transitions defined)");
+            }
+
+            return sb.ToString();
+        }
     }
 }
