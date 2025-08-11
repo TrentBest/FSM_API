@@ -148,7 +148,7 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
-                return bucket.Instances.AsReadOnly();
+                return bucket.Instances.ToList().AsReadOnly();
             }
 
 
@@ -668,6 +668,25 @@ namespace TheSingularityWorkshop.FSM_API
             public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processingGroup)
             {             
                 return Internal.GetFSMHandle(testFsmName, context, processingGroup);
+            }
+
+
+            /// <summary>
+            /// Returns the requested definition or a default FSM.
+            /// </summary>
+            /// <param name="fsmName">Name of the FSM Definition to Get</param>
+            /// <param name="processingGroup">Name of the Processing Group to find the FSM in.</param>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
+            public static FSM GetFSMDefinition(string fsmName, string processingGroup = "Update")
+            {
+                if (FSM_API.Internal.DoesFsmDefinitionExist(processingGroup, fsmName))
+                {
+                    return FSM_API.Internal.GetFSM(fsmName, processingGroup);
+                }
+                FSM fsm = new FSM() { Name = fsmName, ProcessingGroup = processingGroup };
+                FSM_API.Internal.Register(fsmName, fsm, 0, processingGroup);
+                return fsm;
             }
         }
 

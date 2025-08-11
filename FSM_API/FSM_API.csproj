@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;netstandard2.0;netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<!-- CHANGED: Set to disable -->
 		<Nullable>disable</Nullable>
-		<!-- CHANGED: Set to disable -->
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-
+		<LangVersion>8.0</LangVersion>
+		<GenerateImplicitUsings>false</GenerateImplicitUsings>
 		<IsPackable>true</IsPackable>
 		<PackageId>TheSingularityWorkshop.FSM_API</PackageId>
 		<Version>1.0.6</Version>
@@ -23,13 +22,10 @@
 		<PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
 		<Copyright>Copyright © 2024 The Singularity Workshop. All rights reserved.</Copyright>
 	</PropertyGroup>
-	<!-- REMOVED: This conditional PropertyGroup is no longer needed -->
-	<!-- <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup> -->
+
 	<ItemGroup>
 		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
-
 		<None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
 	</ItemGroup>
+
 </Project>

@@ -4,73 +4,142 @@ using System;
 
 using TheSingularityWorkshop.FSM_API;
 
-// A simple mock implementation of IStateContext for our tests.
-public class TestContext : IStateContext
-{
-    public bool IsValid { get; set; } = true;
-    public string Name { get; set; } = "TestContext";
-    public int OnEnterCounter { get; set; } = 0;
-    public int OnUpdateCounter { get; set; } = 0;
-    public int OnExitCounter { get; set; } = 0;
-    public bool ShouldTransition { get; set; } = false;
-    public bool HasEntered { get; set; } =false;
-    public bool AnyStateShouldTransition { get; set; } = false;
-}
-
-// State Action Methods for the FSM
-public static class TestStateActions
-{
-    public static void OnEnterStateA(IStateContext context)
-    {
-        if (context is TestContext ctx)
-        {
-            ctx.OnEnterCounter++;
-        }
-    }
-
-    public static void OnUpdateStateA(IStateContext context)
-    {
-        if (context is TestContext ctx)
-        {
-            ctx.OnUpdateCounter++;
-        }
-    }
-
-    public static void OnExitStateA(IStateContext context)
-    {
-        if (context is TestContext ctx)
-        {
-            ctx.OnExitCounter++;
-        }
-    }
-
-    public static bool ShouldTransition(IStateContext context)
-    {
-        if (context is TestContext ctx)
-        {
-            return ctx.ShouldTransition;
-        }
-        return false;
-    }
-
-    public static bool ShouldAnyStateTransition(IStateContext context)
-    {
-        if (context is TestContext ctx)
-        {
-            return ctx.AnyStateShouldTransition;
-        }
-        return false;
-    }
-}
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// A simple mock implementation of IStateContext for our tests.
+    /// </summary>
+    public class TestContext : IStateContext
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsValid { get; set; } = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; set; } = "TestContext";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int OnEnterCounter { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int OnUpdateCounter { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int OnExitCounter { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ShouldTransition { get; set; } = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasEntered { get; set; } = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AnyStateShouldTransition { get; set; } = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasEnteredCurrentState { get; set; }
+    }
+
+
+    /// <summary>
+    /// State Action Methods for the FSM
+    /// </summary>
+    public static class TestStateActions
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        public static void OnEnterStateA(IStateContext context)
+        {
+            if (context is TestContext ctx)
+            {
+                ctx.OnEnterCounter++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        public static void OnUpdateStateA(IStateContext context)
+        {
+            if (context is TestContext ctx)
+            {
+                ctx.OnUpdateCounter++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        public static void OnExitStateA(IStateContext context)
+        {
+            if (context is TestContext ctx)
+            {
+                ctx.OnExitCounter++;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static bool ShouldTransition(IStateContext context)
+        {
+            if (context is TestContext ctx)
+            {
+                return ctx.ShouldTransition;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static bool ShouldAnyStateTransition(IStateContext context)
+        {
+            if (context is TestContext ctx)
+            {
+                return ctx.AnyStateShouldTransition;
+            }
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_InteractionUpdateTests
     {
         private const string _testProcessingGroup = "TestGroup";
         private const string _testFsmName = "TestFSM";
 
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -79,8 +148,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Internal.ResetAPI();
         }
 
-        // --- Basic Functionality Tests ---
+        
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void Update_ShouldExecuteOnEnterAndOnUpdate_WhenTransitionOccurs()
         {
@@ -128,6 +200,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(ctx.OnExitCounter, Is.EqualTo(1));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void Update_ShouldHandleMultipleIndependentInstances()
         {
@@ -178,7 +253,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(ctx2.OnExitCounter, Is.EqualTo(0));
         }
 
-         [Test]
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
         public void Update_ShouldPrioritizeAnyStateTransition()
         {
             // Arrange
@@ -186,7 +265,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
                 .State("StateB", null, null, null) // Target for regular transition
                 .State("StateC", null, null, null) // Target for any-state transition
-                // Regular transition from StateA to StateB
+                                                   // Regular transition from StateA to StateB
                 .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
                 // Any-state transition from anywhere to StateC
                 .AnyTransition("StateC", TestStateActions.ShouldAnyStateTransition)

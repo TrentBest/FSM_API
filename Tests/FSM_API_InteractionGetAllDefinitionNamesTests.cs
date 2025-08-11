@@ -4,17 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_InteractionGetAllDefinitionNamesTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_DefaultGroup_ReturnsCorrectNames()
         {
@@ -28,11 +40,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(); // Using default "Update"
 
             // Assert
-            Assert.IsNotNull(names, "Returned collection should not be null.");
+            Assert.That(names, Is.EqualTo(new[] { "FSM1", "FSM2", "FSM3" }), "Returned collection should not be null.");
             Assert.That(names.Count, Is.EqualTo(3), "Expected 3 FSM definitions in the default group.");
-            CollectionAssert.AreEquivalent(new[] { "FSM1", "FSM2", "FSM3" }, names, "Returned names should match expected FSMs.");
+            
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_CustomGroup_ReturnsCorrectNames()
         {
@@ -47,11 +62,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
 
             // Assert
-            Assert.IsNotNull(names, "Returned collection should not be null.");
+            Assert.That(names, Is.True, "Returned collection should not be null.");
             Assert.That(names.Count, Is.EqualTo(2), $"Expected 2 FSM definitions in the '{customGroup}' group.");
-            CollectionAssert.AreEquivalent(new[] { "PhysFSM_A", "PhysFSM_B" }, names, "Returned names should match expected FSMs in custom group.");
+            Assert.That(names, Is.EquivalentTo(new[] { "PhysFSM_A", "PhysFSM_B" }), 
+                "Returned collection should contain the correct FSM names for the custom group.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_GroupWithSingleFSM_ReturnsSingleName()
         {
@@ -64,11 +83,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
 
             // Assert
-            Assert.IsNotNull(names, "Returned collection should not be null.");
+            Assert.That(names, Is.True, "Returned collection should not be null.");
             Assert.That(names.Count, Is.EqualTo(1), "Expected 1 FSM definition in the group.");
             Assert.That(names.First(), Is.EqualTo(singleFsmName), "The single FSM name should be correct.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_GroupWithNoFSMs_ReturnsEmptyCollection()
         {
@@ -84,12 +106,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
 
             // Assert
-            Assert.IsNotNull(names, "Returned collection should not be null.");
-            Assert.IsEmpty(names, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
+            Assert.That(names, Is.True, "Returned collection should not be null.");
+            Assert.That(names, Is.True, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
             Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions.");
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_NonExistentGroup_ReturnsEmptyCollection()
         {
@@ -100,11 +124,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
 
             // Assert
-            Assert.IsNotNull(names, "Returned collection should not be null for non-existent group.");
-            Assert.IsEmpty(names, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
+            Assert.That(names, Is.True, "Returned collection should not be null for non-existent group.");
+            Assert.That(names, Is.True, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
             Assert.That(names.Count, Is.EqualTo(0), "Expected 0 FSM definitions for a non-existent group.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_ReturnedCollectionIsReadOnly()
         {
@@ -116,17 +143,24 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(group);
 
             // Assert
-            // Attempt to cast to List<string> to confirm it's not directly modifiable.
-            // A ReadOnlyCollection wrapper prevents direct modification.
-            Assert.IsInstanceOf<System.Collections.ObjectModel.ReadOnlyCollection<string>>(names, "Returned collection should be a ReadOnlyCollection.");
+            // 1. Ensure it's not null.
+            Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
 
-            // Attempting to modify should result in a compile-time error or runtime exception if cast is forced
-            // For example, the following line would not compile or throw NotSupportedException if it somehow did compile:
-            // Assert.Throws<NotSupportedException>(() => ((IList<string>)names).Add("NewFSM"));
-            // (The above is commented out because it's testing implementation detail of ReadOnlyCollection,
-            // the IsInstanceOf check is sufficient for public contract).
+            // 2. Ensure it implements IReadOnlyCollection<string> (implicit from the return type, but good for clarity)
+            // This assertion is often redundant if the method's signature already guarantees IReadOnlyCollection<string>.
+            Assert.That(names, Is.InstanceOf<IReadOnlyCollection<string>>(), "Returned collection should implement IReadOnlyCollection.");
+
+            // 3. More importantly: Ensure it's NOT a mutable collection type.
+            // If it's a List<string> or similar, it could be cast back and modified.
+            // This is the core of what you're trying to prevent.
+            Assert.That(names, Is.Not.InstanceOf<List<string>>(), "Returned collection should not be a mutable List<string>.");
+            Assert.That(names, Is.Not.InstanceOf<HashSet<string>>(), "Returned collection should not be a mutable HashSet<string>.");
+            // Add other mutable collection types if applicable, e.g., Dictionary, if it were a different scenario.
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_NullProcessingGroup_ThrowsArgumentException()
         {
@@ -138,6 +172,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "Expected ArgumentException for null processing group.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_EmptyProcessingGroup_ThrowsArgumentException()
         {
@@ -149,6 +186,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "Expected ArgumentException for empty processing group.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetAllDefinitionNames_WhitespaceProcessingGroup_ThrowsArgumentException()
         {

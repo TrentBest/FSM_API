@@ -110,7 +110,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
         /// or without a data bag (`context` is `null`).
         /// </exception>
-        public FSMHandle(FSM definition, IStateContext context)
+        public FSMHandle(FSM definition=null, IStateContext context = null)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition), "FSM definition cannot be null for FSMHandle.");
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");

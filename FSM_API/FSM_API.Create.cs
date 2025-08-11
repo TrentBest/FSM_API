@@ -181,7 +181,6 @@ namespace TheSingularityWorkshop.FSM_API
             /// </exception>
             public static void CreateProcessingGroup(string processingGroup)
             {
-
                 Internal.GetOrCreateBucketProcessingGroup(processingGroup);
             }
         }

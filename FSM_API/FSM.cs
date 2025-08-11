@@ -447,7 +447,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             // 2. Enter the state if it's unentered
-            if(!ctx.HasEntered)
+            if(!ctx.HasEnteredCurrentState)
                 currentState.Enter(ctx);
 
             // 3. Execute current state's Update logic

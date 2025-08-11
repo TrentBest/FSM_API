@@ -190,24 +190,44 @@ namespace TheSingularityWorkshop.FSM_API
             /// or reloaded, to clear its error history.
             /// </summary>
             /// <param name="fsmDefinitionName">The name of the FSM definition whose error count to reset.</param>
-            internal static void ResetDefinitionErrorCount(string fsmDefinitionName)
+            public static void ResetDefinitionErrorCount(string fsmDefinitionName)
             {
                 // Note: No processingGroup needed here as _fsmDefinitionErrorCounts key is just fsmDefinitionName.
                 // If it were keyed by (fsmName, processingGroup), then processingGroup would be needed.
                 _fsmDefinitionErrorCounts.Remove(fsmDefinitionName);
             }
 
-            internal static Dictionary<FSMHandle, int> GetErrorCounts()
+            /// <summary>
+            /// returns the current error counts
+            /// </summary>
+            /// <returns></returns>
+            public static Dictionary<FSMHandle, int> GetErrorCounts()
             {
                 return _errorCounts;
             }
 
-            internal static Dictionary<string, int> GetDefinitionErrorCounts()
+            /// <summary>
+            /// resets the definition error counts.
+            /// </summary>
+            /// <returns></returns>
+            public static Dictionary<string, int> GetDefinitionErrorCounts()
             {
                 return _fsmDefinitionErrorCounts;
             }
 
-            internal static void Reset()
+            /// <summary>
+            /// Resets the Error count for an instance.
+            /// </summary>
+            /// <param name="handle"></param>
+            public static void ResetInstanceErrorCount(FSMHandle handle)
+            {
+                _errorCounts.Remove(handle);
+            }
+
+            /// <summary>
+            ///  Resets All error counts.
+            /// </summary>
+            public static void Reset()
             {
                 _fsmDefinitionErrorCounts.Clear();
                 _errorCounts.Clear();

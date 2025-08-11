@@ -4,19 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+
 using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_Create_CreateInstanceTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_SucceedsWithDefaultProcessingGroup()
         {
@@ -30,13 +41,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSMHandle handle = FSM_API.Create.CreateInstance(fsmName, context);
 
             // Assert
-            Assert.IsNotNull(handle, "FSMHandle should not be null.");
+            Assert.That(handle, Is.Not.Null, "FSMHandle should not be null.");
             Assert.That(handle.Context, Is.EqualTo(context), "FSMHandle context should match the provided context.");
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1), "Expected one FSM instance to be created.");
             // You could also assert on the FSM definition associated with the handle if FSMHandle exposes it
             // Assert.AreEqual(fsmName, handle.Definition.Name);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_SucceedsWithCustomProcessingGroup()
         {
@@ -51,11 +65,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSMHandle handle = FSM_API.Create.CreateInstance(fsmName, context, customProcessingGroup);
 
             // Assert
-            Assert.IsNotNull(handle, "FSMHandle should not be null.");
+            Assert.That(handle, Is.Not.Null, "FSMHandle should not be null.");
             Assert.That(handle.Context, Is.EqualTo(context), "FSMHandle context should match the provided context.");
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1), "Expected one FSM instance to be created.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_MultipleInstancesForSameFSM_Succeeds()
         {
@@ -73,15 +90,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSMHandle handle3 = FSM_API.Create.CreateInstance(fsmName, context3);
 
             // Assert
-            Assert.IsNotNull(handle1);
-            Assert.IsNotNull(handle2);
-            Assert.IsNotNull(handle3);
+            Assert.That(handle1, Is.Not.Null);
+            Assert.That(handle2, Is.Not.Null);
+            Assert.That(handle3, Is.Not.Null);
             Assert.That(handle2, Is.Not.SameAs(handle1), "Handles should be distinct instances.");
             Assert.That(handle3, Is.Not.SameAs(handle1), "Handles should be distinct instances.");
             Assert.That(handle3, Is.Not.SameAs(handle2), "Handles should be distinct instances.");
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Expected three FSM instances to be created.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_InvalidFsmName_ThrowsArgumentException()
         {
@@ -98,19 +118,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "No FSM instance should be created with invalid FSM name.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_NullContext_ThrowsArgumentNullException()
         {
             // Arrange
             string fsmName = "SomeFSM";
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            FSMTestContext? tc = null;
+            FSMTestContext tc = null;
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => FSM_API.Create.CreateInstance(fsmName, tc!), "Expected ArgumentNullException for null context.");
+            Assert.Throws<ArgumentNullException>(() => FSM_API.Create.CreateInstance(fsmName, tc), "Expected ArgumentNullException for null context.");
 
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "No FSM instance should be created with null context.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_InvalidProcessingGroup_ThrowsArgumentException()
         {
@@ -127,6 +153,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "No FSM instance should be created with invalid processing group.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_FSMDefinitionNotFound_ThrowsKeyNotFoundException()
         {
@@ -151,6 +180,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "No FSM instance should be created when definition is not found.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateInstance_BucketDefinitionIsNull_UsesDefaultFSMAndSucceeds()
         {
@@ -187,13 +219,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSMHandle handle = FSM_API.Create.CreateInstance(fsmName, context, processingGroup);
 
             // Assert
-            Assert.IsNotNull(handle, "FSMHandle should be created even if bucket.Definition was initially null.");
-            Assert.IsNotNull(handle.Definition, "FSMHandle should have a non-null definition (the default FSM).");
+            Assert.That(handle, Is.Not.Null, "FSMHandle should be created even if bucket.Definition was initially null.");
+            Assert.That(handle.Definition, Is.Not.Null, "FSMHandle should have a non-null definition (the default FSM).");
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1), "Expected one FSM instance to be created.");
             // You could further assert that handle.Definition.Name matches the default FSM name if GetDefaultFSM has a known name.
             // Assert.AreEqual(FSM_API.Internal.GetDefaultFSM().Name, handle.Definition.Name);
         }
     }
-
-    
 }

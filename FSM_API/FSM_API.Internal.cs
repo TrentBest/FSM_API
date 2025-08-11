@@ -136,7 +136,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             public static int TotalFsmHandleCount => _buckets.Sum(
                 group => group.Value.Sum(fsm => fsm.Value.Instances.Count)
-            ); // Correct.
+            );
 
             /// <summary>
             /// Gets the number of FSM definitions within a specific processing group.
@@ -342,7 +342,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// have completed their processing.
             /// Errors during deferred actions are reported via <see cref="Error.OnInternalApiError"/>.
             /// </remarks>
-            internal static void ProcessDeferredModifications()
+            public static void ProcessDeferredModifications()
             {
                 while (_deferredModifications.Count > 0)
                 {
@@ -533,7 +533,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// It includes safety checks to prevent <see cref="NullReferenceException"/>
             /// and <see cref="KeyNotFoundException"/> if the specified group or FSM name does not exist.
             /// </remarks>
-            internal static FsmBucket GetBucket(string fsmName, string processGroup)
+            public static FsmBucket GetBucket(string fsmName, string processGroup)
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
