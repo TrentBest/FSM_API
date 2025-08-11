@@ -229,7 +229,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             /// <summary>
-
             /// Resets the accumulated error count for a specific FSMHandle
             /// </summary>
             /// <param name="handle"></param>
@@ -247,7 +246,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             /// <remarks>
             /// This method is primarily intended for internal monitoring and testing purposes.
-            /// Error counts are incremented via <see cref="InvokeInstanceError(FSMHandle, string, Exception)"/>.
+            /// Error counts are incremented via <see cref="InvokeInstanceError(FSMHandle, string, Exception, string)"/>.
             /// When an FSM instance's error count reaches the <see cref="InstanceErrorThreshold"/>,
             /// the instance is scheduled for destruction, and its entry is removed from this dictionary.
             /// </remarks>

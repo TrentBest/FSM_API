@@ -92,7 +92,10 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public bool IsValid => Context?.IsValid ?? false;
 
-        public bool HasEnteredCurrentState { get; internal set; }
+        /// <summary>
+        /// indicates whether this FSM instance has **already entered its current state**.  ToDo:  IsValid should be enough?
+        /// </summary>
+        public bool HasEnteredCurrentState { get; internal set; } = false;
 
 
         /// <summary>
