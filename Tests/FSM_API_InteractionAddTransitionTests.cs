@@ -13,7 +13,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_InteractionAddTransitionTests
+    public class FSM_API_ErrorAPITests
     {
         /// <summary>
         /// 

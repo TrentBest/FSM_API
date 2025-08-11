@@ -382,7 +382,6 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                // Correct. TryGetValue makes 'fsmDefinitionsForCategory' non-null if true.
                 if (!_buckets.TryGetValue(processingGroup, out var fsmDefinitionsForCategory))
                 {
                     return;
@@ -420,7 +419,13 @@ namespace TheSingularityWorkshop.FSM_API
                         {
                             try
                             {
-                                handle.Update(); 
+                                if (!handle.HasEnteredCurrentState)
+                                {
+                                    bucket.Definition.GetState(bucket.Definition.InitialState).Enter(handle.Context);
+                                    handle.HasEnteredCurrentState = true;
+                                }
+                                bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
+                                
                             }
                             catch (Exception ex)
                             {
