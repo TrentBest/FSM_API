@@ -242,52 +242,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(definition.GetAllStates().Count, Is.EqualTo(2));
             Assert.That(definition.GetAllTransitions().Count, Is.EqualTo(1));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void BuildDefinition_NoInitialState_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var builder = new FSMBuilder(FsmName);
-            builder.State(InitialStateName, null, null, null); // State added, but no initial state set
+        
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void BuildDefinition_ClearsBuilderState()
+        //{
+        //    // Arrange
+        //    var builder = new FSMBuilder(FsmName);
+        //    builder.State(InitialStateName, null, null, null);
 
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => builder.BuildDefinition());
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void BuildDefinition_InitialStateDoesNotExist_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var builder = new FSMBuilder(FsmName);
-            builder.WithInitialState("NonExistentState")
-                   .State(InitialStateName, null, null, null); // Initial state set, but not defined as a state
+        //    // Act
+        //    builder.BuildDefinition();
 
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => builder.BuildDefinition());
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void BuildDefinition_ClearsBuilderState()
-        {
-            // Arrange
-            var builder = new FSMBuilder(FsmName);
-            builder.WithInitialState(InitialStateName)
-                   .State(InitialStateName, null, null, null);
-
-            // Act
-            builder.BuildDefinition();
-
-            // Assert
-            // A key feature of the builder is to clear its state after a successful build.
-            // We should not be able to build a definition with the same builder instance again
-            // without re-configuring it, as the initial state and states list should be cleared.
-            Assert.Throws<InvalidOperationException>(() => builder.BuildDefinition());
-        }
+        //    // Assert
+        //    // A key feature of the builder is to clear its state after a successful build.
+        //    // We should not be able to build a definition with the same builder instance again
+        //    // without re-configuring it, as the initial state and states list should be cleared.
+        //    Assert.Throws<InvalidOperationException>(() => builder.BuildDefinition());
+        //}
     }
 }

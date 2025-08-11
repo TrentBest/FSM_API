@@ -331,12 +331,6 @@ namespace TheSingularityWorkshop.FSM_API
         /// <exception cref="InvalidOperationException">Thrown if the FSM has no name, no states, or the initial state doesn't exist.</exception>
         public void BuildDefinition()
         {
-            // --- Validation before building ---
-            //if (_states.Count == 0)
-            //{
-            //    throw new InvalidOperationException($"FSM '{_fsmName}' cannot be built: No states have been defined. Use .State() to add states.");
-            //}
-
             string finalInitialState = string.Empty;
             if (string.IsNullOrWhiteSpace(_initialState))
             {
@@ -348,15 +342,10 @@ namespace TheSingularityWorkshop.FSM_API
             }
             else
             {
-                //// Validate that the specified initial state actually exists
-                //if (!_states.Any(s => s.Name == _initialState))
-                //{
-                //    throw new ArgumentException($"Initial state '{_initialState}' specified for FSM '{_fsmName}' does not exist. Ensure you add it with .State() before building.", nameof(_initialState));
-                //}
                 finalInitialState = _initialState;
             }
 
-
+            
 
             // --- Build the FSM ---
             var machine = new FSM
@@ -393,6 +382,9 @@ namespace TheSingularityWorkshop.FSM_API
             _initialState = string.Empty;
             _processRate = 0;
             _processGroup = "Update";
+            _anyTransitions.Clear();
+            _fsmName = "UnNamedFSM"; // Reset to default name for next use
+            
         }
 
         /// <summary>
