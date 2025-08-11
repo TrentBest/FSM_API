@@ -136,7 +136,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </summary>
             public static int TotalFsmHandleCount => _buckets.Sum(
                 group => group.Value.Sum(fsm => fsm.Value.Instances.Count)
-            ); // Correct.
+            );
 
             /// <summary>
             /// Gets the number of FSM definitions within a specific processing group.

@@ -108,13 +108,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// The FSM system calls this method automatically when an FSM instance transitions into this state.
-        /// After this method runs, the state's <see cref="IStateContext.HasEntered"/> flag is set to `true`.
+        /// After this method runs, the state's <see cref="FSMHandle.HasEnteredCurrentState"/> flag is set to `true`.
         /// </remarks>
         /// <param name="c">The context object specific to this FSM instance, providing data access.</param>
         public void Enter(IStateContext c)
         {
-            _onEnter.Invoke(c); // Guaranteed not to be null due to constructor and SetOnX methods
-            
+            _onEnter.Invoke(c); 
         }
 
         /// <summary>

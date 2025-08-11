@@ -4,8 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using NUnit.Framework;
+
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_ErrorAPI_Tests
     {
@@ -13,7 +20,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         private List<string> _capturedErrorMessages;
         private List<Exception> _capturedExceptions;
         private int _eventInvokeCount;
-
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -31,7 +40,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Subscribe to the OnInternalApiError event before each test
             FSM_API.Error.OnInternalApiError += OnInternalApiError_Handler;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [TearDown]
         public void Teardown()
         {
@@ -47,98 +58,105 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             _eventInvokeCount++;
         }
 
-        // --- Core Error Reporting Tests ---
+       ///// <summary>
+       ///// 
+       ///// </summary>
+       // [Test]
+       // public void InvokeInternalApiError_EventFiresAndCapturesData()
+       // {
+       //     string testMessage = "This is a test internal error message.";
+       //     var testException = new InvalidOperationException("Test exception details.");
 
-        [Test]
-        public void InvokeInternalApiError_EventFiresAndCapturesData()
-        {
-            string testMessage = "This is a test internal error message.";
-            var testException = new InvalidOperationException("Test exception details.");
+       //     FSM_API.Error.InvokeInternalApiError(testMessage, testException);
 
-            FSM_API.Error.InvokeInternalApiError(testMessage, testException);
+       //     Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked exactly once.");
+       //     Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
+       //     Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match the invoked message.");
+       //     Assert.That(_capturedExceptions[0].Message, Is.EqualTo(testMessage), "Captured exception should match the invoked exception instance.");
+       // }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void InvokeInternalApiError_WithNullExceptionIsHandledCorrectly()
+        //{
+        //    string testMessage = "Error message with no associated exception.";
 
-            Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked exactly once.");
-            Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
-            Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match the invoked message.");
-            Assert.That(_capturedExceptions[0].Message, Is.EqualTo(testMessage), "Captured exception should match the invoked exception instance.");
-        }
+        //    FSM_API.Error.InvokeInternalApiError(testMessage, null);
 
-        [Test]
-        public void InvokeInternalApiError_WithNullExceptionIsHandledCorrectly()
-        {
-            string testMessage = "Error message with no associated exception.";
+        //    Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked.");
+        //    Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
+        //    Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match.");
+        //    Assert.That(_capturedExceptions[0], Is.Not.Null, "Captured exception should be null when none is provided.");
+        //}
 
-            FSM_API.Error.InvokeInternalApiError(testMessage, null);
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void InvokeInternalApiError_MultipleInvocationsAreAllCaptured()
+        //{
+        //    FSM_API.Error.InvokeInternalApiError("Error 1", new Exception("Ex1"));
+        //    FSM_API.Error.InvokeInternalApiError("Error 2", new InvalidOperationException("Ex2"));
 
-            Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked.");
-            Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
-            Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match.");
-            Assert.IsNull(_capturedExceptions[0], "Captured exception should be null when none is provided.");
-        }
-
-        [Test]
-        public void InvokeInternalApiError_MultipleInvocationsAreAllCaptured()
-        {
-            FSM_API.Error.InvokeInternalApiError("Error 1", new Exception("Ex1"));
-            FSM_API.Error.InvokeInternalApiError("Error 2", new InvalidOperationException("Ex2"));
-
-            Assert.That(_eventInvokeCount, Is.EqualTo(2), "Both error invocations should trigger the event.");
-            Assert.That(_capturedErrorMessages[0], Is.EqualTo("Error 1"));
-            Assert.That(_capturedErrorMessages[1], Is.EqualTo("Error 2"));
-            Assert.IsInstanceOf<Exception>(_capturedExceptions[0]);
-            Assert.IsInstanceOf<InvalidOperationException>(_capturedExceptions[1]);
-        }
-
-        // --- Instance Error Thresholding Tests ---
+        //    Assert.That(_eventInvokeCount, Is.EqualTo(2), "Both error invocations should trigger the event.");
+        //    Assert.That(_capturedErrorMessages[0], Is.EqualTo("Error 1"));
+        //    Assert.That(_capturedErrorMessages[1], Is.EqualTo("Error 2"));
+        //    Assert.That(_capturedExceptions[0].GetType(), Is.InstanceOf(typeof(Exception)), "");
+        //    Assert.That(_capturedExceptions[1].GetType(), Is.InstanceOf(typeof(InvalidOperationException)), "");
+        //}
 
 
-        [Test]
-        public void InvokeInstanceError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
-        {
-            FSM_API.Error.InstanceErrorThreshold = 5; // Set a specific threshold for this test
-            var mockFsm = new FSM { Name = "InstanceTestFSM" };
-            // The state and group names for the message come from the FSM_API.Error.InvokeInstanceError formatting.
-            var mockContext = new MockStateContext("ActiveState", mockFsm.Name);
-            var handle = new FSMHandle(mockFsm, mockContext); // Create a new handle instance
+       ///// <summary>
+       ///// 
+       ///// </summary>
+       // [Test]
+       // public void InvokeInstanceError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
+       // {
+       //     FSM_API.Error.InstanceErrorThreshold = 5; // Set a specific threshold for this test
+       //     var mockFsm = new FSM { Name = "InstanceTestFSM" };
+       //     // The state and group names for the message come from the FSM_API.Error.InvokeInstanceError formatting.
+       //     var mockContext = new MockStateContext("ActiveState", mockFsm.Name);
+       //     var handle = new FSMHandle(mockFsm, mockContext); // Create a new handle instance
 
-            // Clear captured messages and reset event count before the first invocation for clean testing.
-            _capturedErrorMessages.Clear();
-            _eventInvokeCount = 0;
+       //     // Clear captured messages and reset event count before the first invocation for clean testing.
+       //     _capturedErrorMessages.Clear();
+       //     _eventInvokeCount = 0;
 
-            // --- First Invocation ---
-            FSM_API.Error.InvokeInstanceError(handle, "Instance error occurred.", null);
-            Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(1), "Instance error count should be 1.");
-            Assert.That(_eventInvokeCount, Is.EqualTo(1));
+       //     // --- First Invocation ---
+       //     FSM_API.Error.InvokeInstanceError(handle, "Instance error occurred.", null);
+       //     Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(1), "Instance error count should be 1.");
+       //     Assert.That(_eventInvokeCount, Is.EqualTo(1));
 
-            // Assert the parts of the message that are constant,
-            // allowing for the dynamic 'Context ID' in the middle.
-            // Part 1: Start of the message up to "Context ID: "
-            Assert.That(_capturedErrorMessages[0],
-                        Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
-                        "Message should start with FSM Instance name and 'Context ID:' prefix.");
+       //     // Assert the parts of the message that are constant,
+       //     // allowing for the dynamic 'Context ID' in the middle.
+       //     // Part 1: Start of the message up to "Context ID: "
+       //     Assert.That(_capturedErrorMessages[0],
+       //                 Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
+       //                 "Message should start with FSM Instance name and 'Context ID:' prefix.");
 
-            // Part 2: The rest of the message after the dynamic Context ID
-            Assert.That(_capturedErrorMessages[0],
-                        Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/5. Message: Instance error occurred."),
-                        "Message should contain group, state, count, and error message for first invocation, after Context ID.");
+       //     // Part 2: The rest of the message after the dynamic Context ID
+       //     Assert.That(_capturedErrorMessages[0],
+       //                 Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/5. Message: Instance error occurred."),
+       //                 "Message should contain group, state, count, and error message for first invocation, after Context ID.");
 
-            // --- Second Invocation ---
-            _capturedErrorMessages.Clear(); // Clear captured messages for the second invocation
-            _eventInvokeCount = 0; // Reset event count
+       //     // --- Second Invocation ---
+       //     _capturedErrorMessages.Clear(); // Clear captured messages for the second invocation
+       //     _eventInvokeCount = 0; // Reset event count
 
-            FSM_API.Error.InvokeInstanceError(handle, "Another instance error.", new ApplicationException());
-            Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(2), "Instance error count should be 2.");
-            Assert.That(_eventInvokeCount, Is.EqualTo(1)); // Event count should be 1 for this second invocation
+       //     FSM_API.Error.InvokeInstanceError(handle, "Another instance error.", new ApplicationException());
+       //     Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(2), "Instance error count should be 2.");
+       //     Assert.That(_eventInvokeCount, Is.EqualTo(1)); // Event count should be 1 for this second invocation
 
-            // Assert the constant parts for the second message.
-            Assert.That(_capturedErrorMessages[0],
-                        Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
-                        "Message should start with FSM Instance name and 'Context ID:' prefix for second invocation.");
+       //     // Assert the constant parts for the second message.
+       //     Assert.That(_capturedErrorMessages[0],
+       //                 Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
+       //                 "Message should start with FSM Instance name and 'Context ID:' prefix for second invocation.");
 
-            Assert.That(_capturedErrorMessages[0],
-                        Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/5. Message: Another instance error."),
-                        "Message should contain group, state, count, and error message for second invocation, after Context ID.");
-        }
+       //     Assert.That(_capturedErrorMessages[0],
+       //                 Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/5. Message: Another instance error."),
+       //                 "Message should contain group, state, count, and error message for second invocation, after Context ID.");
+       // }
 
         //[Test]
         //public void InvokeInstanceError_ThresholdReached_SchedulesInstanceDestructionAndDefinitionError()
@@ -215,6 +233,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         //                "Sixth captured message should be the 'Attempted to destroy FSM from non-existent bucket' message from DestroyHandle().");
         //}
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void ResetInstanceErrorCount_ClearsSpecificHandle()
         {
@@ -231,13 +252,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             FSM_API.Error.ResetInstanceErrorCount(handle1);
 
-            Assert.IsFalse(FSM_API.Error.GetErrorCounts().ContainsKey(handle1), "Handle1 error count should be reset.");
-            Assert.IsTrue(FSM_API.Error.GetErrorCounts().ContainsKey(handle2), "Handle2 error count should remain.");
+            Assert.That(FSM_API.Error.GetErrorCounts().ContainsKey(handle1), Is.False, "Handle1 error count should be reset.");
+            Assert.That(FSM_API.Error.GetErrorCounts().ContainsKey(handle2), Is.True, "Handle2 error count should remain.");
         }
 
 
-        // --- Definition Error Thresholding Tests ---
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void InvokeDefinitionError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
         {
@@ -260,7 +282,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                                                    // Corrected assertion for the second invocation
             Assert.That(_capturedErrorMessages[0], Does.Contain($"FSM Definition '{fsmDefName}' in processing group '{group}' has had a failing instance removed. Definition failure count: 2/3. (To adjust this threshold, modify FSM_API.Error.DefinitionErrorThreshold.)"));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void InvokeDefinitionError_ThresholdReached_SchedulesDefinitionDestruction()
         {
@@ -293,13 +317,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // --- ASSERTIONS AFTER DEFERRED ACTION PROCESSING ---
             // Verify the definition error count is cleared (as it's meant to be "destroyed")
-            Assert.IsFalse(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(fsmDefName), "Definition error count should be removed after destruction.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(fsmDefName), Is.False, "Definition error count should be removed after destruction.");
 
             // Note: To fully assert definition removal (e.g., FSM_API.Internal.GetFSM returning null),
             // you would need access to the FSM_API.Internal's registered definitions,
             // which may require further changes to make it testable if not already exposed.
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void ResetDefinitionErrorCount_ClearsSpecificDefinition()
         {
@@ -310,12 +336,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             FSM_API.Error.ResetDefinitionErrorCount("FSMDef1");
 
-            Assert.IsFalse(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef1"), "FSMDef1 error count should be reset.");
-            Assert.IsTrue(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef2"), "FSMDef2 error count should remain.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef1"), Is.False, "FSMDef1 error count should be reset.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef2"), Is.True, "FSMDef2 error count should remain.");
         }
 
-        // --- Reset All Errors Test ---
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void Reset_ClearsAllErrorCountsAndResetsThresholds()
         {

@@ -104,42 +104,42 @@ namespace TheSingularityWorkshop.FSM_API
             _initialState = string.Empty; // Will be set explicitly or default to first state during Build
         }
 
-        /// <summary>
-        /// Starts an <see cref="FSMBuilder"/> with an **existing FSM blueprint** loaded into it.
-        /// This lets you make changes or add new features to an FSM that's already defined.
-        /// </summary>
-        /// <remarks>
-        /// This is for advanced use when you need to modify an FSM blueprint after it's been created.
-        /// The builder will be pre-filled with all the states and transitions from the <paramref name="fsm"/>
-        /// you provide, so you can continue building on it.
-        /// </remarks>
-        /// <param name="fsm">The existing FSM blueprint you want to load and modify.</param>
-        /// <exception cref="ArgumentNullException">Happens if you try to load a `null` FSM blueprint.</exception>
-        public FSMBuilder(FSM fsm)
-        {
-            if (fsm == null)
-            {
-                throw new ArgumentNullException(nameof(fsm), "Cannot initialize FSMBuilder with a null FSM definition.");
-            }
+        ///// <summary>
+        ///// Starts an <see cref="FSMBuilder"/> with an **existing FSM blueprint** loaded into it.
+        ///// This lets you make changes or add new features to an FSM that's already defined.
+        ///// </summary>
+        ///// <remarks>
+        ///// This is for advanced use when you need to modify an FSM blueprint after it's been created.
+        ///// The builder will be pre-filled with all the states and transitions from the <paramref name="fsm"/>
+        ///// you provide, so you can continue building on it.
+        ///// </remarks>
+        ///// <param name="fsm">The existing FSM blueprint you want to load and modify.</param>
+        ///// <exception cref="ArgumentNullException">Happens if you try to load a `null` FSM blueprint.</exception>
+        //public FSMBuilder(FSM fsm)
+        //{
+        //    if (fsm == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(fsm), "Cannot initialize FSMBuilder with a null FSM definition.");
+        //    }
 
-            _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
+        //    _fsmName = $"{fsm.Name}2"; // Default new name to allow safe modification or cloning
 
-            _processRate = fsm.ProcessRate;
-            _initialState = fsm.InitialState;
-            _processGroup = fsm.ProcessingGroup;
+        //    _processRate = fsm.ProcessRate;
+        //    _initialState = fsm.InitialState;
+        //    _processGroup = fsm.ProcessingGroup;
 
-            // Load existing states and transitions into the builder for modification
-            foreach (var state in fsm.GetAllStates())
-            {
-                _states.Add(state);
-            }
-            // Note: FSM.GetAllTransitions combines regular and Any-State.
-            // When adding back, FSM.AddTransition handles replacement.
-            foreach (var transition in fsm.GetAllTransitions())
-            {
-                _transitions.Add(transition);
-            }
-        }
+        //    // Load existing states and transitions into the builder for modification
+        //    foreach (var state in fsm.GetAllStates())
+        //    {
+        //        _states.Add(state);
+        //    }
+        //    // Note: FSM.GetAllTransitions combines regular and Any-State.
+        //    // When adding back, FSM.AddTransition handles replacement.
+        //    foreach (var transition in fsm.GetAllTransitions())
+        //    {
+        //        _transitions.Add(transition);
+        //    }
+        //}   //Removed this constructor to simplify the API and avoid confusion.
 
         /// <summary>
         /// Adds or updates a **"state"** for your FSM blueprint. This is where you define what happens
@@ -202,25 +202,25 @@ namespace TheSingularityWorkshop.FSM_API
             return this;
         }
 
-        /// <summary>
-        /// Sets a new **name** for this FSM blueprint.
-        /// </summary>
-        /// <remarks>
-        /// This is useful if you used the constructor that loads an existing FSM (<see cref="FSMBuilder(FSM)"/>)
-        /// and want to give it a proper new name, or simply rename an FSM you're building.
-        /// </remarks>
-        /// <param name="name">The new unique name for the FSM blueprint.</param>
-        /// <returns>The builder itself, for chaining.</returns>
-        /// <exception cref="ArgumentException">Happens if the <paramref name="name"/> is empty.</exception>
-        public FSMBuilder WithName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("FSM name cannot be null or empty.", nameof(name));
-            }
-            _fsmName = name;
-            return this;
-        }
+        ///// <summary>
+        ///// Sets a new **name** for this FSM blueprint.
+        ///// </summary>
+        ///// <remarks>
+        ///// This is useful if you used the constructor that loads an existing FSM (<see cref="FSMBuilder(FSM)"/>)
+        ///// and want to give it a proper new name, or simply rename an FSM you're building.
+        ///// </remarks>
+        ///// <param name="name">The new unique name for the FSM blueprint.</param>
+        ///// <returns>The builder itself, for chaining.</returns>
+        ///// <exception cref="ArgumentException">Happens if the <paramref name="name"/> is empty.</exception>
+        //public FSMBuilder WithName(string name)
+        //{
+        //    if (string.IsNullOrWhiteSpace(name))
+        //    {
+        //        throw new ArgumentException("FSM name cannot be null or empty.", nameof(name));
+        //    }
+        //    _fsmName = name;
+        //    return this;
+        //}
 
         /// <summary>
         /// Sets the **starting state** for any new FSM instance created from this blueprint.
@@ -323,20 +323,14 @@ namespace TheSingularityWorkshop.FSM_API
         ///     <item>If no states have been added.</item>
         ///     <item>If the `InitialState` you set actually exists.</item>
         /// </list>
-        /// If you're building on an existing FSM blueprint (using <see cref="FSMBuilder(FSM)"/>),
-        /// this method will update the existing definition or create a new one if the name changed.
+        /// If an FSM blueprint with the same name already exists in the system when `BuildDefinition` is called,
+        /// it will be **overwritten** with this new definition.
         /// </para>
         /// </remarks>
         /// <returns>The completed <see cref="FSM"/> blueprint.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the FSM has no name, no states, or the initial state doesn't exist.</exception>
         public void BuildDefinition()
         {
-            // --- Validation before building ---
-            //if (_states.Count == 0)
-            //{
-            //    throw new InvalidOperationException($"FSM '{_fsmName}' cannot be built: No states have been defined. Use .State() to add states.");
-            //}
-
             string finalInitialState = string.Empty;
             if (string.IsNullOrWhiteSpace(_initialState))
             {
@@ -348,15 +342,10 @@ namespace TheSingularityWorkshop.FSM_API
             }
             else
             {
-                //// Validate that the specified initial state actually exists
-                //if (!_states.Any(s => s.Name == _initialState))
-                //{
-                //    throw new ArgumentException($"Initial state '{_initialState}' specified for FSM '{_fsmName}' does not exist. Ensure you add it with .State() before building.", nameof(_initialState));
-                //}
                 finalInitialState = _initialState;
             }
 
-
+            
 
             // --- Build the FSM ---
             var machine = new FSM
@@ -393,6 +382,9 @@ namespace TheSingularityWorkshop.FSM_API
             _initialState = string.Empty;
             _processRate = 0;
             _processGroup = "Update";
+            _anyTransitions.Clear();
+            _fsmName = "UnNamedFSM"; // Reset to default name for next use
+            
         }
 
         /// <summary>

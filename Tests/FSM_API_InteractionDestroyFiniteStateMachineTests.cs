@@ -4,23 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_InteractionDestoryFiniteStateMachineTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [TestFixture]
         public class FSM_API_InteractionDestructionTests
         {
             private const string _testProcessingGroup = "TestGroup";
             private const string _testFsmName = "TestFSM";
 
+            /// <summary>
+            /// 
+            /// </summary>
             [SetUp]
             public void Setup()
             {
@@ -28,6 +42,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 FSM_API.Internal.ResetAPI(true);
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
             [Test]
             public void DestroyFiniteStateMachine_ShouldCleanupAllInstances()
             {

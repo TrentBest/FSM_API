@@ -1,14 +1,28 @@
+
+using System;
+
+using NUnit.Framework;
+
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_Create_CreateProcessingGroupTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateProcessingGroup_Succeeds()
         {
@@ -25,7 +39,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(buckets[groupName], Is.Empty, "Newly created processing group should be empty.");
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="invalidGroupName"></param>
         [TestCase("")]
         [TestCase("   ")]
         public void CreateProcessingGroup_InvalidNames_ThrowsArgumentException(string invalidGroupName)
@@ -38,7 +55,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // ASSERT
             Assert.That(ex.Message, Does.Contain("Processing group cannot be null or empty."), "Exception message should indicate invalid group name.");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateProcessingGroup_MaxLengthName_Succeeds()
         {
@@ -53,7 +72,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             var buckets = FSM_API.Internal.GetBuckets();
             Assert.That(buckets, Contains.Key(longGroupName), "Long processing group name should be created.");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void CreateProcessingGroup_ExistingName_ReturnsExistingGroup()
         {

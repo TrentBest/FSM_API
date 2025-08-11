@@ -23,6 +23,6 @@
         /// Always "DefaultStateContext".
         /// </summary>
         public string Name { get; set; } = "DefaultStateContext";
-        public bool HasEntered { get; set; }
+        public bool HasEnteredCurrentState { get; set; }
     }
 }

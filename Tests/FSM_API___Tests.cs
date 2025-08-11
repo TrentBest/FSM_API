@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_ErrorAPITests
+    public class FSM_API__Tests
     {
         /// <summary>
         /// 
@@ -23,7 +22,5 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             FSM_API.Internal.ResetAPI(true);
         }
-
-
     }
 }

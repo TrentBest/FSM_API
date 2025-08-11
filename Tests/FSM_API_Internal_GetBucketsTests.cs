@@ -4,17 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_Internal_GetBucketsTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetBuckets_InitiallyEmpty()
         {
@@ -26,6 +37,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(buckets, Is.Empty, "Buckets should be empty after a hard reset.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetBuckets_ReflectsProcessingGroupCreation()
         {
@@ -41,6 +55,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(buckets[groupName], Is.Empty, "The new processing group's inner dictionary should be empty as no FSMs are defined yet.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetBuckets_ReflectsFSMDefinitionRegistration()
         {
@@ -58,6 +75,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(buckets[groupName][fsmName].Definition, Is.Not.Null, "The FSM definition in the bucket should not be null.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetBuckets_ReturnsSameReference()
         {
@@ -81,6 +101,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(bucketsAfterModification, Contains.Key(newGroupName), "Modifying the returned dictionary should affect the internal state.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetBuckets_NoFSMsInGroup_ReturnsEmptyInnerDictionary()
         {

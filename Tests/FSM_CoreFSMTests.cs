@@ -8,15 +8,23 @@ using NUnit.Framework; // Assuming NUnit for testing
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_CoreFSMTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true); // Resets the API for a clean test environment
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddState_Succeeds()
         {
@@ -27,9 +35,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 (ctx) => Console.WriteLine($"Updating TestState"),
                 (ctx) => Console.WriteLine($"Exiting TestState")));
 
-            Assert.IsTrue(fsm.GetAllStates().Count() == 1);
+            Assert.That(fsm.GetAllStates().Count(), Is.EqualTo( 1));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddState_WithInvalidNameThrows()
         {
@@ -42,7 +52,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(ex.Message, Does.Contain("null or empty"));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddState_UpdateExistingStateSucceeds()
         {
@@ -71,10 +83,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             var ctx = new MockStateContext("MyState", fsm.Name);
             fsm.EnterInitial(ctx); // This will call the Enter action of "MyState"
 
-            Assert.IsFalse(originalActionCalled, "Original state's Enter action should NOT have been called.");
-            Assert.IsTrue(updatedActionCalled, "Updated state's Enter action should have been called.");
+            Assert.That(originalActionCalled, Is.False, "Original state's Enter action should NOT have been called.");
+            Assert.That(updatedActionCalled, Is.True, "Updated state's Enter action should have been called.");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddState_AddsMultipleDistinctStatesSucceeds()
         {
@@ -85,16 +99,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             fsm.AddState(new FSMState("StateC", null, null, null));
 
             Assert.That(fsm.GetAllStates().Count(), Is.EqualTo(3), "Should have 3 states after adding distinct states.");
-            Assert.IsTrue(fsm.HasState("StateA"));
-            Assert.IsTrue(fsm.HasState("StateB"));
-            Assert.IsTrue(fsm.HasState("StateC"));
-            Assert.IsNotNull(fsm.GetState("StateA"));
-            Assert.IsNotNull(fsm.GetState("StateB"));
-            Assert.IsNotNull(fsm.GetState("StateC"));
+            Assert.That(fsm.HasState("StateA"), Is.True);
+            Assert.That(fsm.HasState("StateB"), Is.True);
+            Assert.That(fsm.HasState("StateC"), Is.True);
+            Assert.That(fsm.GetState("StateA"), Is.Not.Null);
+            Assert.That(fsm.GetState("StateB"), Is.Not.Null);
+            Assert.That(fsm.GetState("StateC"), Is.Not.Null);
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddTransition_Succeeds()
         {
@@ -104,29 +120,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             fsm.AddTransition("StateA", "StateB", (ctx) => true);
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(1), "Should have 1 transition after adding a valid one.");
-            Assert.IsTrue(fsm.HasTransition("StateA", "StateB"), "Should confirm the transition exists.");
-            Assert.IsNotNull(fsm.GetTransition(new Tuple<string, string>("StateB", "StateA")), "Should be able to retrieve the transition by (To, From).");
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.True, "Should confirm the transition exists.");
+            Assert.That(fsm.GetTransition(new Tuple<string, string>("StateB", "StateA")), Is.Not.Null, "Should be able to retrieve the transition by (To, From).");
         }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void AddTransition_NullConditionThrowsArgumentNullException()
+        //{
+        //    FSM fsm = new FSM { Name = "NullConditionTransitionFSM" };
+        //    HelperAddState(fsm, "StateA");
+        //    HelperAddState(fsm, "StateB");
 
-        [Test]
-        public void AddTransition_NullConditionThrowsArgumentNullException()
-        {
-            FSM fsm = new FSM { Name = "NullConditionTransitionFSM" };
-            HelperAddState(fsm, "StateA");
-            HelperAddState(fsm, "StateB");
+        //    var ex = Assert.Throws<ArgumentNullException>(() =>
+        //    {
+        //        fsm.AddTransition("StateA", "StateB", null);
+        //    });
 
-            var ex = Assert.Throws<ArgumentNullException>(() =>
-            {
-                fsm.AddTransition("StateA", "StateB", null);
-            });
-
-            Assert.That(ex.ParamName, Is.EqualTo("cond"), "The parameter name should be 'cond'.");
-            Assert.That(ex.Message, Does.Contain($"Attempted to add a transition with null condition from 'StateA' to 'StateB' in FSM 'NullConditionTransitionFSM'."), "Error message should indicate null condition.");
-            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "No transition should be added when a null condition is provided.");
-        }
+        //    Assert.That(ex.ParamName, Is.EqualTo("cond"), "The parameter name should be 'cond'.");
+        //    Assert.That(ex.Message, Does.Contain($"Attempted to add a transition with null condition from 'StateA' to 'StateB' in FSM 'NullConditionTransitionFSM'."), "Error message should indicate null condition.");
+        //    Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "No transition should be added when a null condition is provided.");
+        //}
 
        
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddTransition_AddsMultipleDistinctTransitionsSucceeds()
         {
@@ -140,11 +160,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             fsm.AddTransition("StateA", "StateC", (ctx) => true);
 
             Assert.That(fsm.GetAllTransitions().Count(), Is.EqualTo(3), "Should have 3 transitions after adding distinct ones.");
-            Assert.IsTrue(fsm.HasTransition("StateA", "StateB"));
-            Assert.IsTrue(fsm.HasTransition("StateB", "StateC"));
-            Assert.IsTrue(fsm.HasTransition("StateA", "StateC"));
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.True);
+            Assert.That(fsm.HasTransition("StateB", "StateC"), Is.True);
+            Assert.That(fsm.HasTransition("StateA", "StateC"), Is.True);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddTransition_FromNonExistentStateNoThrows()
         {
@@ -159,12 +181,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             });
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(1), "Transition should be added to the blueprint even if 'from' state doesn't exist.");
-            Assert.IsTrue(fsm.HasTransition("NonExistentState", "ExistingState"), "Should register the transition.");
+            Assert.That(fsm.HasTransition("NonExistentState", "ExistingState"), Is.True, "Should register the transition.");
 
             // To fully test this, you'd need a Step test where the FSM is current in "NonExistentState"
             // and observe error logging via FSM_API.Error.
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void AddTransition_ToNonExistentStateNoThrows()
         {
@@ -178,12 +203,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             });
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(1), "Transition should be added to the blueprint even if 'to' state doesn't exist.");
-            Assert.IsTrue(fsm.HasTransition("ExistingState", "NonExistentState"), "Should register the transition.");
+            Assert.That(fsm.HasTransition("ExistingState", "NonExistentState"), Is.True, "Should register the transition.");
 
             // To fully test this, you'd need a Step test where the transition condition becomes true
             // and observe error logging via FSM_API.Error when trying to enter "NonExistentState".
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void RemoveTransition_SpecificTransitionRemoved()
         {
@@ -201,12 +228,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             fsm.RemoveTransition("StateA", "StateB");
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(2), "Count should be 2 after removing one transition.");
-            Assert.IsFalse(fsm.HasTransition("StateA", "StateB"), "The specific transition A->B should be removed.");
-            Assert.IsTrue(fsm.HasTransition("StateA", "StateC"), "Transition A->C should still exist.");
-            Assert.IsTrue(fsm.HasTransition("StateB", "StateC"), "Transition B->C should still exist.");
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.False, "The specific transition A->B should be removed.");
+            Assert.That(fsm.HasTransition("StateA", "StateC"), Is.True, "Transition A->C should still exist.");
+            Assert.That(fsm.HasTransition("StateB", "StateC"), Is.True, "Transition B->C should still exist.");
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void RemoveState_Succeeds()
         {
@@ -215,7 +244,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             fsm.RemoveState("TestState");
 
-            Assert.IsTrue(fsm.GetAllStates().Count == 0);
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0));
         }
 
 

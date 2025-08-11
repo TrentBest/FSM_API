@@ -4,6 +4,9 @@ using TheSingularityWorkshop.FSM_API;
 
 namespace MyReviewerShowcaseFSM
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class PortfolioViewer : IStateContext
     {
 
@@ -16,26 +19,72 @@ namespace MyReviewerShowcaseFSM
         private readonly string COMMAND_REVIEW_LINKED_IN_PROFILE = "l";
         private readonly string COMMAND_QUIT = "q";
 
+        /// <summary>
+        /// 
+        /// </summary>
         public FSMHandle Status { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string ReviewProcessGroup { get; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsValid { get; set; } = false;
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsPresenting { get; private set; } = false;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public CandidateProfile CandidateProfile { get; private set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool CoverLetterReviewed { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool ResumeReviewed { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool GitRepoReviewed { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool GitPagesReviewed { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool NugetPackageReviewed { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public bool PatreonPageReviewed { get; private set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Complete { get; private set; } = false;
+        /// <summary>
+        /// 
+        /// </summary>
         public string? Input { get; private set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
         public bool LinkedInProfileReviewed { get; private set; }
+        
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reviewProcessGroup"></param>
         public PortfolioViewer(string reviewProcessGroup)
         {
             ReviewProcessGroup = reviewProcessGroup;
@@ -80,7 +129,7 @@ namespace MyReviewerShowcaseFSM
 
                     .BuildDefinition();
             }
-
+            CandidateProfile = new CandidateProfile();
             Status = FSM_API.Create.CreateInstance(Name, this, reviewProcessGroup);
             IsValid = true;
         }
@@ -122,11 +171,13 @@ namespace MyReviewerShowcaseFSM
             {
                 DisplayOptions(viewer);
                 string? input = Console.ReadLine();
-                if(input != null)
+
+                if (input != null)
                 {
                     input.ToLower();
+                    viewer.Input = input; // Set input for transitions
                 }
-                viewer.Input = input; // Set input for transitions
+
             }
         }
 
@@ -404,6 +455,9 @@ namespace MyReviewerShowcaseFSM
             Console.Write("Your action: ");
         }
 
-        public bool HasEntered { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasEnteredCurrentState { get; set; }
     }
 }
