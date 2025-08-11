@@ -10,6 +10,9 @@ using NUnit.Framework;
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_ErrorAPI_Tests
     {
@@ -17,7 +20,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         private List<string> _capturedErrorMessages;
         private List<Exception> _capturedExceptions;
         private int _eventInvokeCount;
-
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -35,7 +40,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Subscribe to the OnInternalApiError event before each test
             FSM_API.Error.OnInternalApiError += OnInternalApiError_Handler;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [TearDown]
         public void Teardown()
         {
@@ -51,8 +58,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             _eventInvokeCount++;
         }
 
-        // --- Core Error Reporting Tests ---
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void InvokeInternalApiError_EventFiresAndCapturesData()
         {
@@ -66,7 +74,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match the invoked message.");
             Assert.That(_capturedExceptions[0].Message, Is.EqualTo(testMessage), "Captured exception should match the invoked exception instance.");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void InvokeInternalApiError_WithNullExceptionIsHandledCorrectly()
         {
@@ -77,9 +87,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked.");
             Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
             Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match.");
-            Assert.IsNull(_capturedExceptions[0], "Captured exception should be null when none is provided.");
+            Assert.That(_capturedExceptions[0], Is.Not.Null, "Captured exception should be null when none is provided.");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void InvokeInternalApiError_MultipleInvocationsAreAllCaptured()
         {
@@ -89,13 +101,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(_eventInvokeCount, Is.EqualTo(2), "Both error invocations should trigger the event.");
             Assert.That(_capturedErrorMessages[0], Is.EqualTo("Error 1"));
             Assert.That(_capturedErrorMessages[1], Is.EqualTo("Error 2"));
-            Assert.IsInstanceOf<Exception>(_capturedExceptions[0]);
-            Assert.IsInstanceOf<InvalidOperationException>(_capturedExceptions[1]);
+            Assert.That(_capturedExceptions[0].GetType(), Is.InstanceOf(typeof(Exception)), "");
+            Assert.That(_capturedExceptions[1].GetType(), Is.InstanceOf(typeof(InvalidOperationException)), "");
         }
 
-        // --- Instance Error Thresholding Tests ---
-
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void InvokeInstanceError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
         {
@@ -219,6 +231,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         //                "Sixth captured message should be the 'Attempted to destroy FSM from non-existent bucket' message from DestroyHandle().");
         //}
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void ResetInstanceErrorCount_ClearsSpecificHandle()
         {
@@ -235,13 +250,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             FSM_API.Error.ResetInstanceErrorCount(handle1);
 
-            Assert.IsFalse(FSM_API.Error.GetErrorCounts().ContainsKey(handle1), "Handle1 error count should be reset.");
-            Assert.IsTrue(FSM_API.Error.GetErrorCounts().ContainsKey(handle2), "Handle2 error count should remain.");
+            Assert.That(FSM_API.Error.GetErrorCounts().ContainsKey(handle1), Is.False, "Handle1 error count should be reset.");
+            Assert.That(FSM_API.Error.GetErrorCounts().ContainsKey(handle2), Is.True, "Handle2 error count should remain.");
         }
 
 
-        // --- Definition Error Thresholding Tests ---
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void InvokeDefinitionError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
         {
@@ -264,7 +280,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                                                    // Corrected assertion for the second invocation
             Assert.That(_capturedErrorMessages[0], Does.Contain($"FSM Definition '{fsmDefName}' in processing group '{group}' has had a failing instance removed. Definition failure count: 2/3. (To adjust this threshold, modify FSM_API.Error.DefinitionErrorThreshold.)"));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void InvokeDefinitionError_ThresholdReached_SchedulesDefinitionDestruction()
         {
@@ -297,13 +315,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // --- ASSERTIONS AFTER DEFERRED ACTION PROCESSING ---
             // Verify the definition error count is cleared (as it's meant to be "destroyed")
-            Assert.IsFalse(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(fsmDefName), "Definition error count should be removed after destruction.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(fsmDefName), Is.False, "Definition error count should be removed after destruction.");
 
             // Note: To fully assert definition removal (e.g., FSM_API.Internal.GetFSM returning null),
             // you would need access to the FSM_API.Internal's registered definitions,
             // which may require further changes to make it testable if not already exposed.
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void ResetDefinitionErrorCount_ClearsSpecificDefinition()
         {
@@ -314,12 +334,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             FSM_API.Error.ResetDefinitionErrorCount("FSMDef1");
 
-            Assert.IsFalse(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef1"), "FSMDef1 error count should be reset.");
-            Assert.IsTrue(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef2"), "FSMDef2 error count should remain.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef1"), Is.False, "FSMDef1 error count should be reset.");
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey("FSMDef2"), Is.True, "FSMDef2 error count should remain.");
         }
 
-        // --- Reset All Errors Test ---
-
+       /// <summary>
+       /// 
+       /// </summary>
         [Test]
         public void Reset_ClearsAllErrorCountsAndResetsThresholds()
         {
