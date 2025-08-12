@@ -5,9 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+using TheSingularityWorkshop.FSM_API.Tests.Internal;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 {
     /// <summary>
     /// 
@@ -35,9 +41,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
             List<FSMHandle> expectedHandles = new List<FSMHandle>
             {
-                FSM_API.Create.CreateInstance(fsmName, new FSMTestContext()),
-                FSM_API.Create.CreateInstance(fsmName, new FSMTestContext()),
-                FSM_API.Create.CreateInstance(fsmName, new FSMTestContext())
+                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
+                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
+                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext())
             };
 
             // Act
@@ -132,8 +138,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
             var fsmDefinition = FSM_API.Interaction.GetFSMDefinition(fsmName);
             // Create some instances through your API, which GetInstances() will then retrieve.
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
+            FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
 
             // Act
             // THIS IS WHERE YOU CALL YOUR API'S METHOD
@@ -156,7 +162,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             {
                 // Provide valid arguments for FSMHandle constructor for testing Add/Remove
                 // Use the fsmDefinition that was created in Arrange
-                var dummyContext = new FSMTestContext();
+                var dummyContext = new Tests.Internal.FSMTestContext();
                 var dummyHandle = new FSMHandle(fsmDefinition, dummyContext);
 
                 Assert.Throws<NotSupportedException>(() => mutableHandlesAttempt.Add(dummyHandle), "Adding to the list should throw NotSupportedException.");

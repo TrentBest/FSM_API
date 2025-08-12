@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 {
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_InteractionAddStateToFSM_Tests
+    public class FSM_API_InteractionRemoveTransitionTests
     {
         /// <summary>
         /// 

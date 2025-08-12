@@ -12,14 +12,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// invalid input.
     /// </summary>
     [TestFixture]
-    public class FSM_API_BuilderTests
+    public class FSM_API_Builder_Tests
     {
         private const string FsmName = "TestFSM";
         private const string InitialStateName = "Idle";
         private const string OtherStateName = "Running";
         private const string ValidProcessingGroup = "GameLoop";
         private static int processRate = 0;
-        private static string processingGroup;
+        private static string processingGroup = "Update";
 
         /// <summary>
         /// 

@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Create
 {
     /// <summary>
     /// Tests for Creating Finite state machines
