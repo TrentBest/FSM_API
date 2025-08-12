@@ -8,12 +8,15 @@ using NUnit.Framework; // Assuming NUnit for testing
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
+
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_CoreFSMTests
+    public class FSM_API_FSM_Tests
     {
+        private List<(string message, Exception exception)> _capturedErrors;
+
         /// <summary>
         /// 
         /// </summary>
@@ -21,7 +24,26 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true); // Resets the API for a clean test environment
+            _capturedErrors = new List<(string message, Exception exception)>();
+            FSM_API.Error.OnInternalApiError += CaptureInternalApiError;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            FSM_API.Error.OnInternalApiError -= CaptureInternalApiError; // Unsubscribe
+                                                                         // Any other cleanup for FSM_API if needed
+        }
+
+        private void CaptureInternalApiError(string message, Exception exception)
+        {
+            _capturedErrors.Add((message, exception));
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -35,8 +57,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 (ctx) => Console.WriteLine($"Updating TestState"),
                 (ctx) => Console.WriteLine($"Exiting TestState")));
 
-            Assert.That(fsm.GetAllStates().Count(), Is.EqualTo( 1));
+            Assert.That(fsm.GetAllStates().Count(), Is.EqualTo(1));
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -52,6 +76,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(ex.Message, Does.Contain("null or empty"));
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -86,6 +112,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(originalActionCalled, Is.False, "Original state's Enter action should NOT have been called.");
             Assert.That(updatedActionCalled, Is.True, "Updated state's Enter action should have been called.");
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -123,27 +151,56 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fsm.HasTransition("StateA", "StateB"), Is.True, "Should confirm the transition exists.");
             Assert.That(fsm.GetTransition(new Tuple<string, string>("StateB", "StateA")), Is.Not.Null, "Should be able to retrieve the transition by (To, From).");
         }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[Test]
-        //public void AddTransition_NullConditionThrowsArgumentNullException()
-        //{
-        //    FSM fsm = new FSM { Name = "NullConditionTransitionFSM" };
-        //    HelperAddState(fsm, "StateA");
-        //    HelperAddState(fsm, "StateB");
 
-        //    var ex = Assert.Throws<ArgumentNullException>(() =>
-        //    {
-        //        fsm.AddTransition("StateA", "StateB", null);
-        //    });
 
-        //    Assert.That(ex.ParamName, Is.EqualTo("cond"), "The parameter name should be 'cond'.");
-        //    Assert.That(ex.Message, Does.Contain($"Attempted to add a transition with null condition from 'StateA' to 'StateB' in FSM 'NullConditionTransitionFSM'."), "Error message should indicate null condition.");
-        //    Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "No transition should be added when a null condition is provided.");
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void AddTransition_NullConditionInvokesInternalApiError()
+        {
+            // Arrange
+            var fsm = new FSM();
+            fsm.Name = "TestFSM";
+            fsm.AddState(new FSMState("StateA", null, null, null));
+            fsm.AddState(new FSMState("StateB", null, null, null));
 
-       
+            // Act
+            fsm.AddTransition("StateA", "StateB", null); // Pass null condition
+
+            // Assert
+            Assert.That(_capturedErrors, Is.Not.Empty, "OnInternalApiError event should have been invoked.");
+            Assert.That(_capturedErrors[0].exception, Is.InstanceOf<ArgumentNullException>(), "Captured exception should be ArgumentNullException.");
+            Assert.That(_capturedErrors[0].message, Does.Contain("Attempted to add a transition with null condition"), "Captured message should indicate null condition.");
+            //Assert.That(_capturedErrors[0].exception., Is.EqualTo("cond"), "ArgumentNullException should be for 'cond' parameter.");
+
+            // Also assert that the transition was *not* added
+            Assert.That(fsm.GetTransition(new Tuple<string, string>("StateB", "StateA")), Is.Null, "Transition should not be added when condition is null.");
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void AddAnyStateTransition_NullConditionInvokesInternalApiError()
+        {
+            // Arrange
+            var fsm = new FSM();
+            fsm.Name = "TestFSM";
+            fsm.AddState(new FSMState("StateA", null, null, null));
+
+            // Act
+            fsm.AddAnyStateTransition("StateA", null);
+
+            // Assert
+            Assert.That(_capturedErrors, Is.Not.Empty, "OnInternalApiError event should have been invoked for AnyState transition.");
+            Assert.That(_capturedErrors[0].exception, Is.InstanceOf<ArgumentNullException>(), "Captured exception for AnyState should be ArgumentNullException.");
+            Assert.That(_capturedErrors[0].message, Does.Contain("Attempted to add an Any-State transition with null condition"), "Captured message should indicate null condition for AnyState.");
+            //Assert.That(_capturedErrors[0].exception.ParamName, Is.EqualTo("cond"), "ArgumentNullException should be for 'cond' parameter.");
+        }
+      
+
         /// <summary>
         /// 
         /// </summary>
@@ -164,6 +221,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fsm.HasTransition("StateB", "StateC"), Is.True);
             Assert.That(fsm.HasTransition("StateA", "StateC"), Is.True);
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -187,6 +246,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // and observe error logging via FSM_API.Error.
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -208,6 +268,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // To fully test this, you'd need a Step test where the transition condition becomes true
             // and observe error logging via FSM_API.Error when trying to enter "NonExistentState".
         }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -233,6 +295,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fsm.HasTransition("StateB", "StateC"), Is.True, "Transition B->C should still exist.");
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -248,8 +311,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         }
 
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void RemoveState_()
+        {
+            FSM fSM = new FSM();
+            HelperAddState(fSM);
+        }
 
 
         private void HelperAddState(FSM fsm, string stateName = "TestState")

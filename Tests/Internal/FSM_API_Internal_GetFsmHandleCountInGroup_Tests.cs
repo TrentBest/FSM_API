@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FSM_API.Interaction;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Internal
 {
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_GetFsmHandleCountInGroup_Tests
+    public class FSM_API_Internal_GetFsmHandleCountInGroup_Tests
     {
         /// <summary>
         /// 
@@ -30,10 +37,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void CountIsValidForOneFSM_Test()
         {
             Helper_CreateTestFSM("TestFSM", "Update");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "Update");
+            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFsmHandleCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
         }
 
         /// <summary>
@@ -43,11 +50,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void CountIsValidForTwoFSM_Test()
         {
             Helper_CreateTestFSM("TestFSM", "Update");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "Update");
-            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "Update");
+            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFsmHandleCountInGroup("Update"), Is.EqualTo(2));
+            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(2));
         }
 
         /// <summary>
@@ -58,14 +65,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             Helper_CreateTestFSM("TestFSM", "Update");
             Helper_CreateTestFSM("TestFSM", "FixedUpdate");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "Update");
-            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "FixedUpdate");
+            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "FixedUpdate");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFsmHandleCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
             Assert.That(handle2, Is.Not.Null);
             Assert.That(handle2.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFsmHandleCountInGroup("FixedUpdate"), Is.EqualTo(1));
+            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("FixedUpdate"), Is.EqualTo(1));
         }
 
         /// <summary>
@@ -74,7 +81,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [Test]
         public void CountIsZeroForNonExistentGroup_Test()
         {
-            Assert.That(FSM_API.Internal.GetFsmHandleCountInGroup("NonExistentGroup"), Is.EqualTo(0));
+            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("NonExistentGroup"), Is.EqualTo(0));
         }
 
 

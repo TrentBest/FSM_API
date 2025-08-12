@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Internal
 {
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_AverageFsmHandlesPerDefinition_Tests
+    public class FSM_API_Internal_AverageFsmHandlesPerDefinition_Tests
     {
         /// <summary>
         /// 
@@ -45,7 +51,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Helper_CreateFSM($"TestFSM", "TestGroup");
             for (int i = 0; i < 100; i++)
             {
-                FSM_API.Create.CreateInstance("TestFSM", new TestContext(), "TestGroup");
+                FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             }
             Assert.That(FSM_API.Internal.AverageFsmHandlesPerDefinition, Is.EqualTo(100.0));
         }
@@ -62,8 +68,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Helper_CreateFSM($"TestFSM2", "TestGroup2");
             for (int i = 0; i < 50; i++)
             {
-                FSM_API.Create.CreateInstance("TestFSM1", new TestContext(), "TestGroup1");
-                FSM_API.Create.CreateInstance("TestFSM2", new TestContext(), "TestGroup2");
+                FSM_API.Create.CreateInstance("TestFSM1", new FSMTestContext(), "TestGroup1");
+                FSM_API.Create.CreateInstance("TestFSM2", new FSMTestContext(), "TestGroup2");
             }
             Assert.That(FSM_API.Internal.AverageFsmHandlesPerDefinition, Is.EqualTo(50.0));
         }

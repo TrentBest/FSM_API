@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using TheSingularityWorkshop.FSM_API;
+
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Internal
 {
     /// <summary>
     /// 
@@ -69,7 +75,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             for (int i = 0; i < 200; i++)
             {
                 string fsmName = sourceString + i.ToString();
-                string processingGroup = (i % 2 == 0) ? "Update" : "FixedUpdate";
+                string processingGroup = i % 2 == 0 ? "Update" : "FixedUpdate";
                 Helper_CreateTestFSM(fsmName, processingGroup);
             }
             Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(100));

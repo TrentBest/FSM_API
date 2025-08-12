@@ -65,7 +65,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// using the NUnit framework.
     /// </summary>
     [TestFixture]
-    public class FSM_API_ModifierTests
+    public class FSM_API_FSMModifier_Tests
     {
         private const string FsmName = "TestFSM";
         private const string ProcessGroup = "Update";

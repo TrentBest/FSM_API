@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using TheSingularityWorkshop.FSM_API;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using TheSingularityWorkshop.FSM_API.Tests;
+
+
+namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 {
     /// <summary>
     /// 

@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using TheSingularityWorkshop.FSM_API;
+using TheSingularityWorkshop.FSM_API.Tests.Internal;
+
 using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
 
-namespace TheSingularityWorkshop.FSM_API.Tests
+namespace TheSingularityWorkshop.FSM_API.Tests.Create
 {
     /// <summary>
     /// 
@@ -33,7 +36,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             string fsmName = "PlayerFSM";
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
             // Define the FSM first, as CreateInstance requires an existing definition
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
 
@@ -57,7 +60,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             string fsmName = "EnemyAI";
             string customProcessingGroup = "FixedUpdate";
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
             // Define the FSM in the custom processing group
             FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
 
@@ -80,9 +83,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             string fsmName = "DoorFSM";
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
 
-            IStateContext context1 = new FSMTestContext();
-            IStateContext context2 = new FSMTestContext();
-            IStateContext context3 = new FSMTestContext();
+            IStateContext context1 = new Tests.Internal.FSMTestContext();
+            IStateContext context2 = new Tests.Internal.FSMTestContext();
+            IStateContext context3 = new Tests.Internal.FSMTestContext();
 
             // Act
             FSMHandle handle1 = FSM_API.Create.CreateInstance(fsmName, context1);
@@ -106,7 +109,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void CreateInstance_InvalidFsmName_ThrowsArgumentException()
         {
             // Arrange
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
             string validFsmName = "ValidFSM";
             FSM_API.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition(); // Ensure one valid FSM exists
 
@@ -127,7 +130,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             string fsmName = "SomeFSM";
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            FSMTestContext tc = null;
+            Tests.Internal.FSMTestContext tc = null;
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => FSM_API.Create.CreateInstance(fsmName, tc), "Expected ArgumentNullException for null context.");
 
@@ -142,7 +145,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             string fsmName = "AnotherFSM";
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
             FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
 
             // Act & Assert
@@ -164,7 +167,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             string existingFsmName = "ExistingFSM";
             string nonExistentGroup = "NonExistentGroup";
             string existingGroup = "Update";
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
 
             // Create one FSM to ensure the system is not entirely empty
             FSM_API.Create.CreateFiniteStateMachine(existingFsmName, processingGroup: existingGroup).BuildDefinition();
@@ -189,7 +192,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             string fsmName = "FSMWithNullDefinition";
             string processingGroup = "SpecialGroup";
-            IStateContext context = new FSMTestContext();
+            IStateContext context = new Tests.Internal.FSMTestContext();
 
             // Simulate a scenario where a bucket exists but its Definition is null.
             // This requires direct manipulation of the internal _buckets, which is generally
