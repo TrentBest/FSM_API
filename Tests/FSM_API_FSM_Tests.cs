@@ -1,10 +1,13 @@
-﻿using System;
+﻿using NUnit.Framework; // Assuming NUnit for testing
+
+using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
-
-using NUnit.Framework; // Assuming NUnit for testing
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
@@ -199,7 +202,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(_capturedErrors[0].message, Does.Contain("Attempted to add an Any-State transition with null condition"), "Captured message should indicate null condition for AnyState.");
             //Assert.That(_capturedErrors[0].exception.ParamName, Is.EqualTo("cond"), "ArgumentNullException should be for 'cond' parameter.");
         }
-      
+
 
         /// <summary>
         /// 
@@ -315,11 +318,162 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         /// 
         /// </summary>
         [Test]
-        public void RemoveState_()
+        public void RemoveState_WithManyStatesSucceeds()
         {
             FSM fSM = new FSM();
-            HelperAddState(fSM);
+            for (int i = 0; i < 5; i++)
+            {
+                HelperAddState(fSM, $"TestState{i}");
+            }
+
+            var initCount = fSM.GetAllStates().Count;
+            fSM.RemoveState("TestState2");
+            Assert.That(fSM.GetAllStates().Count, Is.EqualTo(initCount - 1), "Should have one less state after removal.");
+            Assert.That(fSM.HasState("TestState2"), Is.False, "Should confirm the state2 was removed.");
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void HasTransition_ReturnsFalseWhenEmpty()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.False, "Should return false when no transitions exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void HasTransition_ReturnsFalseForNonExistentTransition()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+            fsm.AddTransition("StateA", "StateB", (ctx) => true);
+            Assert.That(fsm.HasTransition("StateB", "StateA"), Is.False, "Should return false for reverse transition that doesn't exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void HasState_ReturnsFalseWhenEmpty()
+        {
+            FSM fsm = new FSM();
+            Assert.That(fsm.HasState("NonExistentState"), Is.False, "Should return false when no states exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void HasState_ReturnsFalseForNonExistentState()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "ExistingState");
+            Assert.That(fsm.HasState("NonExistentState"), Is.False, "Should return false for a state that doesn't exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetState_ReturnsNullForNonExistentState()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "ExistingState");
+            var state = fsm.GetState("NonExistentState");
+            Assert.That(state, Is.Null, "Should return null for a state that doesn't exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetState_ReturnsCorrectState()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "TestState");
+            var state = fsm.GetState("TestState");
+            Assert.That(state, Is.Not.Null, "Should return the state that exists.");
+            Assert.That(state.Name, Is.EqualTo("TestState"), "Should return the correct state by name.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllStates_ReturnsEmptyWhenNoStates()
+        {
+            FSM fsm = new FSM();
+            var states = fsm.GetAllStates();
+            Assert.That(states, Is.Empty, "Should return an empty collection when no states exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllStates_ReturnsAllAddedStates()
+        {
+            FSM fsm = new FSM();
+            for (int i = 0; i < 3; i++)
+            {
+                HelperAddState(fsm, $"TestState{i}");
+            }
+            var states = fsm.GetAllStates();
+            Assert.That(states.Count(), Is.EqualTo(3), "Should return all added states.");
+            Assert.That(states.Select(s => s.Name).OrderBy(n => n), Is.EqualTo(new[] { "TestState0", "TestState1", "TestState2" }));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllTransitions_ReturnsEmptyWhenNoTransitions()
+        {
+            FSM fsm = new FSM();
+            var transitions = fsm.GetAllTransitions();
+            Assert.That(transitions, Is.Empty, "Should return an empty collection when no transitions exist.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllTransitions_ReturnsAllAddedTransitions()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+            HelperAddState(fsm, "StateC");
+            fsm.AddTransition("StateA", "StateB", (ctx) => true);
+            fsm.AddTransition("StateB", "StateC", (ctx) => true);
+            fsm.AddTransition("StateA", "StateC", (ctx) => true);
+            var transitions = fsm.GetAllTransitions();
+            Assert.That(transitions.Count(), Is.EqualTo(3), "Should return all added transitions.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetTransition_ReturnsNullForNonExistentTransition()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+            var transition = fsm.GetTransition(new Tuple<string, string>("StateA", "StateB"));
+            Assert.That(transition, Is.Null, "Should return null for a transition that doesn't exist.");
+        }
+
+
+
 
 
         private void HelperAddState(FSM fsm, string stateName = "TestState")
