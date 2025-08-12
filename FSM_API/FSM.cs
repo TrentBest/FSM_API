@@ -94,22 +94,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public string ProcessingGroup { get; internal set; }
 
-        /// <summary>
-        /// This is a special internal text identifier (`"__ANY_STATE__"`)
-        /// used to represent "Any State."
-        /// </summary>
-        /// <remarks>
-        /// When you define a transition from "Any State," it means that
-        /// transition can be triggered **no matter what state** the FSM
-        /// is currently in. It's like a global rule.
-        /// This unique text prevents it from clashing with any of your
-        /// actual state names.
-        /// </remarks>
-        public const string AnyStateIdentifier = "__ANY_STATE__"; // Using a unique, unlikely string
-
-        private readonly Dictionary<string, FSMState> _states = new Dictionary<string, FSMState>();
-        private readonly List<FSMTransition> _transitions = new List<FSMTransition>(); // Regular transitions
-        private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>(); // Any State transitions
+       
 
         /// <summary>
         /// Creates a new, empty FSM blueprint with some default settings.
@@ -708,5 +693,22 @@ namespace TheSingularityWorkshop.FSM_API
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// This is a special internal text identifier (`"__ANY_STATE__"`)
+        /// used to represent "Any State."
+        /// </summary>
+        /// <remarks>
+        /// When you define a transition from "Any State," it means that
+        /// transition can be triggered **no matter what state** the FSM
+        /// is currently in. It's like a global rule.
+        /// This unique text prevents it from clashing with any of your
+        /// actual state names.
+        /// </remarks>
+        public const string AnyStateIdentifier = "__ANY_STATE__"; // Using a unique, unlikely string
+
+        private readonly Dictionary<string, FSMState> _states = new Dictionary<string, FSMState>();
+        private readonly List<FSMTransition> _transitions = new List<FSMTransition>(); // Regular transitions
+        private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>(); // Any State transitions
     }
 }
