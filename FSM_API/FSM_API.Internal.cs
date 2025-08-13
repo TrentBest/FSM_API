@@ -646,6 +646,7 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     categoryBuckets = new Dictionary<string, FsmBucket>();
                     _buckets[processingGroup] = categoryBuckets;
+                    _processingGroupTickCounts[processingGroup] = 0;
                 }
                 return categoryBuckets;
             }
@@ -809,7 +810,11 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     return;
                 }
-
+                if(!_processingGroupTickCounts.ContainsKey(processingGroup))
+                {
+                    _processingGroupTickCounts.Add(processingGroup, 0);
+                }
+                _processingGroupTickCounts[processingGroup]++;
                 // ToList() creates a copy, preventing collection modification errors during iteration.
                 var bucketsToTick = fsmDefinitionsForCategory.Values.ToList();
 
@@ -868,6 +873,21 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+            /// <summary>
+            /// Provides Internal access to a processing group's tick count
+            /// </summary>
+            /// <param name="processingGroup"></param>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
+            public static ulong GetProcessingGroupTickCount(string processingGroup)
+            {
+                if(_processingGroupTickCounts.TryGetValue(processingGroup, out var tickCount))
+                {
+                    return tickCount;
+                }
+                return 0;
+            }
+
 
             /// <summary>
             /// A queue of actions representing modifications to the FSM system
@@ -891,6 +911,13 @@ namespace TheSingularityWorkshop.FSM_API
             /// designated thread where FSM updates occur. The dictionary itself is never null.
             /// </remarks>
             private static Dictionary<string, Dictionary<string, FsmBucket>> _buckets = new Dictionary<string, Dictionary<string, FsmBucket>>(); // Correct, initialized.
+
+
+            /// <summary>
+            /// for tracking the tick counts for each processing group.
+            /// </summary>
+            private static Dictionary<string, ulong> _processingGroupTickCounts = new Dictionary<string, ulong>();
+
 
             /// <summary>
             /// Represents a default FSM definition for internal API operations.

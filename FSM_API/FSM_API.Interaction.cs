@@ -76,6 +76,8 @@ namespace TheSingularityWorkshop.FSM_API
                 return bucket.ContainsKey(fsmName);
             }
 
+ 
+
             /// <summary>
             /// Retrieves the names of all FSM definitions currently registered
             /// within a specific processing group. This is useful for introspection, debugging, or
