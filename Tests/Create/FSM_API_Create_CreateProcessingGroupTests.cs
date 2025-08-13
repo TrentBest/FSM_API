@@ -1,3 +1,7 @@
+using NUnit.Framework;
+
+using System;
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
     /// <summary>
