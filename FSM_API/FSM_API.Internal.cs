@@ -526,6 +526,7 @@ namespace TheSingularityWorkshop.FSM_API
                 if (hardReset)
                 {
                     _buckets.Clear();
+                    
                     Error.Reset();
                 }
                 else
@@ -543,8 +544,9 @@ namespace TheSingularityWorkshop.FSM_API
                         processGroup.Value.Clear();
                     }
                     _buckets.Clear();
+
                 }
-                
+                _processingGroupTickCounts.Clear();
             }
 
 
