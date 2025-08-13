@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -19,13 +19,19 @@
 		<PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
 		<PackageIcon>TheSingularityWorkshop.jpg</PackageIcon>
 		<PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
-		<Copyright>Copyright Â© 2024 The Singularity Workshop. All rights reserved.</Copyright>
+		<Copyright>Copyright Â© 2025 The Singularity Workshop. All rights reserved.</Copyright>
+		<Title>Finite State Machine API</Title>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
 		<None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy /y &quot;$(TargetDir)FSM_API.dll&quot; &quot;C:\Users\theta\Documents\UnityIntegration\FSM_UnityIntegration\Assets\Plugins\&quot;&#xA;xcopy /y &quot;$(TargetDir)FSM_API.pdb&quot; &quot;C:\Users\theta\Documents\UnityIntegration\FSM_UnityIntegration\Assets\Plugins\&quot;&#xA;xcopy /y &quot;$(TargetDir)FSM_API.xml&quot; &quot;C:\Users\theta\Documents\UnityIntegration\FSM_UnityIntegration\Assets\Plugins\&quot;" />
+	</Target>
 
 
 </Project>

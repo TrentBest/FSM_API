@@ -41,6 +41,21 @@ namespace TheSingularityWorkshop.FSM_API
         public static partial class Interaction
         {
             /// <summary>
+            /// Returns the current tick count for the specified processing group.
+            /// </summary>
+            /// <param name="processingGroup"></param>
+            /// <returns></returns>
+            /// <exception cref="ArgumentException"></exception>
+            public static ulong GetCurrentTick(string processingGroup = "Update")
+            {
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+                return Internal.GetCurrentTick(processingGroup);
+            }
+
+            /// <summary>
             /// Checks if an FSM definition with the given name exists within the specified processing group.
             /// This is useful for verifying if an FSM blueprint has been registered before attempting
             /// to create instances or modify its definition.

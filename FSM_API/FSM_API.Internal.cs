@@ -808,10 +808,14 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     return;
                 }
-
+                if(!_processGroupTickCount.ContainsKey(processingGroup))
+                {
+                    _processGroupTickCount[processingGroup] = 0;
+                }
+                _processGroupTickCount[processingGroup]++;
                 // ToList() creates a copy, preventing collection modification errors during iteration.
                 var bucketsToTick = fsmDefinitionsForCategory.Values.ToList();
-
+                
                 foreach (var bucket in bucketsToTick)
                 {
 
@@ -867,6 +871,20 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+            /// <summary>
+            /// Returns the current tick count for the specified processing group.
+            /// </summary>
+            /// <param name="processingGroup"></param>
+            /// <returns></returns>
+            public static ulong GetCurrentTick(string processingGroup)
+            {
+                if(_processGroupTickCount.ContainsKey(processingGroup))
+                {
+                    return _processGroupTickCount[processingGroup];
+                }
+                return 0;
+            }
+
 
             /// <summary>
             /// A queue of actions representing modifications to the FSM system
@@ -900,6 +918,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// while allowing the system to continue functioning with a safe, empty FSM.
             /// </remarks>
             private static FSM _defaultFSM = new FSM(); // Correct, initialized.
+            private static Dictionary<string, ulong> _processGroupTickCount = new Dictionary<string, ulong>();
         }
     }
 
