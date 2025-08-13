@@ -1,18 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using NUnit.Framework;
-
-using TheSingularityWorkshop.FSM_API;
-
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
-using TheSingularityWorkshop.FSM_API.Tests;
-
-
-namespace TheSingularityWorkshop.FSM_API.Tests.Create
+namespace TheSingularityWorkshop.FSM_API.Tests
 {
     /// <summary>
     /// 
