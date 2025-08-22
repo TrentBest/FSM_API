@@ -156,7 +156,7 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     bucket.Definition = Internal.GetDefaultFSM();
                 }
-                var handle = new FSMHandle(bucket.Definition, ctx);
+                var handle = new FSMHandle(bucket.Definition, ctx, bucket.Instances.Count+1);
                 bucket.Instances.Add(handle);
                 return handle;
             }

@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_InteractionRemoveStateFromFSM_Tests
+    public class FSM_API_Interaction_RemoveStateFromFSM_Tests
     {
         /// <summary>
         /// 

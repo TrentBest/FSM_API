@@ -62,6 +62,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         /// 
         /// </summary>
         public bool HasEnteredCurrentState { get; set; }
+        public int TestData { get; internal set; }
     }
 
 
@@ -139,7 +140,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_InteractionUpdateTests
+    public class FSM_API_Interaction_Update_Tests
     {
         private const string _testProcessingGroup = "TestGroup";
         private const string _testFsmName = "TestFSM";
@@ -155,57 +156,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             FSM_API.Internal.ResetAPI();
         }
 
-        
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[Test]
-        //public void Update_ShouldExecuteOnEnterAndOnUpdate_WhenTransitionOccurs()
-        //{
-        //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
-        //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
-        //        .State("StateB", null, null, null)
-        //        .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
-        //        .WithInitialState("StateA")
-        //        .BuildDefinition();
 
-        //    var ctx = new TestContext();
-        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
-        //    //InitialState:
-        //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
-        //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(0));
-        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(0));
-        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(0));
-        //    // Act 1: Initial state check (First update tick)
-        //    // OnEnter should be called. OnUpdate should not.
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
-        //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
-        //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
-        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
-        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(0));
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void Update_Succeeds()
+        {
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
+                .WithInitialState("StateA")
+                .BuildDefinition();
 
-        //    // Act 2: Second update tick (OnUpdate should be called, transition should be evaluated, but will be false)
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
-        //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
-        //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
-        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(2));
-        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(0));
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
 
-        //    // Act 3: Trigger transition and update again (Third update tick)
-        //    // This time, the transition condition will be true, leading to a state change.
-        //    handle.TransitionTo("StateB");
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
-
-        //    // Assert
-        //    Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
-        //    // OnEnterStateB is null, so OnEnterCounter should not increase.
-        //    // OnUpdate and OnExit from StateA should have been called once more, but the test's logic is that the update loop runs first.
-        //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
-        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(3));
-        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(1));
-        //}
+            Assert.That(handle.HasEnteredCurrentState, Is.False, "FSM should not have entered the initial state before the first update.");
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"), "FSM should be in StateA after the first update.");
+            Assert.That(handle.HasEnteredCurrentState, Is.True, "FSM should have entered StateA after the first update.");
+        }
 
         ///// <summary>
         ///// 

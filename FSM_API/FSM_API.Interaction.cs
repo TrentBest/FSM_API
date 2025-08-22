@@ -40,6 +40,210 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public static partial class Interaction
         {
+
+            /// <summary>
+            /// Dynamically adds a new state definition to an existing Finite State Machine blueprint
+            /// at runtime.
+            /// </summary>
+            /// <remarks>
+            /// This method allows you to extend the behavior of an FSM after it has been defined.
+            /// It internally uses an <see cref="FSMModifier"/> to apply the changes.
+            /// If a state with the given <paramref name="stateName"/> already exists in the FSM,
+            /// its <c>onEnter</c>, <c>onUpdate</c>, and <c>onExit</c> actions will be updated.
+            /// All active instances of this FSM definition will immediately reflect the added or
+            /// updated state when they attempt to transition to or from it, or if they are
+            /// currently in that state and its actions are modified.
+            /// </remarks>
+            /// <param name="fsmName">
+            /// The unique name of the FSM blueprint to which the state will be added or updated.
+            /// </param>
+            /// <param name="stateName">
+            /// The name of the state to add or update. This must be unique within the FSM.
+            /// </param>
+            /// <param name="processingGroup">
+            /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
+            /// </param>
+            /// <param name="onEnter">
+            /// An <see cref="Action{T}"/> to execute when an FSM instance enters this state. Can be <c>null</c>.
+            /// </param>
+            /// <param name="onUpdate">
+            /// An <see cref="Action{T}"/> to execute when an FSM instance is in this state during an <see cref="Update(string)"/> call. Can be <c>null</c>.
+            /// </param>
+            /// <param name="onExit">
+            /// An <see cref="Action{T}"/> to execute when an FSM instance exits this state. Can be <c>null</c>.
+            /// </param>
+            /// <exception cref="ArgumentException">
+            /// Thrown if <paramref name="fsmName"/>, <paramref name="stateName"/>, or <paramref name="processingGroup"/>
+            /// is null, empty, or consists only of white-space characters.
+            /// </exception>
+            /// <exception cref="KeyNotFoundException">
+            /// Thrown if the FSM definition specified by <paramref name="fsmName"/> and <paramref name="processingGroup"/>
+            /// cannot be found.
+            /// </exception>
+            public static void AddStateToFSM(string fsmName, string stateName, // Added stateName as a direct parameter
+                Action<IStateContext> onEnter,
+                Action<IStateContext> onUpdate,
+                Action<IStateContext> onExit,
+                string processingGroup = "Update") // Moved processingGroup to end for consistency
+            {
+                if (string.IsNullOrWhiteSpace(fsmName))
+                {
+                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+                }
+                if (string.IsNullOrWhiteSpace(stateName))
+                {
+                    throw new ArgumentException("State name cannot be null or empty.", nameof(stateName));
+                }
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+
+                var fsm = Internal.GetFSM(fsmName, processingGroup); // Assuming GetFSM can throw if not found
+                if (fsm == null)
+                {
+                    throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
+                }
+
+                // Use the FSMBuilder instance method
+                new FSMModifier(fsm).WithState(stateName, onEnter, onUpdate, onExit)
+                   .ModifyDefinition(); // Builds and applies changes directly to the FSM instance
+            }
+
+
+            /// <summary>
+            /// Dynamically adds a new transition between two states to an existing Finite State Machine blueprint.
+            /// </summary>
+            /// <remarks>
+            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
+            /// This allows for changing the flow of your FSMs at runtime. If a transition
+            /// from <paramref name="fromState"/> to <paramref name="toState"/> with the exact
+            /// same condition already exists, it will be updated with the new <paramref name="condition"/>.
+            /// </remarks>
+            /// <param name="fsmName">
+            /// The unique name of the FSM blueprint to which the transition will be added or updated.
+            /// </param>
+            /// <param name="fromState">
+            /// The name of the state from which the transition originates. Use <see cref="FSM.AnyStateIdentifier"/>
+            /// to define a transition that can occur from any state.
+            /// </param>
+            /// <param name="toState">
+            /// The name of the state to which the transition leads.
+            /// </param>
+            /// <param name="condition">
+            /// A <see cref="Func{T, TResult}"/> that returns <c>true</c> when the transition should occur.
+            /// This function operates on the <see cref="IStateContext"/>.
+            /// </param>
+            /// <param name="processingGroup">
+            /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
+            /// </param>
+            /// <exception cref="ArgumentException">
+            /// Thrown if <paramref name="fsmName"/>, <paramref name="fromState"/>, <paramref name="toState"/>,
+            /// or <paramref name="processingGroup"/> is null, empty, or consists only of white-space characters,
+            /// or if <paramref name="condition"/> is <c>null</c>.
+            /// </exception>
+            /// <exception cref="KeyNotFoundException">
+            /// Thrown if the FSM definition specified by <paramref name="fsmName"/> and <paramref name="processingGroup"/>
+            /// cannot be found.
+            /// </exception>
+            /// <exception cref="InvalidOperationException">
+            /// Thrown if <paramref name="fromState"/> or <paramref name="toState"/> does not exist within the FSM's defined states,
+            /// unless <paramref name="fromState"/> is <see cref="FSM.AnyStateIdentifier"/>.
+            /// </exception>
+            public static void AddTransition(string fsmName, string fromState, string toState, Func<IStateContext, bool> condition, string processingGroup = "Update")
+            {
+                if (string.IsNullOrWhiteSpace(fsmName))
+                {
+                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+                }
+                if (string.IsNullOrWhiteSpace(fromState))
+                {
+                    throw new ArgumentException("From state cannot be null or empty.", nameof(fromState));
+                }
+                if (string.IsNullOrWhiteSpace(toState))
+                {
+                    throw new ArgumentException("To state cannot be null or empty.", nameof(toState));
+                }
+                if (condition == null)
+                {
+                    throw new ArgumentException("Transition condition cannot be null.", nameof(condition));
+                }
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+
+                var fsm = Internal.GetFSM(fsmName, processingGroup);
+                if (fsm == null)
+                {
+                    throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
+                }
+
+                new FSMModifier(fsm).WithTransition(fromState, toState, condition)
+                   .ModifyDefinition();
+            }
+
+
+            /// <summary>
+            /// Removes a registered FSM definition and all its associated active instances
+            /// from a specific processing group. This effectively unregisters the FSM blueprint
+            /// and frees up resources for all its derived instances.
+            /// </summary>
+            /// <remarks>
+            /// This is a **destructive operation** for a specific FSM type. All current instances
+            /// of this FSM definition will cease to be managed by the API. Their <see cref="FSMHandle.DestroyHandle"/>
+            /// method will be called to ensure proper <c>OnExit</c> logic is executed.
+            /// Memory will then be eligible for garbage collection once all external references are released.
+            /// If the FSM definition or group does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
+            /// </remarks>
+            /// <param name="fsmName">
+            /// The name of the FSM definition to destroy.
+            /// </param>
+            /// <param name="processingGroup">
+            /// The processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
+            /// </param>
+            /// <exception cref="ArgumentException">
+            /// Thrown if <paramref name="fsmName"/> or <paramref name="processingGroup"/> is null, empty,
+            /// or consists only of white-space characters.
+            /// </exception>
+            public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = "Update")
+            {
+                if (string.IsNullOrWhiteSpace(fsmName))
+                {
+                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+                }
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+
+                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
+                {
+                    Error.InvokeInternalApiError($"Attempted to destroy FSM '{fsmName}' from non-existent processing group '{processingGroup}'.", null);
+                    return;
+                }
+
+                if (!categoryBuckets.TryGetValue(fsmName, out var bucket))
+                {
+                    Error.InvokeInternalApiError($"Attempted to destroy non-existent FSM '{fsmName}' in processing group '{processingGroup}'.", null);
+                    return;
+                }
+
+                // Call DestroyHandle on all instances before clearing
+                foreach (var instance in bucket.Instances)
+                {
+                    instance.DestroyHandle(); // Call DestroyHandle to trigger OnExit logic
+                    Error.GetErrorCounts().Remove(instance);
+                }
+                bucket.Instances.Clear();
+
+                // Clean up the definition's error count
+                Error.GetDefinitionErrorCounts().Remove(fsmName);
+
+                categoryBuckets.Remove(fsmName);
+            }
+
+
             /// <summary>
             /// Checks if an FSM definition with the given name exists within the specified processing group.
             /// This is useful for verifying if an FSM blueprint has been registered before attempting
@@ -155,51 +359,6 @@ namespace TheSingularityWorkshop.FSM_API
 
 
             /// <summary>
-            /// Advances the FSM instance by one logical step. This involves executing the 'OnUpdate'
-            /// action of the <see cref="FSMHandle.CurrentState"/> and evaluating all defined transitions
-            /// from the <see cref="FSMHandle.CurrentState"/>. If a valid transition is found, the FSM will
-            /// move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.
-            /// </summary>
-            /// <param name="processingGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
-            /// <remarks>
-            /// **The Crucial Step for FSM Processing:**
-            /// This <c>Update()</c> method is fundamental to the operation of an FSM instance. Without
-            /// it being called, the FSM will not execute its state's update logic, evaluate transitions,
-            /// or progress through its defined states. An FSM definition, no matter how intricate,
-            /// remains static until its instances are actively updated.
-            ///
-            /// **How FSMs are "Ticked":**
-            /// This method is primarily designed to be invoked by the <c>FSM_API</c>'s internal management
-            /// system (e.g., via <c>FSM_API.Interaction.TickAll(string processingGroup)</c>). The API
-            /// manages the periodic invocation of this method for all registered FSM instances
-            /// within a given processing group, respecting their defined <c>ProcessRate</c>.
-            ///
-            /// **CAUTION: Manual Invocation (Advanced Use Only):**
-            /// While publicly accessible, directly calling <c>Update()</c> manually from your application code
-            /// should only be done by developers who possess a deep understanding of the FSM's internal
-            /// processing cycle and lifecycle management. Manual invocation outside of the
-            /// <c>FSM_API</c>'s managed loop can lead to:
-            /// <list type="bullet">
-            ///     <item><description>Unpredictable state behavior due to uncontrolled update rates.</description></item>
-            ///     <item><description>Performance issues if not integrated into an efficient game loop or update scheduler.</description></item>
-            ///     <item><description>Conflicts with the <c>FSM_API</c>'s internal error handling and instance management.</description></item>
-            /// </list>
-            /// Use with extreme care and only when building a highly customized, self-managed FSM update system.
-            /// </remarks>
-            public static void Update(string processingGroup = "Update")
-            {
-                var sw = Stopwatch.StartNew();
-                Internal.TickAll(processingGroup);
-                Internal.ProcessDeferredModifications();
-                sw.Stop();
-                if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
-                {
-                    string message = $"'Update' tick took {sw.ElapsedMilliseconds}ms. Threshold: {Internal.TickPerformanceWarningThresholdMs}ms.";
-                    Error.InvokeInternalApiError(message, new Exception(message));
-                }
-            }
-
-            /// <summary>
             /// Removes an entire FSM processing group from the system, along with all FSM definitions
             /// and all their active instances associated with that group.
             /// </summary>
@@ -248,64 +407,57 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+
             /// <summary>
-            /// Removes a registered FSM definition and all its associated active instances
-            /// from a specific processing group. This effectively unregisters the FSM blueprint
-            /// and frees up resources for all its derived instances.
+            /// Advances the FSM instance by one logical step. This involves executing the 'OnUpdate'
+            /// action of the <see cref="FSMHandle.CurrentState"/> and evaluating all defined transitions
+            /// from the <see cref="FSMHandle.CurrentState"/>. If a valid transition is found, the FSM will
+            /// move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.
             /// </summary>
+            /// <param name="processingGroup">Optional: A string identifying the process group for error reporting, defaults to "Update".</param>
             /// <remarks>
-            /// This is a **destructive operation** for a specific FSM type. All current instances
-            /// of this FSM definition will cease to be managed by the API. Their <see cref="FSMHandle.DestroyHandle"/>
-            /// method will be called to ensure proper <c>OnExit</c> logic is executed.
-            /// Memory will then be eligible for garbage collection once all external references are released.
-            /// If the FSM definition or group does not exist, a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
+            /// **The Crucial Step for FSM Processing:**
+            /// This <c>Update()</c> method is fundamental to the operation of an FSM instance. Without
+            /// it being called, the FSM will not execute its state's update logic, evaluate transitions,
+            /// or progress through its defined states. An FSM definition, no matter how intricate,
+            /// remains static until its instances are actively updated.
+            ///
+            /// **How FSMs are "Ticked":**
+            /// This method is primarily designed to be invoked by the <c>FSM_API</c>'s internal management
+            /// system (e.g., via <c>FSM_API.Interaction.TickAll(string processingGroup)</c>). The API
+            /// manages the periodic invocation of this method for all registered FSM instances
+            /// within a given processing group, respecting their defined <c>ProcessRate</c>.
+            ///
+            /// **CAUTION: Manual Invocation (Advanced Use Only):**
+            /// While publicly accessible, directly calling <c>Update()</c> manually from your application code
+            /// should only be done by developers who possess a deep understanding of the FSM's internal
+            /// processing cycle and lifecycle management. Manual invocation outside of the
+            /// <c>FSM_API</c>'s managed loop can lead to:
+            /// <list type="bullet">
+            ///     <item><description>Unpredictable state behavior due to uncontrolled update rates.</description></item>
+            ///     <item><description>Performance issues if not integrated into an efficient game loop or update scheduler.</description></item>
+            ///     <item><description>Conflicts with the <c>FSM_API</c>'s internal error handling and instance management.</description></item>
+            /// </list>
+            /// Use with extreme care and only when building a highly customized, self-managed FSM update system.
             /// </remarks>
-            /// <param name="fsmName">
-            /// The name of the FSM definition to destroy.
-            /// </param>
-            /// <param name="processingGroup">
-            /// The processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
-            /// </param>
-            /// <exception cref="ArgumentException">
-            /// Thrown if <paramref name="fsmName"/> or <paramref name="processingGroup"/> is null, empty,
-            /// or consists only of white-space characters.
-            /// </exception>
-            public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = "Update")
+            public static void Update(string processingGroup = "Update")
             {
-                if (string.IsNullOrWhiteSpace(fsmName))
+                Console.WriteLine($"Here4");
+                var sw = Stopwatch.StartNew();
+                Internal.TickAll(processingGroup);
+                Console.WriteLine($"Here5");
+                Internal.ProcessDeferredModifications();
+                sw.Stop();
+                if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
                 {
-                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+                    string message = $"'Update' tick took {sw.ElapsedMilliseconds}ms. Threshold: {Internal.TickPerformanceWarningThresholdMs}ms.";
+                    Error.InvokeInternalApiError(message, new Exception(message));
                 }
-                if (string.IsNullOrWhiteSpace(processingGroup))
-                {
-                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
-                }
-
-                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
-                {
-                    Error.InvokeInternalApiError($"Attempted to destroy FSM '{fsmName}' from non-existent processing group '{processingGroup}'.", null);
-                    return;
-                }
-
-                if (!categoryBuckets.TryGetValue(fsmName, out var bucket))
-                {
-                    Error.InvokeInternalApiError($"Attempted to destroy non-existent FSM '{fsmName}' in processing group '{processingGroup}'.", null);
-                    return;
-                }
-
-                // Call DestroyHandle on all instances before clearing
-                foreach (var instance in bucket.Instances)
-                {
-                    instance.DestroyHandle(); // Call DestroyHandle to trigger OnExit logic
-                    Error.GetErrorCounts().Remove(instance);
-                }
-                bucket.Instances.Clear();
-
-                // Clean up the definition's error count
-                Error.GetDefinitionErrorCounts().Remove(fsmName);
-
-                categoryBuckets.Remove(fsmName);
             }
+
+           
+
+           
 
             /// <summary>
             /// Unregisters a specific FSM instance from the system, allowing it to be garbage collected
@@ -370,74 +522,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
 
-            /// <summary>
-            /// Dynamically adds a new state definition to an existing Finite State Machine blueprint
-            /// at runtime.
-            /// </summary>
-            /// <remarks>
-            /// This method allows you to extend the behavior of an FSM after it has been defined.
-            /// It internally uses an <see cref="FSMModifier"/> to apply the changes.
-            /// If a state with the given <paramref name="stateName"/> already exists in the FSM,
-            /// its <c>onEnter</c>, <c>onUpdate</c>, and <c>onExit</c> actions will be updated.
-            /// All active instances of this FSM definition will immediately reflect the added or
-            /// updated state when they attempt to transition to or from it, or if they are
-            /// currently in that state and its actions are modified.
-            /// </remarks>
-            /// <param name="fsmName">
-            /// The unique name of the FSM blueprint to which the state will be added or updated.
-            /// </param>
-            /// <param name="stateName">
-            /// The name of the state to add or update. This must be unique within the FSM.
-            /// </param>
-            /// <param name="processingGroup">
-            /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
-            /// </param>
-            /// <param name="onEnter">
-            /// An <see cref="Action{T}"/> to execute when an FSM instance enters this state. Can be <c>null</c>.
-            /// </param>
-            /// <param name="onUpdate">
-            /// An <see cref="Action{T}"/> to execute when an FSM instance is in this state during an <see cref="Update(string)"/> call. Can be <c>null</c>.
-            /// </param>
-            /// <param name="onExit">
-            /// An <see cref="Action{T}"/> to execute when an FSM instance exits this state. Can be <c>null</c>.
-            /// </param>
-            /// <exception cref="ArgumentException">
-            /// Thrown if <paramref name="fsmName"/>, <paramref name="stateName"/>, or <paramref name="processingGroup"/>
-            /// is null, empty, or consists only of white-space characters.
-            /// </exception>
-            /// <exception cref="KeyNotFoundException">
-            /// Thrown if the FSM definition specified by <paramref name="fsmName"/> and <paramref name="processingGroup"/>
-            /// cannot be found.
-            /// </exception>
-            public static void AddStateToFSM(string fsmName, string stateName, // Added stateName as a direct parameter
-                Action<IStateContext> onEnter,
-                Action<IStateContext> onUpdate,
-                Action<IStateContext> onExit,
-                string processingGroup = "Update") // Moved processingGroup to end for consistency
-            {
-                if (string.IsNullOrWhiteSpace(fsmName))
-                {
-                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
-                }
-                if (string.IsNullOrWhiteSpace(stateName))
-                {
-                    throw new ArgumentException("State name cannot be null or empty.", nameof(stateName));
-                }
-                if (string.IsNullOrWhiteSpace(processingGroup))
-                {
-                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
-                }
-
-                var fsm = Internal.GetFSM(fsmName, processingGroup); // Assuming GetFSM can throw if not found
-                if (fsm == null)
-                {
-                    throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
-                }
-
-                // Use the FSMBuilder instance method
-                new FSMModifier(fsm).WithState(stateName, onEnter, onUpdate, onExit)
-                   .ModifyDefinition(); // Builds and applies changes directly to the FSM instance
-            }
+           
 
             /// <summary>
             /// Dynamically removes a state definition from an existing Finite State Machine blueprint at runtime.
@@ -520,77 +605,7 @@ namespace TheSingularityWorkshop.FSM_API
                     .ModifyDefinition();
             }
 
-            /// <summary>
-            /// Dynamically adds a new transition between two states to an existing Finite State Machine blueprint.
-            /// </summary>
-            /// <remarks>
-            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
-            /// This allows for changing the flow of your FSMs at runtime. If a transition
-            /// from <paramref name="fromState"/> to <paramref name="toState"/> with the exact
-            /// same condition already exists, it will be updated with the new <paramref name="condition"/>.
-            /// </remarks>
-            /// <param name="fsmName">
-            /// The unique name of the FSM blueprint to which the transition will be added or updated.
-            /// </param>
-            /// <param name="fromState">
-            /// The name of the state from which the transition originates. Use <see cref="FSM.AnyStateIdentifier"/>
-            /// to define a transition that can occur from any state.
-            /// </param>
-            /// <param name="toState">
-            /// The name of the state to which the transition leads.
-            /// </param>
-            /// <param name="condition">
-            /// A <see cref="Func{T, TResult}"/> that returns <c>true</c> when the transition should occur.
-            /// This function operates on the <see cref="IStateContext"/>.
-            /// </param>
-            /// <param name="processingGroup">
-            /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
-            /// </param>
-            /// <exception cref="ArgumentException">
-            /// Thrown if <paramref name="fsmName"/>, <paramref name="fromState"/>, <paramref name="toState"/>,
-            /// or <paramref name="processingGroup"/> is null, empty, or consists only of white-space characters,
-            /// or if <paramref name="condition"/> is <c>null</c>.
-            /// </exception>
-            /// <exception cref="KeyNotFoundException">
-            /// Thrown if the FSM definition specified by <paramref name="fsmName"/> and <paramref name="processingGroup"/>
-            /// cannot be found.
-            /// </exception>
-            /// <exception cref="InvalidOperationException">
-            /// Thrown if <paramref name="fromState"/> or <paramref name="toState"/> does not exist within the FSM's defined states,
-            /// unless <paramref name="fromState"/> is <see cref="FSM.AnyStateIdentifier"/>.
-            /// </exception>
-            public static void AddTransition(string fsmName, string fromState, string toState, Func<IStateContext, bool> condition, string processingGroup = "Update")
-            {
-                if (string.IsNullOrWhiteSpace(fsmName))
-                {
-                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
-                }
-                if (string.IsNullOrWhiteSpace(fromState))
-                {
-                    throw new ArgumentException("From state cannot be null or empty.", nameof(fromState));
-                }
-                if (string.IsNullOrWhiteSpace(toState))
-                {
-                    throw new ArgumentException("To state cannot be null or empty.", nameof(toState));
-                }
-                if (condition == null)
-                {
-                    throw new ArgumentException("Transition condition cannot be null.", nameof(condition));
-                }
-                if (string.IsNullOrWhiteSpace(processingGroup))
-                {
-                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
-                }
-
-                var fsm = Internal.GetFSM(fsmName, processingGroup);
-                if (fsm == null)
-                {
-                    throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
-                }
-
-                new FSMModifier(fsm).WithTransition(fromState, toState, condition)
-                   .ModifyDefinition();
-            }
+           
 
             /// <summary>
             /// Dynamically removes a specific transition between two states from an existing Finite State Machine blueprint.

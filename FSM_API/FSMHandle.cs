@@ -39,6 +39,10 @@ namespace TheSingularityWorkshop.FSM_API
     public class FSMHandle
     {
         /// <summary>
+        /// Handle's Id
+        /// </summary>
+        public int Id { get; internal set; } = -1;
+        /// <summary>
         /// This is the original **blueprint (definition)** of the FSM that this handle is controlling.
         /// </summary>
         /// <remarks>
@@ -63,7 +67,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// Changing it directly from outside might bypass your FSM's carefully planned logic!
         /// </para>
         /// </remarks>
-        public IStateContext Context { get; set; }
+        public IStateContext Context { get; set; } = null;
 
         /// <summary>
         /// This tells you the **current state name** of this FSM instance.
@@ -73,7 +77,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// This is the **best and safest way** to check what your FSM is doing.
         /// This state name is updated automatically when the FSM moves between states.
         /// </remarks>
-        public string CurrentState { get; private set; }
+        public string CurrentState { get; internal set; } = "UnknownState";
 
         /// <summary>
         /// This is the **name of the FSM blueprint** that this handle is using.
@@ -111,17 +115,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <param name="definition">The blueprint (<see cref="FSM"/>) for this FSM instance.</param>
         /// <param name="context">The data bag (<see cref="IStateContext"/>) for this specific FSM instance.</param>
+        /// <param name="id">ID of the handle</param>
         /// <exception cref="ArgumentNullException">
         /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
         /// or without a data bag (`context` is `null`).
         /// </exception>
-        public FSMHandle(FSM definition=null, IStateContext context = null)
+        public FSMHandle(FSM definition=null, IStateContext context = null, int id = -1)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition), "FSM definition cannot be null for FSMHandle.");
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");
-
+            Id = id;
             CurrentState = Definition.InitialState;
-
         }
 
         /// <summary>
@@ -152,6 +156,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 // The Step method will internally handle state transitions and update CurrentState
                 Definition.Step(CurrentState, Context, out string nextState);
+                Console.WriteLine($"Here3");
                 CurrentState = nextState;
             }
             catch (Exception ex)
@@ -194,7 +199,7 @@ namespace TheSingularityWorkshop.FSM_API
             try
             {
                 Definition.ForceTransition(CurrentState, nextStateName, Context);
-                //CurrentState = nextStateName;
+                CurrentState = nextStateName;
             }
             catch (Exception ex)
             {

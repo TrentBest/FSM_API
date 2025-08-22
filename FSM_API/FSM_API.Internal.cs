@@ -497,6 +497,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             public static void ProcessDeferredModifications()
             {
+                Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
                 while (_deferredModifications.Count > 0)
                 {
                     var action = _deferredModifications.Dequeue();
@@ -801,6 +802,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             internal static void TickAll(string processingGroup)
             {
+                Console.WriteLine($"Ticking:  {processingGroup}");
                 if (string.IsNullOrWhiteSpace(processingGroup))
                 {
                     // Correct: passing null for Exception?
@@ -808,54 +810,83 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                if (!_buckets.TryGetValue(processingGroup, out var fsmDefinitionsForCategory))
+                if (!_buckets.TryGetValue(processingGroup, out var fsmDefinitionsForProcessingGroup))
                 {
+                    Console.WriteLine($"Here6");
                     return;
                 }
                 if(!_processingGroupTickCounts.ContainsKey(processingGroup))
                 {
+                    Console.WriteLine($"Here7");
                     _processingGroupTickCounts.Add(processingGroup, 0);
                 }
+                Console.WriteLine($"Here8");
                 _processingGroupTickCounts[processingGroup]++;
                 // ToList() creates a copy, preventing collection modification errors during iteration.
-                var bucketsToTick = fsmDefinitionsForCategory.Values.ToList();
+                var bucketsToTick = fsmDefinitionsForProcessingGroup.Values.ToList();
 
                 foreach (var bucket in bucketsToTick)
                 {
-
+                    //Console.WriteLine($"Here9");
                     if (bucket.ProcessRate == 0)
                     {
+                        Console.WriteLine($"Here11");
                         continue;
                     }
-
+                    //Console.WriteLine($"Here10");
                     if (bucket.ProcessRate > 0)
                     {
+                        Console.WriteLine($"Here12");
                         bucket.Counter--;
                         if (bucket.Counter > 0)
                         {
+                            Console.WriteLine($"Here13");
                             continue;
                         }
+                        //Console.WriteLine($"Here14");
                         bucket.Counter = bucket.ProcessRate;
                     }
-
+                    //Console.WriteLine($"Here15");
                     var instancesToTick = bucket.Instances.ToList(); // Copy to avoid modification issues
                     foreach (var handle in instancesToTick)
                     {
+                       // Console.WriteLine($"Here16");
                         // Ensure the handle itself is not null, its context is not null,
                         // AND its context is reported as valid by the context itself.
                         // `handle` is FSMHandle (non-nullable List element), but we need to ensure FSMHandle.Context
                         // is non-null before accessing its IsValid property.
                         if (handle != null && handle.Context != null && handle.Context.IsValid)
                         {
+                            //Console.WriteLine($"Here17");
                             try
                             {
                                 if (!handle.HasEnteredCurrentState)
                                 {
+                                    //Console.WriteLine($"Here18");
                                     bucket.Definition.GetState(bucket.Definition.InitialState).Enter(handle.Context);
                                     handle.HasEnteredCurrentState = true;
                                 }
+                                //Console.WriteLine($"Here19");
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
-
+                                //Console.WriteLine($"Here20");
+                                var transitions = bucket.Definition.GetAllTransitions();
+                                foreach (var transition in transitions)
+                                {
+                                    Console.WriteLine($"HereAgain");
+                                    if (transition.From == handle.CurrentState)
+                                    {
+                                        Console.WriteLine($"HereAgain2");
+                                        var result = transition.Condition.Invoke(handle.Context);
+                                        if (result)
+                                        {
+                                            Console.WriteLine($"HereAgain3");
+                                            bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
+                                            handle.CurrentState = transition.To;
+                                            handle.HasEnteredCurrentState = false;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                             catch (Exception ex)
                             {

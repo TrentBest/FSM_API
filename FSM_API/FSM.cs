@@ -94,7 +94,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public string ProcessingGroup { get; internal set; }
 
-       
+
 
         /// <summary>
         /// Creates a new, empty FSM blueprint with some default settings.
@@ -143,6 +143,11 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             _states[s.Name] = s;
+            if (_states.Count == 1)
+            {
+                // If this is the first state added, set it as the initial state
+                InitialState = s.Name;
+            }
         }
 
         /// <summary>
@@ -210,7 +215,7 @@ namespace TheSingularityWorkshop.FSM_API
                 FSM_API.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with null condition to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
-            if(to == string.Empty)
+            if (to == string.Empty)
             {
                 FSM_API.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with empty string 'to' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
@@ -384,6 +389,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Step(string current, IStateContext ctx, out string next)
         {
+            Console.WriteLine("Stepping");
             next = current; // Assume state doesn't change unless a transition fires
 
             if (!_states.TryGetValue(current, out var currentState))
@@ -425,7 +431,7 @@ namespace TheSingularityWorkshop.FSM_API
                         $"Error evaluating Any-State transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
                     );
-                   
+
                 }
             }
 
@@ -445,13 +451,14 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Error during Update logic of state '{current}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex
                 );
-                
+
             }
 
 
             // 4. Check regular transitions from the current state
             foreach (var t in _transitions)
             {
+                Console.WriteLine("Here");
                 if (t.From == current) // Only consider transitions *from* the current state
                 {
                     // Check if the target state exists before evaluating condition
@@ -466,10 +473,13 @@ namespace TheSingularityWorkshop.FSM_API
 
                     try
                     {
+                        Console.WriteLine("Here2");
                         if (t.Condition(ctx))
                         {
                             currentState.Exit(ctx);
-                            //_states[t.To].Enter(ctx);
+                            var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            handle.CurrentState = t.To; // Update the FSM handle's current state
+                            handle.HasEnteredCurrentState = false;
                             next = t.To;
                             return; // Transition occurred, exit
                         }
@@ -480,7 +490,7 @@ namespace TheSingularityWorkshop.FSM_API
                             $"Error evaluating regular transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                             ex
                         );
-                     
+
                     }
                 }
             }
@@ -581,7 +591,7 @@ namespace TheSingularityWorkshop.FSM_API
             _states.Remove(name);
         }
 
-         /// <summary>
+        /// <summary>
         /// Checks if a regular transition exists between the specified starting
         /// and ending states.
         /// </summary>
@@ -712,3 +722,7 @@ namespace TheSingularityWorkshop.FSM_API
         private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>(); // Any State transitions
     }
 }
+
+
+
+

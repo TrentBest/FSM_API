@@ -9,6 +9,8 @@ using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
+using TheSingularityWorkshop.FSM_API.Tests.Internal;
+
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
 
@@ -244,9 +246,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(1), "Transition should be added to the blueprint even if 'from' state doesn't exist.");
             Assert.That(fsm.HasTransition("NonExistentState", "ExistingState"), Is.True, "Should register the transition.");
-
-            // To fully test this, you'd need a Step test where the FSM is current in "NonExistentState"
-            // and observe error logging via FSM_API.Error.
         }
 
 
@@ -267,9 +266,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(1), "Transition should be added to the blueprint even if 'to' state doesn't exist.");
             Assert.That(fsm.HasTransition("ExistingState", "NonExistentState"), Is.True, "Should register the transition.");
-
-            // To fully test this, you'd need a Step test where the transition condition becomes true
-            // and observe error logging via FSM_API.Error when trying to enter "NonExistentState".
         }
 
 
@@ -332,6 +328,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fSM.HasState("TestState2"), Is.False, "Should confirm the state2 was removed.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void ForceTransition_Succeeds()
+        {
+            FSM fsm = new FSM();
+           
+        }
 
         /// <summary>
         /// 

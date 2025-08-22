@@ -8,7 +8,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_Create_CreateProcessingGroupTests
+    public class FSM_API_Create_CreateProcessingGroup_Tests
     {
         /// <summary>
         /// 

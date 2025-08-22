@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
     /// Tests for Creating Finite state machines
     /// </summary>
     [TestFixture]
-    public class FSM_API_Create_CreateFiniteStateMachineTests
+    public class FSM_API_Create_CreateFiniteStateMachine_Tests
     {
         /// <summary>
         /// Setup for tests, resets the api

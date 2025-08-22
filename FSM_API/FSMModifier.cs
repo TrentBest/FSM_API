@@ -43,6 +43,7 @@ namespace TheSingularityWorkshop.FSM_API
             this.fsm = fsm;
             _existingProcessRate = fsm.ProcessRate;
             _existingProcessGroup = fsm.ProcessingGroup;
+            _modifiedProcessGroup = _existingProcessGroup;
             _existingFSMName = fsm.Name;
         }
 
@@ -350,8 +351,6 @@ namespace TheSingularityWorkshop.FSM_API
                     tran.Condition = transition.Item3;
                 }
             }
-
-
         }
     }
 }

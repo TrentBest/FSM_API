@@ -17,7 +17,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_Create_CreateInstanceTests
+    public class FSM_API_Create_CreateInstance_Tests
     {
         /// <summary>
         /// 

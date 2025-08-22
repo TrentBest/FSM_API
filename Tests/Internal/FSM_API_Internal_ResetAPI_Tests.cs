@@ -137,5 +137,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         /// 
         /// </summary>
         public bool HasEnteredCurrentState { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int TestData { get; set; }
     }
 }

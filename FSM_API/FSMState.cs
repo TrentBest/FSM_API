@@ -126,7 +126,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// <param name="c">The context object specific to this FSM instance, providing data access.</param>
         public void Update(IStateContext c)
         {
-            _onUpdate.Invoke(c); // Guaranteed not to be null
+            _onUpdate.Invoke(c);
+
         }
 
         /// <summary>

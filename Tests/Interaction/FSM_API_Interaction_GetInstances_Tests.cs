@@ -19,7 +19,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
     /// 
     /// </summary>
     [TestFixture]
-    public class FSM_API_InteractionGetInstancesTests
+    public class FSM_API_Interaction_GetInstances_Tests
     {
         /// <summary>
         /// 
