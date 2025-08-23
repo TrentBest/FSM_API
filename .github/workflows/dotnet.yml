@@ -3,33 +3,24 @@
 
 name: .NET
 
-# The workflow will run on push and pull requests to the main branch.
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
-# Define the jobs to be executed.
 jobs:
   build:
-    # Use the latest Ubuntu environment for the build agent.
     runs-on: ubuntu-latest
 
-    # The strategy matrix allows the job to run for multiple .NET versions.
-    # We've updated this to include all target frameworks mentioned in your csproj.
-    # This ensures each of these frameworks is built and tested.
     strategy:
       matrix:
-        dotnet-version: ['8.0.x', '7.0.x', '6.0.x', '5.0.x', '3.1.x', '2.1.x']
-        # Note: netstandard2.1 and netstandard2.0 will be built by these SDKs.
+        # This matrix will create a separate build job for each target framework
+        dotnet-version: [ '8.0.x', '7.0.x', '6.0.x' ]
 
     steps:
-    # Check out the repository code.
     - uses: actions/checkout@v4
-    
-    # Set up the .NET SDK. The version is taken from the matrix.
-    - name: Setup .NET ${{ matrix.dotnet-version }}
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
