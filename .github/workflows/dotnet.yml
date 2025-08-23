@@ -1,3 +1,6 @@
+# This workflow is designed to build the .NET solution against multiple target frameworks,
+# run tests on the primary framework, and conditionally publish the NuGet package.
+
 name: .NET
 
 on:
@@ -9,32 +12,40 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        dotnet-version: [ '8.0.x']
+        # Define the target frameworks to build against.
+        # We use the latest .NET 8 SDK as it can compile for all older targets.
+        target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: '8.0.x'
 
     - name: Restore Solution Dependencies
-      working-directory: ${{ github.workspace }}
       run: dotnet restore FSM_API.sln
 
-    - name: Build Main Project
-      working-directory: ${{ github.workspace }}
-      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release
+    - name: Build Project for Target Framework
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
 
-    - name: Build Test Project
-      working-directory: ${{ github.workspace }}
-      run: dotnet build Tests/FSM_API.Tests.csproj --no-restore --configuration Release
+  test:
+    runs-on: ubuntu-latest
+    # The test job will only run after all builds have succeeded.
+    needs: build
 
-    # --- Code Coverage Steps ---
-    # We now create a runsettings file to properly configure the code coverage collector.
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Solution Dependencies
+      run: dotnet restore FSM_API.sln
+
     - name: Create Coverlet Runsettings File
       run: |
         echo '<RunSettings>' > coverlet.runsettings
@@ -49,13 +60,13 @@ jobs:
         echo '    </DataCollectors>' >> coverlet.runsettings
         echo '  </DataCollectionRunSettings>' >> coverlet.runsettings
         echo '</RunSettings>' >> coverlet.runsettings
+      shell: bash
+
     - name: Run Tests with Code Coverage
-      working-directory: ${{ github.workspace }}
       run: |
         dotnet test Tests/FSM_API.Tests.csproj \
-          --no-build \
-          --no-restore \
           --configuration Release \
+          --framework net8.0 \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults \
           --logger "trx;LogFileName=testresults.trx" \
@@ -64,7 +75,6 @@ jobs:
 
     - name: Find coverage report path
       id: find_coverage_path
-      working-directory: ${{ github.workspace }}
       run: |
         COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
         if [ -z "$COVERAGE_FILE" ]; then
@@ -84,117 +94,21 @@ jobs:
         name: FSM-API-Codecov
         fail_ci_if_error: true
         verbose: true
-# -------------------------------------------------------------
 
-    # Commenting out the DLL artifact upload as it was looking for netstandard2.0
-    # You can re-enable and adjust the path once you reintroduce netstandard2.0
-    # - name: Upload FSM_API DLL Artifact
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: fsm-api-dll
-    #     path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
-    #     retention-days: 1
+  publish_nuget:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-  # The 'publish_nuget' job is commented out as it should not run with every build.
-  # Uncomment this entire section when you are ready to publish a new NuGet package.
-  # publish_nuget:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Setup .NET
-  #       uses: actions/setup-dotnet@v4
-  #       with:
-  #         dotnet-version: 8.0.x
+      - name: Pack
+        run: dotnet pack FSM_API/FSM_API.csproj --configuration Release -o nuget-packages
 
-  #     - name: Download FSM_API DLL Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: fsm-api-dll
-  #         path: .
-
-  #     - name: Pack
-  #       run: dotnet pack FSM_API/FSM_API/FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-
-  #     - name: Publish to NuGet.org
-  #       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
-
-  # Commenting out DLL push jobs until netstandard2.0 build is re-enabled and stable
-  # push_dll_to_fsm_api_unity:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-
-  #   steps:
-  #     - name: Checkout FSM_API_Unity Repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         repository: 'TrentBest/FSM_API_Unity'
-  #         token: ${{ secrets.PAT }}
-  #         path: './fsm_api_unity_repo'
-
-  #     - name: Download FSM_API DLL Artifact for FSM_API_Unity
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: fsm-api-dll
-  #         path: .
-
-  #     - name: Create Plugins directory in FSM_API_Unity
-  #       run: mkdir -p ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
-  #       shell: bash
-
-  #     - name: Update DLL in FSM_API_Unity Repo
-  #       run: |
-  #         cp FSM_API.dll ./fsm_api_unity_repo/Assets/FSM_API/Plugins/
-  #       shell: bash
-
-  #     - name: Commit and Push to FSM_API_Unity Repo
-  #       run: |
-  #         cd ./fsm_api_unity_repo
-  #         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-  #         git config --global user.name "github-actions[bot]"
-  #         git add Assets/FSM_API/Plugins/FSM_API.dll
-  #         git commit -m "Automated: Update FSM_API.dll from CI build"
-  #         git push
-  #       shell: bash
-
-  # push_dll_to_rawwar:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-
-  #   steps:
-  #     - name: Checkout raWWar Repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         repository: 'TrentBest/raWWar'
-  #         token: ${{ secrets.PAT }}
-  #         path: './rawwar_repo'
-  #         ref: 'Alpha'
-
-  #     - name: Download FSM_API DLL Artifact for raWWar
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: fsm-api-dll
-  #         path: .
-
-  #     - name: Create Plugins directory in raWWar
-  #       run: mkdir -p ./rawwar_repo/Assets/Plugins/
-  #       shell: bash
-
-  #     - name: Update DLL in raWWar Repo
-  #       run: |
-  #         cp FSM_API.dll ./rawwar_repo/Assets/Plugins/
-  #       shell: bash
-
-  #     - name: Commit and Push to raWWar Repo
-  #       run: |
-  #         cd ./rawwar_repo
-  #         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-  #         git config --global user.name "github-actions[bot]"
-  #         git add Assets/Plugins/FSM_API.dll
-  #         git commit -m "Automated: Update FSM_API.dll from FSM_API CI build"
-  #         git push origin Alpha
-  #       shell: bash
+      - name: Publish to NuGet.org
+        run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
