@@ -257,7 +257,7 @@ builder.WithProcessingGroup("GameLogic"); // Instances will default to the "Game
 
 ### How it integrates with `FSM_UnityIntegration` (for Unity users):
 
-The `FSM_UnityIntegration` script (discussed in **[02. Getting Started with Unity](https://www.google.com/search?q=02_Getting_Started_Unity.md)**) will automatically create and update the "Update", "FixedUpdate", "LateUpdate", etc., processing groups. By using `WithProcessingGroup("Update")` or `WithProcessingGroup("FixedUpdate")` in your builder, you're instructing FSM\_API to include instances of this definition in those Unity-driven update cycles by default.
+The `FSM_UnityIntegration` script (discussed in **[02. Getting Started with Unity](02_Getting_Started_Unity.md)**) will automatically create and update the "Update", "FixedUpdate", "LateUpdate", etc., processing groups. By using `WithProcessingGroup("Update")` or `WithProcessingGroup("FixedUpdate")` in your builder, you're instructing FSM_API to include instances of this definition in those Unity-driven update cycles by default.
 
 -----
 
@@ -298,4 +298,4 @@ var playerFSMDefinition = FSM_API.CreateFiniteStateMachine("PlayerFSM")
 
 -----
 
-[➡️ Continue to: 05. Understanding and Implementing Your Context (IStateContext)](https://www.google.com/search?q=05_Context_Implementation.md)
+[➡️ Continue to: 05. Understanding and Implementing Your Context (IStateContext)](05_Context_Implementation.md)

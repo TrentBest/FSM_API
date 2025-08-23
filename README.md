@@ -15,6 +15,9 @@ FSM_API
 
 [![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
 
+[Support Us](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+
+<br>
 Blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
 🔍 Overview
@@ -160,3 +163,5 @@ The Singularity Workshop - Tools for the curious, the bold, and the systemically
 <img src="https://github.com/user-attachments/assets/b94a9412-29f3-4b55-9d07-ddef3b57e082" width="200" alt="Description of the image">
 
 Because state shouldn't be a mess.
+
+**Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
