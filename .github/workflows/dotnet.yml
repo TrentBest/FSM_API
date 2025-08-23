@@ -1,5 +1,5 @@
-# This workflow is designed to build the .NET solution against multiple target frameworks,
-# run tests on the primary framework, and conditionally publish the NuGet package.
+# This workflow builds the .NET solution against multiple target frameworks,
+# runs tests on the primary framework, and conditionally publishes the NuGet package.
 
 name: .NET
 
@@ -10,12 +10,11 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         # Define the target frameworks to build against.
-        # We use the latest .NET 8 SDK as it can compile for all older targets.
         target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
@@ -23,6 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
+        # The .NET 8 SDK can compile for all older targets.
         dotnet-version: '8.0.x'
 
     - name: Restore Solution Dependencies
@@ -31,73 +31,30 @@ jobs:
     - name: Build Project for Target Framework
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
 
-  test:
-    runs-on: ubuntu-latest
-    # The test job will only run after all builds have succeeded.
-    needs: build
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-
-    - name: Restore Solution Dependencies
-      run: dotnet restore FSM_API.sln
-
-    - name: Create Coverlet Runsettings File
-      run: |
-        echo '<RunSettings>' > coverlet.runsettings
-        echo '  <DataCollectionRunSettings>' >> coverlet.runsettings
-        echo '    <DataCollectors>' >> coverlet.runsettings
-        echo '      <DataCollector friendlyName="XPlat Code Coverage" uri="ms-dotnet-coverage://microsoft.com/CodeCoverage/v1" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.NetCore.DataCollector.CoverageDataCollector, Microsoft.VisualStudio.Coverage.NetCore.DataCollector, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">' >> coverlet.runsettings
-        echo '        <Configuration>' >> coverlet.runsettings
-        echo '          <Format>cobertura</Format>' >> coverlet.runsettings
-        echo '          <FileName>coverage.cobertura.xml</FileName>' >> coverlet.runsettings
-        echo '        </Configuration>' >> coverlet.runsettings
-        echo '      </DataCollector>' >> coverlet.runsettings
-        echo '    </DataCollectors>' >> coverlet.runsettings
-        echo '  </DataCollectionRunSettings>' >> coverlet.runsettings
-        echo '</RunSettings>' >> coverlet.runsettings
-      shell: bash
-
+    # --- Testing and Code Coverage Steps (Only for .NET 8.0) ---
     - name: Run Tests with Code Coverage
+      if: matrix.target-framework == 'net8.0'
       run: |
         dotnet test Tests/FSM_API.Tests.csproj \
           --configuration Release \
           --framework net8.0 \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults \
-          --logger "trx;LogFileName=testresults.trx" \
-          --settings coverlet.runsettings
+          --logger "trx;LogFileName=testresults.trx"
       shell: bash
-
-    - name: Find coverage report path
-      id: find_coverage_path
-      run: |
-        COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
-        if [ -z "$COVERAGE_FILE" ]; then
-          echo "ERROR: Code coverage file 'coverage.cobertura.xml' not found!"
-          exit 1
-        fi
-        echo "Found coverage file: $COVERAGE_FILE"
-        echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
-      shell: bash
-
-    - name: Upload coverage reports to Codecov
+    
+    - name: Upload coverage to Codecov
+      if: matrix.target-framework == 'net8.0'
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ${{ steps.find_coverage_path.outputs.coverage_file }}
-        flags: unittests
-        name: FSM-API-Codecov
+        files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
-        verbose: true
 
   publish_nuget:
-    needs: test
+    needs: build_and_test
     runs-on: ubuntu-latest
+    # This job will only run on a push to the master branch.
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
@@ -107,8 +64,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Restore Solution
+        run: dotnet restore FSM_API.sln
+
+      - name: Build Solution for All Frameworks
+        run: dotnet build FSM_API.sln --configuration Release
+
       - name: Pack
-        run: dotnet pack FSM_API/FSM_API.csproj --configuration Release -o nuget-packages
+        run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
 
       - name: Publish to NuGet.org
         run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
