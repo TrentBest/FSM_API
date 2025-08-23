@@ -12,11 +12,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         # Define the target frameworks to build against.
-        # We use the latest .NET 8 SDK for all builds as it can compile older targets.
+        # We use the latest .NET 8 SDK as it can compile for all older targets.
         target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
@@ -24,21 +23,30 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        # Always use the latest SDK that can handle all target frameworks.
         dotnet-version: '8.0.x'
 
     - name: Restore Solution Dependencies
-      working-directory: ${{ github.workspace }}
       run: dotnet restore FSM_API.sln
 
     - name: Build Project for Target Framework
-      working-directory: ${{ github.workspace }}
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
 
-    # --- Testing and Code Coverage Steps ---
-    # These steps will ONLY run for the .NET 8.0 framework build.
+  test:
+    runs-on: ubuntu-latest
+    # The test job will only run after all builds have succeeded.
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Solution Dependencies
+      run: dotnet restore FSM_API.sln
+
     - name: Create Coverlet Runsettings File
-      if: matrix.target-framework == 'net8.0'
       run: |
         echo '<RunSettings>' > coverlet.runsettings
         echo '  <DataCollectionRunSettings>' >> coverlet.runsettings
@@ -55,11 +63,8 @@ jobs:
       shell: bash
 
     - name: Run Tests with Code Coverage
-      if: matrix.target-framework == 'net8.0'
-      working-directory: ${{ github.workspace }}
       run: |
         dotnet test Tests/FSM_API.Tests.csproj \
-          --no-build \
           --configuration Release \
           --framework net8.0 \
           --collect:"XPlat Code Coverage" \
@@ -69,9 +74,7 @@ jobs:
       shell: bash
 
     - name: Find coverage report path
-      if: matrix.target-framework == 'net8.0'
       id: find_coverage_path
-      working-directory: ${{ github.workspace }}
       run: |
         COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml" | head -n 1)
         if [ -z "$COVERAGE_FILE" ]; then
@@ -83,7 +86,6 @@ jobs:
       shell: bash
 
     - name: Upload coverage reports to Codecov
-      if: matrix.target-framework == 'net8.0'
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -94,10 +96,8 @@ jobs:
         verbose: true
 
   publish_nuget:
-    # This job depends on the successful completion of the 'build' job.
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
-    # This job will only run on a push to the master branch.
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
