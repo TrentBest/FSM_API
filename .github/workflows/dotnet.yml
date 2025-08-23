@@ -1,5 +1,5 @@
-# This workflow is designed to build the .NET solution, run tests with code coverage,
-# and conditionally publish the NuGet package to the remote repository.
+# This workflow is designed to build the .NET solution against multiple target frameworks,
+# run tests on the primary framework, and conditionally publish the NuGet package.
 
 name: .NET
 
@@ -15,31 +15,30 @@ jobs:
 
     strategy:
       matrix:
-        # This matrix will create a separate build job for each target framework
-        dotnet-version: [ '8.0.x', '7.0.x', '6.0.x' ]
+        # Define the target frameworks to build against.
+        # We use the latest .NET 8 SDK for all builds as it can compile older targets.
+        target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        # Always use the latest SDK that can handle all target frameworks.
+        dotnet-version: '8.0.x'
 
-    # Restore all dependencies for the entire solution file.
     - name: Restore Solution Dependencies
       working-directory: ${{ github.workspace }}
       run: dotnet restore FSM_API.sln
 
-    # Build the entire solution, which will build all projects (FSM_API and Tests).
-    - name: Build Solution
+    - name: Build Project for Target Framework
       working-directory: ${{ github.workspace }}
-      run: dotnet build FSM_API.sln --no-restore --configuration Release
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
 
-    # We can skip a separate build step for the test project since the solution build handles it.
-
-    # --- Code Coverage Steps ---
-    # Create a runsettings file to properly configure the code coverage collector.
+    # --- Testing and Code Coverage Steps ---
+    # These steps will ONLY run for the .NET 8.0 framework build.
     - name: Create Coverlet Runsettings File
+      if: matrix.target-framework == 'net8.0'
       run: |
         echo '<RunSettings>' > coverlet.runsettings
         echo '  <DataCollectionRunSettings>' >> coverlet.runsettings
@@ -55,22 +54,22 @@ jobs:
         echo '</RunSettings>' >> coverlet.runsettings
       shell: bash
 
-    # Run the tests with code coverage enabled.
     - name: Run Tests with Code Coverage
+      if: matrix.target-framework == 'net8.0'
       working-directory: ${{ github.workspace }}
       run: |
         dotnet test Tests/FSM_API.Tests.csproj \
           --no-build \
-          --no-restore \
           --configuration Release \
+          --framework net8.0 \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults \
           --logger "trx;LogFileName=testresults.trx" \
           --settings coverlet.runsettings
       shell: bash
 
-    # Find the path to the generated coverage report.
     - name: Find coverage report path
+      if: matrix.target-framework == 'net8.0'
       id: find_coverage_path
       working-directory: ${{ github.workspace }}
       run: |
@@ -83,8 +82,8 @@ jobs:
         echo "coverage_file=$COVERAGE_FILE" >> $GITHUB_OUTPUT
       shell: bash
 
-    # Upload the coverage reports to Codecov.
     - name: Upload coverage reports to Codecov
+      if: matrix.target-framework == 'net8.0'
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -93,15 +92,13 @@ jobs:
         name: FSM-API-Codecov
         fail_ci_if_error: true
         verbose: true
-      # --- End of Code Coverage Steps ---
 
   publish_nuget:
     # This job depends on the successful completion of the 'build' job.
     needs: build
-    # This job will also run on the latest Ubuntu.
     runs-on: ubuntu-latest
-    # The publish job is disabled by default. Uncomment it when you are ready to publish a new package.
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # This job will only run on a push to the master branch.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -111,7 +108,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Pack
-        run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+        run: dotnet pack FSM_API/FSM_API.csproj --configuration Release -o nuget-packages
 
       - name: Publish to NuGet.org
         run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
