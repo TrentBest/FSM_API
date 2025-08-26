@@ -45,6 +45,53 @@ jobs:
         name: fsm-api-dll-${{ matrix.target-framework }}
         path: FSM_API/bin/Release/${{ matrix.target-framework }}/FSM_API.dll
 
+  name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build_for_all_frameworks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.1' ]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Restore Solution Dependencies
+      run: dotnet restore FSM_API.sln
+    - name: Build Project for Target Framework
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
+    - name: Run Tests with Code Coverage
+      run: |
+        dotnet test Tests/FSM_API.Tests.csproj \
+          --configuration Release \
+          --framework ${{ matrix.target-framework }} \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --logger "trx;LogFileName=testresults.trx"
+      shell: bash
+    - name: Upload coverage to Codecov
+      if: matrix.target-framework == 'net8.0' # Only upload coverage for the latest framework
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./TestResults/**/coverage.cobertura.xml
+        fail_ci_if_error: true
+    - name: Upload DLL as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fsm-api-dll-${{ matrix.target-framework }}
+        path: FSM_API/bin/Release/${{ matrix.target-framework }}/FSM_API.dll
+
   deploy_to_unity_repo:
     needs: build_for_all_frameworks
     runs-on: ubuntu-latest
@@ -77,6 +124,27 @@ jobs:
         git add FSM_API.dll
         git commit -m "Auto-update FSM_API.dll from CI" || echo "No changes to commit"
         git push
+        
+  publish_nuget:
+    needs: build_for_all_frameworks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore Solution
+      run: dotnet restore FSM_API.sln
+    - name: Build Solution for All Frameworks
+      run: dotnet build FSM_API.sln --configuration Release
+    - name: Pack
+      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+    - name: Publish to NuGet.org
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+
         
   publish_nuget:
     needs: build_for_all_frameworks
