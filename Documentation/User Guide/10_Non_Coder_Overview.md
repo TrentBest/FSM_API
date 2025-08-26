@@ -129,3 +129,5 @@ If you're interested in learning about the coding side of things from a clear, p
 </a>
 <em>Support The Singularity Workshop on Patreon.</em>
 </a>
+
+**Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
