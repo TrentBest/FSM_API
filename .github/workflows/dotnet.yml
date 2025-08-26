@@ -84,7 +84,7 @@ jobs:
         
     - name: Copy DLL to Unity repo directory
       run: |
-        cp FSM_API_Unity_repo/netstandard2.1/FSM_API.dll FSM_API_Unity_repo/
+        cp downloaded-artifacts/FSM_API/bin/Release/netstandard2.1/FSM_API.dll FSM_API_Unity_repo/
 
     - name: Commit and Push to Unity repo
       run: |
