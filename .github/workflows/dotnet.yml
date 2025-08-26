@@ -7,47 +7,68 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build_and_test:
+  build_test_and_package:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+        
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
-    - name: Build Project for Target Framework
-      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
-    - name: Run Tests with Code Coverage
-      if: matrix.target-framework == 'net8.0'
+
+    - name: Build and Test for .NET 8.0
       run: |
+        dotnet build FSM_API.sln --no-restore --configuration Release
         dotnet test Tests/FSM_API.Tests.csproj \
+          --no-build \
           --configuration Release \
           --framework net8.0 \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults \
           --logger "trx;LogFileName=testresults.trx"
-      shell: bash
+      
+    - name: Pack NuGet Package
+      run: |
+        dotnet pack FSM_API/FSM_API.csproj \
+          --no-build \
+          --configuration Release \
+          -o nuget-packages \
+          /p:Version=$(grep "<Version>" FSM_API/FSM_API.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')
+
     - name: Upload coverage to Codecov
-      if: matrix.target-framework == 'net8.0'
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
-    - name: Upload DLL as Artifact
+
+    - name: Rename DLLs before upload
+      run: |
+        mkdir publish
+        cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
+        cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
+        cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
+
+    - name: Upload DLLs as Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: fsm-api-dll
-        path: FSM_API/bin/Release/netstandard2.0/FSM_API.dll
+        name: fsm-api-dlls
+        path: publish/*
+        if-no-files-found: error
+          
+    - name: Upload NuGet Package as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package
+        path: nuget-packages/*.nupkg
 
   deploy_to_unity_repo:
-    needs: build_and_test
+    needs: build_test_and_package
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
@@ -55,9 +76,9 @@ jobs:
     - name: Download DLL Artifact
       uses: actions/download-artifact@v4
       with:
-        name: fsm-api-dll
+        name: fsm-api-dlls
         path: ./
-        
+
     - name: Checkout Unity repo
       uses: actions/checkout@v4
       with:
@@ -65,9 +86,9 @@ jobs:
         token: ${{ secrets.UNITY_REPO_PAT }}
         path: FSM_API_Unity_repo
         
-    - name: Copy DLL to Unity repo directory
+    - name: Copy netstandard2.1 DLL to Unity repo directory
       run: |
-        cp FSM_API.dll FSM_API_Unity_repo/
+        cp FSM_API_netstandard2.1.dll FSM_API_Unity_repo/FSM_API.dll
 
     - name: Commit and Push to Unity repo
       run: |
@@ -79,21 +100,16 @@ jobs:
         git push
         
   publish_nuget:
-    needs: build_and_test
+    needs: build_test_and_package
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Download NuGet Package Artifact
+      uses: actions/download-artifact@v4
       with:
-        dotnet-version: 8.0.x
-    - name: Restore Solution
-      run: dotnet restore FSM_API.sln
-    - name: Build Solution for All Frameworks
-      run: dotnet build FSM_API.sln --configuration Release
-    - name: Pack
-      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+        name: nuget-package
+        path: ./nuget-packages
+
     - name: Publish to NuGet.org
       run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
