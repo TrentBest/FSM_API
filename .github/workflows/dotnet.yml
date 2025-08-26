@@ -41,7 +41,6 @@ jobs:
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
 
-  # New job to deploy the compiled DLL to the Unity repository
   deploy_to_unity_repo:
     needs: build_and_test
     runs-on: ubuntu-latest
@@ -76,7 +75,6 @@ jobs:
   publish_nuget:
     needs: build_and_test
     runs-on: ubuntu-latest
-    # This job will only run on a push to the master branch and if the variable is set to 'true'.
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
 
     steps:
