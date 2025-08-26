@@ -1,6 +1,3 @@
-# This workflow builds the .NET solution against multiple target frameworks,
-# runs tests on the primary framework, and conditionally publishes the NuGet package.
-
 name: .NET
 
 on:
@@ -14,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Define the target frameworks to build against.
         target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.0' ]
 
     steps:
@@ -22,16 +18,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        # The .NET 8 SDK can compile for all older targets.
         dotnet-version: '8.0.x'
-
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
-
     - name: Build Project for Target Framework
       run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
-
-    # --- Testing and Code Coverage Steps (Only for .NET 8.0) ---
     - name: Run Tests with Code Coverage
       if: matrix.target-framework == 'net8.0'
       run: |
@@ -42,7 +33,6 @@ jobs:
           --results-directory ./TestResults \
           --logger "trx;LogFileName=testresults.trx"
       shell: bash
-    
     - name: Upload coverage to Codecov
       if: matrix.target-framework == 'net8.0'
       uses: codecov/codecov-action@v4
@@ -54,24 +44,20 @@ jobs:
   publish_nuget:
     needs: build_and_test
     runs-on: ubuntu-latest
-    # This job will only run on a push to the master branch.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # This job will only run on a push to the master branch and if the variable is set to 'true'.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Restore Solution
-        run: dotnet restore FSM_API.sln
-
-      - name: Build Solution for All Frameworks
-        run: dotnet build FSM_API.sln --configuration Release
-
-      - name: Pack
-        run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
-
-      - name: Publish to NuGet.org
-        run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore Solution
+      run: dotnet restore FSM_API.sln
+    - name: Build Solution for All Frameworks
+      run: dotnet build FSM_API.sln --configuration Release
+    - name: Pack
+      run: dotnet pack FSM_API/FSM_API.csproj --no-build --configuration Release -o nuget-packages
+    - name: Publish to NuGet.org
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
