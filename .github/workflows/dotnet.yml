@@ -12,7 +12,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -47,19 +46,14 @@ jobs:
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
 
-    - name: Rename DLLs before upload
-      run: |
-        mkdir publish
-        cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
-        cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
-        cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
-
     - name: Upload DLLs as Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dlls
-        path: publish/*
-        if-no-files-found: error
+        path: |
+          FSM_API/bin/Release/net8.0/FSM_API.dll
+          FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll
+          FSM_API/bin/Release/netstandard2.1/FSM_API.dll
           
     - name: Upload NuGet Package as Artifact
       uses: actions/upload-artifact@v4
@@ -67,6 +61,8 @@ jobs:
         name: nuget-package
         path: nuget-packages/*.nupkg
 
+  # The following jobs are now separate and dependent on the build job.
+  
   deploy_to_unity_repo:
     needs: build_test_and_package
     runs-on: ubuntu-latest
@@ -77,7 +73,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: fsm-api-dlls
-        path: ./
+        path: ./downloaded-dlls
 
     - name: Checkout Unity repo
       uses: actions/checkout@v4
@@ -86,17 +82,17 @@ jobs:
         token: ${{ secrets.UNITY_REPO_PAT }}
         path: FSM_API_Unity_repo
         
-    - name: Copy netstandard2.1 DLL to Unity repo directory
+    - name: Copy DLL to Unity repo directory
       run: |
         mkdir -p FSM_API_Unity_repo/Plugins/
-        cp fsm-api-dlls/netstandard2.1/FSM_API.dll FSM_API_Unity_repo/Plugins/
+        cp downloaded-dlls/FSM_API/bin/Release/netstandard2.1/FSM_API.dll FSM_API_Unity_repo/Plugins/
 
     - name: Commit and Push to Unity repo
       run: |
         cd FSM_API_Unity_repo
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git add FSM_API.dll
+        git add Plugins/FSM_API.dll
         git commit -m "Auto-update FSM_API.dll from CI" || echo "No changes to commit"
         git push
         
