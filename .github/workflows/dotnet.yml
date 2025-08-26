@@ -41,6 +41,38 @@ jobs:
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
 
+  # New job to deploy the compiled DLL to the Unity repository
+  deploy_to_unity_repo:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+    - name: Checkout FSM_API repo
+      uses: actions/checkout@v4
+      with:
+        path: FSM_API_source
+        
+    - name: Checkout Unity repo
+      uses: actions/checkout@v4
+      with:
+        repository: 'TrentBest/FSM_API_Unity'
+        token: ${{ secrets.UNITY_REPO_PAT }}
+        path: FSM_API_Unity_repo
+        
+    - name: Copy DLL to Unity repo directory
+      run: |
+        cp FSM_API_source/FSM_API/bin/Release/netstandard2.0/FSM_API.dll FSM_API_Unity_repo/
+
+    - name: Commit and Push to Unity repo
+      run: |
+        cd FSM_API_Unity_repo
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add FSM_API.dll
+        git commit -m "Auto-update FSM_API.dll from CI" || echo "No changes to commit"
+        git push
+        
   publish_nuget:
     needs: build_and_test
     runs-on: ubuntu-latest
