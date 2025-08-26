@@ -7,58 +7,55 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build_and_test:
+  build_for_all_frameworks:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target-framework: [ 'net8.0', 'netcoreapp3.1', 'netstandard2.1' ]
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        # Use .NET 8, which supports building for .NET Standard 2.1
-        dotnet-version: '8.0.x' 
+        dotnet-version: '8.0.x'
     - name: Restore Solution Dependencies
-      # Restore for the specific framework Unity needs
       run: dotnet restore FSM_API.sln
-
-    - name: Build Project for Unity
-      # Build the FSM API specifically for .NET Standard 2.1
-      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework netstandard2.1
-
+    - name: Build Project for Target Framework
+      run: dotnet build FSM_API/FSM_API.csproj --no-restore --configuration Release --framework ${{ matrix.target-framework }}
     - name: Run Tests with Code Coverage
-      # Run tests against the same framework as the build
       run: |
         dotnet test Tests/FSM_API.Tests.csproj \
           --configuration Release \
-          --framework netstandard2.1 \
+          --framework ${{ matrix.target-framework }} \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults \
           --logger "trx;LogFileName=testresults.trx"
       shell: bash
-
     - name: Upload coverage to Codecov
+      if: matrix.target-framework == 'net8.0' # Only upload coverage for the latest framework
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
-
     - name: Upload DLL as Artifact
-      # The DLL is now guaranteed to be the correct version
       uses: actions/upload-artifact@v4
       with:
-        name: fsm-api-dll
-        path: FSM_API/bin/Release/netstandard2.1/FSM_API.dll
+        name: fsm-api-dll-${{ matrix.target-framework }}
+        path: FSM_API/bin/Release/${{ matrix.target-framework }}/FSM_API.dll
 
   deploy_to_unity_repo:
-    needs: build_and_test
+    needs: build_for_all_frameworks
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
     - name: Download DLL Artifact
+      # Download only the .NET Standard 2.1 artifact
       uses: actions/download-artifact@v4
       with:
-        name: fsm-api-dll
+        name: fsm-api-dll-netstandard2.1
         path: ./
         
     - name: Checkout Unity repo
@@ -82,7 +79,7 @@ jobs:
         git push
         
   publish_nuget:
-    needs: build_and_test
+    needs: build_for_all_frameworks
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
 
