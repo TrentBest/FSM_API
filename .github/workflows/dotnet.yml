@@ -46,14 +46,18 @@ jobs:
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
 
+    - name: Rename DLLs before upload
+      run: |
+        mkdir publish
+        cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
+        cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
+        cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
+
     - name: Upload DLLs as Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: fsm-api-dlls
-        path: |
-          FSM_API/bin/Release/net8.0/FSM_API.dll
-          FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll
-          FSM_API/bin/Release/netstandard2.1/FSM_API.dll
+        path: publish/*
           
     - name: Upload NuGet Package as Artifact
       uses: actions/upload-artifact@v4
@@ -85,7 +89,7 @@ jobs:
     - name: Copy DLL to Unity repo directory
       run: |
         mkdir -p FSM_API_Unity_repo/Plugins/
-        cp downloaded-dlls/FSM_API/bin/Release/netstandard2.1/FSM_API.dll FSM_API_Unity_repo/Plugins/
+        cp downloaded-dlls/FSM_API_netstandard2.1.dll FSM_API_Unity_repo/Plugins/FSM_API.dll
 
     - name: Commit and Push to Unity repo
       run: |
