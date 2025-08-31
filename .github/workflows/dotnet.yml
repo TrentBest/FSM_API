@@ -103,7 +103,7 @@ jobs:
   publish_nuget:
     needs: build_test_and_package
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && secrets.NUGET_BUILD == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.PUBLISH_NUGET_PACKAGE
 
     steps:
     - name: Download NuGet Package Artifact
