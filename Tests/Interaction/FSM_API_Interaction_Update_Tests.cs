@@ -62,6 +62,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         /// 
         /// </summary>
         public bool HasEnteredCurrentState { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public int TestData { get; internal set; }
     }
 

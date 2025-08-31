@@ -75,8 +75,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Helper_CreateFSM("TestFSM", "TestGroup");
             var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert that the equality operator works as expected for the same instance
-            Assert.That(handle == handle, Is.True);
-            Assert.That(handle != handle, Is.False);
+            Assert.That(handle , Is.EqualTo(handle));
         }
 
 
