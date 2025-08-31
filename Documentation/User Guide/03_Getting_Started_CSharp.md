@@ -8,29 +8,28 @@ This guide shows how to use FSM\_API in non-Unity environments (console, service
 
 ## 📚 Table of Contents
 
-[00. Introduction to FSM_API](00_Introduction.md)
+[00. Introduction to FSM_API](User%20Guide/00_Introduction.md)
 
-[01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
+[01. Core Concepts: Your Guide to FSM_API](User%20Guide/01_Core_Concepts.md)
 
-[02. Getting Started with Unity](02_Getting_Started_Unity.md)
+[03. Getting Started with C# (Non-Unity)](User%20Guide/03_Getting_Started_CSharp.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[04. FSMBuilder Deep Dive: Building Your FSMs](User%20Guide/04_FSM_Builder_Deep_Dive.md)
 
-[04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
+[05. Understanding and Implementing Your Context (IStateContext)](User%20Guide/05_Context_Implementation.md)
 
-[05. Understanding and Implementing Your Context (IStateContext)](05_Context_Implementation.md)
+[06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
 
-[06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime](06_FSM_Modifier_Deep_Dive.md)
+[07. Robust Error Handling: Cascading Degradation System](User%20Guide/07_Error_Handling.md)
 
-[07. Robust Error Handling: Cascading Degradation System](07_Error_Handling.md)
+[08. Performance Tips & Best Practices](User%20Guide/08_Performance_Tips.md)
 
-[08. Performance Tips & Best Practices](08_Performance_Tips.md)
+[09. Common Use Cases & Examples](User%20Guide/09_Common_Use_Cases.md)
 
-[09. Common Use Cases & Examples](09_Common_Use_Cases.md)
+[10. FSM_API for Non-Coders: A Big Picture Overview](User%20Guide/10_Non_Coder_Overview.md)
 
-[10. FSM_API for Non-Coders: A Big Picture Overview](10_Non_Coder_Overview.md)
+[11. Frequently Asked Questions (FAQ)](User%20Guide/11_FAQ.md)
 
-[11. Frequently Asked Questions (FAQ)](11_FAQ.md)
 
 -----
 
@@ -71,7 +70,7 @@ It must implement the `IStateContext` interface. Recall from the **[01. Core Con
 
 ```csharp
 using System;
-using TheSingularityWorkshop.FSM.API; // Make sure this namespace matches your FSM_API.dll
+using TheSingularityWorkshop.FSM_API;
 
 public class GameCharacterContext : IStateContext
 {
@@ -151,7 +150,7 @@ This class will set up our FSM definition and manage the FSM instance within a s
 
 ```csharp
 using System;
-using TheSingularityWorkshop.FSM.API; // Make sure this namespace matches your FSM_API.dll
+using TheSingularityWorkshop.FSM_API;
 
 public class PureCSharpGameLoop
 {
@@ -275,7 +274,7 @@ To run this pure C\# FSM example:
 1.  **Create a Console App Project** in your preferred IDE (e.g., Visual Studio, VS Code with C\# extension).
 2.  **Add FSM\_API Reference:**
       * If FSM\_API is available on NuGet, add it via the NuGet Package Manager.
-      * Otherwise, manually add a reference to the `TheSingularityWorkshop.FSM.API.dll` file.
+      * Otherwise, manually add a reference to the `TheSingularityWorkshop.FSM_API.dll` file.
 3.  **Add Code Files:**
       * Create `GameCharacterContext.cs` and paste the code from Step 1.
       * Create `PureCSharpGameLoop.cs` and paste the code from Step 2.

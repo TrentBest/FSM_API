@@ -2,29 +2,28 @@
 
 ## 📚 Table of Contents
 
-[00. Introduction to FSM_API](00_Introduction.md)
+[00. Introduction to FSM_API](User%20Guide/00_Introduction.md)
 
-[01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
+[01. Core Concepts: Your Guide to FSM_API](User%20Guide/01_Core_Concepts.md)
 
-[02. Getting Started with Unity](02_Getting_Started_Unity.md)
+[03. Getting Started with C# (Non-Unity)](User%20Guide/03_Getting_Started_CSharp.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[04. FSMBuilder Deep Dive: Building Your FSMs](User%20Guide/04_FSM_Builder_Deep_Dive.md)
 
-[04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
+[05. Understanding and Implementing Your Context (IStateContext)](User%20Guide/05_Context_Implementation.md)
 
-[05. Understanding and Implementing Your Context (IStateContext)](05_Context_Implementation.md)
+[06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
 
-[06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime](06_FSM_Modifier_Deep_Dive.md)
+[07. Robust Error Handling: Cascading Degradation System](User%20Guide/07_Error_Handling.md)
 
-[07. Robust Error Handling: Cascading Degradation System](07_Error_Handling.md)
+[08. Performance Tips & Best Practices](User%20Guide/08_Performance_Tips.md)
 
-[08. Performance Tips & Best Practices](08_Performance_Tips.md)
+[09. Common Use Cases & Examples](User%20Guide/09_Common_Use_Cases.md)
 
-[09. Common Use Cases & Examples](09_Common_Use_Cases.md)
+[10. FSM_API for Non-Coders: A Big Picture Overview](User%20Guide/10_Non_Coder_Overview.md)
 
-[10. FSM_API for Non-Coders: A Big Picture Overview](10_Non_Coder_Overview.md)
+[11. Frequently Asked Questions (FAQ)](User%20Guide/11_FAQ.md)
 
-[11. Frequently Asked Questions (FAQ)](11_FAQ.md)
 
 ---
 
@@ -89,12 +88,12 @@ A **State** is simply a named stage or phase that your FSM can be in. It's the "
 ```csharp
     // Imagine this is part of your FSM setup
     .State("Idle",
-        onEnter: (context) => { /* Code to start Idle animation */ },
-        onUpdate: (context) => { /* Code to check for player input */ },
-        onExit: (context) => { /* Code to stop Idle animation */ })
+        onEnter: (ctx) => { /* Code to start Idle animation */ },
+        onUpdate: (ctx) => { /* Code to check for player input */ },
+        onExit: (ctx) => { /* Code to stop Idle animation */ })
 ````
 
-*(Don't worry about `context` for now; we'll explain it next\!)*
+*(Don't worry about `context (ctx)` for now; we'll explain it next\!)*
 
 -----
 
@@ -135,7 +134,7 @@ public interface IStateContext : IContext // It inherits from IContext!
 }
 ```
 
-  * **Example of what your class looks like (you'll fill in your own game details):**
+  * **Example of what your class looks like (you'll fill in your own details):**
 
 <!-- end list -->
 
@@ -152,8 +151,7 @@ public class GameCharacter : IStateContext
     public string Name { get; set; }
 
     // --- IStateContext requires this ---
-    // This tells FSM_API if the object is still active.
-    // When IsAlive is false, the FSM instance can be cleaned up automatically.
+    //When IsAlive is false, FSM_API will cease all updates on this instance.
     public bool IsValid => IsAlive;
 
     // Constructor for the character
@@ -186,10 +184,5 @@ public class GameCharacter : IStateContext
 ```
 -----
 
-### For Unity Developers
-For engine-specific examples and a dedicated getting started guide, please see the official Unity integration repository:
-**[FSM_API_Unity on GitHub](https://github.com/TrentBest/FSM_API_Unity)**
-
------
 
 [Continue to: 03. Getting Started with C#](03_Getting_Started_CSharp.md)

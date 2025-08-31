@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net48</TargetFrameworks>
-    <ImplicitUsings>disable</ImplicitUsings>
+	  <TargetFrameworks>net8.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0</TargetFrameworks>
+	  <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
@@ -24,7 +24,7 @@
 
 	<ItemGroup>
 		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
-		<None Include=".\Assets\TheSingularityWorkshop.jpg" Pack="true" PackagePath="" />
+		<None Include=".\Assets\TheSingularityWorkshop.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 

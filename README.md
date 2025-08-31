@@ -2,22 +2,19 @@ FSM_API
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+[![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
+[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
+[![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
+[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
 
 [![GitHub stars](https://img.shields.io/github/stars/TrentBest/FSM_API?style=social)](https://github.com/TrentBest/FSM_API/stargazers)
 [![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
-
 [![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amain)
-[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
-[![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amain)
+[**💖 Support Us**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
 
-
-[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
-
-[Support Us](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
-
-<br>
 Blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
 🔍 Overview
@@ -65,7 +62,7 @@ C#
 public class LightSwitch : IStateContext
 {
     public bool IsOn = false;
-    public bool IsValid => true; // Essential for FSM validation
+    public bool IsValid => true; // FSM API will not operate on this if IsValid is false.
     public string Name { get; set; } = "KitchenLight";
 }
 ```
@@ -75,13 +72,31 @@ C#
 // Optional: Create a named processing group for organizing FSM updates
 FSM_API.CreateProcessingGroup("MainLoop");
 
-var fsmDefinition = FSM_API.Create.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
-    .State("Off")
-        .OnEnter(ctx => { if (ctx is LightSwitch l) l.IsOn = false; }) // Action when entering "Off" state
-        .TransitionIf("On", ctx => ctx is LightSwitch l && l.IsOn) // Transition to "On" if IsOn is true
-    .State("On")
-        .OnEnter(ctx => { if (ctx is LightSwitch l) l.IsOn = true; }) // Action when entering "On" state
-        .TransitionIf("Off", ctx => ctx is LightSwitch l && !l.IsOn) // Transition to "Off" if IsOn is false
+// Define a simple condition function
+private static bool CheckUserInput(IStateContext ctx)
+{
+    // A simplified example of checking for input
+    // In a real app, this would check for a key press or a UI event
+    return ((LightSwitch)ctx).IsOn; // This is a placeholder
+}
+
+FSM_API.Create.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
+    .State("Off", 
+        onEnter: (ctx) => { 
+            if (ctx is LightSwitch l) l.IsOn = false; 
+        }, 
+        onUpdate: null, 
+        onExit: null)
+    .State("On", 
+        onEnter: (ctx) => { 
+            if (ctx is LightSwitch l) l.IsOn = true; 
+        }, 
+        onUpdate: null, 
+        onExit: null)
+    .WithInitialState("Off") // Must set an initial state
+    // Now define the transitions between states
+    .Transition("Off", "On", (ctx) => ((LightSwitch)ctx).IsOn)
+    .Transition("On", "Off", (ctx) => !((LightSwitch)ctx).IsOn)
     .BuildDefinition(); // Finalize the FSM definition
 ```
 3. Create an instance for your context:
@@ -134,7 +149,7 @@ FSM_API.Interaction.Update("MainLoop");
 | ✅ **Easy to Unit Test** | The inherent **decoupling of FSM logic from context data** ensures your state machines are **highly testable in isolation**, leading to more robust and reliable code with simplified unit testing.                                                                                                                                        |
 | 💯 **Mathematically Provable** | With clearly defined states and transitions, the FSM architecture lends itself to **formal verification and rigorous analysis**, providing a strong foundation for high-assurance systems where correctness is paramount.                                                                                                                       |
 | 🤝 **Collaborative Design** | FSMs provide a **visual and structured way to define complex behaviors**, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.   |
-|  🎮 Unity Integration Available | For game and interactive application development, a dedicated [Unity integration package](https://github.com/TrentBest/FSM_API_Unity) is available, built on this core FSM_API library.  |
+|  🎮 Unity Integration Available | Now preparing for submission to the Unity Asset Store.  |
 
 📘 What’s Next?
 

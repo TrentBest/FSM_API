@@ -1,112 +1,48 @@
 # FSM_API: The Singularity Workshop's Finite State Machine API
 
-A high-performance, modular, and engine-agnostic C#/.NET library for building and managing Finite State Machines (FSMs). The FSM_API empowers developers to model complex behavior with clarity and efficiency—whether you're handling AI, player states, UI flow, or reactive systems.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+[![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 
-While a dedicated package for Unity is available, the core API is pure C# and designed to be portable and independent of any game engine.
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
+[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
+[![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
+[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
 
-This package provides a unified logic architecture, allowing you to design all application logic through a central, fluent FSM definition system.
+[![GitHub stars](https://img.shields.io/github/stars/TrentBest/FSM_API?style=social)](https://github.com/TrentBest/FSM_API/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
+[![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
 
-🎮 What Is a Finite State Machine (FSM)?
-
-Think of an FSM as a system that can only be in one "state" at a time. It has a limited, or "finite," number of possible states (like Idle, Walking, or Attacking) and clear rules for "transitions" (moving from one state to another). FSMs simplify intricate behaviors into modular, testable logic units, replacing tangled if/else trees with structured and readable logic.
-
-
-<a href="Visuals/FSM.png" target="_blank">
-    <img src="Visuals/FSM.png" alt="Visual of a Finite State Machine" height="200" style="display: block;">
-</a>
-*A visual representation of a Finite State Machine (FSM).*
-<br><br>
-
-# ✨ Why FSM_API?
-
-* **Unified Logic Architecture:** Design all application logic through a central, fluent FSM definition system that is easy to read and manage.
-<br>
-<a href="Visuals/UnifiedLogicArchitecture.png" target="_blank">
-    <img src="Visuals/UnifiedLogicArchitecture.png" alt="Diagram illustrating Unified Logic Architecture" height="200" style="display: block;">
-</a>
-*Unified Logic Architecture.*
-<br>
-<br>
-* **Engine-Agnostic:** Built in pure C#/.NET with no dependencies on any game engine. The core API is portable and can be integrated into any C# application, including games, simulations, and backend services.
-<br>
-<a href="Visuals/EngineAgnostic.png" target="_blank">
-    <img src="Visuals/EngineAgnostic.png" alt="Diagram illustrating that the API is Engine Agnostic" height="200" style="display: block;">
-</a>
-*Engine-Agnostic.*
-<br>
-<br>
-* **Context-Driven Execution:** FSMs operate on your custom data structures through the IStateContext interface, ensuring a direct and efficient link between your state logic and your application's data.
-<br>
-<a href="Visuals/ContextDrivenExecution.png" target="_blank">
-    <img src="Visuals/ContextDrivenExecution.png" alt="Diagram illustrating Context-Driven Execution" height="200" style="display: block;">
-</a>
-*A diagram showing how generic FSM logic operates on specific user data (IStateContext).*
-<br>
-<br>
-* **Flexible Update Control:** Attach FSMs to any update loop or scheduler, or define custom update groups for fine-tuned performance. (Unity integration is available as a separate package.)
-<br>
-<a href="Visuals/ProcessingGroups.png" target="_blank">
-    <img src="Visuals/ProcessingGroups.png" alt="Diagram of FSM Processing Groups" height="200" style="display: block;">
-</a>
-*A diagram showing how FSMs can be organized into different update groups.*
-<br>
-<br>
-* **Performance-Driven:** Designed for efficiency and responsiveness, allowing you to manage hundreds or thousands of active state machines without performance issues.
-<br>
-<a href="Visuals/FSM_API.png" target="_blank">
-    <img src="Visuals/FSM_API.png" alt="Diagram of the FSM_API Architecture" height="200" style="display: block;">
-</a>
-*A diagram showing the FSM_API's core components.*
-<br>
-<br>
+[**💖 Support Us**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
 
 
-## 📦 Installation
+Welcome to the FSM_API Documentation! 📚
 
-The recommended way to install FSM_API is via NuGet. Alternatively, you can clone the repository for manual integration.
+This guide will help you navigate the FSM_API documentation.
 
-### Install via NuGet
+The core FSM_API is a high-performance, modular, and engine-agnostic C#/.NET library for building and managing Finite State Machines (FSMs). It empowers developers to model complex behavior with clarity and efficiency—whether you're handling AI, player states, UI flow, or reactive systems.
 
-```sh
-dotnet add package TheSingularityWorkshop.FSM_API
-```
+The documentation is organized to help you get started quickly and find the information you need.
 
-Or using the NuGet Package Manager in Visual Studio:
+📖 Documentation Layout
 
-```sh
-Install-Package TheSingularityWorkshop.FSM_API
-```
+The user guide and key information are broken down into several files to keep the content focused and easy to digest. Below is a brief description of each document and what you can expect to find inside.
 
-### Manual Installation (Clone)
+    01. Core Concepts: Your Guide to FSM_API: Start here to understand the fundamental building blocks of the FSM_API. This document explains the purpose of FSM definitions, instances, states, and contexts.
 
-Clone the repository and add the source or DLL to your project:
+    03. Getting Started with C# (Non-Unity): This is your hands-on guide to integrating the FSM_API into any pure C# application. It provides step-by-step instructions and code examples to get you up and running quickly.
 
-```sh
-git clone https://github.com/TrentBest/FSM_API
-```
+    11. Frequently Asked Questions (FAQ): A collection of answers to common questions about the API, design patterns, and best practices.
 
-<br>
+🎮 Unity Integration
 
-# 🚀 Getting Started
+The core API is pure C# and designed to be portable and independent of any game engine. A dedicated package for Unity is available separately.
 
-This ReadMe provides a high-level overview. For a deeper dive, please consult the following documents:
+For developers working with Unity, please consult the official Unity integration repository:
 
-* [01. Core Concepts: Your Guide to FSM_API](User%20Guide/01_Core_Concepts.md) — A detailed explanation of FSM definitions, instances, states, and contexts.
-* [03. Getting Started with C# (Non-Unity)](User%20Guide/03_Getting_Started_CSharp.md) — Instructions for using the FSM_API in any pure C# application.
-* [11. Frequently Asked Questions (FAQ)](User%20Guide/11_FAQ.md) — Answers to common questions about the API.
+    Unity Integration Guide: The official Unity repository for integrating FSM_API into your Unity project.
 
-Unity integration is available as a separate package:
-* [Unity Integration Guide](https://github.com/TrentBest/FSM_API_Unity) — The official Unity repository for integrating FSM_API into your Unity project.
-
-
-<br>
-
-# 🔗 Structure & Portability
-
-    ✅ No engine dependencies in core API
-    ✅ Works in any .NET C# app
-    ✅ Designed for integration into games, simulations, VR, robotics, backend services, or any C# environment where state machines are needed
-    ✅ Unity integration available as a separate package
+This revised ReadMe.md is more effective because it's concise, provides clear signposts to other documents, and accurately describes the content of those files. It serves its intended purpose without cluttering the user's view with redundant information or API-specific diagrams that belong elsewhere.
 
 
 <br>
