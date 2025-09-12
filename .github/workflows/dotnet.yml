@@ -28,11 +28,10 @@ jobs:
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
 
-    - name: Build for .NET 8.0
-      run: dotnet build FSM_API.sln --no-restore --configuration Release
-      
-    - name: Run Tests for .NET 8.0
-      run: dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
+    - name: Build and Test for .NET 8.0
+      run: |
+        dotnet build FSM_API.sln --no-restore --configuration Release
+        dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
       
     - name: Pack NuGet Package
       run: |
