@@ -17,19 +17,22 @@ jobs:
       with:
         dotnet-version: '8.0.x'
         
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/FSM_API.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
 
-    - name: Build and Test for .NET 8.0
-      run: |
-        dotnet build FSM_API.sln --no-restore --configuration Release
-        dotnet test Tests/FSM_API.Tests.csproj \
-          --no-build \
-          --configuration Release \
-          --framework net8.0 \
-          --collect:"XPlat Code Coverage" \
-          --results-directory ./TestResults \
-          --logger "trx;LogFileName=testresults.trx"
+    - name: Build for .NET 8.0
+      run: dotnet build FSM_API.sln --no-restore --configuration Release
+      
+    - name: Run Tests for .NET 8.0
+      run: dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
       
     - name: Pack NuGet Package
       run: |
@@ -64,8 +67,30 @@ jobs:
       with:
         name: nuget-package
         path: nuget-packages/*.nupkg
+  
+  build_documentation:
+    runs-on: ubuntu-latest
+    needs: build_test_and_package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-  # The following jobs are now separate and dependent on the build job.
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          
+      - name: Install DocFx
+        run: dotnet tool install --global docfx
+      
+      - name: Generate documentation
+        run: docfx build
+        
+      - name: Upload documentation as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsm-api-documentation
+          path: _site
   
   deploy_to_unity_repo:
     needs: build_test_and_package
@@ -103,7 +128,7 @@ jobs:
   publish_nuget:
     needs: build_test_and_package
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.NUGET_PUBLISH_ENABLED == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.PUBLISH_NUGET_PACKAGE != '-1'
 
     steps:
     - name: Download NuGet Package Artifact
