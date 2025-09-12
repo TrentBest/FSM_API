@@ -1,43 +1,141 @@
-{
-  "metadata": [
-    {
-      "src": [
-        {
-          "src": "FSM_API",
-          "files": [ "**/*.csproj" ]
-        }
-      ],
-      "dest": "api"
-    }
-  ],
-  "build": {
-    "content": [
-      {
-        "src": "Documentation",
-        "files": [ "**/*.md" ]
-      },
-      {
-        "src": ".",
-        "files": [ "README.md" ]
-      },
-      {
-        "src": "api",
-        "files": [ "**/*.yml" ]
-      }
-    ],
-    "resource": [
-      {
-        "src": "Documentation/Visuals",
-        "files": [ "**/*" ]
-      }
-    ],
-    "globalMetadata": {
-      "_appName": "FSM_API",
-      "_appTitle": "The Singularity Workshop's FSM API"
-    },
-    "dest": "_site",
-    "globalMetadata": {
-      "pdf": false
-    }
-  }
-}
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build_test_and_package:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/FSM_API.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore Solution Dependencies
+      run: dotnet restore FSM_API.sln
+
+    - name: Build for .NET 8.0
+      run: dotnet build FSM_API.sln --no-restore --configuration Release
+      
+    - name: Run Tests for .NET 8.0
+      run: dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
+      
+    - name: Pack NuGet Package
+      run: |
+        dotnet pack FSM_API/FSM_API.csproj \
+          --no-build \
+          --configuration Release \
+          -o nuget-packages \
+          /p:Version=$(grep "<Version>" FSM_API/FSM_API.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./TestResults/**/coverage.cobertura.xml
+        fail_ci_if_error: true
+
+    - name: Rename DLLs before upload
+      run: |
+        mkdir publish
+        cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
+        cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
+        cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
+
+    - name: Upload DLLs as Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: fsm-api-dlls
+        path: publish/*
+          
+    - name: Upload NuGet Package as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package
+        path: nuget-packages/*.nupkg
+  
+  build_documentation:
+    runs-on: ubuntu-latest
+    needs: build_test_and_package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          
+      - name: Install DocFx
+        run: dotnet tool install --global docfx
+      
+      - name: Generate documentation
+        run: docfx build
+        
+      - name: Upload documentation as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsm-api-documentation
+          path: _site
+  
+  deploy_to_unity_repo:
+    needs: build_test_and_package
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+    - name: Download DLL Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: fsm-api-dlls
+        path: ./downloaded-dlls
+
+    - name: Checkout Unity repo
+      uses: actions/checkout@v4
+      with:
+        repository: 'TrentBest/FSM_API_Unity'
+        token: ${{ secrets.UNITY_REPO_PAT }}
+        path: FSM_API_Unity_repo
+        
+    - name: Copy DLL to Unity repo directory
+      run: |
+        mkdir -p FSM_API_Unity_repo/Runtime/
+        cp downloaded-dlls/FSM_API_netstandard2.1.dll FSM_API_Unity_repo/Runtime/FSM_API.dll
+
+    - name: Commit and Push to Unity repo
+      run: |
+        cd FSM_API_Unity_repo
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add Runtime/FSM_API.dll
+        git commit -m "Auto-update FSM_API.dll from CI" || echo "No changes to commit"
+        git push
+        
+  publish_nuget:
+    needs: build_test_and_package
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.PUBLISH_NUGET_PACKAGE != '-1'
+
+    steps:
+    - name: Download NuGet Package Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-package
+        path: ./nuget-packages
+
+    - name: Publish to NuGet.org
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
