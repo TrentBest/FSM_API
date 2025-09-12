@@ -13,14 +13,14 @@
   "build": {
     "content": [
       {
+        "src": ".",
+        "files": [ "index.md" ]
+      },
+      {
         "src": "api",
         "files": [ "**/*.yml" ]
       }
     ],
-    "globalMetadata": {
-      "_appName": "FSM_API",
-      "_appTitle": "The Singularity Workshop's FSM API"
-    },
     "dest": "_site",
     "sitemap": {
       "baseUrl": "https://trentbest.github.io/FSM_API/",
