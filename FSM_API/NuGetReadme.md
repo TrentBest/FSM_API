@@ -180,7 +180,7 @@ MIT License – use it, hack it, build amazing things with it.
 
 **The Singularity Workshop – Tools for the curious, the bold, and the systemically inclined.**
 
-<img src="FSM_API/Assets/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" height="200">
+<img src="TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" height="200">
 
 Because state shouldn’t be a mess.
 

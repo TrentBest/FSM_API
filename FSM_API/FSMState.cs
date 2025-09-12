@@ -5,6 +5,15 @@ namespace TheSingularityWorkshop.FSM_API
     /// <summary>
     /// This represents a single **"state"** within your FSM (Finite State Machine) blueprint. 🌟
     /// Think of it as a specific condition or behavior an object can be in, like "Standing," "Jumping," or "Attacking."
+    /// <div class="mermaid">
+    /// sequenceDiagram
+    ///    participant E as onEnter
+    ///    participant U as onUpdate
+    ///    participant X as onExit
+    ///    E->>U: Start state actions
+    ///    U-->>U: Loop actions
+    ///    U->>X: Exit state
+    /// </div>
     /// </summary>
     /// <remarks>
     /// Each `FSMState` has a unique name and can have three special "actions" linked to it:

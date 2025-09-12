@@ -6,6 +6,11 @@ namespace TheSingularityWorkshop.FSM_API
     /// <summary>
     /// This is your direct link, or **"handle,"** to a specific, live FSM (Finite State Machine) instance. 🎮
     /// Think of it as the remote control for one particular character or object that's using an FSM.
+    /// <div class="mermaid">
+    /// graph TD
+    ///    A[FSMHandle (The Logic)] -->|Commands| B[IStateContext (The Data)];
+    ///    B -->|Returns Data/Status| A;
+    /// </div>
     /// </summary>
     /// <remarks>
     /// This handle is how you, as a game designer or system integrator, will typically interact with an FSM

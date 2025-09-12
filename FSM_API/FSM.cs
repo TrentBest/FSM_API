@@ -10,6 +10,17 @@ namespace TheSingularityWorkshop.FSM_API
     /// should act over time. This blueprint defines all the different
     /// "states" it can be in, like "Idle," "Walking," or "Attacking,"
     /// and how it moves between these states.
+    /// Think of an **FSM** (Finite State Machine) as a master blueprint 🗺️.
+    /// It lays out all the possible behaviors and rules for how something
+    /// should act over time. This blueprint defines all the different
+    /// "states" it can be in, like "Idle," "Walking," or "Attacking,"
+    /// and how it moves between these states.
+    /// <div class="mermaid">
+    /// graph TD
+    ///     A[FSM Definition] --> B(States);
+    ///     A --> C(Transitions);
+    ///     A --> D(Initial State);
+    /// </div>
     /// </summary>
     /// <remarks>
     /// This blueprint itself doesn't actually *do* anything directly.

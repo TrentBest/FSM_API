@@ -7,6 +7,17 @@ namespace TheSingularityWorkshop.FSM_API
     /// <summary>
     /// This is your **primary tool for creating and setting up new FSMs (Finite State Machines)**. 🛠️
     /// Think of it as a special "construction kit" that lets you easily build complex FSM blueprints step-by-step.
+    /// <div class="mermaid">
+    /// graph TD
+    ///     A(Create.CreateFiniteStateMachine) --> B(State);
+    ///     B --> B;
+    ///     B --> C(WithInitialState);
+    ///     C --> D(Transition);
+    ///     D --> D;
+    ///     D --> E(AnyTransition);
+    ///     E --> E;
+    ///     E --> F(BuildDefinition);
+    /// </div>
     /// </summary>
     /// <remarks>
     /// The <see cref="FSMBuilder"/> is designed to be very **user-friendly**, allowing you to define
