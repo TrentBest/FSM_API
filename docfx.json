@@ -38,6 +38,14 @@
     "dest": "_site",
     "globalMetadata": {
       "pdf": false
-    }
+    },
+    "sitemap": {
+      "baseUrl": "https://trentbest.github.io/FSM_API/",
+      "changefreq": "daily",
+      "priority": 0.5
+    },
+    "plugins": [
+      "docfx.plugins.mermaid"
+    ]
   }
 }
