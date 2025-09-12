@@ -13,22 +13,8 @@
   "build": {
     "content": [
       {
-        "src": "Documentation",
-        "files": [ "**/*.md" ]
-      },
-      {
-        "src": ".",
-        "files": [ "README.md" ]
-      },
-      {
         "src": "api",
         "files": [ "**/*.yml" ]
-      }
-    ],
-    "resource": [
-      {
-        "src": "Documentation/Visuals",
-        "files": [ "**/*" ]
       }
     ],
     "globalMetadata": {
@@ -36,9 +22,6 @@
       "_appTitle": "The Singularity Workshop's FSM API"
     },
     "dest": "_site",
-    "globalMetadata": {
-      "pdf": false
-    },
     "sitemap": {
       "baseUrl": "https://trentbest.github.io/FSM_API/",
       "changefreq": "daily",
