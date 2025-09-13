@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// that is being removed.
     /// </para>
     /// </remarks>
-    internal class FSMModifier
+    public class FSMModifier
     {
         private FSM fsm;
         private List<Tuple<string,string>> _statesToRemove = new List<Tuple<string, string>>();

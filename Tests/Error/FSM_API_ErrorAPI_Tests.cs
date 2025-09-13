@@ -62,180 +62,180 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Error
             _eventInvokeCount++;
         }
 
-       ///// <summary>
-       ///// 
-       ///// </summary>
-       // [Test]
-       // public void InvokeInternalApiError_EventFiresAndCapturesData()
-       // {
-       //     string testMessage = "This is a test internal error message.";
-       //     var testException = new InvalidOperationException("Test exception details.");
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void InvokeInternalApiError_EventFiresAndCapturesData()
+        {
+            string testMessage = "This is a test internal error message.";
+            var testException = new InvalidOperationException("Test exception details.");
 
-       //     FSM_API.Error.InvokeInternalApiError(testMessage, testException);
+            FSM_API.Error.InvokeInternalApiError(testMessage, testException);
 
-       //     Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked exactly once.");
-       //     Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
-       //     Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match the invoked message.");
-       //     Assert.That(_capturedExceptions[0].Message, Is.EqualTo(testMessage), "Captured exception should match the invoked exception instance.");
-       // }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[Test]
-        //public void InvokeInternalApiError_WithNullExceptionIsHandledCorrectly()
-        //{
-        //    string testMessage = "Error message with no associated exception.";
+            Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked exactly once.");
+            Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
+            Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match the invoked message.");
+            Assert.That(_capturedExceptions[0].Message, Is.EqualTo(testException.Message), "Captured exception message should match the original exception message.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void InvokeInternalApiError_WithNullExceptionIsHandledCorrectly()
+        {
+            string testMessage = "Error message with no associated exception.";
 
-        //    FSM_API.Error.InvokeInternalApiError(testMessage, null);
+            FSM_API.Error.InvokeInternalApiError(testMessage, null);
 
-        //    Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked.");
-        //    Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
-        //    Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match.");
-        //    Assert.That(_capturedExceptions[0], Is.Not.Null, "Captured exception should be null when none is provided.");
-        //}
+            Assert.That(_eventInvokeCount, Is.EqualTo(1), "OnInternalApiError event should have been invoked.");
+            Assert.That(_capturedErrorMessages.Count, Is.EqualTo(1), "Should have captured one error message.");
+            Assert.That(_capturedErrorMessages[0], Is.EqualTo(testMessage), "Captured message should match.");
+            Assert.That(_capturedExceptions[0], Is.Null, "Captured exception should be null when none is provided.");
+        }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[Test]
-        //public void InvokeInternalApiError_MultipleInvocationsAreAllCaptured()
-        //{
-        //    FSM_API.Error.InvokeInternalApiError("Error 1", new Exception("Ex1"));
-        //    FSM_API.Error.InvokeInternalApiError("Error 2", new InvalidOperationException("Ex2"));
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void InvokeInternalApiError_MultipleInvocationsAreAllCaptured()
+        {
+            FSM_API.Error.InvokeInternalApiError("Error 1", new Exception("Ex1"));
+            FSM_API.Error.InvokeInternalApiError("Error 2", new InvalidOperationException("Ex2"));
 
-        //    Assert.That(_eventInvokeCount, Is.EqualTo(2), "Both error invocations should trigger the event.");
-        //    Assert.That(_capturedErrorMessages[0], Is.EqualTo("Error 1"));
-        //    Assert.That(_capturedErrorMessages[1], Is.EqualTo("Error 2"));
-        //    Assert.That(_capturedExceptions[0].GetType(), Is.InstanceOf(typeof(Exception)), "");
-        //    Assert.That(_capturedExceptions[1].GetType(), Is.InstanceOf(typeof(InvalidOperationException)), "");
-        //}
-
-
-       ///// <summary>
-       ///// 
-       ///// </summary>
-       // [Test]
-       // public void InvokeInstanceError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
-       // {
-       //     FSM_API.Error.InstanceErrorThreshold = 5; // Set a specific threshold for this test
-       //     var mockFsm = new FSM { Name = "InstanceTestFSM" };
-       //     // The state and group names for the message come from the FSM_API.Error.InvokeInstanceError formatting.
-       //     var mockContext = new MockStateContext("ActiveState", mockFsm.Name);
-       //     var handle = new FSMHandle(mockFsm, mockContext); // Create a new handle instance
-
-       //     // Clear captured messages and reset event count before the first invocation for clean testing.
-       //     _capturedErrorMessages.Clear();
-       //     _eventInvokeCount = 0;
-
-       //     // --- First Invocation ---
-       //     FSM_API.Error.InvokeInstanceError(handle, "Instance error occurred.", null);
-       //     Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(1), "Instance error count should be 1.");
-       //     Assert.That(_eventInvokeCount, Is.EqualTo(1));
-
-       //     // Assert the parts of the message that are constant,
-       //     // allowing for the dynamic 'Context ID' in the middle.
-       //     // Part 1: Start of the message up to "Context ID: "
-       //     Assert.That(_capturedErrorMessages[0],
-       //                 Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
-       //                 "Message should start with FSM Instance name and 'Context ID:' prefix.");
-
-       //     // Part 2: The rest of the message after the dynamic Context ID
-       //     Assert.That(_capturedErrorMessages[0],
-       //                 Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/5. Message: Instance error occurred."),
-       //                 "Message should contain group, state, count, and error message for first invocation, after Context ID.");
-
-       //     // --- Second Invocation ---
-       //     _capturedErrorMessages.Clear(); // Clear captured messages for the second invocation
-       //     _eventInvokeCount = 0; // Reset event count
-
-       //     FSM_API.Error.InvokeInstanceError(handle, "Another instance error.", new ApplicationException());
-       //     Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(2), "Instance error count should be 2.");
-       //     Assert.That(_eventInvokeCount, Is.EqualTo(1)); // Event count should be 1 for this second invocation
-
-       //     // Assert the constant parts for the second message.
-       //     Assert.That(_capturedErrorMessages[0],
-       //                 Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
-       //                 "Message should start with FSM Instance name and 'Context ID:' prefix for second invocation.");
-
-       //     Assert.That(_capturedErrorMessages[0],
-       //                 Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/5. Message: Another instance error."),
-       //                 "Message should contain group, state, count, and error message for second invocation, after Context ID.");
-       // }
-
-        //[Test]
-        //public void InvokeInstanceError_ThresholdReached_SchedulesInstanceDestructionAndDefinitionError()
-        //{
-        //    // Ensure FSM_API.Error.ResetAllErrorCounts() clears _fsmDefinitionErrorCounts for a clean test environment.
-        //    FSM_API.Error.Reset();
-
-        //    FSM_API.Error.InstanceErrorThreshold = 2; // Set instance threshold to 2 for easy testing
-        //    FSM_API.Error.DefinitionErrorThreshold = 1; // Set definition threshold to 1 for this test
-
-        //    var mockFsm = new FSM { Name = "FSM_Instance_To_Destroy" };
-        //    var mockContext = new MockStateContext("StateX", mockFsm.Name);
-        //    var handle = new FSMHandle(mockFsm, mockContext);
-
-        //    // Clear captured messages and reset count before invocations for clean testing.
-        //    _capturedErrorMessages.Clear();
-        //    _capturedExceptions.Clear();
-        //    _eventInvokeCount = 0;
-
-        //    // --- ACT ---
-        //    // Invoke error once (generates message 1: Instance error with count 1/2)
-        //    FSM_API.Error.InvokeInstanceError(handle, "First instance error.", null);
-
-        //    // Invoke error a second time, which should hit the instance threshold.
-        //    // This generates message 2 (main error with count 2/2) AND enqueues deferred actions
-        //    // (instance shutdown, definition error and its subsequent cleanup).
-        //    FSM_API.Error.InvokeInstanceError(handle, "Second instance error - Threshold reached!", null);
-
-        //    // --- ASSERTIONS AFTER INVOKE (BEFORE DEFERRED ACTION PROCESSING) ---
-        //    // At this point, only the two direct InvokeInternalApiError calls (from each InvokeInstanceError)
-        //    // should have been processed. The shutdown, definition errors, and destruction warnings are deferred.
-        //    Assert.AreEqual(2, _eventInvokeCount, "Two error events should be invoked immediately: one for each instance error.");
-
-        //    // Message 1: From the first invocation of InvokeInstanceError (full detail)
-        //    Assert.That(_capturedErrorMessages[0], Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "));
-        //    Assert.That(_capturedErrorMessages[0], Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/2. Message: First instance error."));
-
-        //    // Message 2: From the second invocation of InvokeInstanceError (full detail)
-        //    Assert.That(_capturedErrorMessages[1], Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "));
-        //    Assert.That(_capturedErrorMessages[1], Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/2. Message: Second instance error - Threshold reached!"));
+            Assert.That(_eventInvokeCount, Is.EqualTo(2), "Both error invocations should trigger the event.");
+            Assert.That(_capturedErrorMessages[0], Is.EqualTo("Error 1"));
+            Assert.That(_capturedErrorMessages[1], Is.EqualTo("Error 2"));
+            Assert.That(_capturedExceptions[0], Is.InstanceOf(typeof(Exception)), "The first captured exception should be of type Exception.");
+            Assert.That(_capturedExceptions[1], Is.InstanceOf(typeof(InvalidOperationException)), "The second captured exception should be of type InvalidOperationException.");
+        }
 
 
-        //    // --- PROCESS DEFERRED ACTIONS ---
-        //    // This will execute the instance shutdown, InvokeDefinitionError, and DestroyHandle.
-        //    // InvokeDefinitionError will itself log messages and enqueue another deferred action for definition destruction.
-        //    FSM_API.Internal.ProcessDeferredModifications();
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void InvokeInstanceError_CountsErrorsCorrectlyAndIncludesThresholdInfoInMessage()
+        {
+            FSM_API.Error.InstanceErrorThreshold = 5; // Set a specific threshold for this test
+            var mockFsm = new FSM { Name = "InstanceTestFSM" };
+            // The state and group names for the message come from the FSM_API.Error.InvokeInstanceError formatting.
+            var mockContext = new MockStateContext("ActiveState", mockFsm.Name);
+            var handle = new FSMHandle(mockFsm, mockContext); // Create a new handle instance
 
-        //    // --- ASSERTIONS AFTER DEFERRED ACTION PROCESSING ---
-        //    // We expect 6 total messages now.
-        //    Assert.AreEqual(6, _eventInvokeCount, "Total event count should be 6 after deferred actions: 2 instance errors + 1 instance shutdown + 2 definition errors + 1 from DestroyHandle().");
+            // Clear captured messages and reset event count before the first invocation for clean testing.
+            _capturedErrorMessages.Clear();
+            _eventInvokeCount = 0;
 
-        //    // Verify the handle's error count is cleared
-        //    Assert.IsFalse(FSM_API.Error.GetErrorCounts().ContainsKey(handle), "Instance error count for destroyed handle should be removed.");
+            // --- First Invocation ---
+            FSM_API.Error.InvokeInstanceError(handle, "Instance error occurred.", null);
+            Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(1), "Instance error count should be 1.");
+            Assert.That(_eventInvokeCount, Is.EqualTo(1));
 
-        //    // Verify the definition error count is removed (as its destruction path has been triggered).
-        //    Assert.IsFalse(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(mockFsm.Name),
-        //        "Definition error count for the FSM definition should be removed after its destruction is scheduled/completed.");
+            // Assert the parts of the message that are constant,
+            // allowing for the dynamic 'Context ID' in the middle.
+            // Part 1: Start of the message up to "Context ID: "
+            Assert.That(_capturedErrorMessages[0],
+                        Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
+                        "Message should start with FSM Instance name and 'Context ID:' prefix.");
 
-        //    // Message 3 (index 2 in the list): The simplified instance shutdown message (triggered by deferred action)
-        //    Assert.That(_capturedErrorMessages[2],
-        //                Is.EqualTo($"FSM Instance '{mockFsm.Name}' hit InstanceErrorThreshold ({FSM_API.Error.InstanceErrorThreshold}). Shutting down instance."),
-        //                "Third captured message should be the simplified instance shutdown message (from deferred action).");
+            // Part 2: The rest of the message after the dynamic Context ID
+            Assert.That(_capturedErrorMessages[0],
+                        Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/5. Message: Instance error occurred."),
+                        "Message should contain group, state, count, and error message for first invocation, after Context ID.");
 
-        //    // Message 4 (index 3 in the list): The definition error count message (from InvokeDefinitionError inside deferred action)
-        //    Assert.That(_capturedErrorMessages[3], Does.Contain($"FSM Definition '{mockFsm.Name}' in processing group 'Update' has had a failing instance removed. Definition failure count: 1/1."), "Definition error message for count should be logged.");
+            // --- Second Invocation ---
+            _capturedErrorMessages.Clear(); // Clear captured messages for the second invocation
+            _eventInvokeCount = 0; // Reset event count
 
-        //    // Message 5 (index 4 in the list): The definition destruction scheduling message (from InvokeDefinitionError hitting its threshold)
-        //    Assert.That(_capturedErrorMessages[4], Does.Contain($"FSM Definition '{mockFsm.Name}' in processing group 'Update' hit DefinitionErrorThreshold (1). Scheduling complete destruction."), "Definition destruction scheduling message should be logged.");
+            FSM_API.Error.InvokeInstanceError(handle, "Another instance error.", new ApplicationException());
+            Assert.That(FSM_API.Error.GetErrorCounts()[handle], Is.EqualTo(2), "Instance error count should be 2.");
+            Assert.That(_eventInvokeCount, Is.EqualTo(1)); // Event count should be 1 for this second invocation
 
-        //    // Message 6 (index 5 in the list): The error from DestroyHandle()
-        //    // --- UPDATED THIS ASSERTION TO MATCH THE ACTUAL MESSAGE ---
-        //    Assert.That(_capturedErrorMessages[5],
-        //                Is.EqualTo($"Attempted to destroy FSM '{mockFsm.Name}' from non-existent bucket or already unregistered. Handle: '{handle.Name}'."), // Full expected message based on error output
-        //                "Sixth captured message should be the 'Attempted to destroy FSM from non-existent bucket' message from DestroyHandle().");
-        //}
+            // Assert the constant parts for the second message.
+            Assert.That(_capturedErrorMessages[0],
+                        Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "),
+                        "Message should start with FSM Instance name and 'Context ID:' prefix for second invocation.");
+
+            Assert.That(_capturedErrorMessages[0],
+                        Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/5. Message: Another instance error."),
+                        "Message should contain group, state, count, and error message for second invocation, after Context ID.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void InvokeInstanceError_ThresholdReached_SchedulesInstanceDestructionAndDefinitionError()
+        {
+            // Ensure FSM_API.Error.ResetAllErrorCounts() clears _fsmDefinitionErrorCounts for a clean test environment.
+            FSM_API.Error.Reset();
+
+            FSM_API.Error.InstanceErrorThreshold = 2; // Set instance threshold to 2 for easy testing
+            FSM_API.Error.DefinitionErrorThreshold = 1; // Set definition threshold to 1 for this test
+
+            var mockFsm = new FSM { Name = "FSM_Instance_To_Destroy" };
+            var mockContext = new MockStateContext("StateX", mockFsm.Name);
+            var handle = new FSMHandle(mockFsm, mockContext);
+
+            // Clear captured messages and reset count before invocations for clean testing.
+            _capturedErrorMessages.Clear();
+            _capturedExceptions.Clear();
+            _eventInvokeCount = 0;
+
+            // --- ACT ---
+            // Invoke error once (generates message 1: Instance error with count 1/2)
+            FSM_API.Error.InvokeInstanceError(handle, "First instance error.", null);
+
+            // Invoke error a second time, which should hit the instance threshold.
+            // This generates message 2 (main error with count 2/2) AND enqueues deferred actions
+            // (instance shutdown, definition error and its subsequent cleanup).
+            FSM_API.Error.InvokeInstanceError(handle, "Second instance error - Threshold reached!", null);
+
+            // --- ASSERTIONS AFTER INVOKE (BEFORE DEFERRED ACTION PROCESSING) ---
+            // At this point, only the two direct InvokeInternalApiError calls (from each InvokeInstanceError)
+            // should have been processed. The shutdown, definition errors, and destruction warnings are deferred.
+            Assert.That(_eventInvokeCount, Is.EqualTo(2), "Two error events should be invoked immediately: one for each instance error.");
+
+            // Message 1: From the first invocation of InvokeInstanceError (full detail)
+            Assert.That(_capturedErrorMessages[0], Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "));
+            Assert.That(_capturedErrorMessages[0], Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 1/2. Message: First instance error."));
+
+            // Message 2: From the second invocation of InvokeInstanceError (full detail)
+            Assert.That(_capturedErrorMessages[1], Does.StartWith($"FSM Instance '{mockFsm.Name}' (Context ID: "));
+            Assert.That(_capturedErrorMessages[1], Does.Contain($") in group 'Update' encountered error in state '__ANY_STATE__'. Count: 2/2. Message: Second instance error - Threshold reached!"));
+
+
+            // --- PROCESS DEFERRED ACTIONS ---
+            // This will execute the instance shutdown, InvokeDefinitionError, and DestroyHandle.
+            // InvokeDefinitionError will itself log messages and enqueue another deferred action for definition destruction.
+            FSM_API.Internal.ProcessDeferredModifications();
+
+            // --- ASSERTIONS AFTER DEFERRED ACTION PROCESSING ---
+            // We expect 6 total messages now.
+            Assert.That(_eventInvokeCount, Is.EqualTo(6), "Total event count should be 6 after deferred actions: 2 instance errors + 1 instance shutdown + 2 definition errors + 1 from DestroyHandle().");
+
+            // Verify the handle's error count is cleared
+            Assert.That(FSM_API.Error.GetErrorCounts().ContainsKey(handle), Is.False, "Instance error count for destroyed handle should be removed.");
+
+            // Verify the definition error count is removed (as its destruction path has been triggered).
+            Assert.That(FSM_API.Error.GetDefinitionErrorCounts().ContainsKey(mockFsm.Name), Is.False,
+                "Definition error count for the FSM definition should be removed after its destruction is scheduled/completed.");
+
+            // Message 3 (index 2 in the list): The simplified instance shutdown message (triggered by deferred action)
+            Assert.That(_capturedErrorMessages[2],
+                        Is.EqualTo($"FSM Instance '{mockFsm.Name}' hit InstanceErrorThreshold ({FSM_API.Error.InstanceErrorThreshold}). Shutting down instance."),
+                        "Third captured message should be the simplified instance shutdown message (from deferred action).");
+
+            // Message 4 (index 3 in the list): The definition error count message (from InvokeDefinitionError inside deferred action)
+            Assert.That(_capturedErrorMessages[3], Does.Contain($"FSM Definition '{mockFsm.Name}' in processing group 'Update' has had a failing instance removed. Definition failure count: 1/1."), "Definition error message for count should be logged.");
+
+            // Message 5 (index 4 in the list): The definition destruction scheduling message (from InvokeDefinitionError hitting its threshold)
+            Assert.That(_capturedErrorMessages[4], Does.Contain($"FSM Definition '{mockFsm.Name}' in processing group 'Update' hit DefinitionErrorThreshold (1). Scheduling complete destruction."), "Definition destruction scheduling message should be logged.");
+
+            // Message 6 (index 5 in the list): The error from DestroyHandle()
+            // --- UPDATED THIS ASSERTION TO MATCH THE ACTUAL MESSAGE ---
+            Assert.That(_capturedErrorMessages[5], Is.EqualTo($"Attempted to destroy FSM '{mockFsm.Name}' from non-existent processing group '{mockFsm.ProcessingGroup}'."));
+        }
 
         /// <summary>
         /// 

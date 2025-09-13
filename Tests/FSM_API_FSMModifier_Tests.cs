@@ -98,114 +98,96 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             FSM_API.Internal.ResetAPI(true);
             FSM_Setup();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMModifier_AddState_Succeeds()
+        {
+            // Arrange
+            
+            // Act
+            FSM_API.Interaction.AddStateToFSM(FsmName, "AddedState", null, null, null, "Update");
+           
+           //Assert
+            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, "Update");
+            Assert.That(fsmDef, Is.Not.Null, "FSM definition should not be null");
+            Assert.That(fsmDef.GetAllStates().ToList().Any(s=>s.Name == "AddedState"), Is.True, "FSM should contain the newly added state");
+        }
 
-        ///// <summary>
-        ///// Tests that a State and Transition can be added after definition.
-        ///// </summary>
-        //[Test]
-        //public void Test_AddStateAndTransition_Runtime()
-        //{
-        //    // Arrange
-        //    // Ensure the initial FSM definition has two states and one transition
-        //    Assert.That(FSM_API.Internal.DoesFsmDefinitionExist(ProcessGroup, FsmName), Is.True);
-        //    var initialDefinition = FSM_API.Internal.GetBucket(ProcessGroup, FsmName)?.Definition;
-        //    Assert.That(initialDefinition, Is.Not.Null);
-        //    Assert.That(initialDefinition.GetAllStates().Count, Is.EqualTo(2));
 
-        //    // Create an instance of the FSM
-        //    var context = new MockStateContext();
-        //    var handle = FSM_API.Create.CreateInstance(FsmName, context);
-        //    Assert.That(handle, Is.Not.Null);
+        /// <summary>
+        /// Tests that a state can be removed from an FSM using the Interaction API.
+        /// </summary>
+        [Test]
+        public void FSMModifier_RemoveStateFromFSM_Succeeds()
+        {
+            // Arrange
+            FSM_API.Interaction.AddStateToFSM(FsmName, "StateToRemove", null, null, null, ProcessGroup);
+            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            var initialCount = fsmDef.GetAllStates().Count;
 
-        //    // Act
-        //    // Use FSMModifier to add a new state "Paused" and a new transition
-        //    FSM_API.Interaction.AddStateToFSM(FsmName, "Paused", null, null, null);
- 
+            // Act
+            FSM_API.Interaction.RemoveStateFromFSM(FsmName, "StateToRemove", ProcessGroup);
 
-        //    // Get the modified definition
-        //    var modifiedDefinition = FSM_API.Internal.GetBucket(ProcessGroup, FsmName)?.Definition;
-        //    Assert.That(modifiedDefinition, Is.Not.Null);
+            // Assert
+            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            Assert.That(fsmDef.GetAllStates().Count, Is.EqualTo(initialCount - 1), "State count should be one less after removal.");
+            Assert.That(fsmDef.HasState("StateToRemove"), Is.False, "The state should no longer exist.");
+        }
 
-        //    // Assert
-        //    // Verify that the new state exists
-        //    Assert.That(modifiedDefinition.GetAllStates().Count, Is.EqualTo(3));
-        //    Assert.That(modifiedDefinition.GetState("Paused"), Is.Not.Null);
+        /// <summary>
+        /// Tests that a regular transition can be added between two states using the Interaction API.
+        /// </summary>
+        [Test]
+        public void FSMModifier_AddTransition_Succeeds()
+        {
+            // Arrange
+            FSM_API.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
+            FSM_API.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
+            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            var initialTransitionCount = fsmDef.GetAllTransitions().Count;
 
-        //    // Verify that the new transition exists
-        //    var newTransition = modifiedDefinition.GetTransition(new Tuple<string, string>("Running", "Pause"));
-        //    Assert.That(newTransition, Is.Not.Null);
-        //    Assert.That(newTransition.From, Is.EqualTo("Running"));
-        //    Assert.That(newTransition.To, Is.EqualTo("Paused"));
+            // Act
+            FSM_API.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
 
-        //    // Verify that an FSM instance can use the new transition
-        //    Assert.That(context.ContextData, Is.EqualTo("Initial"));
+            // Assert
+            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            Assert.That(fsmDef.GetAllTransitions().Count, Is.EqualTo(initialTransitionCount + 1), "A new transition should have been added.");
+            Assert.That(fsmDef.HasTransition("StateA", "StateB"), Is.True, "The transition from StateA to StateB should exist.");
+        }
 
-        //    // Trigger the initial transition (Idle -> Running)
-        //    handle.TransitionTo("Start");
+        /// <summary>
+        /// Tests that a regular transition can be removed using the Interaction API.
+        /// </summary>
+        [Test]
+        public void FSMModifier_RemoveTransition_Succeeds()
+        {
+            // Arrange
+            FSM_API.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
+            FSM_API.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
+            FSM_API.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
+            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            var initialTransitionCount = fsmDef.GetAllTransitions().Count;
 
-        //    // Trigger the newly added transition (Running -> Paused)
-        //    Assert.That(context.ContextData, Is.EqualTo("Running"));
-        //    handle.TransitionTo("Pause");
+            // Act
+            FSM_API.Interaction.RemoveTransition(FsmName, "StateA", "StateB", ProcessGroup);
 
-        //    // Check that the FSM instance is now in the new "Paused" state
-        //    // (Note: The FSM's state change is handled internally by the API,
-        //    // we're simulating the state by checking the context data)
-        //    Assert.That(context.ContextData, Is.EqualTo("Paused"));
-        //}
+            // Assert
+            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            Assert.That(fsmDef.GetAllTransitions().Count, Is.EqualTo(initialTransitionCount - 1), "One transition should have been removed.");
+            Assert.That(fsmDef.HasTransition("StateA", "StateB"), Is.False, "The transition from StateA to StateB should no longer exist.");
+        }
 
-        ///// <summary>
-        ///// Tests removing of a state after definition.
-        ///// </summary>
-        //[Test]
-        //public void Test_RemoveState_Runtime()
-        //{
-        //    // Arrange
-        //    var initialDefinition = FSM_API.Internal.GetBucket(ProcessGroup, FsmName)?.Definition;
-        //    Assert.That(initialDefinition!.GetAllStates().Count, Is.EqualTo(2));
-        //    Assert.That(initialDefinition!.GetState("Running"), Is.Not.Null);
 
-        //    // Act
-        //    FSM_API.Interaction.RemoveStateFromFSM(FsmName, "Running", "Idle", ProcessGroup);
 
-        //    // Get the modified definition
-        //    var modifiedDefinition = FSM_API.Internal.GetBucket(ProcessGroup, FsmName)?.Definition;
 
-        //    // Assert
-        //    // The "Running" state should no longer exist
-        //    Assert.That(modifiedDefinition!.GetAllStates().Count, Is.EqualTo(1));
-        //    Assert.That(modifiedDefinition!.GetState("Running"), Is.Null);
 
-        //    // The transition from "Idle" to "Running" should also be removed
-        //    var removedTransition = modifiedDefinition.GetTransition(new Tuple<string, string>("Idle", "Start"));
-        //    Assert.That(removedTransition, Is.Null);
-        //}
 
-        ///// <summary>
-        ///// Tests modification of a Transition after definition.
-        ///// </summary>
-        //[Test]
-        //public void Test_ModifyTransition_Runtime()
-        //{
-        //    // Arrange
-        //    var initialDefinition = FSM_API.Internal.GetBucket(ProcessGroup, FsmName)?.Definition;
-        //    var context = new MockStateContext();
-        //    var handle = FSM_API.Create.CreateInstance(FsmName, context);
 
-        //    // Act - Modify the transition condition
-        //    FSM_API.Interaction.AddTransition(FsmName, "Idle", "Start", (ctx) => ((MockStateContext)ctx).ContextData == "NewCondition");
-        
 
-        //    // Try to trigger the transition with the old condition, should fail
-        //    handle.TransitionTo("Start");
-        //    Assert.That(context.ContextData, Is.EqualTo("Initial")); // Should still be "Initial"
 
-        //    // Update the context to meet the new condition
-        //    context.ContextData = "NewCondition";
 
-        //    // Try to trigger the transition again, should now succeed
-        //    handle.TransitionTo("Start");
-        //    Assert.That(context.ContextData, Is.EqualTo("Running"));
-        //}
     }
     /// <summary>
     /// 

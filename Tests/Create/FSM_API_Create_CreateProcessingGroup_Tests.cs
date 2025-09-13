@@ -1,6 +1,7 @@
 using NUnit.Framework;
 
 using System;
+using System.Linq;
 
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
@@ -99,6 +100,38 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(bucketsAfterSecondCall[groupName], Is.SameAs(initialBucketState),
                         "Calling CreateProcessingGroup with an existing name should return the identical bucket instance.");
         }
+
+        /// <summary>
+        /// Tests that providing a null, empty, or whitespace name for a processing group throws an ArgumentException.
+        /// </summary>
+        [Test]
+        public void CreateProcessingGroup_InvalidName_ThrowsArgumentException()
+        {
+            // Arrange, Act & Assert
+            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup(null), "Expected ArgumentException for null group name.");
+            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup(""), "Expected ArgumentException for empty group name.");
+            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup("   "), "Expected ArgumentException for whitespace group name.");
+        }
+
+        /// <summary>
+        /// Tests that calling CreateProcessingGroup on an existing group does not create a new one.
+        /// </summary>
+        [Test]
+        public void CreateProcessingGroup_ExistingGroup_DoesNotCreateNew()
+        {
+            // Arrange
+            string groupName = "ExistingGroup";
+            FSM_API.Create.CreateProcessingGroup(groupName);
+            var initialCount = FSM_API.Internal.ProcessingGroupCount;
+
+            // Act
+            FSM_API.Create.CreateProcessingGroup(groupName);
+
+            // Assert
+            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(initialCount), "No new group should be created when one with the same name already exists.");
+        }
+
+
     }
 
 
