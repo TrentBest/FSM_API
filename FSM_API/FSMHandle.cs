@@ -8,31 +8,55 @@ namespace TheSingularityWorkshop.FSM_API
     /// Think of it as the remote control for one particular character or object that's using an FSM.
     /// <div class="mermaid">
     /// classDiagram
-    ///    direction BT
+    ///    direction LR
     ///    class FSMHandle {
     ///        +string Name
     ///        +string CurrentState
     ///        +IStateContext Context
-    ///        +FSM Definition
     ///    }
     ///    class FSM {
     ///        +string Name
     ///        +string InitialState
     ///    }
     ///    class IStateContext {
-    ///        <<interface>>
+    ///        &lt;&lt;interface&gt;&gt;
     ///        +string Name
     ///        +bool IsValid
     ///    }
     ///
-    ///    FSMHandle "1" *-- "1" FSM : <<uses>>
-    ///    FSMHandle "1" *-- "1" IStateContext : <<controls>>
+    ///    FSMHandle "1" *-- "1" FSM : &lt;&lt;uses&gt;&gt;
+    ///    FSMHandle "1" *-- "1" IStateContext : &lt;&lt;controls&gt;&gt;
     /// </div>
     /// <div class="mermaid">
     /// graph TD
     ///    A[FSMHandle (The Logic)] -->|Commands| B[IStateContext (The Data)];
     ///    B -->|Returns Data/Status| A;
     /// </div>
+    /// <div class="mermaid">
+    /// sequenceDiagram
+    ///    participant H as FSMHandle
+    ///    participant D as FSMDefinition
+    ///    participant S as CurrentState
+    ///    participant C as Context
+    ///
+    ///    H->>D: Step(CurrentState, Context)
+    ///    D->>S: Update(Context)
+    ///    note right of S: Performs state logic
+    ///    D->>D: Check Any-State Transitions
+    ///    D->>D: Check Regular Transitions
+    ///    alt If a transition condition is met
+    ///        D->>S: Exit(Context)
+    ///        D->>+D: Find New State
+    ///        D->>-H: Return NewStateName
+    ///        H->>H: CurrentState = NewStateName
+    ///        H->>D: ForceTransition(OldState, NewState, Context)
+    ///        D->>+S: Exit(Context)
+    ///        S->>+S: Enter(Context)
+    ///    else No transition
+    ///        D->>H: Return CurrentStateName
+    ///    end
+    /// </div>
+    /// !(https://raw.githubusercontent.com/trentbest/fsm_api/FSM_API-72aeabda0e28b301ddd2e675e1f49da584cf105c/Documentation/User%20Guide/Visuals/State_Lifecycle.png)
     /// </summary>
     /// <remarks>
     /// This handle is how you, as a game designer or system integrator, will typically interact with an FSM
@@ -46,7 +70,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// It also gives you access to the FSM's <see cref="IStateContext"/>, which holds all the unique data
     /// for *this specific FSM instance*.
     /// </para>
-    /// 
+    ///
     /// **Tips for Using Your FSM Handle:**
     /// <list type="bullet">
     ///     <item>
@@ -138,7 +162,9 @@ namespace TheSingularityWorkshop.FSM_API
         ///     <item>It needs an `FSM` <paramref name="definition"/> (the blueprint).</item>
         ///     <item>It needs a `context` (the data bag) specific to this running instance.</item>
         /// </list>
-        /// The FSM will immediately enter its <see cref="FSM.InitialState"/> as defined in its blueprint.
+        /// Upon creation, the handle's <see cref="CurrentState"/> property is immediately set to the FSM's <see cref="FSM.InitialState"/>.
+        /// However, the `OnEnter` action for this state will not be executed until the FSM instance is first stepped or updated, typically
+        /// by the API's internal tick system. This prevents unexpected behavior from 'OnEnter' actions running during the handle's instantiation.
         /// </remarks>
         /// <param name="definition">The blueprint (<see cref="FSM"/>) for this FSM instance.</param>
         /// <param name="context">The data bag (<see cref="IStateContext"/>) for this specific FSM instance.</param>
@@ -147,7 +173,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
         /// or without a data bag (`context` is `null`).
         /// </exception>
-        public FSMHandle(FSM definition=null, IStateContext context = null, int id = -1)
+        public FSMHandle(FSM definition = null, IStateContext context = null, int id = -1)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition), "FSM definition cannot be null for FSMHandle.");
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");

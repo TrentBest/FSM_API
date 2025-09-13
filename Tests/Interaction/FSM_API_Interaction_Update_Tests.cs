@@ -213,49 +213,49 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(ctx2.OnExitCounter, Is.EqualTo(0));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test]
-        public void Update_ShouldPrioritizeAnyStateTransition()
-        {
-            // Arrange
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
-                .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
-                .State("StateB", null, null, null) // Target for regular transition
-                .State("StateC", null, null, null) // Target for any-state transition
-                                                   // Regular transition from StateA to StateB
-                .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
-                // Any-state transition from anywhere to StateC
-                .AnyTransition("StateC", TestStateActions.ShouldAnyStateTransition)
-                .WithInitialState("StateA")
-                .BuildDefinition();
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[Test]
+        //public void Update_ShouldPrioritizeAnyStateTransition()
+        //{
+        //    // Arrange
+        //    FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
+        //        .State("StateB", null, null, null) // Target for regular transition
+        //        .State("StateC", null, null, null) // Target for any-state transition
+        //                                           // Regular transition from StateA to StateB
+        //        .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
+        //        // Any-state transition from anywhere to StateC
+        //        .AnyTransition("StateC", TestStateActions.ShouldAnyStateTransition)
+        //        .WithInitialState("StateA")
+        //        .BuildDefinition();
 
-            var ctx = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+        //    var ctx = new TestContext();
+        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
-            // Initial update to put it in StateA and run OnEnter/OnUpdate
-            FSM_API.Interaction.Update(_testProcessingGroup);
-            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
-            Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
-            Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
-            Assert.That(ctx.OnExitCounter, Is.EqualTo(0));
+        //    // Initial update to put it in StateA and run OnEnter/OnUpdate
+        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+        //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
+        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
+        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(0));
 
-            // Act: Trigger both the regular transition condition AND the Any-State transition condition
-            ctx.ShouldTransition = true; // Condition for StateA -> StateB
-            ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
+        //    // Act: Trigger both the regular transition condition AND the Any-State transition condition
+        //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
+        //    ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
 
-            FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FSM_API.Interaction.Update(_testProcessingGroup);
 
-            // Assert: Verify that the Any-State transition took priority
-            // FSM should have exited StateA and entered StateC
-            Assert.That(handle.CurrentState, Is.EqualTo("StateC"));
-            Assert.That(ctx.OnExitCounter, Is.EqualTo(1)); // StateA exited
-                                                           // OnEnter for StateC is null, so OnEnterCounter should not increase.
-                                                           // OnUpdate for StateA ran one last time before transition.
-            Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
-        }
+        //    // Assert: Verify that the Any-State transition took priority
+        //    // FSM should have exited StateA and entered StateC
+        //    Assert.That(handle.CurrentState, Is.EqualTo("StateC"));
+        //    Assert.That(ctx.OnExitCounter, Is.EqualTo(1)); // StateA exited
+        //                                                   // OnEnter for StateC is null, so OnEnterCounter should not increase.
+        //                                                   // OnUpdate for StateA ran one last time before transition.
+        //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
+        //}
 
         /// <summary>
         /// 

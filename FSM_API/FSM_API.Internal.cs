@@ -921,6 +921,31 @@ namespace TheSingularityWorkshop.FSM_API
                 return 0;
             }
 
+            /// <summary>
+            /// Retrieves a specific FSM definition from the internal API by its name and processing group.
+            /// </summary>
+            /// <remarks>
+            /// This method provides direct access to the FSM's blueprint, allowing you to inspect its
+            /// states and transitions. If a matching FSM definition cannot be found, the method
+            /// returns <c>null</c> without throwing an exception.
+            /// </remarks>
+            /// <param name="fsmName">The unique name of the FSM definition to retrieve.</param>
+            /// <param name="processGroup">The name of the processing group where the FSM is registered. Defaults to "Update".</param>
+            /// <returns>
+            /// The <see cref="FSM"/> definition if found; otherwise, <c>null</c>.
+            /// </returns>
+            public static FSM GetFsmDefinition(string fsmName, string processGroup = "Update")
+            {
+                if (_buckets.TryGetValue(processGroup, out var groupBuckets))
+                {
+                    if (groupBuckets.TryGetValue(fsmName, out var bucket))
+                    {
+                        return bucket.Definition;
+                    }
+                }
+                return null;
+            }
+
 
             /// <summary>
             /// A queue of actions representing modifications to the FSM system

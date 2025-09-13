@@ -104,6 +104,81 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(handle == null, Is.True);
             Assert.That(handle != null, Is.False);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMHandle_Constructor_SucceedsAndSetsPropertiesCorrectly()
+        {
+            // Arrange
+            var fsmDefinition = new FSM { Name = "TestFSM" };
+            var context = new MockStateContext("InitialState", "TestFSM");
+            var id = 1;
+
+            // Act
+            var handle = new FSMHandle(fsmDefinition, context, id);
+
+            // Assert
+            Assert.That(handle, Is.Not.Null);
+            Assert.That(handle.Definition, Is.EqualTo(fsmDefinition));
+            Assert.That(handle.Context, Is.EqualTo(context));
+            Assert.That(handle.Id, Is.EqualTo(id));
+            Assert.That(handle.CurrentState, Is.EqualTo("__ANY_STATE__"));
+            Assert.That(handle.Name, Is.EqualTo("TestFSM"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMHandle_Context_PropertyIsAccessible()
+        {
+            // Arrange
+            var fsmDefinition = new FSM { Name = "TestFSM" };
+            var context = new MockStateContext("InitialState", "TestFSM");
+            var handle = new FSMHandle(fsmDefinition, context, 1);
+
+            // Act
+            var retrievedContext = handle.Context;
+
+            // Assert
+            Assert.That(retrievedContext, Is.EqualTo(context));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMHandle_Name_PropertyIsAccessible()
+        {
+            // Arrange
+            var fsmDefinition = new FSM { Name = "TestFSM" };
+            var context = new MockStateContext("InitialState", "TestFSM");
+            var handle = new FSMHandle(fsmDefinition, context, 1);
+
+            // Act
+            var retrievedName = handle.Name;
+
+            // Assert
+            Assert.That(retrievedName, Is.EqualTo(fsmDefinition.Name));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMHandle_ID_PropertyIsAccessible()
+        {
+            // Arrange
+            var fsmDefinition = new FSM { Name = "TestFSM" };
+            var context = new MockStateContext("InitialState", "TestFSM");
+            var id = 123;
+            var handle = new FSMHandle(fsmDefinition, context, id);
+
+            // Act
+            var retrievedId = handle.Id;
+
+            // Assert
+            Assert.That(retrievedId, Is.EqualTo(id));
+        }
 
         private void Helper_CreateFSM(string fsmName, string processingGroup)
         {

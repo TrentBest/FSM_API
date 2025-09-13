@@ -477,8 +477,86 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(transition, Is.Null, "Should return null for a transition that doesn't exist.");
         }
 
+       
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void AddAnyStateTransition_Succeeds()
+        {
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+
+            // Add an Any-State transition
+            fsm.AddAnyStateTransition("StateA", (ctx) => true);
+
+            // Verify the transition was added
+            var anyTransitions = fsm.GetAnyStateTransitions();
+            Assert.That(anyTransitions.Count, Is.EqualTo(1));
+            Assert.That(anyTransitions[0].To, Is.EqualTo("StateA"));
+            Assert.That(anyTransitions[0].From, Is.EqualTo(FSM.AnyStateIdentifier));
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void RemoveState_AlsoRemovesAssociatedTransitions()
+        {
+            // Arrange
+            FSM fsm = new FSM();
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+            HelperAddState(fsm, "StateC");
+
+            fsm.AddTransition("StateA", "StateB", (ctx) => true); // A -> B
+            fsm.AddTransition("StateB", "StateA", (ctx) => true); // B -> A
+            fsm.AddAnyStateTransition("StateC", (ctx) => true);   // Any -> C
+
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(3), "Initial state count should be 3.");
+            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(3), "Initial transition count should be 3.");
+
+            // Act: Remove the middle state
+            fsm.RemoveState("StateB");
+
+            // Assert
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(2), "State count should be 2 after removing one state.");
+            Assert.That(fsm.HasState("StateB"), Is.False, "State 'StateB' should be removed.");
+
+            // Verify that transitions associated with "StateB" are also gone.
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.False, "Transition A->B should be removed.");
+            Assert.That(fsm.HasTransition("StateB", "StateA"), Is.False, "Transition B->A should be removed.");
+            Assert.That(fsm.HasTransition(FSM.AnyStateIdentifier, "StateC"), Is.True, "Any-State transition should still exist.");
+        }
+
+
+        /// <summary>
+        /// Tests that adding an "Any-State" transition using the FSMTransition object overload succeeds.
+        /// </summary>
+        [Test]
+        public void AddAnyStateTransition_UsingFSMTransitionObject_Succeeds()
+        {
+            // Arrange
+            FSM fsm = new FSM { Name = "AnyStateOverloadTest" };
+            HelperAddState(fsm, "StateA");
+            HelperAddState(fsm, "StateB");
+
+            // Create an FSMTransition object
+            var transition = new FSMTransition(FSM.AnyStateIdentifier, "StateB", (ctx) => true);
+
+            // Act
+            fsm.AddAnyStateTransition(transition);
+
+            // Assert
+            var anyTransitions = fsm.GetAnyStateTransitions();
+            Assert.That(anyTransitions.Count, Is.EqualTo(1));
+            Assert.That(anyTransitions.Any(t => t.To == "StateB"), Is.True, "Any-State transition to StateB should exist.");
+        }
+
+       
 
 
         private void HelperAddState(FSM fsm, string stateName = "TestState")

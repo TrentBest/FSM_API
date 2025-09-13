@@ -178,5 +178,60 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Assert
             Assert.That(actualString, Is.EqualTo(expectedString));
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMTransition_Constructor_Succeeds()
+        {
+            // Arrange
+            var condition = new Func<IStateContext, bool>((ctx) => true);
+
+            // Act
+            var transition = new FSMTransition("StateA", "StateB", condition);
+
+            // Assert
+            Assert.That(transition, Is.Not.Null);
+            Assert.That(transition.From, Is.EqualTo("StateA"));
+            Assert.That(transition.To, Is.EqualTo("StateB"));
+            Assert.That(transition.Condition, Is.EqualTo(condition));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMTransition_Constructor_ThrowsForNullOrEmptyFromState()
+        {
+            // Arrange
+            var condition = new Func<IStateContext, bool>((ctx) => true);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => new FSMTransition(null, "StateB", condition), "Expected ArgumentException for null 'from' state.");
+            Assert.Throws<ArgumentException>(() => new FSMTransition("", "StateB", condition), "Expected ArgumentException for empty 'from' state.");
+            Assert.Throws<ArgumentException>(() => new FSMTransition("   ", "StateB", condition), "Expected ArgumentException for whitespace 'from' state.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMTransition_Constructor_ThrowsForNullOrEmptyToState()
+        {
+            // Arrange
+            var condition = new Func<IStateContext, bool>((ctx) => true);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => new FSMTransition("StateA", null, condition), "Expected ArgumentException for null 'to' state.");
+            Assert.Throws<ArgumentException>(() => new FSMTransition("StateA", "", condition), "Expected ArgumentException for empty 'to' state.");
+            Assert.Throws<ArgumentException>(() => new FSMTransition("StateA", "   ", condition), "Expected ArgumentException for whitespace 'to' state.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMTransition_Constructor_ThrowsForNullCondition()
+        {
+            // Arrange, Act & Assert
+            Assert.Throws<ArgumentNullException>(() => new FSMTransition("StateA", "StateB", null), "Expected ArgumentNullException for null condition.");
+        }
     }
 }

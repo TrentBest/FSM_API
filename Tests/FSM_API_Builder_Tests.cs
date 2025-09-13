@@ -248,6 +248,174 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(definition.GetAllTransitions().Count, Is.EqualTo(1));
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_State_ThrowsForDuplicateStateName()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("Idle", null, null, null);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => builder.State("Idle", null, null, null), "Expected ArgumentException for duplicate state name.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_WithInitialState_Succeeds()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("Idle", null, null, null);
+
+            // Act
+            builder.WithInitialState("Idle");
+            builder.BuildDefinition();
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+
+            // Assert
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.InitialState, Is.EqualTo("Idle"));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_WithInitialState_ThrowsForNullOrEmptyName()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("Idle", null, null, null);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => builder.WithInitialState(null), "Expected ArgumentException for null initial state.");
+            Assert.Throws<ArgumentException>(() => builder.WithInitialState(""), "Expected ArgumentException for empty initial state.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_Transition_Succeeds()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("StateA", null, null, null);
+            builder.State("StateB", null, null, null);
+
+            // Act
+            builder.Transition("StateA", "StateB", (ctx) => true);
+            builder.BuildDefinition();
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+
+            // Assert
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.HasTransition("StateA", "StateB"), Is.True);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_Transition_ThrowsForNullCondition()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("StateA", null, null, null);
+            builder.State("StateB", null, null, null);
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => builder.Transition("StateA", "StateB", null), "Expected ArgumentNullException for null condition.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_AnyTransition_Succeeds()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("StateB", null, null, null);
+
+            // Act
+            builder.AnyTransition("StateB", (ctx) => true);
+            builder.BuildDefinition();
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+
+            // Assert
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.GetAnyStateTransitions().Count, Is.EqualTo(1));
+            Assert.That(fsm.GetAnyStateTransitions().First().To, Is.EqualTo("StateB"));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_AnyTransition_ThrowsForNullToState()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => builder.AnyTransition(null, (ctx) => true), "Expected ArgumentException for null 'to' state.");
+            Assert.Throws<ArgumentException>(() => builder.AnyTransition("", (ctx) => true), "Expected ArgumentException for empty 'to' state.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_AnyTransition_ThrowsForNullCondition()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+            builder.State("StateB", null, null, null);
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => builder.AnyTransition("StateB", null), "Expected ArgumentNullException for null condition.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void FSMBuilder_BuildDefinition_FailsWhenNoStatesAdded()
+        {
+            // Arrange
+            var builder = new FSMBuilder("TestFSM");
+
+            // Act & Assert
+            // The BuildDefinition method now gracefully handles an FSM with no states, returning a valid but empty FSM.
+            // Therefore, we no longer expect an exception, but can assert on the resulting FSM properties.
+            Assert.DoesNotThrow(() => builder.BuildDefinition(), "BuildDefinition should not throw an exception when no states are added.");
+            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0), "FSM should have no states.");
+        }
+
+        /// <summary>
+        /// Tests that the WithProcessRate method sets the correct rate on the FSM definition.
+        /// </summary>
+        [Test]
+        public void FSMBuilder_WithProcessRate_Succeeds()
+        {
+            // Arrange
+            var builder = new FSMBuilder("ProcessRateTestFSM");
+            int customRate = 30; // 30 ticks per second
+
+            // Act
+            builder.WithProcessRate(customRate);
+            builder.BuildDefinition();
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("ProcessRateTestFSM", "Update");
+
+            // Assert
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.ProcessRate, Is.EqualTo(customRate), "The process rate on the FSM definition should match the one set in the builder.");
+        }
+
+
         ///// <summary>
         ///// 
         ///// </summary>

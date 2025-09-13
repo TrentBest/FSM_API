@@ -586,22 +586,26 @@ namespace TheSingularityWorkshop.FSM_API
         /// Removes a state with the given name from this FSM blueprint.
         /// </summary>
         /// <remarks>
-        /// If you remove a state, any transitions that relied on it (either starting
-        /// from it or going to it) will no longer work correctly. It's very important
-        /// to make sure no FSM instances are currently in, or trying to move to,
-        /// a state that you are removing.
+        /// This method will also remove any regular transitions that start from or end at the removed state.
+        /// Note that any-state transitions targeting this state will also be removed.
         /// </remarks>
         /// <param name="name">The name of the state you want to remove.</param>
         public void RemoveState(string name)
         {
-            _states.Remove(name);
+            if (_states.ContainsKey(name))
+            {
+                _states.Remove(name);
+                // Remove regular transitions that either start or end at the removed state
+                _transitions.RemoveAll(t => t.From == name || t.To == name);
+                // Remove any-state transitions that target the removed state
+                _anyStateTransitions.RemoveAll(t => t.To == name);
+            }
         }
 
         /// <summary>
-        /// Checks if a regular transition exists between the specified starting
-        /// and ending states.
+        /// Checks if a regular transition or an Any-State transition exists.
         /// </summary>
-        /// <param name="fromState">The name of the state where the transition starts.</param>
+        /// <param name="fromState">The name of the state where the transition starts. Use FSM.AnyStateIdentifier for Any-State transitions.</param>
         /// <param name="toState">The name of the state where the transition ends.</param>
         /// <returns>
         /// <c>true</c> if a transition exists from <paramref name="fromState"/> to
@@ -609,7 +613,13 @@ namespace TheSingularityWorkshop.FSM_API
         /// </returns>
         public bool HasTransition(string fromState, string toState)
         {
-            return _transitions.Any(s => s.From == fromState && s.To == toState);
+            // Check regular transitions first
+            if (fromState != FSM.AnyStateIdentifier)
+            {
+                return _transitions.Any(s => s.From == fromState && s.To == toState);
+            }
+            // Check any-state transitions if the fromState is the AnyStateIdentifier
+            return _anyStateTransitions.Any(s => s.To == toState);
         }
 
         /// <summary>
