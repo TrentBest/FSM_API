@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>01. What Are Finite State Machines (FSMs)? - A Deeper Dive </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="01. What Are Finite State Machines (FSMs)? - A Deeper Dive ">
+    
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="01-what-are-finite-state-machines-fsms---a-deeper-dive">01. What Are Finite State Machines (FSMs)? - A Deeper Dive</h1>
+
+<blockquote>
+<p>A <strong>Finite State Machine (FSM)</strong> is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of <strong>states</strong> at any given time. The FSM can change from one state to another in response to some inputs; the change from one state to another is called a <strong>transition</strong>. An FSM is defined by a list of its states, its initial state, and the conditions for each transition.</p>
+</blockquote>
+<p>While our &quot;Non-Coder Overview&quot; (10. FSM_API for Non-Coders) introduced the concept simply, this document delves into the more formal and detailed understanding of what FSMs are, laying the groundwork for why they are so widely used in software development.</p>
+<hr>
+<h2 id="-table-of-contents-for-theory-folder">📚 Table of Contents (for Theory Folder)</h2>
+<ul>
+<li><a href="01_What_Are_FSMs.html">01. What Are Finite State Machines (FSMs)? - A Deeper Dive</a></li>
+<li><a href="02_Types_Of_FSMs.html">02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent</a></li>
+<li><a href="03_Advantages_And_Disadvantages.html">03. Advantages and Disadvantages of Using FSMs</a></li>
+<li><a href="04_When_To_Use_FSMs.html">04. When to Use Finite State Machines</a></li>
+<li><a href="05_FSM_Limitations_And_Alternatives.html">05. FSM Limitations and Alternatives</a></li>
+</ul>
+<hr>
+<h2 id="-the-core-components-of-an-fsm">⚛️ The Core Components of an FSM</h2>
+<p>Every Finite State Machine, regardless of its complexity, is built upon a few fundamental components:</p>
+<h3 id="1-states">1. <strong>States</strong></h3>
+<p>A state represents a particular situation, condition, or mode that a system can be in.</p>
+<ul>
+<li><strong>Finite Number:</strong> Crucially, there must be a defined, limited number of possible states. For example, a traffic light only has Red, Yellow, and Green.</li>
+<li><strong>Exclusive:</strong> An FSM can only be in one state at any given moment. It cannot be in two states simultaneously.</li>
+<li><strong>Representation:</strong> States often correspond to discrete behaviors or phases (e.g., <code>Idle</code>, <code>Walking</code>, <code>Attacking</code> for a game character; <code>Open</code>, <code>Closed</code>, <code>Opening</code> for a door).</li>
+</ul>
+<h3 id="2-transitions">2. <strong>Transitions</strong></h3>
+<p>A transition is a change from one state to another.</p>
+<ul>
+<li><strong>Triggered by Events/Conditions:</strong> Transitions occur in response to specific <code>events</code> (e.g., a button press, a network message received) or when certain <code>conditions</code> become true (e.g., health drops below a threshold, a timer expires).</li>
+<li><strong>Directional:</strong> Transitions typically move in one direction (e.g., <code>Green</code> to <code>Yellow</code>, but not directly <code>Green</code> to <code>Red</code>).</li>
+<li><strong>Atomic:</strong> A transition is an instantaneous jump from one state to the next.</li>
+</ul>
+<h3 id="3-initial-state">3. <strong>Initial State</strong></h3>
+<p>Every FSM must have a designated starting state. This is the state the machine enters when it is first created or initialized.</p>
+<h3 id="4-optional-finalaccepting-states">4. <strong>Optional: Final/Accepting States</strong></h3>
+<p>While not always present in all FSM applications (especially in continuous systems like game AI), in formal automata theory, some FSMs have &quot;final&quot; or &quot;accepting&quot; states. Reaching one of these states signifies the successful completion of a process or the recognition of a valid input sequence.</p>
+<hr>
+<h2 id="-a-simple-example-the-traffic-light">🚦 A Simple Example: The Traffic Light</h2>
+<p>Let's illustrate with the classic example: a traffic light.</p>
+<ul>
+<li><strong>States:</strong>
+<ul>
+<li><code>Red</code></li>
+<li><code>Green</code></li>
+<li><code>Yellow</code></li>
+</ul>
+</li>
+<li><strong>Initial State:</strong> Let's say it starts at <code>Red</code>.</li>
+<li><strong>Transitions:</strong>
+<ul>
+<li>From <code>Red</code>: When a timer expires, transition to <code>Green</code>.</li>
+<li>From <code>Green</code>: When a timer expires, transition to <code>Yellow</code>.</li>
+<li>From <code>Yellow</code>: When a timer expires, transition to <code>Red</code>.</li>
+</ul>
+</li>
+</ul>
+<img src="Visuals/TrafficLightFSM.png" alt="Traffic Light FSM Diagram" height="200" style="display: block;">
+<p>In this diagram:</p>
+<ul>
+<li>Circles represent <strong>States</strong>.</li>
+<li>Arrows represent <strong>Transitions</strong>.</li>
+<li>Labels on arrows represent the <strong>Conditions/Events</strong> that trigger the transition.</li>
+</ul>
+<hr>
+<h2 id="-why-fsms-are-powerful">💾 Why FSMs are Powerful</h2>
+<p>The beauty of FSMs lies in their simplicity and power:</p>
+<ul>
+<li><strong>Clarity and Predictability:</strong> They provide a very clear, easy-to-understand model of behavior. You can always know what the system is doing and what it <em>can</em> do next.</li>
+<li><strong>Organized Logic:</strong> By segmenting logic into distinct states, complex behaviors become modular and manageable. Instead of one giant block of &quot;if-else-if&quot; statements, you have specialized logic for each state.</li>
+<li><strong>Reduced Bugs:</strong> The strict rules for state transitions prevent illogical or impossible states, significantly reducing unexpected bugs.</li>
+<li><strong>Testability:</strong> Each state and transition can be tested in isolation, making debugging and validation much easier.</li>
+<li><strong>Maintainability and Extensibility:</strong> Adding new behaviors or modifying existing ones often means simply adding a new state or transition, rather than re-architecting large portions of your code.</li>
+</ul>
+<p>FSM_API provides the tools to build these powerful, organized, and reliable state machines right into your C# applications, whether you're working on complex game AI, intricate UI interactions, or robust backend workflows.</p>
+<hr>
+<p><a href="02_Types_Of_FSMs.html">➡️ Continue to: 02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent</a></p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/Theory/01_What_Are_FSMs.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

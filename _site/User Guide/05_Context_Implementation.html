@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>05. Understanding and Implementing Your Context (IStateContext) </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="05. Understanding and Implementing Your Context (IStateContext) ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="05-understanding-and-implementing-your-context-istatecontext">05. Understanding and Implementing Your Context (<code>IStateContext</code>)</h1>
+
+<blockquote>
+<p>The <code>IStateContext</code> interface is the fundamental link between your FSM_API logic and <strong>your application's specific data and behavior</strong>. It allows your FSMs to interact with the objects they are managing, whether they are game characters, UI elements, network connections, or any other entity that exhibits state-driven behavior.</p>
+</blockquote>
+<p>Think of your <code>IStateContext</code> as the <strong>actor</strong> in a play, and the FSM as its <strong>director</strong>. The director tells the actor <em>what kind of action to perform</em> (e.g., &quot;enter state 'Idle'&quot;), but the actor (your <code>IStateContext</code> object) is the one who <em>actually knows how to perform</em> that action (e.g., &quot;play the idle animation&quot;). This separation ensures your FSMs are generic and reusable, while your application's data and logic remain encapsulated.</p>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-why-do-we-need-a-context">🧐 Why Do We Need a Context?</h2>
+<p>FSM_API's core strength lies in its <strong>decoupling</strong>. The FSM itself doesn't know anything about &quot;player health,&quot; &quot;door animations,&quot; or &quot;enemy positions.&quot; It only understands abstract concepts like &quot;states&quot; and &quot;transitions.&quot;</p>
+<p>The <code>IStateContext</code> provides this crucial bridge:</p>
+<ul>
+<li><strong>Access to Data:</strong> It allows state actions (<code>onEnter</code>, <code>onUpdate</code>, <code>onExit</code>) and transition conditions to read and modify the specific properties of your object (e.g., <code>currentHealth</code>, <code>IsDoorOpen</code>).</li>
+<li><strong>Execution of Logic:</strong> It provides the methods that states will call to perform actual work (e.g., <code>PlayAnimation()</code>, <code>ApplyDamage()</code>).</li>
+<li><strong>Lifecycle Management:</strong> For engines like Unity, <code>IStateContext</code>'s <code>IsValid</code> property allows FSM_API to track if the underlying object is still active and relevant, preventing errors if an object is destroyed.</li>
+</ul>
+<hr>
+<h2 id="-the-icontext-interface-the-basic-identifier">🔀 The <code>IContext</code> Interface: The Basic Identifier</h2>
+<p>At its most fundamental level, FSM_API identifies objects that an FSM can work with through the <code>IContext</code> interface.</p>
+<pre><code class="lang-csharp">// FSM_API.IContext.cs
+namespace TheSingularityWorkshop.FSM.API
+{
+    public interface IContext
+    {
+        /// &lt;summary&gt;
+        /// A string that represents the name of the entity this context refers to.
+        /// Useful for logging, debugging, and identifying specific FSM instances.
+        /// &lt;/summary&gt;
+        string Name { get; set; }
+    }
+}
+</code></pre>
+<p>Every object used as a context for an FSM <strong>must</strong> provide a <code>Name</code>. This is primarily used for:</p>
+<ul>
+<li><strong>Debugging:</strong> When FSM_API logs messages, it uses the context's name to identify which object is performing the action or experiencing a state change.</li>
+<li><strong>Identification:</strong> Helps you easily distinguish between multiple FSM instances controlling different objects.</li>
+</ul>
+<hr>
+<h2 id="-the-istatecontext-interface-the-fsm-link">🤝 The <code>IStateContext</code> Interface: The FSM Link</h2>
+<p>The <code>IStateContext</code> interface extends <code>IContext</code>, adding the vital <code>IsValid</code> property. This is the interface that your custom classes will implement to fully integrate with FSM_API.</p>
+<pre><code class="lang-csharp">// FSM_API.IStateContext.cs
+namespace TheSingularityWorkshop.FSM.API
+{
+    // IStateContext builds upon the simpler IContext.
+    // This means any class implementing IStateContext also fulfills the IContext contract.
+    public interface IStateContext : IContext
+    {
+        /// &lt;summary&gt;
+        /// A flag indicating whether the context (and thus the FSM instance bound to it) is still valid and active.
+        /// When false, the FSM instance will be automatically cleaned up and removed from processing.
+        /// &lt;/summary&gt;
+        bool IsValid { get; }
+    }
+}
+</code></pre>
+<p>The <code>IsValid</code> property is crucial for robust FSM management, especially in dynamic environments like game engines:</p>
+<ul>
+<li><strong>Automatic Cleanup:</strong> If <code>IsValid</code> returns <code>false</code>, FSM_API will automatically <strong>unregister and clean up</strong> the associated <code>FSMHandle</code> instance. This prevents memory leaks and errors that can occur if an FSM tries to interact with a non-existent or invalid object.</li>
+<li><strong>Performance:</strong> Invalid FSMs are removed from processing queues, reducing overhead.</li>
+<li><strong>Example Scenarios:</strong>
+<ul>
+<li>In Unity, if a <code>GameObject</code> with an <code>IStateContext</code> component is destroyed, <code>IsValid</code> should return <code>false</code>.</li>
+<li>In a non-Unity application, if a data model is no longer relevant (e.g., a network connection closes, a background task completes and is disposed), <code>IsValid</code> should be set to <code>false</code>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-implementing-istatecontext">🛠 Implementing <code>IStateContext</code></h2>
+<p>Let's look at how you would implement <code>IStateContext</code> in both a pure C# class and a Unity MonoBehaviour.</p>
+<h3 id="example-1-pure-c-class">Example 1: Pure C# Class</h3>
+<p>For console applications, backend services, or custom engines, you'll implement <code>IStateContext</code> directly on your data models or entities.</p>
+<pre><code class="lang-csharp">using System;
+using TheSingularityWorkshop.FSM.API;
+
+public class MyCharacterData : IStateContext
+{
+    // --- Your Character's Specific Data ---
+    public float CurrentHealth { get; private set; }
+    public string CharacterName { get; private set; }
+    public bool IsAlive { get; private set; } = true; // Your game logic controls this
+
+    // --- IContext &amp; IStateContext Implementation ---
+    // The 'Name' property, required by IContext
+    public string Name { get; set; }
+
+    // The 'IsValid' property, required by IStateContext
+    // For pure C#, this might reflect if the object is considered &quot;active&quot; or &quot;disposed&quot;
+    public bool IsValid =&gt; IsAlive; // For this example, if character is not alive, it's not valid
+
+    public MyCharacterData(string name, float initialHealth)
+    {
+        CharacterName = name;
+        CurrentHealth = initialHealth;
+        Name = name; // Set the FSM_API name
+        Console.WriteLine($&quot;{Name}: Initialized with {CurrentHealth} health.&quot;);
+    }
+
+    // --- Methods your FSM States will call ---
+    public void TakeDamage(float amount)
+    {
+        CurrentHealth -= amount;
+        if (CurrentHealth &lt;= 0)
+        {
+            CurrentHealth = 0;
+            IsAlive = false; // Mark as not alive
+            Console.WriteLine($&quot;{Name}: Took {amount} damage. Health: {CurrentHealth}. Character is no longer alive!&quot;);
+        }
+        else
+        {
+            Console.WriteLine($&quot;{Name}: Took {amount} damage. Health: {CurrentHealth}.&quot;);
+        }
+    }
+
+    public void Heal(float amount)
+    {
+        CurrentHealth += amount;
+        if (CurrentHealth &gt; 100) CurrentHealth = 100;
+        IsAlive = true; // Reviving
+        Console.WriteLine($&quot;{Name}: Healed {amount}. Health: {CurrentHealth}.&quot;);
+    }
+
+    public void PlaySound(string sound)
+    {
+        Console.WriteLine($&quot;Playing sound '{sound}' for {Name}.&quot;);
+    }
+}
+</code></pre>
+<p>In this pure C# example, <code>IsValid</code> directly reflects the <code>IsAlive</code> state of the character. When <code>IsAlive</code> becomes <code>false</code> (e.g., after <code>TakeDamage</code> reduces health to zero), <code>IsValid</code> will also become <code>false</code>, prompting FSM_API to clean up the associated FSM instance.</p>
+<h3 id="example-2-unity-monobehaviour">Example 2: Unity MonoBehaviour</h3>
+<p>In Unity, your FSM contexts will typically be <code>MonoBehaviour</code> scripts attached to <code>GameObject</code>s. The <code>IsValid</code> check for Unity usually involves checking the <code>gameObject.activeInHierarchy</code> property or if the MonoBehaviour itself is <code>null</code> (which indicates the GameObject or component has been destroyed).</p>
+<pre><code class="lang-csharp">using UnityEngine;
+using TheSingularityWorkshop.FSM.API; // Your FSM_API namespace
+
+public class EnemyAI : MonoBehaviour, IStateContext
+{
+    // --- Your Enemy's Specific Data ---
+    public float Health = 100f;
+    public float AttackRange = 5f;
+    public Transform Target; // The player or another target
+
+    // --- IContext &amp; IStateContext Implementation ---
+    // The 'Name' property, required by IContext.
+    // We typically set this to the GameObject's name for easy debugging.
+    public string Name { get; set; }
+
+    // The 'IsValid' property, required by IStateContext.
+    // For Unity, we check if the GameObject is still active in the hierarchy.
+    // 'this != null' is crucial if the MonoBehaviour script itself might be nullified.
+    public bool IsValid =&gt; this != null &amp;&amp; gameObject.activeInHierarchy;
+
+    // --- FSM Handle for this instance ---
+    private FSMHandle myFSM;
+
+    void Awake()
+    {
+        Name = gameObject.name; // Assign GameObject's name for FSM_API debugging
+
+        // Example FSM Definition (often defined once in a central manager or at startup)
+        if (!FSM_API.Exists(&quot;EnemyCombatFSM&quot;))
+        {
+            FSM_API.CreateFiniteStateMachine(&quot;EnemyCombatFSM&quot;, processingGroup: &quot;Update&quot;)
+                .State(&quot;Patrol&quot;,
+                    onEnter: ctx =&gt; ((EnemyAI)ctx).StartPatrol(),
+                    onUpdate: ctx =&gt; ((EnemyAI)ctx).DoPatrol(),
+                    onExit: ctx =&gt; ((EnemyAI)ctx).StopPatrol())
+                .State(&quot;Chase&quot;,
+                    onEnter: ctx =&gt; ((EnemyAI)ctx).StartChase(),
+                    onUpdate: ctx =&gt; ((EnemyAI)ctx).DoChase(),
+                    onExit: ctx =&gt; ((EnemyAI)ctx).StopChase())
+                .State(&quot;Attack&quot;,
+                    onEnter: ctx =&gt; ((EnemyAI)ctx).StartAttack(),
+                    onUpdate: ctx =&gt; ((EnemyAI)ctx).DoAttack())
+                .WithInitialState(&quot;Patrol&quot;)
+                .Transition(&quot;Patrol&quot;, &quot;Chase&quot;, ctx =&gt; ((EnemyAI)ctx).TargetDetected())
+                .Transition(&quot;Chase&quot;, &quot;Attack&quot;, ctx =&gt; ((EnemyAI)ctx).IsInAttackRange())
+                .Transition(&quot;Attack&quot;, &quot;Chase&quot;, ctx =&gt; !((EnemyAI)ctx).IsInAttackRange())
+                .Transition(&quot;Chase&quot;, &quot;Patrol&quot;, ctx =&gt; !((EnemyAI)ctx).TargetDetected())
+                .AnyTransition(&quot;Dead&quot;, ctx =&gt; ((EnemyAI)ctx).Health &lt;= 0) // Global transition to Dead
+                .BuildDefinition();
+        }
+    }
+
+    void Start()
+    {
+        // Create an FSM instance and link *this* MonoBehaviour as its context.
+        myFSM = FSM_API.CreateInstance(&quot;EnemyCombatFSM&quot;, this);
+        Debug.Log($&quot;[{Name}] FSM initialized to: {myFSM.CurrentState}&quot;);
+    }
+
+    void OnDestroy()
+    {
+        // Crucial for Unity: Unregister the FSM instance when the GameObject is destroyed.
+        // This prevents the FSM from trying to access a null GameObject/MonoBehaviour.
+        // FSM_API's IsValid check will also catch this, but explicit unregistration is good practice.
+        if (myFSM != null)
+        {
+            FSM_API.Unregister(myFSM);
+            myFSM = null;
+            Debug.Log($&quot;[{Name}] FSM instance unregistered due to GameObject destruction.&quot;);
+        }
+    }
+
+    // --- Methods your FSM States will call ---
+    public void StartPatrol() { Debug.Log($&quot;[{Name}] Starting patrol.&quot;); }
+    public void DoPatrol() { /* Implement patrol movement */ }
+    public void StopPatrol() { Debug.Log($&quot;[{Name}] Stopping patrol.&quot;); }
+    public void StartChase() { Debug.Log($&quot;[{Name}] Starting chase.&quot;); }
+    public void DoChase() { /* Implement chase movement towards Target */ }
+    public void StopChase() { Debug.Log($&quot;[{Name}] Stopping chase.&quot;); }
+    public void StartAttack() { Debug.Log($&quot;[{Name}] Starting attack.&quot;); }
+    public void DoAttack() { /* Implement attack logic */ }
+    public bool TargetDetected() =&gt; Target != null &amp;&amp; Vector3.Distance(transform.position, Target.position) &lt; 20f;
+    public bool IsInAttackRange() =&gt; Target != null &amp;&amp; Vector3.Distance(transform.position, Target.position) &lt; AttackRange;
+}
+</code></pre>
+<hr>
+<h2 id="-best-practices-for-istatecontext-implementation">✅ Best Practices for <code>IStateContext</code> Implementation</h2>
+<ul>
+<li><strong>Keep Contexts Lean (but functional):</strong> While your context holds data and methods, avoid putting complex, high-level FSM logic directly into it. That's what the FSM definition is for. The context should be focused on providing the raw data and atomic operations that states need.</li>
+<li><strong>Clear Naming:</strong> Ensure your <code>Name</code> property provides useful debugging information. For Unity, <code>gameObject.name</code> is often sufficient.</li>
+<li><strong>Accurate <code>IsValid</code>:</strong> Implement <code>IsValid</code> carefully. It's the primary way FSM_API knows if an instance is still relevant. Incorrect <code>IsValid</code> logic can lead to memory leaks or NullReferenceExceptions.</li>
+<li><strong>Explicit Unregistration (Unity):</strong> For MonoBehaviours, always unregister your <code>FSMHandle</code> in <code>OnDestroy()</code>. While <code>IsValid</code> will eventually lead to cleanup, explicit unregistration is safer and faster in Unity's lifecycle.</li>
+<li><strong>Casting in State Actions:</strong> Remember that the <code>context</code> parameter in state actions (<code>onEnter</code>, <code>onUpdate</code>, <code>onExit</code>) and transition conditions is of type <code>IStateContext</code>. You'll almost always need to cast it to your specific context type (e.g., <code>((MyCharacterData)ctx)</code>) to access your custom properties and methods.</li>
+</ul>
+<p>By adhering to the <code>IStateContext</code> interface, your FSMs become incredibly flexible and reusable, able to control diverse objects across various C# environments.</p>
+<hr>
+<p><a href="06_FSM_Modifier_Deep_Dive.html">➡️ Continue to: 06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/05_Context_Implementation.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

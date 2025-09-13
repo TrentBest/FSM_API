@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Namespace TheSingularityWorkshop.FSM_API </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Namespace TheSingularityWorkshop.FSM_API ">
+    
+    
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API">
+
+  <h1 id="TheSingularityWorkshop_FSM_API" data-uid="TheSingularityWorkshop.FSM_API" class="text-break">Namespace TheSingularityWorkshop.FSM_API</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">
+Classes
+</h3>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html">FSM</a></h4>
+      <section><p>Think of an <strong>FSM</strong> (Finite State Machine) as a master blueprint 🗺️.
+It lays out all the possible behaviors and rules for how something
+should act over time. This blueprint defines all the different
+&quot;states&quot; it can be in, like &quot;Idle,&quot; &quot;Walking,&quot; or &quot;Attacking,&quot;
+and how it moves between these states.
+Think of an <strong>FSM</strong> (Finite State Machine) as a master blueprint 🗺️.
+It lays out all the possible behaviors and rules for how something
+should act over time. This blueprint defines all the different
+&quot;states&quot; it can be in, like &quot;Idle,&quot; &quot;Walking,&quot; or &quot;Attacking,&quot;
+and how it moves between these states.</p>
+<div class="mermaid">
+graph TD
+    A[FSM Definition] --&gt; B(States);
+    A --&gt; C(Transitions);
+    A --&gt; D(Initial State);
+</div>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></h4>
+      <section><p>This is your <strong>primary tool for creating and setting up new FSMs (Finite State Machines)</strong>. 🛠️
+Think of it as a special &quot;construction kit&quot; that lets you easily build complex FSM blueprints step-by-step.</p>
+<div class="mermaid">
+graph TD
+    A(Create.CreateFiniteStateMachine) --&gt; B(State);
+    B --&gt; B;
+    B --&gt; C(WithInitialState);
+    C --&gt; D(Transition);
+    D --&gt; D;
+    D --&gt; E(AnyTransition);
+    E --&gt; E;
+    E --&gt; F(BuildDefinition);
+</div>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a></h4>
+      <section><p>This is your direct link, or <strong>&quot;handle,&quot;</strong> to a specific, live FSM (Finite State Machine) instance. 🎮
+Think of it as the remote control for one particular character or object that's using an FSM.</p>
+<div class="mermaid">
+graph TD
+   A[FSMHandle (The Logic)] --&gt;|Commands| B[IStateContext (The Data)];
+   B --&gt;|Returns Data/Status| A;
+</div>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMState.html">FSMState</a></h4>
+      <section><p>This represents a single <strong>&quot;state&quot;</strong> within your FSM (Finite State Machine) blueprint. 🌟
+Think of it as a specific condition or behavior an object can be in, like &quot;Standing,&quot; &quot;Jumping,&quot; or &quot;Attacking.&quot;</p>
+<div class="mermaid">
+sequenceDiagram
+   participant E as onEnter
+   participant U as onUpdate
+   participant X as onExit
+   E-&gt;&gt;U: Start state actions
+   U--&gt;&gt;U: Loop actions
+   U-&gt;&gt;X: Exit state
+</div>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMTransition.html">FSMTransition</a></h4>
+      <section><p>This class represents a single <strong>&quot;transition rule&quot;</strong> in your FSM (Finite State Machine) blueprint.
+Think of it as a specific pathway 🛤️ that tells your FSM how to move from one &quot;state&quot;
+(like &quot;Idle&quot;) to another &quot;state&quot; (like &quot;Running&quot;).</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.html">FSM_API</a></h4>
+      <section><p>Provides methods for querying, managing, and interacting with live Finite State Machine (FSM)
+definitions and their active instances at runtime. This section enables dynamic control
+over your FSM ecosystem after initial setup.</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Create.html">FSM_API.Create</a></h4>
+      <section><p>Provides a centralized entry point for defining and creating instances of
+Finite State Machines (FSMs) within the API.</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html">FSM_API.Error</a></h4>
+      <section><p>Provides a centralized system for managing and reporting errors and warnings within the FSM API.
+This class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs
+and subscribe to internal diagnostic notifications.</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html">FSM_API.Interaction</a></h4>
+      <section><p>Provides a set of methods for interacting with and managing FSM definitions and instances at runtime.
+This includes querying their existence, retrieving instances, ticking processing groups,
+and destroying definitions or individual instances.</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html">FSM_API.Interaction.FSMTimers</a></h4>
+      <section><p>Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds)
+and integer increments (e.g., frames or discrete steps).</p>
+<p>
+This class is designed to be time-agnostic; it does not acquire time itself but relies on the
+calling application to provide delta time (<code>dt</code>) and delta integer (<code>di</code>) values.
+It serves as a convenience for implementing frequency-based updates or delays, complementing
+the FSM API's core, untimed step mechanism.
+</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Internal.html">FSM_API.Internal</a></h4>
+      <section><p>Provides internal access to the core data structures and operational methods
+of the FSM API. Members within this class are not intended for direct use
+by external API consumers.</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html">FSM_API.Internal.FsmBucket</a></h4>
+      <section><p>Represents an internal container for an FSM definition and all its active instances.</p>
+</section>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.IContext.html">IContext</a></h4>
+      <section><p>Base interface for all fundamental context objects within The Singularity Workshop's API ecosystem.</p>
+<p>
+This interface provides a common contract for any object that needs a unique name for identification,
+debugging, or management purposes across various systems, including but not limited to Finite State Machines.
+It serves as a foundational building block, allowing for consistent naming conventions for entities
+that are processed, tracked, or referenced by higher-level abstractions.
+</p>
+<p>
+While primarily used as the base for <a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a> within the FSM API,
+<code>IContext</code> is designed to be more general. It lays the groundwork for future modular components
+(e.g., "Atomic" operations, processing units, or other managed entities) that require
+a common identity but may not necessarily involve state transitions.
+</p>
+</section>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a></h4>
+      <section><p>Represents the &quot;Context&quot; or &quot;Data Model&quot; for an FSM instance.</p>
+<p>
+**For Non-Coders/Domain Experts:**
+Think of this as the "thing" or "object" whose behavior you want to control or describe using a Finite State Machine.
+For example, if you're building a "Light Switch" FSM, your <code>LightSwitch</code> class would implement this interface.
+It holds all the relevant data and properties that the FSM will read and potentially modify as it transitions between states.
+</p>
+<p>
+**For Developers:**
+Implement this interface on any Plain Old C# Object (POCO) that represents the data model
+or entity you want an FSM to manage. This design promotes a clean separation of concerns,
+decoupling your FSM logic from your application's core data. Your FSM definitions will
+operate directly on instances of this context.
+</p>
+</section>
+    <h3 id="delegates">
+Delegates
+</h3>
+      <h4><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html">FSM_API.Error.InternalApiErrorEventHandler</a></h4>
+      <section><p>Represents a delegate for internal API error events.</p>
+</section>
+
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

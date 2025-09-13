@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class FSM_API.Error </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class FSM_API.Error ">
+    
+    <meta name="description" content="Provides a centralized system for managing and reporting errors and warnings within the FSM API. This class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs and subscribe to internal diagnostic notifications.">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_FSM_API_Error" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error" class="text-break">Class FSM_API.Error</h1>
+  <div class="markdown level0 summary"><p>Provides a centralized system for managing and reporting errors and warnings within the FSM API.
+This class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs
+and subscribe to internal diagnostic notifications.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">FSM_API.Error</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class FSM_API.Error</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The API uses a robust error handling mechanism to ensure system stability.
+When FSM instances or definitions encounter repeated errors (e.g., exceptions during state entry/exit,
+or transition evaluation), this system tracks those occurrences. If predefined thresholds are met,
+the problematic FSM instance or even the entire FSM definition can be automatically removed
+to prevent ongoing issues or resource consumption.</p>
+<p>
+You can also subscribe to the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError">OnInternalApiError</a> event to receive real-time notifications
+about non-FSM-specific internal errors, warnings, or significant API events.
+</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L52">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold">DefinitionErrorThreshold</h4>
+  <div class="markdown level1 summary"><p>The maximum number of times an FSM definition can cause an instance to be shut down due to errors
+before the entire definition is scheduled for destruction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int DefinitionErrorThreshold { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If multiple instances of the same FSM definition repeatedly fail (reaching their <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold">InstanceErrorThreshold</a>),
+it might indicate a fundamental flaw in the FSM's design. When this threshold is met,
+the problematic FSM definition will be removed from the system, and all its remaining active instances will be shut down.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L41">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold">InstanceErrorThreshold</h4>
+  <div class="markdown level1 summary"><p>The maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int InstanceErrorThreshold { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Once an FSM instance reaches this error count, it will be automatically unregistered from the system
+to prevent it from causing further issues.</p>
+</div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L276">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts">GetDefinitionErrorCounts()</h4>
+  <div class="markdown level1 summary"><p>Provides a read-only dictionary of current definition-specific error counts.
+Each entry maps an FSM definition name (string) to the number of errors encountered related to that definition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Dictionary&lt;string, int&gt; GetDefinitionErrorCounts()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary&lt;TKey, TValue&gt;</a> where keys are FSM definition names (strings)
+and values are their respective error counts.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method is primarily intended for internal monitoring and testing purposes.
+Definition error counts are incremented via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_">InvokeDefinitionError(string, string)</a>.
+When a definition's error count reaches the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold">DefinitionErrorThreshold</a>,
+the FSM definition and all its active instances are scheduled for complete destruction,
+and its entry is removed from this dictionary.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L255">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts">GetErrorCounts()</h4>
+  <div class="markdown level1 summary"><p>Provides a read-only dictionary of current instance-specific error counts for active FSM handles.
+Each entry maps an <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> to the number of errors encountered by that instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Dictionary&lt;FSMHandle, int&gt; GetErrorCounts()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary&lt;TKey, TValue&gt;</a> where keys are <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> instances
+and values are their respective error counts.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method is primarily intended for internal monitoring and testing purposes.
+Error counts are incremented via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_">InvokeInstanceError(FSMHandle, string, Exception, string)</a>.
+When an FSM instance's error count reaches the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold">InstanceErrorThreshold</a>,
+the instance is scheduled for destruction, and its entry is removed from this dictionary.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L158">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)">InvokeDefinitionError(string, string)</h4>
+  <div class="markdown level1 summary"><p>Invokes an error specifically related to an FSM definition, typically when an instance
+derived from it has been shut down due to repeated errors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void InvokeDefinitionError(string fsmDefinitionName, string processingGroup)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmDefinitionName</span></td>
+        <td><p>The name of the FSM definition that caused the error.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The processing group of the FSM definition.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method tracks definition-specific errors and will automatically schedule the
+complete destruction of the FSM definition and all its instances if its error count
+reaches the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold">DefinitionErrorThreshold</a>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmDefinitionName</code>
+or <code class="paramref">processingGroup</code> is null, empty, or whitespace.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle%2CSystem.String%2CSystem.Exception%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L91">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)">InvokeInstanceError(FSMHandle, string, Exception, string)</h4>
+  <div class="markdown level1 summary"><p>Invokes an error specifically related to a misbehaving FSM instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception, string processGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a></td>
+        <td><span class="parametername">handle</span></td>
+        <td><p>The <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> instance that encountered the error.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>A descriptive message about the instance error.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><span class="parametername">exception</span></td>
+        <td><p>The associated exception, or null if no exception occurred.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processGroup</span></td>
+        <td><p>The name of the processing group where the error occurred (default is &quot;Update&quot;).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method tracks instance-specific errors and will automatically shut down
+the <code class="paramref">handle</code> if its error count reaches the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold">InstanceErrorThreshold</a>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code class="paramref">handle</code> is null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String%2CSystem.Exception)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L73">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)">InvokeInternalApiError(string, Exception)</h4>
+  <div class="markdown level1 summary"><p>Invokes the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError">OnInternalApiError</a> event.
+This method is used internally by the FSM API to report critical non-instance-specific issues.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void InvokeInternalApiError(string message, Exception exception)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>A descriptive message about the error or event.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><span class="parametername">exception</span></td>
+        <td><p>The associated exception, or null if no exception occurred.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L291">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset">Reset()</h4>
+  <div class="markdown level1 summary"><p>Resets all internal error tracking counters for both FSM instances and FSM definitions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Reset()</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method clears all accumulated instance-specific and definition-specific error counts.
+It is typically used for internal cleanup or to provide a fresh state, for example,
+at the start of new test runs or when explicitly resetting the FSM API's error tracking.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L224">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)">ResetDefinitionErrorCount(string)</h4>
+  <div class="markdown level1 summary"><p>Resets the accumulated error count for a specific FSM definition.
+This is typically called when an FSM definition is explicitly destroyed
+or reloaded, to clear its error history.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ResetDefinitionErrorCount(string fsmDefinitionName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmDefinitionName</span></td>
+        <td><p>The name of the FSM definition whose error count to reset.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_TheSingularityWorkshop_FSM_API_FSMHandle_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L235">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_TheSingularityWorkshop_FSM_API_FSMHandle_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)">ResetInstanceErrorCount(FSMHandle)</h4>
+  <div class="markdown level1 summary"><p>Resets the accumulated error count for a specific FSMHandle</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ResetInstanceErrorCount(FSMHandle handle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a></td>
+        <td><span class="parametername">handle</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L65">View Source</a>
+  </span>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError">OnInternalApiError</h4>
+  <div class="markdown level1 summary"><p>Occurs when a non-FSM-instance-specific internal error, warning, or significant API event is reported.
+Subscribe to this event to receive diagnostic notifications about the FSM API's internal operations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event FSM_API.Error.InternalApiErrorEventHandler OnInternalApiError</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.html">FSM_API</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html">Error</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html">InternalApiErrorEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Error.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Error%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Error.cs/#L29" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

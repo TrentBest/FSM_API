@@ -1,0 +1,15 @@
+graph LR
+    subgraph Core Foundation
+        FSM_API[FSM_API: Foundational Behavior Logic]
+    end
+
+    subgraph Unity Ecosystem
+        UnityEcosystem[Unity Ecosystem: Packages & AnyApp]
+    end
+
+    subgraph Cloud Infrastructure
+        MyVR[MyVR: Cloud-based Digiverse]
+    end
+ 
+    FSM_API --> UnityEcosystem
+    UnityEcosystem --> MyVR

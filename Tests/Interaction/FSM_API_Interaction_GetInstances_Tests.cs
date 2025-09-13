@@ -180,7 +180,72 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 // This path indicates a truly immutable collection, where modification methods simply don't exist.
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetInstances_FSMExistsWithMultipleInstancesInCustomGroup_ReturnsAllInstances()
+        {
+            // Arrange
+            string fsmName = "EnemyAI";
+            string customProcessingGroup = "EnemyUpdate";
+            FSM_API.Create.CreateProcessingGroup(customProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
 
+            List<FSMHandle> expectedHandles = new List<FSMHandle>
+    {
+        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup),
+        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup)
+    };
+            // Create an instance in a different group to ensure isolation
+            FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "OtherGroup").BuildDefinition();
+            FSM_API.Create.CreateInstance("OtherFSM", new FSMTestContext(), "OtherGroup");
+
+            // Act
+            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName, customProcessingGroup);
+
+            // Assert
+            Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
+            Assert.That(actualHandles.Count, Is.EqualTo(expectedHandles.Count), "Expected count of instances does not match.");
+            Assert.That(actualHandles, Is.EquivalentTo(expectedHandles), "Returned instances should match the expected handles in the custom group.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetInstances_FSMExistsWithSingleInstance_ReturnsSingleInstance()
+        {
+            // Arrange
+            string fsmName = "DoorFSM";
+            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FSMHandle expectedHandle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+
+            // Act
+            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+
+            // Assert
+            Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
+            Assert.That(actualHandles.Count, Is.EqualTo(1), "Expected exactly one FSM instance.");
+            Assert.That(actualHandles.First(), Is.EqualTo(expectedHandle), "The returned handle should be the expected instance.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetInstances_FSMExistsButHasNoInstances_ReturnsEmptyList()
+        {
+            // Arrange
+            string fsmName = "EmptyFSM";
+            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition(); // Define the FSM, but don't create instances
+
+            // Act
+            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+
+            // Assert
+            Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
+            Assert.That(actualHandles, Is.Empty, "Expected an empty list when FSM definition exists but has no instances.");
+        }
 
         /// <summary>
         /// 

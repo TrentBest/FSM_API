@@ -1,0 +1,52 @@
+### YamlMime:TableOfContent
+items:
+- uid: TheSingularityWorkshop.FSM_API
+  name: TheSingularityWorkshop.FSM_API
+  type: Namespace
+  items:
+  - uid: TheSingularityWorkshop.FSM_API.FSM
+    name: FSM
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSMBuilder
+    name: FSMBuilder
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSMState
+    name: FSMState
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSMTransition
+    name: FSMTransition
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Create
+    name: FSM_API.Create
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: FSM_API.Error
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    name: FSM_API.Error.InternalApiErrorEventHandler
+    type: Delegate
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+    name: FSM_API.Interaction
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+    name: FSM_API.Interaction.FSMTimers
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+    name: FSM_API.Internal
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+    name: FSM_API.Internal.FsmBucket
+    type: Class
+  - uid: TheSingularityWorkshop.FSM_API.IContext
+    name: IContext
+    type: Interface
+  - uid: TheSingularityWorkshop.FSM_API.IStateContext
+    name: IStateContext
+    type: Interface
+memberLayout: SamePage

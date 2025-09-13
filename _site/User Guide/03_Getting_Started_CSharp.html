@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>03. Getting Started with FSM_API in Pure C# </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="03. Getting Started with FSM_API in Pure C# ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="03-getting-started-with-fsm_api-in-pure-c">03. Getting Started with FSM_API in Pure C#</h1>
+
+<blockquote>
+<p>Use FSM_API with pure C# classes — completely decoupled from Unity — for backend logic, simulations, AI, networking, or any state-based system.</p>
+</blockquote>
+<p>This guide shows how to use FSM_API in non-Unity environments (console, services, backends, robotics, etc.) with clean, minimal dependencies.</p>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-what-this-example-will-demonstrate">🎯 What This Example Will Demonstrate</h2>
+<p>We’ll simulate a basic character health lifecycle using FSM_API — all in <strong>pure C#</strong>. This example is useful for understanding how FSM_API integrates into any standard C# application, offering the same benefits as in Unity.</p>
+<p>This example illustrates:</p>
+<ul>
+<li>How to define and link FSMs to standard C# classes as their context.</li>
+<li>How a game character transitions through health-related states (<code>Healthy</code>, <code>Damaged</code>, <code>Critically Injured</code>, <code>Dead</code>).</li>
+<li>How FSM_API makes these transitions declarative, clean, and maintainable.</li>
+<li>How to manually control the &quot;ticking&quot; of FSMs without relying on a game engine's built-in loop.</li>
+<li>How FSMs can be revived and continue operating even after simulated &quot;death.&quot;</li>
+</ul>
+<h3 id="-simulation-flow">💡 Simulation Flow</h3>
+<ol>
+<li>The player starts in the <strong>Healthy</strong> state.</li>
+<li>Over several ticks, they take damage, triggering transitions to:
+<ul>
+<li><strong>Damaged</strong></li>
+<li><strong>Critically Injured</strong></li>
+<li><strong>Dead</strong></li>
+</ul>
+</li>
+<li>After death, a revive command is issued.</li>
+<li>Health is restored.</li>
+<li>The FSM automatically transitions back to <strong>Healthy</strong>.</li>
+</ol>
+<p>All output is printed to the console to simulate animation, audio, and event feedback — ideal for unit tests or backend game systems.</p>
+<hr>
+<h2 id="-step-1-define-your-pure-c-context">✅ Step 1: Define Your Pure C# Context</h2>
+<p>Create a standard C# class to represent the &quot;thing&quot; your FSM will manage — like a character, connection, pipeline, or subsystem. This class will hold the data and methods that your FSM's states will interact with.</p>
+<p>It must implement the <code>IStateContext</code> interface. Recall from the <strong><a href="01_Core_Concepts.html">01. Core Concepts: Your Guide to FSM_API</a></strong> that <code>IStateContext</code> requires <code>Name</code> and <code>IsValid</code> properties.</p>
+<h3 id="-example-gamecharactercontextcs">🛠 Example: <code>GameCharacterContext.cs</code></h3>
+<pre><code class="lang-csharp">using System;
+using TheSingularityWorkshop.FSM_API;
+
+public class GameCharacterContext : IStateContext
+{
+    private float _currentHealth = 100f;
+    private int _currentAmmo = 10;
+    private float _moveSpeed = 5f;
+    private bool _isActive = true;
+    private bool _isReviveCommandIssued = false;
+
+    public float CurrentHealth =&gt; _currentHealth;
+    public int CurrentAmmo =&gt; _currentAmmo;
+    public float MoveSpeed =&gt; _moveSpeed;
+
+    // IStateContext Properties
+    public string Name { get; set; }
+    public bool IsValid =&gt; _isActive; // FSM_API uses this to know if the context is still relevant
+
+    public GameCharacterContext(string name)
+    {
+        Name = name;
+        Console.WriteLine($&quot;{Name} context created.&quot;);
+    }
+
+    // Methods that FSM states will call to interact with this context
+    public void TakeDamage(float amount)
+    {
+        _currentHealth -= amount;
+        Console.WriteLine($&quot;{Name} took {amount} damage. Health: {CurrentHealth}&quot;);
+    }
+
+    public void SetActive(bool active)
+    {
+        _isActive = active;
+        Console.WriteLine($&quot;{Name} active status set to {_isActive}.&quot;);
+    }
+
+    public void RestoreHealth(float amount)
+    {
+        _currentHealth += amount;
+        if (_currentHealth &gt; 100f) _currentHealth = 100f;
+        Console.WriteLine($&quot;{Name} health restored to {CurrentHealth}.&quot;);
+    }
+
+    public void SimulateMovement()
+    {
+        Console.WriteLine($&quot;{Name} is moving at speed {MoveSpeed}.&quot;);
+    }
+
+    public void PlaySound(string soundName)
+    {
+        Console.WriteLine($&quot;{Name} playing sound: {soundName}&quot;);
+    }
+
+    // Methods for transition conditions
+    public void IssueReviveCommand() =&gt; _isReviveCommandIssued = true;
+    public void ClearReviveCommand() =&gt; _isReviveCommandIssued = false;
+    public bool IsReviveCommandPending =&gt; _isReviveCommandIssued;
+}
+</code></pre>
+<hr>
+<h2 id="-step-2-define-and-create-the-fsm">✅ Step 2: Define and Create the FSM</h2>
+<p>With your context ready, you can now define your FSM using <code>FSM_API.CreateFiniteStateMachine()</code> and its fluent builder pattern. Then, create an instance of that FSM, linking it to your <code>GameCharacterContext</code>.</p>
+<h3 id="-example-purecsharpgameloopcs">🎯 Example: <code>PureCSharpGameLoop.cs</code></h3>
+<a href="Visuals/Character_Health_FSM.png" target="_blank">
+</a>
+    <img src="Visuals/Character_Health_FSM.png" alt="A flowchart of the Character Health FSM showing states and transitions." height="200" style="display: block;">
+
+*A flowchart of the Character Health FSM showing states and transitions.*
+
+<p>This class will set up our FSM definition and manage the FSM instance within a simulated game loop.</p>
+<pre><code class="lang-csharp">using System;
+using TheSingularityWorkshop.FSM_API;
+
+public class PureCSharpGameLoop
+{
+    private FSMHandle characterHealthFSM;
+    private GameCharacterContext playerCharacter;
+
+    public void SetupGame()
+    {
+        playerCharacter = new GameCharacterContext(&quot;Hero&quot;);
+
+        // Define the FSM blueprint if it doesn't already exist.
+        // The FSM definition is reusable across multiple instances.
+        if (!FSM_API.Exists(&quot;CharacterHealthFSM&quot;))
+        {
+            FSM_API.CreateFiniteStateMachine(&quot;CharacterHealthFSM&quot;, processRate: 1, processingGroup: &quot;GameLogic&quot;)
+                .State(&quot;Healthy&quot;,
+                    onEnter: ctx =&gt; ((GameCharacterContext)ctx).PlaySound(&quot;HappyTune&quot;),
+                    onUpdate: ctx =&gt; 
+                        Console.WriteLine($&quot;{ctx.Name} is Healthy. Health: {((GameCharacterContext)ctx).CurrentHealth}&quot;),
+                    onExit: ctx =&gt; ((GameCharacterContext)ctx).PlaySound(&quot;SadTune&quot;))
+                .State(&quot;Damaged&quot;,
+                    onEnter: ctx =&gt; ((GameCharacterContext)ctx).PlaySound(&quot;OuchSound&quot;),
+                    onUpdate: ctx =&gt; 
+                        Console.WriteLine($&quot;{ctx.Name} is Damaged. Health: {((GameCharacterContext)ctx).CurrentHealth}&quot;))
+                .State(&quot;CriticallyInjured&quot;,
+                    onEnter: ctx =&gt; ((GameCharacterContext)ctx).PlaySound(&quot;WarningAlarm&quot;),
+                    onUpdate: ctx =&gt; Console.WriteLine($&quot;{ctx.Name} is Critically Injured!&quot;))
+                .State(&quot;Dead&quot;,
+                    onEnter: ctx =&gt; ((GameCharacterContext)ctx).PlaySound(&quot;DeathRattle&quot;),
+                    onUpdate: ctx =&gt; Console.WriteLine($&quot;{ctx.Name} is Dead.&quot;),
+                    onExit: ctx =&gt; ((GameCharacterContext)ctx).ClearReviveCommand())
+                .WithInitialState(&quot;Healthy&quot;)
+                .Transition(&quot;Healthy&quot;, &quot;Damaged&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).CurrentHealth &lt;= 75 &amp;&amp; ((GameCharacterContext)ctx).CurrentHealth &gt; 25)
+                .Transition(&quot;Damaged&quot;, &quot;Healthy&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).CurrentHealth &gt; 75)
+                .Transition(&quot;Damaged&quot;, &quot;CriticallyInjured&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).CurrentHealth &lt;= 25 &amp;&amp; ((GameCharacterContext)ctx).CurrentHealth &gt; 0)
+                .Transition(&quot;CriticallyInjured&quot;, &quot;Damaged&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).CurrentHealth &gt; 25 &amp;&amp; ((GameCharacterContext)ctx).CurrentHealth &lt;= 75)
+                .Transition(&quot;CriticallyInjured&quot;, &quot;Dead&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).CurrentHealth &lt;= 0)
+                .Transition(&quot;Dead&quot;, &quot;Healthy&quot;, ctx =&gt; 
+                    ((GameCharacterContext)ctx).IsReviveCommandPending &amp;&amp; ((GameCharacterContext)ctx).CurrentHealth &gt; 0)
+                .BuildDefinition();
+        }
+
+        // Create a live FSM instance, associating it with our playerCharacter context.
+        characterHealthFSM = FSM_API.CreateInstance(&quot;CharacterHealthFSM&quot;, playerCharacter);
+        Console.WriteLine($&quot;FSM for {playerCharacter.Name} initialized to state: {characterHealthFSM.CurrentState}&quot;);
+    }
+
+    // Call this method from your main application loop to update the FSMs
+    public void UpdateGameLogic() =&gt; FSM_API.Update(&quot;GameLogic&quot;);
+
+    // Helper methods for accessing character and FSM state
+    public GameCharacterContext GetPlayerCharacter() =&gt; playerCharacter;
+    public string GetCharacterFSMState() =&gt; characterHealthFSM.CurrentState;
+}
+</code></pre>
+<hr>
+<h2 id="-step-3-manual-update-loop">✅ Step 3: Manual Update Loop</h2>
+<p>Since you don’t have an engine's <code>Update()</code> or <code>FixedUpdate()</code> loop, you'll explicitly &quot;tick&quot; the FSMs yourself from your main application loop or a dedicated manager. You'll call <code>FSM_API.Update()</code> for the processing group you defined.</p>
+<h3 id="-example-programcs-main-application-entry-point">🕹 Example: <code>Program.cs</code> (Main Application Entry Point)</h3>
+<a href="Visuals/Simulation_Timeline.png" target="_blank">
+</a>
+    <img src="Visuals/Simulation_Timeline.png" alt="A timeline of the 20-tick simulation showing key events and state changes." height="200" style="display: block;">
+
+*A timeline of the 20-tick simulation showing key events and state changes.*
+
+<pre><code class="lang-csharp">using System;
+using System.Threading; // For Thread.Sleep
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(&quot;--- Starting Pure C# FSM Demo ---&quot;);
+
+        var game = new PureCSharpGameLoop();
+        game.SetupGame();
+        var player = game.GetPlayerCharacter();
+
+        for (int i = 0; i &lt; 20; i++) // Simulate 20 game ticks
+        {
+            Console.WriteLine($&quot;\n--- Tick {i + 1} ---&quot;);
+
+            // Simulate events that affect the character's health
+            if (i == 2) player.TakeDamage(30);   // Health: 100 -&gt; 70 (Healthy -&gt; Damaged)
+            if (i == 5) player.TakeDamage(20);   // Health: 70 -&gt; 50 (Still Damaged)
+            if (i == 8) player.TakeDamage(30);   // Health: 50 -&gt; 20 (Damaged -&gt; Critically Injured)
+            if (i == 10) player.TakeDamage(20);  // Health: 20 -&gt; 0 (Critically Injured -&gt; Dead)
+            if (i == 12) player.IssueReviveCommand(); // Issue revive command
+            if (i == 13) player.RestoreHealth(100);    // Restore health, FSM should transition Dead -&gt; Healthy
+
+            // Advance the FSMs in the &quot;GameLogic&quot; processing group
+            game.UpdateGameLogic();
+
+            Console.WriteLine($&quot;Current FSM State: {game.GetCharacterFSMState()}&quot;);
+            Thread.Sleep(500); // Optional: pause for half a second to observe output
+        }
+
+        Console.WriteLine(&quot;\n--- FSM Demo Finished ---&quot;);
+    }
+}
+</code></pre>
+<hr>
+<h2 id="-running-the-example">🧪 Running the Example</h2>
+<p>To run this pure C# FSM example:</p>
+<ol>
+<li><strong>Create a Console App Project</strong> in your preferred IDE (e.g., Visual Studio, VS Code with C# extension).</li>
+<li><strong>Add FSM_API Reference:</strong>
+<ul>
+<li>If FSM_API is available on NuGet, add it via the NuGet Package Manager.</li>
+<li>Otherwise, manually add a reference to the <code>TheSingularityWorkshop.FSM_API.dll</code> file.</li>
+</ul>
+</li>
+<li><strong>Add Code Files:</strong>
+<ul>
+<li>Create <code>GameCharacterContext.cs</code> and paste the code from Step 1.</li>
+<li>Create <code>PureCSharpGameLoop.cs</code> and paste the code from Step 2.</li>
+<li>Replace the content of <code>Program.cs</code> with the code from Step 3.</li>
+</ul>
+</li>
+<li><strong>Run the App</strong> and observe the FSM transitions and console output, which will show your character moving through different health states.</li>
+</ol>
+<hr>
+<h2 id="-summary">✅ Summary</h2>
+<ul>
+<li>FSM_API works seamlessly outside of Unity and other game engines, providing a powerful FSM solution for any pure C# application.</li>
+<li>You define your application's data models or entities as classes that implement the <strong><code>IStateContext</code></strong> interface.</li>
+<li>FSM definition and instantiation logic remain consistent with Unity usage, using <code>FSM_API.CreateFiniteStateMachine()</code> and <code>FSM_API.CreateInstance()</code>.</li>
+<li>You gain explicit control over when FSMs process their logic by calling <code>FSM_API.Update(&quot;YourGroupName&quot;)</code> from your application's main loop or scheduler.</li>
+<li>This makes FSM_API an ideal choice for server-side logic, complex simulations, AI systems, backend services, or custom game engines where you need robust and decoupled state management.</li>
+</ul>
+<hr>
+<p><a href="04_FSM_Builder_Deep_Dive.html">➡️ Continue to: 04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/03_Getting_Started_CSharp.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>08. Performance Tips &amp; Best Practices </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="08. Performance Tips &amp; Best Practices ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="08-performance-tips--best-practices">08. Performance Tips &amp; Best Practices</h1>
+
+<blockquote>
+<p>FSM_API is built for <strong>high performance and efficiency</strong>, capable of managing hundreds or even thousands of active state machines simultaneously. Achieving optimal performance, however, also depends on how you design and integrate your FSMs. This guide provides best practices and tips to ensure your applications run smoothly.</p>
+</blockquote>
+<p>FSM_API's core design prioritizes speed and minimal overhead. By following these guidelines, you can maximize its benefits and avoid common pitfalls that might impact performance.</p>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-general-principles-for-high-performance-fsms">🚀 General Principles for High Performance FSMs</h2>
+<h3 id="1-keep-onupdate-actions-lean">1. <strong>Keep <code>onUpdate</code> Actions Lean</strong></h3>
+<p>The <code>onUpdate</code> delegates for states are executed every time the FSM &quot;ticks&quot; (based on its <code>processRate</code>). Heavy computations, excessive allocations, or frequent complex queries within <code>onUpdate</code> can quickly become a bottleneck, especially with many active FSM instances.</p>
+<ul>
+<li><strong>Avoid:</strong> Large data traversals, complex pathfinding (unless batched or optimized), or real-time physics calculations in <code>onUpdate</code> if they can be done less frequently.</li>
+<li><strong>Prefer:</strong> Simple checks, state variable updates, or calling optimized methods on your context.</li>
+<li><strong>Delegate Heavy Work:</strong> If a complex operation is needed, consider:
+<ul>
+<li><strong>Batching:</strong> Collect data over several frames and process it less frequently.</li>
+<li><strong>Asynchronous Operations:</strong> Use coroutines (Unity) or <code>async/await</code> (C#) for non-blocking operations.</li>
+<li><strong>Dedicated Systems:</strong> Offload to manager classes or specialized systems.</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-optimize-transition-conditions">2. <strong>Optimize Transition Conditions</strong></h3>
+<p>Transition conditions (<code>Func&lt;IStateContext, bool&gt;</code>) are evaluated frequently, often every tick. Just like <code>onUpdate</code>, keep these conditions as cheap as possible.</p>
+<ul>
+<li><strong>Avoid:</strong> Expensive Raycasts, <code>FindObjectOfType</code>, LINQ queries over large collections, or complex string manipulations.</li>
+<li><strong>Prefer:</strong> Simple property checks, boolean flags, or cached values.</li>
+<li><strong>Order Matters:</strong> Define your transitions from most likely/cheapest to least likely/most expensive. FSM_API checks conditions in the order they are defined. If an early condition is met, subsequent conditions for that tick are skipped.</li>
+</ul>
+<h3 id="3-smart-use-of-processrate">3. <strong>Smart Use of <code>processRate</code></strong></h3>
+<p>The <code>processRate</code> parameter (set via <code>FSMBuilder.WithProcessRate()</code> or <code>FSM_API.CreateFiniteStateMachine()</code>) controls how often an FSM instance's <code>onUpdate</code> and transition conditions are evaluated. This is your primary tool for managing CPU load.</p>
+<ul>
+<li><strong><code>processRate = 1</code> (Default):</strong> Updates every tick. Use for critical, real-time FSMs (e.g., player input, combat AI).</li>
+<li><strong><code>processRate = N</code> (N &gt; 1):</strong> Updates every N ticks. Ideal for less critical or slower-moving FSMs (e.g., ambient AI, background processes, distant enemies). For example, a <code>processRate</code> of <code>5</code> means the FSM only updates its <code>onUpdate</code> and checks conditions every 5 frames/ticks.</li>
+<li><strong><code>processRate = 0</code>:</strong> Updates <em>only</em> when explicitly called via <code>FSM_API.Interaction.Step()</code>. Perfect for purely event-driven FSMs (e.g., UI elements that only react to user clicks, backend processes triggered by messages).</li>
+</ul>
+<!-- end list -->
+<pre><code class="lang-csharp">// Example: An ambient bird FSM only needs to update every 10 frames
+FSM_API.CreateFiniteStateMachine(&quot;AmbientBirdFSM&quot;, processRate: 10)
+    .State(&quot;Flying&quot;, onUpdate: ctx =&gt; { /* ... */ })
+    // ...
+    .BuildDefinition();
+</code></pre>
+<hr>
+<h2 id="-effective-update-strategies">📈 Effective Update Strategies</h2>
+<h3 id="1-leverage-processing-groups">1. <strong>Leverage Processing Groups</strong></h3>
+<p>As seen in <strong><a href="https://www.google.com/search?q=02_Getting_Started_Unity.md">02. Getting Started with Unity</a></strong> and <strong><a href="https://www.google.com/search?q=03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></strong>, processing groups allow you to organize FSMs and update them at different rates or from different sources.</p>
+<ul>
+<li><strong>Unity:</strong> Use <code>FSM_UnityIntegration.cs</code> to drive groups like &quot;Update,&quot; &quot;FixedUpdate,&quot; and &quot;LateUpdate.&quot;
+<ul>
+<li><strong>&quot;Update&quot;</strong>: For most game logic, input, and visual updates.</li>
+<li><strong>&quot;FixedUpdate&quot;</strong>: For physics-related FSMs where precise, fixed-time-step updates are critical.</li>
+<li><strong>&quot;LateUpdate&quot;</strong>: For camera logic or actions that depend on all other updates being complete.</li>
+</ul>
+</li>
+<li><strong>Pure C#:</strong> Create custom groups (e.g., &quot;AI_Slow&quot;, &quot;NetworkUpdates&quot;, &quot;UI_Input&quot;) and call <code>FSM_API.Update(&quot;GroupName&quot;)</code> from your own game loop, scheduler, or event handlers.
+<ul>
+<li>This allows you to update certain groups less frequently than your main loop, even for FSMs with <code>processRate = 1</code>.</li>
+</ul>
+</li>
+</ul>
+<!-- end list -->
+<pre><code class="lang-csharp">// In your main game loop or manager (Pure C#)
+// Update core AI every frame
+FSM_API.Update(&quot;CoreAI&quot;);
+
+// Update background AI less frequently
+if (Time.elapsed % 0.5f == 0) // Example: update every 0.5 seconds
+{
+    FSM_API.Update(&quot;BackgroundAI&quot;);
+}
+</code></pre>
+<h3 id="2-avoid-redundant-fsm-updates">2. <strong>Avoid Redundant FSM Updates</strong></h3>
+<p>Ensure you only call <code>FSM_API.Update(&quot;GroupName&quot;)</code> once per tick for each group. Multiple calls will result in redundant processing and wasted CPU cycles. The <code>FSM_UnityIntegration</code> script is designed to handle this correctly for Unity.</p>
+<h3 id="3-batch-updates-for-large-numbers-of-fsms">3. <strong>Batch Updates for Large Numbers of FSMs</strong></h3>
+<p>If you have thousands of FSMs, consider structuring your system so that not all FSMs in a group are &quot;active&quot; simultaneously or are updated every single frame.</p>
+<ul>
+<li><strong>Distance Culling:</strong> For AI, only update FSMs for characters near the player.</li>
+<li><strong>Level of Detail (LOD):</strong> Use different <code>processRate</code> values or even different FSM definitions based on an entity's distance from the camera or criticality.</li>
+<li><strong>FSM_API.Interaction.SetProcessRate():</strong> Dynamically adjust an <code>FSMHandle</code>'s <code>processRate</code> based on game conditions (e.g., reduce update rate for far-away enemies).</li>
+</ul>
+<hr>
+<h2 id="-efficient-context-implementation-istatecontext">🧹 Efficient Context Implementation (<code>IStateContext</code>)</h2>
+<p>Recall that your <code>IStateContext</code> object is where your FSM reads and writes data. How you design this object and its interaction methods can impact performance.</p>
+<ul>
+<li><strong>Minimize Allocations:</strong> Avoid creating new objects (e.g., <code>new Vector3()</code>, <code>new List&lt;T&gt;()</code>) within your <code>onUpdate</code> or transition conditions unless absolutely necessary. Reuse existing objects or use object pools.</li>
+<li><strong>Cache References:</strong> If your context needs to access other components or systems frequently, cache those references rather than looking them up repeatedly (e.g., <code>GetComponent&lt;T&gt;()</code> in Unity's <code>Awake()</code> or <code>Start()</code>).</li>
+<li><strong>Simple Data Access:</strong> Direct property access (<code>myContext.Health</code>) is faster than method calls or complex logic to retrieve data.</li>
+<li><strong>Accurate <code>IsValid</code>:</strong> A correctly implemented <code>IsValid</code> property is vital for performance and stability. When <code>IsValid</code> returns <code>false</code>, FSM_API automatically unregisters and cleans up the FSM instance. This prevents the system from wasting cycles trying to update invalid or destroyed objects.
+<ul>
+<li><strong>Unity Example:</strong>
+<pre><code class="lang-csharp">public bool IsValid =&gt; this != null &amp;&amp; gameObject.activeInHierarchy;
+</code></pre>
+</li>
+<li><strong>Pure C# Example:</strong>
+<pre><code class="lang-csharp">public bool IsValid =&gt; !IsDisposed &amp;&amp; _isRunning; // Custom logic
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-avoid-common-performance-traps">🚫 Avoid Common Performance Traps</h2>
+<ul>
+<li><strong>Excessive Logging:</strong> While debugging, extensive <code>Debug.Log</code> or <code>Console.WriteLine</code> calls in <code>onUpdate</code> can severely impact performance. Remove or gate them with <code>DEBUG</code> preprocessor directives for release builds.</li>
+<li><strong>Unnecessary FSMs:</strong> Not every single behavior needs an FSM. Simple, one-off logic might be better handled directly in code. FSMs shine for complex, multi-state behaviors.</li>
+<li><strong>Large Delegates/Lambdas:</strong> While convenient, very large and complex lambda expressions for state actions or conditions can sometimes be less readable and harder to optimize. Consider moving complex logic into private methods on your <code>IStateContext</code> class and calling those methods from the lambda.</li>
+</ul>
+<p>By thoughtfully applying these performance tips and best practices, you can ensure that your FSM_API implementation runs efficiently, contributing to a smooth and responsive user experience in your games and applications. The goal is to make FSM_API an unobtrusive yet powerful tool in your toolkit, allowing you to focus on the exciting aspects of development without performance headaches, especially as you prepare for the Unity Asset Store package submission and integration into AnyApp.</p>
+<hr>
+<p><a href="https://www.google.com/search?q=09_Common_Use_Cases.md">➡️ Continue to: 09. Common Use Cases &amp; Examples</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/08_Performance_Tips.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

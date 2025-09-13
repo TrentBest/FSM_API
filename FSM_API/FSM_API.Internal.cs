@@ -134,7 +134,7 @@ namespace TheSingularityWorkshop.FSM_API
 
 
 
-           
+
 
 
 
@@ -247,7 +247,7 @@ namespace TheSingularityWorkshop.FSM_API
                     Error.InvokeInternalApiError("Cannot destroy a null FSMHandle instance.", null);
                     return;
                 }
-                
+
                 try
                 {
                     var bucket = Internal.GetBuckets()[handle.Definition.ProcessingGroup][handle.Definition.Name];
@@ -527,7 +527,7 @@ namespace TheSingularityWorkshop.FSM_API
                 if (hardReset)
                 {
                     _buckets.Clear();
-                    
+
                     Error.Reset();
                 }
                 else
@@ -802,7 +802,6 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             internal static void TickAll(string processingGroup)
             {
-                Console.WriteLine($"Ticking:  {processingGroup}");
                 if (string.IsNullOrWhiteSpace(processingGroup))
                 {
                     // Correct: passing null for Exception?
@@ -812,15 +811,15 @@ namespace TheSingularityWorkshop.FSM_API
 
                 if (!_buckets.TryGetValue(processingGroup, out var fsmDefinitionsForProcessingGroup))
                 {
-                    Console.WriteLine($"Here6");
+
                     return;
                 }
-                if(!_processingGroupTickCounts.ContainsKey(processingGroup))
+                if (!_processingGroupTickCounts.ContainsKey(processingGroup))
                 {
-                    Console.WriteLine($"Here7");
+
                     _processingGroupTickCounts.Add(processingGroup, 0);
                 }
-                Console.WriteLine($"Here8");
+
                 _processingGroupTickCounts[processingGroup]++;
                 // ToList() creates a copy, preventing collection modification errors during iteration.
                 var bucketsToTick = fsmDefinitionsForProcessingGroup.Values.ToList();
@@ -830,33 +829,34 @@ namespace TheSingularityWorkshop.FSM_API
                     //Console.WriteLine($"Here9");
                     if (bucket.ProcessRate == 0)
                     {
-                        Console.WriteLine($"Here11");
+
                         continue;
                     }
-                    //Console.WriteLine($"Here10");
+
                     if (bucket.ProcessRate > 0)
                     {
-                        Console.WriteLine($"Here12");
+
                         bucket.Counter--;
                         if (bucket.Counter > 0)
                         {
-                            Console.WriteLine($"Here13");
+
                             continue;
                         }
-                        //Console.WriteLine($"Here14");
+
                         bucket.Counter = bucket.ProcessRate;
                     }
-                    //Console.WriteLine($"Here15");
+
                     var instancesToTick = bucket.Instances.ToList(); // Copy to avoid modification issues
                     foreach (var handle in instancesToTick)
                     {
-                       // Console.WriteLine($"Here16");
+
                         // Ensure the handle itself is not null, its context is not null,
                         // AND its context is reported as valid by the context itself.
                         // `handle` is FSMHandle (non-nullable List element), but we need to ensure FSMHandle.Context
                         // is non-null before accessing its IsValid property.
                         if (handle != null && handle.Context != null && handle.Context.IsValid)
                         {
+
                             //Console.WriteLine($"Here17");
                             try
                             {
@@ -914,7 +914,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <exception cref="NotImplementedException"></exception>
             public static ulong GetProcessingGroupTickCount(string processingGroup)
             {
-                if(_processingGroupTickCounts.TryGetValue(processingGroup, out var tickCount))
+                if (_processingGroupTickCounts.TryGetValue(processingGroup, out var tickCount))
                 {
                     return tickCount;
                 }

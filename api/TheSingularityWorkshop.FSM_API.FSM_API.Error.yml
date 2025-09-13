@@ -1,0 +1,1212 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error
+  id: FSM_API.Error
+  parent: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  langs:
+  - csharp
+  - vb
+  name: FSM_API.Error
+  nameWithType: FSM_API.Error
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  type: Class
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Error
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 28
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Provides a centralized system for managing and reporting errors and warnings within the FSM API.
+
+    This class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs
+
+    and subscribe to internal diagnostic notifications.
+  remarks: >-
+    The API uses a robust error handling mechanism to ensure system stability.
+
+    When FSM instances or definitions encounter repeated errors (e.g., exceptions during state entry/exit,
+
+    or transition evaluation), this system tracks those occurrences. If predefined thresholds are met,
+
+    the problematic FSM instance or even the entire FSM definition can be automatically removed
+
+    to prevent ongoing issues or resource consumption.
+
+    <p>
+
+    You can also subscribe to the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError" data-throw-if-not-resolved="false"></xref> event to receive real-time notifications
+
+    about non-FSM-specific internal errors, warnings, or significant API events.
+
+    </p>
+  example: []
+  syntax:
+    content: public static class FSM_API.Error
+    content.vb: Public Module FSM_API.Error
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  id: InstanceErrorThreshold
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: InstanceErrorThreshold
+  nameWithType: FSM_API.Error.InstanceErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: InstanceErrorThreshold
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 40
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: The maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down.
+  remarks: >-
+    Once an FSM instance reaches this error count, it will be automatically unregistered from the system
+
+    to prevent it from causing further issues.
+  example: []
+  syntax:
+    content: public static int InstanceErrorThreshold { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared Property InstanceErrorThreshold As Integer
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold*
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  id: DefinitionErrorThreshold
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: DefinitionErrorThreshold
+  nameWithType: FSM_API.Error.DefinitionErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: DefinitionErrorThreshold
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 51
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    The maximum number of times an FSM definition can cause an instance to be shut down due to errors
+
+    before the entire definition is scheduled for destruction.
+  remarks: >-
+    If multiple instances of the same FSM definition repeatedly fail (reaching their <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold" data-throw-if-not-resolved="false"></xref>),
+
+    it might indicate a fundamental flaw in the FSM's design. When this threshold is met,
+
+    the problematic FSM definition will be removed from the system, and all its remaining active instances will be shut down.
+  example: []
+  syntax:
+    content: public static int DefinitionErrorThreshold { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Shared Property DefinitionErrorThreshold As Integer
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold*
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  commentId: E:TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  id: OnInternalApiError
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: OnInternalApiError
+  nameWithType: FSM_API.Error.OnInternalApiError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  type: Event
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: OnInternalApiError
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 64
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Occurs when a non-FSM-instance-specific internal error, warning, or significant API event is reported.
+
+    Subscribe to this event to receive diagnostic notifications about the FSM API's internal operations.
+  example: []
+  syntax:
+    content: public static event FSM_API.Error.InternalApiErrorEventHandler OnInternalApiError
+    return:
+      type: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    content.vb: Public Shared Event OnInternalApiError As FSM_API.Error.InternalApiErrorEventHandler
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)
+  id: InvokeInternalApiError(System.String,System.Exception)
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: InvokeInternalApiError(string, Exception)
+  nameWithType: FSM_API.Error.InvokeInternalApiError(string, Exception)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(string, System.Exception)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: InvokeInternalApiError
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 72
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Invokes the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError" data-throw-if-not-resolved="false"></xref> event.
+
+    This method is used internally by the FSM API to report critical non-instance-specific issues.
+  example: []
+  syntax:
+    content: public static void InvokeInternalApiError(string message, Exception exception)
+    parameters:
+    - id: message
+      type: System.String
+      description: A descriptive message about the error or event.
+    - id: exception
+      type: System.Exception
+      description: The associated exception, or null if no exception occurred.
+    content.vb: Public Shared Sub InvokeInternalApiError(message As String, exception As Exception)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError*
+  nameWithType.vb: FSM_API.Error.InvokeInternalApiError(String, Exception)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(String, System.Exception)
+  name.vb: InvokeInternalApiError(String, Exception)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  id: InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: InvokeInstanceError(FSMHandle, string, Exception, string)
+  nameWithType: FSM_API.Error.InvokeInstanceError(FSMHandle, string, Exception, string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, string, System.Exception, string)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: InvokeInstanceError
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 90
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Invokes an error specifically related to a misbehaving FSM instance.
+  remarks: >-
+    This method tracks instance-specific errors and will automatically shut down
+
+    the <code class="paramref">handle</code> if its error count reaches the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static void InvokeInstanceError(FSMHandle handle, string message, Exception exception, string processGroup = "Update")
+    parameters:
+    - id: handle
+      type: TheSingularityWorkshop.FSM_API.FSMHandle
+      description: The <xref href="TheSingularityWorkshop.FSM_API.FSMHandle" data-throw-if-not-resolved="false"></xref> instance that encountered the error.
+    - id: message
+      type: System.String
+      description: A descriptive message about the instance error.
+    - id: exception
+      type: System.Exception
+      description: The associated exception, or null if no exception occurred.
+    - id: processGroup
+      type: System.String
+      description: The name of the processing group where the error occurred (default is "Update").
+    content.vb: Public Shared Sub InvokeInstanceError(handle As FSMHandle, message As String, exception As Exception, processGroup As String = "Update")
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: Thrown if <code class="paramref">handle</code> is null.
+  nameWithType.vb: FSM_API.Error.InvokeInstanceError(FSMHandle, String, Exception, String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, String, System.Exception, String)
+  name.vb: InvokeInstanceError(FSMHandle, String, Exception, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  id: InvokeDefinitionError(System.String,System.String)
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: InvokeDefinitionError(string, string)
+  nameWithType: FSM_API.Error.InvokeDefinitionError(string, string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(string, string)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: InvokeDefinitionError
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 157
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Invokes an error specifically related to an FSM definition, typically when an instance
+
+    derived from it has been shut down due to repeated errors.
+  remarks: >-
+    This method tracks definition-specific errors and will automatically schedule the
+
+    complete destruction of the FSM definition and all its instances if its error count
+
+    reaches the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public static void InvokeDefinitionError(string fsmDefinitionName, string processingGroup)
+    parameters:
+    - id: fsmDefinitionName
+      type: System.String
+      description: The name of the FSM definition that caused the error.
+    - id: processingGroup
+      type: System.String
+      description: The processing group of the FSM definition.
+    content.vb: Public Shared Sub InvokeDefinitionError(fsmDefinitionName As String, processingGroup As String)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: >-
+      Thrown if <code class="paramref">fsmDefinitionName</code>
+          or <code class="paramref">processingGroup</code> is null, empty, or whitespace.
+  nameWithType.vb: FSM_API.Error.InvokeDefinitionError(String, String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(String, String)
+  name.vb: InvokeDefinitionError(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)
+  id: ResetDefinitionErrorCount(System.String)
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: ResetDefinitionErrorCount(string)
+  nameWithType: FSM_API.Error.ResetDefinitionErrorCount(string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(string)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: ResetDefinitionErrorCount
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 223
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Resets the accumulated error count for a specific FSM definition.
+
+    This is typically called when an FSM definition is explicitly destroyed
+
+    or reloaded, to clear its error history.
+  example: []
+  syntax:
+    content: public static void ResetDefinitionErrorCount(string fsmDefinitionName)
+    parameters:
+    - id: fsmDefinitionName
+      type: System.String
+      description: The name of the FSM definition whose error count to reset.
+    content.vb: Public Shared Sub ResetDefinitionErrorCount(fsmDefinitionName As String)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount*
+  nameWithType.vb: FSM_API.Error.ResetDefinitionErrorCount(String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(String)
+  name.vb: ResetDefinitionErrorCount(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  id: ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: ResetInstanceErrorCount(FSMHandle)
+  nameWithType: FSM_API.Error.ResetInstanceErrorCount(FSMHandle)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: ResetInstanceErrorCount
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 234
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Resets the accumulated error count for a specific FSMHandle
+  example: []
+  syntax:
+    content: public static void ResetInstanceErrorCount(FSMHandle handle)
+    parameters:
+    - id: handle
+      type: TheSingularityWorkshop.FSM_API.FSMHandle
+      description: ''
+    content.vb: Public Shared Sub ResetInstanceErrorCount(handle As FSMHandle)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount*
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  id: GetErrorCounts
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: GetErrorCounts()
+  nameWithType: FSM_API.Error.GetErrorCounts()
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts()
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: GetErrorCounts
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 254
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Provides a read-only dictionary of current instance-specific error counts for active FSM handles.
+
+    Each entry maps an <xref href="TheSingularityWorkshop.FSM_API.FSMHandle" data-throw-if-not-resolved="false"></xref> to the number of errors encountered by that instance.
+  remarks: >-
+    This method is primarily intended for internal monitoring and testing purposes.
+
+    Error counts are incremented via <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle%2cSystem.String%2cSystem.Exception%2cSystem.String)" data-throw-if-not-resolved="false"></xref>.
+
+    When an FSM instance's error count reaches the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold" data-throw-if-not-resolved="false"></xref>,
+
+    the instance is scheduled for destruction, and its entry is removed from this dictionary.
+  example: []
+  syntax:
+    content: public static Dictionary<FSMHandle, int> GetErrorCounts()
+    return:
+      type: System.Collections.Generic.Dictionary{TheSingularityWorkshop.FSM_API.FSMHandle,System.Int32}
+      description: >-
+        A <xref href="System.Collections.Generic.Dictionary%602" data-throw-if-not-resolved="false"></xref> where keys are <xref href="TheSingularityWorkshop.FSM_API.FSMHandle" data-throw-if-not-resolved="false"></xref> instances
+            and values are their respective error counts.
+    content.vb: Public Shared Function GetErrorCounts() As Dictionary(Of FSMHandle, Integer)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts*
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  id: GetDefinitionErrorCounts
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: GetDefinitionErrorCounts()
+  nameWithType: FSM_API.Error.GetDefinitionErrorCounts()
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts()
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: GetDefinitionErrorCounts
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 275
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Provides a read-only dictionary of current definition-specific error counts.
+
+    Each entry maps an FSM definition name (string) to the number of errors encountered related to that definition.
+  remarks: >-
+    This method is primarily intended for internal monitoring and testing purposes.
+
+    Definition error counts are incremented via <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String%2cSystem.String)" data-throw-if-not-resolved="false"></xref>.
+
+    When a definition's error count reaches the <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold" data-throw-if-not-resolved="false"></xref>,
+
+    the FSM definition and all its active instances are scheduled for complete destruction,
+
+    and its entry is removed from this dictionary.
+  example: []
+  syntax:
+    content: public static Dictionary<string, int> GetDefinitionErrorCounts()
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,System.Int32}
+      description: >-
+        A <xref href="System.Collections.Generic.Dictionary%602" data-throw-if-not-resolved="false"></xref> where keys are FSM definition names (strings)
+            and values are their respective error counts.
+    content.vb: Public Shared Function GetDefinitionErrorCounts() As Dictionary(Of String, Integer)
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts*
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  id: Reset
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  langs:
+  - csharp
+  - vb
+  name: Reset()
+  nameWithType: FSM_API.Error.Reset()
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset()
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Reset
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 290
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Resets all internal error tracking counters for both FSM instances and FSM definitions.
+  remarks: >-
+    This method clears all accumulated instance-specific and definition-specific error counts.
+
+    It is typically used for internal cleanup or to provide a fresh state, for example,
+
+    at the start of new test runs or when explicitly resetting the FSM API's error tracking.
+  example: []
+  syntax:
+    content: public static void Reset()
+    content.vb: Public Shared Sub Reset()
+  overload: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset*
+references:
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  commentId: E:TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError
+  name: OnInternalApiError
+  nameWithType: FSM_API.Error.OnInternalApiError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold
+  name: InstanceErrorThreshold
+  nameWithType: FSM_API.Error.InstanceErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold
+  name: InstanceErrorThreshold
+  nameWithType: FSM_API.Error.InstanceErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold
+  name: DefinitionErrorThreshold
+  nameWithType: FSM_API.Error.DefinitionErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Error.InternalApiErrorEventHandler
+  nameWithType: FSM_API.Error.InternalApiErrorEventHandler
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    name: InternalApiErrorEventHandler
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    name: InternalApiErrorEventHandler
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_
+  name: InvokeInternalApiError
+  nameWithType: FSM_API.Error.InvokeInternalApiError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Exception
+  commentId: T:System.Exception
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.exception
+  name: Exception
+  nameWithType: Exception
+  fullName: System.Exception
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMHandle
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  name: FSMHandle
+  nameWithType: FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentnullexception
+  name: ArgumentNullException
+  nameWithType: ArgumentNullException
+  fullName: System.ArgumentNullException
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_
+  name: InvokeInstanceError
+  nameWithType: FSM_API.Error.InvokeInstanceError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold
+  name: DefinitionErrorThreshold
+  nameWithType: FSM_API.Error.DefinitionErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_
+  name: InvokeDefinitionError
+  nameWithType: FSM_API.Error.InvokeDefinitionError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_System_String_
+  name: ResetDefinitionErrorCount
+  nameWithType: FSM_API.Error.ResetDefinitionErrorCount
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_TheSingularityWorkshop_FSM_API_FSMHandle_
+  name: ResetInstanceErrorCount
+  nameWithType: FSM_API.Error.ResetInstanceErrorCount
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  isExternal: true
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_
+  name: InvokeInstanceError(FSMHandle, string, Exception, string)
+  nameWithType: FSM_API.Error.InvokeInstanceError(FSMHandle, string, Exception, string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, string, System.Exception, string)
+  nameWithType.vb: FSM_API.Error.InvokeInstanceError(FSMHandle, String, Exception, String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, String, System.Exception, String)
+  name.vb: InvokeInstanceError(FSMHandle, String, Exception, String)
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+    name: InvokeInstanceError
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_
+  - name: (
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+    name: InvokeInstanceError
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_
+  - name: (
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Exception
+    name: Exception
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.exception
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts
+  name: GetErrorCounts
+  nameWithType: FSM_API.Error.GetErrorCounts
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+- uid: System.Collections.Generic.Dictionary{TheSingularityWorkshop.FSM_API.FSMHandle,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{TheSingularityWorkshop.FSM_API.FSMHandle,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<FSMHandle, int>
+  nameWithType: Dictionary<FSMHandle, int>
+  fullName: System.Collections.Generic.Dictionary<TheSingularityWorkshop.FSM_API.FSMHandle, int>
+  nameWithType.vb: Dictionary(Of FSMHandle, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TheSingularityWorkshop.FSM_API.FSMHandle, Integer)
+  name.vb: Dictionary(Of FSMHandle, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  isExternal: true
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_
+  name: InvokeDefinitionError(string, string)
+  nameWithType: FSM_API.Error.InvokeDefinitionError(string, string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(string, string)
+  nameWithType.vb: FSM_API.Error.InvokeDefinitionError(String, String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(String, String)
+  name.vb: InvokeDefinitionError(String, String)
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+    name: InvokeDefinitionError
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+    name: InvokeDefinitionError
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts
+  name: GetDefinitionErrorCounts
+  nameWithType: FSM_API.Error.GetDefinitionErrorCounts
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+- uid: System.Collections.Generic.Dictionary{System.String,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, int>
+  nameWithType: Dictionary<string, int>
+  fullName: System.Collections.Generic.Dictionary<string, int>
+  nameWithType.vb: Dictionary(Of String, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, Integer)
+  name.vb: Dictionary(Of String, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset
+  name: Reset
+  nameWithType: FSM_API.Error.Reset
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset

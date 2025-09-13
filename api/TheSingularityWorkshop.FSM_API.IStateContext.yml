@@ -1,0 +1,192 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.IStateContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IStateContext
+  id: IStateContext
+  parent: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  langs:
+  - csharp
+  - vb
+  name: IStateContext
+  nameWithType: IStateContext
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext
+  type: Interface
+  source:
+    remote:
+      path: FSM_API/IStateContext.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: IStateContext
+    path: FSM_API/IStateContext.cs
+    startLine: 23
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Represents the "Context" or "Data Model" for an FSM instance.
+
+    <p>
+
+    **For Non-Coders/Domain Experts:**
+
+    Think of this as the "thing" or "object" whose behavior you want to control or describe using a Finite State Machine.
+
+    For example, if you're building a "Light Switch" FSM, your <code>LightSwitch</code> class would implement this interface.
+
+    It holds all the relevant data and properties that the FSM will read and potentially modify as it transitions between states.
+
+    </p>
+
+    <p>
+
+    **For Developers:**
+
+    Implement this interface on any Plain Old C# Object (POCO) that represents the data model
+
+    or entity you want an FSM to manage. This design promotes a clean separation of concerns,
+
+    decoupling your FSM logic from your application's core data. Your FSM definitions will
+
+    operate directly on instances of this context.
+
+    </p>
+  remarks: >-
+    The `IStateContext` interface ensures your custom data model is compatible with the FSM system.
+
+    It requires the implementation of an `IsValid` property, which the FSM uses to manage its lifecycle.
+  example: []
+  syntax:
+    content: 'public interface IStateContext : IContext'
+    content.vb: Public Interface IStateContext Inherits IContext
+  inheritedMembers:
+  - TheSingularityWorkshop.FSM_API.IContext.Name
+- uid: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  commentId: P:TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  id: IsValid
+  parent: TheSingularityWorkshop.FSM_API.IStateContext
+  langs:
+  - csharp
+  - vb
+  name: IsValid
+  nameWithType: IStateContext.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  type: Property
+  source:
+    remote:
+      path: FSM_API/IStateContext.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: IsValid
+    path: FSM_API/IStateContext.cs
+    startLine: 47
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Gets or sets a value indicating whether this context object is currently valid and active.
+
+    This is crucial for the FSM system to determine if an FSM instance associated with this context
+
+    should continue to be processed.
+
+    <p>
+
+    **For Non-Coders/Domain Experts:**
+
+    This property tells the FSM if the "thing" it's controlling is still relevant or active.
+
+    If <code>IsValid</code> becomes <code>false</code>, the FSM will stop processing this particular instance.
+
+    For example, if your "Light Switch" is physically removed, <code>IsValid</code> might become <code>false</code>.
+
+    </p>
+
+    <p>
+
+    **For Developers:**
+
+    Your implementation of <code>IsValid</code> should reflect the active status of the underlying object.
+
+    For Unity, this might involve checking if the GameObject or MonoBehaviour is still active and not destroyed.
+
+    For plain C# objects, this might involve checking if it has been explicitly "disposed",
+
+    marked as invalid, or if its dependencies are no longer available.
+
+    The FSM system relies on this property to prevent processing FSM instances tied to defunct contexts,
+
+    thereby ensuring error-tolerant FSM lifecycle management.
+
+    </p>
+  example: []
+  syntax:
+    content: bool IsValid { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+      description: <code>true</code> if the context is valid and active; otherwise, <code>false</code>.
+    content.vb: Property IsValid As Boolean
+  overload: TheSingularityWorkshop.FSM_API.IStateContext.IsValid*
+references:
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: TheSingularityWorkshop.FSM_API.IContext.Name
+  commentId: P:TheSingularityWorkshop.FSM_API.IContext.Name
+  parent: TheSingularityWorkshop.FSM_API.IContext
+  href: TheSingularityWorkshop.FSM_API.IContext.html#TheSingularityWorkshop_FSM_API_IContext_Name
+  name: Name
+  nameWithType: IContext.Name
+  fullName: TheSingularityWorkshop.FSM_API.IContext.Name
+- uid: TheSingularityWorkshop.FSM_API.IContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IContext
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.IContext.html
+  name: IContext
+  nameWithType: IContext
+  fullName: TheSingularityWorkshop.FSM_API.IContext
+- uid: TheSingularityWorkshop.FSM_API.IStateContext.IsValid*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html#TheSingularityWorkshop_FSM_API_IStateContext_IsValid
+  name: IsValid
+  nameWithType: IStateContext.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

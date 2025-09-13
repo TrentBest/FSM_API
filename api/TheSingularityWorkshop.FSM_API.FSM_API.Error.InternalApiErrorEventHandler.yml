@@ -1,0 +1,86 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  id: FSM_API.Error.InternalApiErrorEventHandler
+  parent: TheSingularityWorkshop.FSM_API
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: FSM_API.Error.InternalApiErrorEventHandler
+  nameWithType: FSM_API.Error.InternalApiErrorEventHandler
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  type: Delegate
+  source:
+    remote:
+      path: FSM_API/FSM_API.Error.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: InternalApiErrorEventHandler
+    path: FSM_API/FSM_API.Error.cs
+    startLine: 58
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Represents a delegate for internal API error events.
+  example: []
+  syntax:
+    content: public delegate void FSM_API.Error.InternalApiErrorEventHandler(string message, Exception exception)
+    parameters:
+    - id: message
+      type: System.String
+      description: A descriptive error message.
+    - id: exception
+      type: System.Exception
+      description: The exception that occurred, if any.
+    content.vb: Public Delegate Sub FSM_API.Error.InternalApiErrorEventHandler(message As String, exception As Exception)
+references:
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Exception
+  commentId: T:System.Exception
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.exception
+  name: Exception
+  nameWithType: Exception
+  fullName: System.Exception
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

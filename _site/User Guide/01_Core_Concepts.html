@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>01. Core Concepts: Your Guide to FSM_API </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="01. Core Concepts: Your Guide to FSM_API ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="01-core-concepts-your-guide-to-fsm_api">01. Core Concepts: Your Guide to FSM_API</h1>
+
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-fsms-refreshed-a-quick-look">🔁 FSMs Refreshed: A Quick Look</h2>
+<p>For those already familiar with the concept, a <strong>Finite State Machine (FSM)</strong> is a behavioral model that ensures an entity exists in one of a finite number of &quot;states&quot; at any given time, transitioning between them based on defined rules or &quot;events.&quot; It's a powerful pattern for organizing complex logic where behavior changes predictably based on current conditions.</p>
+<ul>
+<li><strong>Example</strong>: A character in a game moving from an <code>Idle</code> state to a <code>Walking</code> state, or a UI button transitioning from <code>Enabled</code> to <code>Pressed</code>.</li>
+</ul>
+<p>If you need a more in-depth theoretical understanding of FSMs, including states, transitions, and different FSM paradigms, please refer to our <strong><a href="Theory/01_What_is_an_FSM.md">Theory folder</a></strong>.</p>
+<hr>
+<h2 id="-understanding-fsm_apis-core-components">✨ Understanding FSM_API's Core Components</h2>
+<p>Now, let's look at how FSM_API implements the fundamental concepts of FSMs. Each component below plays a distinct role in an FSM's structure and operation within this library.</p>
+<hr>
+<h3 id="-fsm-definition-the-blueprint">🧬 FSM Definition: The Blueprint</h3>
+<p>Think of an <strong>FSM Definition</strong> as the complete plan or blueprint for how a certain behavior should work.</p>
+<ul>
+<li><p><strong>What it is:</strong> This blueprint lays out all the &quot;stages&quot; your character, item, or game logic can be in (like &quot;Walking,&quot; &quot;Sleeping,&quot; or &quot;Door Open&quot;). It also defines the rules for moving between these stages and what actions happen in each stage.</p>
+</li>
+<li><p><strong>Why it matters:</strong> Once you have this blueprint, you can use it many times! For example, you can design a &quot;Basic Enemy Behavior&quot; blueprint once, then use that same plan to control hundreds of different enemies. Each acts on its own, but they all follow the same underlying design, saving you from repeating work.</p>
+<p>Similarly, you could design a &quot;Document Workflow&quot; blueprint for a content management system, then use that same plan to manage the approval process for hundreds of documents. Each document follows the same workflow stages (e.g., Draft, Review, Approved, Archived), but operates independently.</p>
+</li>
+</ul>
+<a href="Visuals/Definition_vs_Instance.png" target="_blank">
+    <img src="Visuals/Definition_vs_Instance.png" alt="Diagram showing one FSM Definition blueprint creating multiple independent FSM Instances" height="200" style="display: block;">
+</a>
+<hr>
+<h3 id="-fsm-instance-the-live-version">⚙️ FSM Instance: The Live Version</h3>
+<p>If an FSM Definition is the blueprint, an <strong>FSM Instance</strong> is the actual, live &quot;thing&quot; that's running in your game or application. It's a specific character actually walking, a specific door actually opening, or specific game logic actually deciding what to do next.</p>
+<ul>
+<li><strong>What it is:</strong> This is a live, active version of your FSM blueprint. It's always connected to a specific &quot;thing&quot; in your game (like a player character, a monster, or even a button).</li>
+<li><strong>Purpose:</strong> The FSM Instance is your main way to observe and, if needed, directly influence one of these live FSMs. It tells you what state the FSM is currently in (e.g., &quot;walking&quot; or &quot;awaiting approval&quot;).</li>
+<li><strong>Key Point:</strong> Multiple FSM Instances can share the same FSM Definition but operate entirely independently. Each manages its own current stage and actions, even though they all follow the same initial blueprint.</li>
+</ul>
+<hr>
+<h3 id="-state-the-whats-happening-now">🟢 State: The &quot;What's Happening Now&quot;</h3>
+<a href="Visuals/State_Lifecycle.png" target="_blank">
+    <img src="Visuals/State_Lifecycle.png" alt="A timeline showing the state lifecycle: onEnter fires once, onUpdate loops, and onExit fires once." height="200" style="display: block;">
+</a>
+<p>A <strong>State</strong> is simply a named stage or phase that your FSM can be in. It's the &quot;what's happening right now&quot; for the thing your FSM is controlling.</p>
+<ul>
+<li><strong>What it is:</strong> A single, distinct phase like &quot;Idle,&quot; &quot;Moving,&quot; &quot;Attacking,&quot; &quot;Door_Closed,&quot; or &quot;UI_Enabled.&quot;</li>
+<li><strong>How you define its actions (what happens):</strong> FSM_API makes this straightforward. You don't need to create separate &quot;State&quot; files or classes. Instead, when you use the <code>FSMBuilder</code> to create your FSM Definition, you directly tell it what code should run for each named state:
+<ul>
+<li><code>onEnter</code>: This code runs <strong>once</strong> the moment the FSM enters this state. Perfect for starting an animation, playing a sound, or writing a log entry.</li>
+<li><code>onUpdate</code>: This code runs <strong>repeatedly</strong> as long as the FSM stays in this state. Good for things that happen over time, like moving a character, checking continuous input, or checking the status of a network connection.</li>
+<li><code>onExit</code>: This code runs <strong>once</strong> the moment the FSM leaves this state. Useful for stopping animations, cleaning up resources, triggering post-state actions, or sending a final status update.</li>
+</ul>
+</li>
+<li><strong>Defining State Actions:</strong> You provide these actions as small pieces of code (often called &quot;lambdas&quot; or &quot;methods&quot;) directly when building your FSM.</li>
+</ul>
+<pre><code class="lang-csharp">    // Imagine this is part of your FSM setup
+    .State(&quot;Idle&quot;,
+        onEnter: (ctx) =&gt; { /* Code to start Idle animation */ },
+        onUpdate: (ctx) =&gt; { /* Code to check for player input */ },
+        onExit: (ctx) =&gt; { /* Code to stop Idle animation */ })
+</code></pre>
+<p><em>(Don't worry about <code>context (ctx)</code> for now; we'll explain it next!)</em></p>
+<hr>
+<h3 id="-state-context-istatecontext-your-data-connection">🤝 State Context (<code>IStateContext</code>): Your Data Connection</h3>
+<a href="Visuals/FSM_Context_Relationship.png" target="_blank">
+    <img src="Visuals/FSM_Context_Relationship.png" alt="A diagram showing the FSM Instance (logic) communicating with the IStateContext object (data and actions)." height="200" style="display: block;">
+</a>
+<p>The <strong>State Context</strong> is simply <em>your</em> object – the actual thing in your game that the FSM is controlling. It's how the FSM can &quot;talk&quot; to your game's data and features.</p>
+<ul>
+<li><p><strong>What it is:</strong> This is your own class or script from your game (like a <code>PlayerController</code> script on your player character, or a <code>DoorManager</code> script on a door). The FSM needs this context to know what it's supposed to be influencing.</p>
+</li>
+<li><p><strong>Purpose:</strong> The FSM itself is generic. It doesn't know about &quot;player health&quot; or &quot;door position.&quot; It needs <em>your</em> context object to get that information. Your state actions (<code>onEnter</code>, <code>onUpdate</code>, <code>onExit</code>) will use this context to read data (e.g., &quot;is the door open?&quot;) or make changes (e.g., &quot;open the door&quot;).</p>
+</li>
+<li><p><strong>How you use it: Implementing the <code>IStateContext</code> Interface:</strong> For your game object or script to be used as a context, it must follow a small &quot;contract&quot; by implementing the <code>IStateContext</code> interface. This interface ensures your object provides two key pieces of information that FSM_API needs: its <code>Name</code> and whether it <code>IsValid</code>.</p>
+<ul>
+<li>The <code>IStateContext</code> actually builds upon an even simpler contract, <code>IContext</code>, which just provides a <code>Name</code>. <code>IStateContext</code> then adds the <code>IsValid</code> check.</li>
+</ul>
+</li>
+<li><p><strong>Interface Details (What your object must provide):</strong></p>
+</li>
+</ul>
+<!-- end list -->
+<pre><code class="lang-csharp">public interface IContext
+{
+    // Your object must provide a 'Name'. This helps debugging!
+    string Name { get; set; }
+}
+
+public interface IStateContext : IContext // It inherits from IContext!
+{
+    // Your object must tell FSM_API if it's still valid.
+    // For example, if a game character is destroyed, IsValid might become 'false'.
+    bool IsValid { get; }
+}
+</code></pre>
+<ul>
+<li><strong>Example of what your class looks like (you'll fill in your own details):</strong></li>
+</ul>
+<!-- end list -->
+<pre><code class="lang-csharp">// This is an example of a standard C# class implementing IStateContext.
+public class GameCharacter : IStateContext
+{
+    // --- Your application-specific data ---
+    public float CurrentHealth { get; private set; }
+    public bool IsAlive { get; private set; } = true;
+
+    // --- IContext requires this ---
+    // FSM_API uses this name for debugging.
+    public string Name { get; set; }
+
+    // --- IStateContext requires this ---
+    //When IsAlive is false, FSM_API will cease all updates on this instance.
+    public bool IsValid =&gt; IsAlive;
+
+    // Constructor for the character
+    public GameCharacter(string name, float health)
+    {
+        this.Name = name;
+        this.CurrentHealth = health;
+    }
+
+    // Your specific methods that states will call
+    public void TakeDamage(float amount)
+    {
+        if (!IsAlive) return;
+        CurrentHealth -= amount;
+        if (CurrentHealth &lt;= 0)
+        {
+            CurrentHealth = 0;
+            IsAlive = false;
+        }
+    }
+
+    public void PlayAnimation(string animName)
+        {
+            // In a game, this would trigger a visual animation.
+            // In a non-graphical application, this could log a status change
+            // or call another system to perform a task.
+            System.Console.WriteLine($&quot;[{Name}] Performing action: {animName}&quot;);
+        }
+}
+</code></pre>
+<hr>
+<p><a href="03_Getting_Started_CSharp.html">Continue to: 03. Getting Started with C#</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/01_Core_Concepts.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -314,8 +314,8 @@ namespace TheSingularityWorkshop.FSM_API
         public IReadOnlyCollection<FSMTransition> GetAllTransitions()
         {
             // Combine regular and any-state transitions
-            var allTransitions = new List<FSMTransition>(_transitions);
-            allTransitions.AddRange(_anyStateTransitions);
+            var allTransitions = new List<FSMTransition>(_anyStateTransitions);
+            allTransitions.AddRange(_transitions);
             return allTransitions.AsReadOnly();
         }
 
@@ -400,7 +400,6 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Step(string current, IStateContext ctx, out string next)
         {
-            Console.WriteLine("Stepping");
             next = current; // Assume state doesn't change unless a transition fires
 
             if (!_states.TryGetValue(current, out var currentState))
@@ -414,7 +413,23 @@ namespace TheSingularityWorkshop.FSM_API
                 return;
             }
 
-            // 1. Check Any-State Transitions First (higher priority for global interrupts)
+        
+
+
+     
+            try
+            {
+                currentState.Update(ctx);
+            }
+            catch (Exception ex)
+            {
+                FSM_API.Error.InvokeInternalApiError(
+                    $"Error during Update logic of state '{current}' in FSM '{Name}'. Exception: {ex.Message}",
+                    ex
+                );
+
+            }
+
             foreach (var t in _anyStateTransitions)
             {
                 // Check if the target state exists before evaluating condition
@@ -446,27 +461,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-
-            //// 2. Enter the state if it's unentered
-            //if(!ctx.HasEntered)
-            //    currentState.Enter(ctx);
-
-            // 3. Execute current state's Update logic
-            try
-            {
-                currentState.Update(ctx);
-            }
-            catch (Exception ex)
-            {
-                FSM_API.Error.InvokeInternalApiError(
-                    $"Error during Update logic of state '{current}' in FSM '{Name}'. Exception: {ex.Message}",
-                    ex
-                );
-
-            }
-
-
-            // 4. Check regular transitions from the current state
+           
             foreach (var t in _transitions)
             {
                 Console.WriteLine("Here");

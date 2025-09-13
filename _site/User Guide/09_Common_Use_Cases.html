@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>09. Common Use Cases &amp; Examples </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="09. Common Use Cases &amp; Examples ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="09-common-use-cases--examples">09. Common Use Cases &amp; Examples</h1>
+
+<blockquote>
+<p>Finite State Machines (FSMs) are a foundational pattern in software development, providing a clear and organized way to manage behavior that changes based on different modes or stages. FSM_API empowers you to implement these patterns efficiently across a wide range of applications.</p>
+</blockquote>
+<p>This section explores common scenarios where FSM_API excels, providing conceptual examples and highlighting how its features streamline implementation.</p>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-game-development">🎮 Game Development</h2>
+<p>FSMs are ubiquitous in game development for managing character behaviors, game mechanics, and UI.</p>
+<h3 id="1-character-ai-player--npc">1. <strong>Character AI (Player &amp; NPC)</strong></h3>
+<p>This is perhaps the most common application. FSMs provide a structured way to define how characters react to stimuli and what actions they perform.</p>
+<ul>
+<li><strong>States:</strong> <code>Idle</code>, <code>Patrol</code>, <code>Chase</code>, <code>Attack</code>, <code>Flee</code>, <code>Reload</code>, <code>Stunned</code>, <code>Dead</code>.</li>
+<li><strong>Transitions:</strong>
+<ul>
+<li><code>Idle</code> → <code>Patrol</code> (timer expires)</li>
+<li><code>Patrol</code> → <code>Chase</code> (player detected)</li>
+<li><code>Chase</code> → <code>Attack</code> (player in range)</li>
+<li><code>Attack</code> → <code>Reload</code> (ammo low)</li>
+<li><code>Any</code> → <code>Stunned</code> (hit by stun effect)</li>
+<li><code>Any</code> → <code>Dead</code> (health &lt;= 0)</li>
+</ul>
+</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Clear separation of concerns: AI logic (<code>onUpdate</code>) is encapsulated within states, triggered by context data.</li>
+<li>Scalability: Easily create hundreds of AI agents from a single FSM definition, each with its own <code>IStateContext</code>.</li>
+<li>Runtime modification (<code>FSMModifier</code>): Dynamically change AI behavior (e.g., enemy &quot;enrages&quot; after taking damage, switching to a more aggressive FSM definition).</li>
+<li>Processing groups: Update distant, less critical AI at a lower <code>processRate</code> for performance optimization.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Conceptual C# Example (Enemy AI):</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine(&quot;EnemyPatrolAI&quot;, processingGroup: &quot;AI_Update&quot;, processRate: 2) // Update every 2 frames
+    .State(&quot;Patrol&quot;,
+        onEnter: ctx =&gt; ((EnemyContext)ctx).StartPatrolRoute(),
+        onUpdate: ctx =&gt; ((EnemyContext)ctx).AdvancePatrol(),
+        onExit: ctx =&gt; ((EnemyContext)ctx).StopPatrol())
+    .State(&quot;Chase&quot;,
+        onEnter: ctx =&gt; ((EnemyContext)ctx).PlayChaseMusic(),
+        onUpdate: ctx =&gt; ((EnemyContext)ctx).MoveTowardsPlayer(),
+        onExit: ctx =&gt; ((EnemyContext)ctx).StopChase())
+    .WithInitialState(&quot;Patrol&quot;)
+    .Transition(&quot;Patrol&quot;, &quot;Chase&quot;, ctx =&gt; ((EnemyContext)ctx).IsPlayerDetected())
+    .Transition(&quot;Chase&quot;, &quot;Patrol&quot;, ctx =&gt; !((EnemyContext)ctx).IsPlayerDetected() &amp;&amp; !((EnemyContext)ctx).IsPlayerInAttackRange())
+    .BuildDefinition();
+
+// ... Later, in an EnemyController MonoBehaviour:
+// FSM_API.CreateInstance(&quot;EnemyPatrolAI&quot;, this);
+</code></pre>
+<hr>
+<h3 id="2-game-mechanics--object-states">2. <strong>Game Mechanics &amp; Object States</strong></h3>
+<p>FSMs are perfect for managing the states of interactive objects in your game world.</p>
+<ul>
+<li><strong>Door:</strong> <code>Closed</code>, <code>Opening</code>, <code>Open</code>, <code>Closing</code>, <code>Locked</code>.</li>
+<li><strong>Lever:</strong> <code>Off</code>, <code>Activating</code>, <code>On</code>, <code>Deactivating</code>.</li>
+<li><strong>Power-up:</strong> <code>Active</code>, <code>Expiring</code>, <code>Consumed</code>.</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Encapsulation: All logic for a door's behavior is self-contained within its FSM definition.</li>
+<li>Clear flow: It's immediately obvious what states an object can be in and how it transitions.</li>
+<li>Easy extension: Add new states (e.g., <code>Jammed</code>, <code>Broken</code>) without refactoring existing code.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Conceptual C# Example (Door Control):</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine(&quot;DoorFSM&quot;)
+    .State(&quot;Closed&quot;,
+        onEnter: ctx =&gt; ((DoorContext)ctx).SetDoorVisuals(false),
+        onUpdate: ctx =&gt; { /* Maybe check for auto-unlock */ })
+    .State(&quot;Opening&quot;,
+        onEnter: ctx =&gt; ((DoorContext)ctx).PlayOpeningAnimation(),
+        onUpdate: ctx =&gt; ((DoorContext)ctx).ContinueOpeningAnimation())
+    .State(&quot;Open&quot;,
+        onEnter: ctx =&gt; ((DoorContext)ctx).SetDoorVisuals(true),
+        onUpdate: ctx =&gt; { /* Maybe check for auto-close */ })
+    .State(&quot;Closing&quot;,
+        onEnter: ctx =&gt; ((DoorContext)ctx).PlayClosingAnimation(),
+        onUpdate: ctx =&gt; ((DoorContext)ctx).ContinueClosingAnimation())
+    .WithInitialState(&quot;Closed&quot;)
+    .Transition(&quot;Closed&quot;, &quot;Opening&quot;, ctx =&gt; ((DoorContext)ctx).IsActivated &amp;&amp; !((DoorContext)ctx).IsLocked)
+    .Transition(&quot;Opening&quot;, &quot;Open&quot;, ctx =&gt; ((DoorContext)ctx).AnimationFinished())
+    .Transition(&quot;Open&quot;, &quot;Closing&quot;, ctx =&gt; ((DoorContext)ctx).ShouldAutoClose || ((DoorContext)ctx).IsDeactivated)
+    .Transition(&quot;Closing&quot;, &quot;Closed&quot;, ctx =&gt; ((DoorContext)ctx).AnimationFinished())
+    .BuildDefinition();
+</code></pre>
+<hr>
+<h3 id="3-user-interface-ui-management">3. <strong>User Interface (UI) Management</strong></h3>
+<p>Complex UI elements often have intricate state logic that benefits greatly from FSMs.</p>
+<ul>
+<li><strong>Button:</strong> <code>Normal</code>, <code>Hovered</code>, <code>Pressed</code>, <code>Disabled</code>, <code>Selected</code>.</li>
+<li><strong>Menu System:</strong> <code>MainMenu</code>, <code>OptionsMenu</code>, <code>Credits</code>, <code>InGamePause</code>.</li>
+<li><strong>Inventory Panel:</strong> <code>Hidden</code>, <code>FadingIn</code>, <code>Visible</code>, <code>FadingOut</code>.</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Reactive design: UI elements can easily react to user input or application state changes.</li>
+<li>Animation synchronization: <code>onEnter</code> and <code>onExit</code> are perfect for triggering UI animations.</li>
+<li>Modularity: Break down complex UI into smaller, manageable FSMs.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Conceptual C# Example (Menu Navigation):</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine(&quot;MainMenuFlow&quot;, processingGroup: &quot;UI_Input&quot;, processRate: 0) // Event-driven
+    .State(&quot;MainMenu&quot;,
+        onEnter: ctx =&gt; ((UIManagerContext)ctx).ShowMainMenuPanel(),
+        onExit: ctx =&gt; ((UIManagerContext)ctx).HideMainMenuPanel())
+    .State(&quot;Options&quot;,
+        onEnter: ctx =&gt; ((UIManagerContext)ctx).ShowOptionsPanel(),
+        onExit: ctx =&gt; ((UIManagerContext)ctx).HideOptionsPanel())
+    .State(&quot;Credits&quot;,
+        onEnter: ctx =&gt; ((UIManagerContext)ctx).ShowCreditsPanel(),
+        onExit: ctx =&gt; ((UIManagerContext)ctx).HideCreditsPanel())
+    .WithInitialState(&quot;MainMenu&quot;)
+    .Transition(&quot;MainMenu&quot;, &quot;Options&quot;, ctx =&gt; ((UIManagerContext)ctx).OptionsButtonClicked())
+    .Transition(&quot;Options&quot;, &quot;MainMenu&quot;, ctx =&gt; ((UIManagerContext)ctx).OptionsBackButtonCLicked())
+    .Transition(&quot;MainMenu&quot;, &quot;Credits&quot;, ctx =&gt; ((UIManagerContext)ctx).CreditsButtonClicked())
+    .Transition(&quot;Credits&quot;, &quot;MainMenu&quot;, ctx =&gt; ((UIManagerContext)ctx).CreditsBackButtonCLicked())
+    .BuildDefinition();
+
+// FSM_API.Interaction.Step(myMenuFSMHandle) could be called on button clicks
+</code></pre>
+<hr>
+<h2 id="-general-application-development-pure-c">🖥️ General Application Development (Pure C#)</h2>
+<p>FSMs are not limited to games. Any application with predictable, sequential workflows or conditional logic can benefit.</p>
+<h3 id="1-workflow-management">1. <strong>Workflow Management</strong></h3>
+<p>For applications that process data through defined stages.</p>
+<ul>
+<li><strong>Order Processing:</strong> <code>Received</code>, <code>Validated</code>, <code>Processing</code>, <code>Shipped</code>, <code>Cancelled</code>.</li>
+<li><strong>Document Approval:</strong> <code>Draft</code>, <code>UnderReview</code>, <code>Approved</code>, <code>Rejected</code>, <code>Revised</code>.</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Clarity: Makes complex business logic easy to understand and audit.</li>
+<li>Robustness: Ensures that processes only move forward when specific conditions are met, preventing invalid states.</li>
+<li>Testability: Each state and transition can be unit tested in isolation.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Conceptual C# Example (Order Processing):</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine(&quot;OrderWorkflow&quot;, processingGroup: &quot;BackendProcessor&quot;, processRate: 5)
+    .State(&quot;Received&quot;, onUpdate: ctx =&gt; { /* Validate data */ })
+    .State(&quot;Validated&quot;, onEnter: ctx =&gt; ((OrderContext)ctx).LogValidationSuccess())
+    .State(&quot;Processing&quot;, onUpdate: ctx =&gt; { /* Perform payment/inventory checks */ })
+    .State(&quot;Shipped&quot;, onEnter: ctx =&gt; ((OrderContext)ctx).SendShippingNotification())
+    .State(&quot;Cancelled&quot;, onEnter: ctx =&gt; ((OrderContext)ctx).RefundCustomer())
+    .WithInitialState(&quot;Received&quot;)
+    .Transition(&quot;Received&quot;, &quot;Validated&quot;, ctx =&gt; ((OrderContext)ctx).AllDataValid)
+    .Transition(&quot;Validated&quot;, &quot;Processing&quot;, ctx =&gt; ((OrderContext)ctx).PaymentAuthorized)
+    .Transition(&quot;Processing&quot;, &quot;Shipped&quot;, ctx =&gt; ((OrderContext)ctx).InventoryReserved &amp;&amp; ((OrderContext)ctx).PackageReady)
+    .AnyTransition(&quot;Cancelled&quot;, ctx =&gt; ((OrderContext)ctx).CancellationRequested || ((OrderContext)ctx).PaymentFailed)
+    .BuildDefinition();
+</code></pre>
+<hr>
+<h3 id="2-network-connection-management">2. <strong>Network Connection Management</strong></h3>
+<p>Managing the lifecycle of a network connection.</p>
+<ul>
+<li><strong>States:</strong> <code>Disconnected</code>, <code>Connecting</code>, <code>Connected</code>, <code>Authenticating</code>, <code>Reconnecting</code>, <code>Error</code>.</li>
+<li><strong>Transitions:</strong>
+<ul>
+<li><code>Disconnected</code> → <code>Connecting</code> (user attempts connect)</li>
+<li><code>Connecting</code> → <code>Connected</code> (connection established)</li>
+<li><code>Connected</code> → <code>Authenticating</code> (server requests auth)</li>
+<li><code>Any</code> → <code>Reconnecting</code> (connection lost)</li>
+<li><code>Connecting</code> → <code>Error</code> (timeout)</li>
+</ul>
+</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Handles complexity: Network states can be tricky due to asynchronous operations and error conditions. FSMs simplify this.</li>
+<li>Clear error paths: Define specific error states and how to recover or report them.</li>
+<li>Event-driven: Can use <code>FSM_API.Interaction.Step()</code> to advance FSMs based on network events (e.g., <code>OnConnected</code>, <code>OnDisconnected</code>).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-input-handling--command-processing">3. <strong>Input Handling &amp; Command Processing</strong></h3>
+<p>Interpreting sequences of inputs or commands.</p>
+<ul>
+<li><strong>States:</strong> <code>WaitingForFirstInput</code>, <code>WaitingForSecondInput</code>, <code>ComboExecuting</code>.</li>
+<li><strong>Transitions:</strong> Based on specific key presses or button sequences.</li>
+<li><strong>FSM_API Advantage:</strong>
+<ul>
+<li>Pattern recognition: Easily define and detect complex input patterns (e.g., fighting game combos).</li>
+<li>Contextual actions: Different states can interpret the same input differently.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-best-practices-across-all-use-cases">✅ Best Practices Across All Use Cases</h2>
+<ul>
+<li><strong>Single Responsibility Principle:</strong> Design each FSM to manage a single, well-defined aspect of behavior (e.g., a &quot;Combat FSM&quot; vs. a &quot;Movement FSM&quot; for a character).</li>
+<li><strong>Lean Contexts:</strong> Your <code>IStateContext</code> objects should primarily hold data and atomic methods. The complex logic of <em>when</em> to change state belongs in the FSM definition.</li>
+<li><strong>Clear State Names:</strong> Use descriptive names for your states (e.g., &quot;PlayerWalking&quot;, &quot;EnemyAttacking&quot;) to improve readability and debugging.</li>
+<li><strong>Meaningful Conditions:</strong> Ensure your transition conditions are clear and performant.</li>
+<li><strong>Prioritize <code>AnyTransition</code>:</strong> Use <code>AnyTransition</code> for critical, interrupt-driven states (e.g., <code>Dead</code>, <code>Paused</code>).</li>
+<li><strong>Utilize <code>processRate</code>:</strong> Tune the <code>processRate</code> for each FSM definition to match its required update frequency, optimizing performance.</li>
+</ul>
+<p>By applying FSM_API thoughtfully, you can bring structure, clarity, and maintainability to the most complex behavioral challenges in your projects. This approach contributes significantly to having a solid asset for submission to the Unity Asset Store, as it demonstrates best practices in code organization and performance.</p>
+<hr>
+<p><a href="10_Non_Coder_Overview.html">➡️ Continue to: 10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/09_Common_Use_Cases.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

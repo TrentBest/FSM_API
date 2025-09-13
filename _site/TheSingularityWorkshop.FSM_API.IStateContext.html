@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IStateContext </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IStateContext ">
+    
+    <meta name="description" content="Represents the &amp;quot;Context&amp;quot; or &amp;quot;Data Model&amp;quot; for an FSM instance.  **For Non-Coders/Domain Experts:** Think of this as the &quot;thing&quot; or &quot;object&quot; whose behavior you want to control or describe using a Finite State Machine. For example, if you&#39;re building a &quot;Light Switch&quot; FSM, your LightSwitch class would implement this interface. It holds all the relevant data and properties that the FSM will read and potentially modify as it transitions between states.   **For Developers:** Implement this interface on any Plain Old C# Object (POCO) that represents the data model or entity you want an FSM to manage. This design promotes a clean separation of concerns, decoupling your FSM logic from your application&#39;s core data. Your FSM definitions will operate directly on instances of this context.">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.IStateContext">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_IStateContext" data-uid="TheSingularityWorkshop.FSM_API.IStateContext" class="text-break">Interface IStateContext</h1>
+  <div class="markdown level0 summary"><p>Represents the &quot;Context&quot; or &quot;Data Model&quot; for an FSM instance.</p>
+<p>
+**For Non-Coders/Domain Experts:**
+Think of this as the "thing" or "object" whose behavior you want to control or describe using a Finite State Machine.
+For example, if you're building a "Light Switch" FSM, your <code>LightSwitch</code> class would implement this interface.
+It holds all the relevant data and properties that the FSM will read and potentially modify as it transitions between states.
+</p>
+<p>
+**For Developers:**
+Implement this interface on any Plain Old C# Object (POCO) that represents the data model
+or entity you want an FSM to manage. This design promotes a clean separation of concerns,
+decoupling your FSM logic from your application's core data. Your FSM definitions will
+operate directly on instances of this context.
+</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="TheSingularityWorkshop.FSM_API.IContext.html#TheSingularityWorkshop_FSM_API_IContext_Name">IContext.Name</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_IStateContext_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IStateContext : IContext</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_IStateContext_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The <code>IStateContext</code> interface ensures your custom data model is compatible with the FSM system.
+It requires the implementation of an <code>IsValid</code> property, which the FSM uses to manage its lifecycle.</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_IStateContext_IsValid.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.IStateContext.IsValid%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/IStateContext.cs/#L48">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_IStateContext_IsValid_" data-uid="TheSingularityWorkshop.FSM_API.IStateContext.IsValid*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_IStateContext_IsValid" data-uid="TheSingularityWorkshop.FSM_API.IStateContext.IsValid">IsValid</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this context object is currently valid and active.
+This is crucial for the FSM system to determine if an FSM instance associated with this context
+should continue to be processed.</p>
+<p>
+**For Non-Coders/Domain Experts:**
+This property tells the FSM if the "thing" it's controlling is still relevant or active.
+If <code>IsValid</code> becomes <code>false</code>, the FSM will stop processing this particular instance.
+For example, if your "Light Switch" is physically removed, <code>IsValid</code> might become <code>false</code>.
+</p>
+<p>
+**For Developers:**
+Your implementation of <code>IsValid</code> should reflect the active status of the underlying object.
+For Unity, this might involve checking if the GameObject or MonoBehaviour is still active and not destroyed.
+For plain C# objects, this might involve checking if it has been explicitly "disposed",
+marked as invalid, or if its dependencies are no longer available.
+The FSM system relies on this property to prevent processing FSM instances tied to defunct contexts,
+thereby ensuring error-tolerant FSM lifecycle management.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsValid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><code>true</code> if the context is valid and active; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_IStateContext.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.IStateContext%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/IStateContext.cs/#L24" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

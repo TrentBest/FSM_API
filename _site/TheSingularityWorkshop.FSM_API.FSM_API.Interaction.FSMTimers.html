@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class FSM_API.Interaction.FSMTimers </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class FSM_API.Interaction.FSMTimers ">
+    
+    <meta name="description" content="Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds) and integer increments (e.g., frames or discrete steps).  This class is designed to be time-agnostic; it does not acquire time itself but relies on the calling application to provide delta time (dt) and delta integer (di) values. It serves as a convenience for implementing frequency-based updates or delays, complementing the FSM API&#39;s core, untimed step mechanism.">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers" class="text-break">Class FSM_API.Interaction.FSMTimers</h1>
+  <div class="markdown level0 summary"><p>Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds)
+and integer increments (e.g., frames or discrete steps).</p>
+<p>
+This class is designed to be time-agnostic; it does not acquire time itself but relies on the
+calling application to provide delta time (<code>dt</code>) and delta integer (<code>di</code>) values.
+It serves as a convenience for implementing frequency-based updates or delays, complementing
+the FSM API's core, untimed step mechanism.
+</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">FSM_API.Interaction.FSMTimers</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class FSM_API.Interaction.FSMTimers</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Users are responsible for integrating <code>UpdateTimers</code> into their application's main loop
+and for providing accurate time deltas. Timers must be manually added and checked for expiration.</p>
+</div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_FloatTimers.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L33">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_FloatTimers_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_FloatTimers" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers">FloatTimers</h4>
+  <div class="markdown level1 summary"><p>Gets a dictionary of float-based timers, keyed by a string name.
+These timers are typically used for time-based delays or frequencies (e.g., seconds).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Dictionary&lt;string, float&gt; FloatTimers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_IntTimers.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L39">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_IntTimers_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_IntTimers" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers">IntTimers</h4>
+  <div class="markdown level1 summary"><p>Gets a dictionary of integer-based timers, keyed by a string name.
+These timers are typically used for frame-based or discrete step delays/frequencies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Dictionary&lt;string, int&gt; IntTimers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastFloatTime.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L45">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastFloatTime_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastFloatTime" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime">LastFloatTime</h4>
+  <div class="markdown level1 summary"><p>Stores the last float time value passed to <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32_">UpdateTimers(float, int)</a>.
+This can be used to track total elapsed time or for debugging purposes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float LastFloatTime { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastIntTime.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L51">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastIntTime_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastIntTime" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime">LastIntTime</h4>
+  <div class="markdown level1 summary"><p>Stores the last integer time value passed to <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32_">UpdateTimers(float, int)</a>.
+This can be used to track total elapsed frames/steps or for debugging purposes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int LastIntTime { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetFloatTimer_System_String_System_Single_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(System.String%2CSystem.Single)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L109">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetFloatTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetFloatTimer_System_String_System_Single_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(System.String,System.Single)">AddOrSetFloatTimer(string, float)</h4>
+  <div class="markdown level1 summary"><p>Adds a new float timer or updates an existing one with an initial value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddOrSetFloatTimer(string timerName, float initialValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the timer to add or update.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">initialValue</span></td>
+        <td><p>The initial value for the timer.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetIntTimer_System_String_System_Int32_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(System.String%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L119">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetIntTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetIntTimer_System_String_System_Int32_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(System.String,System.Int32)">AddOrSetIntTimer(string, int)</h4>
+  <div class="markdown level1 summary"><p>Adds a new integer timer or updates an existing one with an initial value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddOrSetIntTimer(string timerName, int initialValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the timer to add or update.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">initialValue</span></td>
+        <td><p>The initial value for the timer.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveFloatTimer_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L129">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveFloatTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveFloatTimer_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(System.String)">RemoveFloatTimer(string)</h4>
+  <div class="markdown level1 summary"><p>Removes a float timer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool RemoveFloatTimer(string timerName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the timer to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><code>true</code> if the timer was successfully found and removed; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveIntTimer_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L139">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveIntTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveIntTimer_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(System.String)">RemoveIntTimer(string)</h4>
+  <div class="markdown level1 summary"><p>Removes an integer timer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool RemoveIntTimer(string timerName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the timer to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><code>true</code> if the timer was successfully found and removed; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetFloatTimer_System_String_System_Single_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(System.String%2CSystem.Single)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L85">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetFloatTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetFloatTimer_System_String_System_Single_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(System.String,System.Single)">ResetFloatTimer(string, float)</h4>
+  <div class="markdown level1 summary"><p>Resets a specific float timer to its <code class="paramref">setPoint</code> value.
+If the timer does not exist, no action is taken.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ResetFloatTimer(string timerName, float setPoint = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the float timer to reset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">setPoint</span></td>
+        <td><p>The value to reset the timer to (defaults to 1.0f).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetIntTimer_System_String_System_Int32_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(System.String%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L98">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetIntTimer_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetIntTimer_System_String_System_Int32_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(System.String,System.Int32)">ResetIntTimer(string, int)</h4>
+  <div class="markdown level1 summary"><p>Resets a specific integer timer to its <code class="paramref">setPoint</code> value.
+If the timer does not exist, no action is taken.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ResetIntTimer(string timerName, int setPoint = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">timerName</span></td>
+        <td><p>The name of the integer timer to reset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">setPoint</span></td>
+        <td><p>The value to reset the timer to (defaults to 1).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(System.Single%2CSystem.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L64">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(System.Single,System.Int32)">UpdateTimers(float, int)</h4>
+  <div class="markdown level1 summary"><p>Updates all registered float and integer timers by subtracting the provided delta values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void UpdateTimers(float dt, int di)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></td>
+        <td><span class="parametername">dt</span></td>
+        <td><p>The delta float time (e.g., seconds since last update) to subtract from float timers.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">di</span></td>
+        <td><p>The delta integer (e.g., frames since last update) to subtract from integer timers.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method simply decrements all active timers. It does not check if timers have reached
+zero or perform any actions based on timer expiration. It is up to the calling code
+to query individual timers (e.g., <code>FSMTimers.FloatTimers[&quot;MyTimer&quot;] &lt;= 0f</code>)
+and trigger relevant FSM updates or other logic.</p>
+</div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMTimers.cs/#L27" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

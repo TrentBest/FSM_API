@@ -1,0 +1,159 @@
+```mermaid
+sequenceDiagram
+    participant Test as Test Method
+    participant API as FSM_API.Interaction.Update()
+    participant Internal as FSM_API.Internal.TickAll()
+    participant FSM as FSM.Step()
+    participant StateA as FSMState: StateA
+    
+    Test->>API: 1. Call Update("TestGroup")
+    activate API
+    API->>Internal: Call TickAll("TestGroup")
+    activate Internal
+    Internal->>Internal: Loop through FSM handles
+    Internal->>Internal: Check for HasEnteredCurrentState == false
+    
+    Internal->>StateA: Call OnEnter(ctx)
+    activate StateA
+    deactivate StateA
+    
+    Internal->>FSM: Call FSM.Step()
+    activate FSM
+    FSM->>FSM: Check Any-State Transitions
+    FSM->>StateA: Call ShouldAnyStateTransition(ctx)
+    alt AnyStateCondition is TRUE
+        FSM->>StateA: Call OnExit(ctx)
+        activate StateA
+        deactivate StateA
+        FSM-->>Internal: Return, nextState = "StateC"
+        deactivate FSM
+        Internal-->>API: Return
+        deactivate Internal
+        API-->>Test: Return
+    else AnyStateCondition is FALSE
+        FSM->>StateA: Call OnUpdate(ctx)
+        activate StateA
+        deactivate StateA
+        FSM->>FSM: Check Regular Transitions
+        alt RegularTransition is TRUE
+            FSM->>StateA: Call OnExit(ctx)
+            activate StateA
+            deactivate StateA
+            FSM-->>Internal: Return, nextState = "StateB"
+            deactivate FSM
+            Internal-->>API: Return
+            deactivate Internal
+            API-->>Test: Return
+        else No Transition
+            FSM-->>Internal: Return, nextState = "StateA"
+            deactivate FSM
+            Internal-->>API: Return
+        sequenceDiagram
+    participant Test as Test Method
+    participant API as FSM_API.Interaction.Update()
+    participant Internal as FSM_API.Internal.TickAll()
+    participant FSM as FSM.Step()
+    participant StateA as FSMState: StateA
+    
+    Test->>API: 1. Call Update("TestGroup")
+    activate API
+    API->>Internal: Call TickAll("TestGroup")
+    activate Internal
+    Internal->>Internal: Loop through FSM handles
+    Internal->>Internal: Check for HasEnteredCurrentState == false
+    
+    Internal->>StateA: Call OnEnter(ctx)
+    activate StateA
+    deactivate StateA
+    
+    Internal->>FSM: Call FSM.Step()sequenceDiagram
+    participant Test as Test Method
+    participant API as FSM_API.Interaction.Update()
+    participant Internal as FSM_API.Internal.TickAll()
+    participant FSM as FSM.Step()
+    participant StateA as FSMState: StateA
+    
+    Test->>API: 1. Call Update("TestGroup")
+    activate API
+    API->>Internal: Call TickAll("TestGroup")
+    activate Internal
+    Internal->>Internal: Loop through FSM handles
+    Internal->>Internal: Check for HasEnteredCurrentState == false
+    
+    Internal->>StateA: Call OnEnter(ctx)
+    activate StateA
+    deactivate StateA
+    
+    Internal->>FSM: Call FSM.Step()
+    activate FSM
+    FSM->>FSM: Check Any-State Transitions
+    FSM->>StateA: Call ShouldAnyStateTransition(ctx)
+    alt AnyStateCondition is TRUE
+        FSM->>StateA: Call OnExit(ctx)
+        activate StateA
+        deactivate StateA
+        FSM-->>Internal: Return, nextState = "StateC"
+        deactivate FSM
+        Internal-->>API: Return
+        deactivate Internal
+        API-->>Test: Return
+    else AnyStateCondition is FALSE
+        FSM->>StateA: Call OnUpdate(ctx)
+        activate StateA
+        deactivate StateA
+        FSM->>FSM: Check Regular Transitions
+        alt RegularTransition is TRUE
+            FSM->>StateA: Call OnExit(ctx)
+            activate StateA
+            deactivate StateA
+            FSM-->>Internal: Return, nextState = "StateB"
+            deactivate FSM
+            Internal-->>API: Return
+            deactivate Internal
+            API-->>Test: Return
+        else No Transition
+            FSM-->>Internal: Return, nextState = "StateA"
+            deactivate FSM
+            Internal-->>API: Return
+            deactivate Internal
+            API-->>Test: Return
+        end
+    end
+    activate FSM
+    FSM->>FSM: Check Any-State Transitions
+    FSM->>StateA: Call ShouldAnyStateTransition(ctx)
+    alt AnyStateCondition is TRUE
+        FSM->>StateA: Call OnExit(ctx)
+        activate StateA
+        deactivate StateA
+        FSM-->>Internal: Return, nextState = "StateC"
+        deactivate FSM
+        Internal-->>API: Return
+        deactivate Internal
+        API-->>Test: Return
+    else AnyStateCondition is FALSE
+        FSM->>StateA: Call OnUpdate(ctx)
+        activate StateA
+        deactivate StateA
+        FSM->>FSM: Check Regular Transitions
+        alt RegularTransition is TRUE
+            FSM->>StateA: Call OnExit(ctx)
+            activate StateA
+            deactivate StateA
+            FSM-->>Internal: Return, nextState = "StateB"
+            deactivate FSM
+            Internal-->>API: Return
+            deactivate Internal
+            API-->>Test: Return
+        else No Transition
+            FSM-->>Internal: Return, nextState = "StateA"
+            deactivate FSM
+            Internal-->>API: Return
+            deactivate Internal
+            API-->>Test: Return
+        end
+    end    deactivate Internal
+            API-->>Test: Return
+        end
+    end
+    ```

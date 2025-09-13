@@ -1,0 +1,153 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.IContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IContext
+  id: IContext
+  parent: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.IContext.Name
+  langs:
+  - csharp
+  - vb
+  name: IContext
+  nameWithType: IContext
+  fullName: TheSingularityWorkshop.FSM_API.IContext
+  type: Interface
+  source:
+    remote:
+      path: FSM_API/IContext.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: IContext
+    path: FSM_API/IContext.cs
+    startLine: 22
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Base interface for all fundamental context objects within The Singularity Workshop's API ecosystem.
+
+    <p>
+
+    This interface provides a common contract for any object that needs a unique name for identification,
+
+    debugging, or management purposes across various systems, including but not limited to Finite State Machines.
+
+    It serves as a foundational building block, allowing for consistent naming conventions for entities
+
+    that are processed, tracked, or referenced by higher-level abstractions.
+
+    </p>
+
+    <p>
+
+    While primarily used as the base for <xref href="TheSingularityWorkshop.FSM_API.IStateContext" data-throw-if-not-resolved="false"></xref> within the FSM API,
+
+    <code>IContext</code> is designed to be more general. It lays the groundwork for future modular components
+
+    (e.g., "Atomic" operations, processing units, or other managed entities) that require
+
+    a common identity but may not necessarily involve state transitions.
+
+    </p>
+  remarks: >-
+    Implementing <code>IContext</code> ensures that an object can be easily identified and referenced
+
+    by name within diagnostic tools, logs, or management interfaces, promoting clarity and traceability
+
+    throughout your application.
+  example: []
+  syntax:
+    content: public interface IContext
+    content.vb: Public Interface IContext
+- uid: TheSingularityWorkshop.FSM_API.IContext.Name
+  commentId: P:TheSingularityWorkshop.FSM_API.IContext.Name
+  id: Name
+  parent: TheSingularityWorkshop.FSM_API.IContext
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IContext.Name
+  fullName: TheSingularityWorkshop.FSM_API.IContext.Name
+  type: Property
+  source:
+    remote:
+      path: FSM_API/IContext.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Name
+    path: FSM_API/IContext.cs
+    startLine: 31
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Gets or sets the unique name of the context object.
+
+    This name is used for identification, debugging, logging, and potentially for grouping or lookup
+
+    within systems that manage collections of contexts.
+  example: []
+  syntax:
+    content: string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+      description: A string representing the descriptive name of the context instance.
+    content.vb: Property Name As String
+  overload: TheSingularityWorkshop.FSM_API.IContext.Name*
+references:
+- uid: TheSingularityWorkshop.FSM_API.IStateContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IStateContext
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html
+  name: IStateContext
+  nameWithType: IStateContext
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: TheSingularityWorkshop.FSM_API.IContext.Name*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.IContext.Name
+  href: TheSingularityWorkshop.FSM_API.IContext.html#TheSingularityWorkshop_FSM_API_IContext_Name
+  name: Name
+  nameWithType: IContext.Name
+  fullName: TheSingularityWorkshop.FSM_API.IContext.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

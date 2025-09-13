@@ -1,0 +1,523 @@
+{
+  "sitemap": {
+    "baseUrl": "https://trentbest.github.io/FSM_API/",
+    "changefreq": "daily",
+    "priority": 0.5
+  },
+  "source_base_path": "C:/Users/theta/Documents/TSW",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/ReadMe.md",
+      "output": {
+        ".html": {
+          "relative_path": "ReadMe.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/00_Introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/00_Introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/01_Core_Concepts.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/01_Core_Concepts.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/03_Getting_Started_CSharp.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/03_Getting_Started_CSharp.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/04_FSM_Builder_Deep_Dive.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/04_FSM_Builder_Deep_Dive.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/05_Context_Implementation.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/05_Context_Implementation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/06_FSM_Modifier_Deep_Dive.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/06_FSM_Modifier_Deep_Dive.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/07_Error_Handling.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/07_Error_Handling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/08_Performance_Tips.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/08_Performance_Tips.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/09_Common_Use_Cases.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/09_Common_Use_Cases.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/10_Non_Coder_Overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/10_Non_Coder_Overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/11_FAQ.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/11_FAQ.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Theory/01_What_Are_FSMs.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Theory/01_What_Are_FSMs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Theory/02_Types_Of_FSMs.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Theory/02_Types_Of_FSMs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Theory/03_Advantages_And_Disadvantages.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Theory/03_Advantages_And_Disadvantages.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Theory/04_When_To_Use_FSMs.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Theory/04_When_To_Use_FSMs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Theory/05_FSM_Limitations_And_Alternatives.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Theory/05_FSM_Limitations_And_Alternatives.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "Documentation/User Guide/Tutorials/MVVM/HowTo_Integrate_FSM_API_WPF_MVVM.md",
+      "output": {
+        ".html": {
+          "relative_path": "User Guide/Tutorials/MVVM/HowTo_Integrate_FSM_API_WPF_MVVM.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/ContextDrivenExecution.png",
+      "output": {
+        "resource": {
+          "relative_path": "ContextDrivenExecution.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/EngineAgnostic.png",
+      "output": {
+        "resource": {
+          "relative_path": "EngineAgnostic.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/FSM.png",
+      "output": {
+        "resource": {
+          "relative_path": "FSM.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/FSM_API.png",
+      "output": {
+        "resource": {
+          "relative_path": "FSM_API.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/FSM_Definition_vs_Instance.png",
+      "output": {
+        "resource": {
+          "relative_path": "FSM_Definition_vs_Instance.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/ProcessingGroups.png",
+      "output": {
+        "resource": {
+          "relative_path": "ProcessingGroups.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/StateLogic_and_DataConnection.png",
+      "output": {
+        "resource": {
+          "relative_path": "StateLogic_and_DataConnection.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/TheSingularityWorkshop.png",
+      "output": {
+        "resource": {
+          "relative_path": "TheSingularityWorkshop.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "Documentation/Visuals/UnifiedLogicArchitecture.png",
+      "output": {
+        "resource": {
+          "relative_path": "UnifiedLogicArchitecture.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM.yml\" sourcestartlinenumber=\"1\">Think of an <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM.yml\" sourcestartlinenumber=\"1\">FSM</strong> (Finite State Machine) as a master blueprint \uD83D\uDDFA️.\nIt lays out all the possible behaviors and rules for how something\nshould act over time. This blueprint defines all the different\n&quot;states&quot; it can be in, like &quot;Idle,&quot; &quot;Walking,&quot; or &quot;Attacking,&quot;\nand how it moves between these states.\nThink of an <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM.yml\" sourcestartlinenumber=\"6\">FSM</strong> (Finite State Machine) as a master blueprint \uD83D\uDDFA️.\nIt lays out all the possible behaviors and rules for how something\nshould act over time. This blueprint defines all the different\n&quot;states&quot; it can be in, like &quot;Idle,&quot; &quot;Walking,&quot; or &quot;Attacking,&quot;\nand how it moves between these states.</p>\n<div class=\"mermaid\">\ngraph TD\n    A[FSM Definition] --&gt; B(States);\n    A --&gt; C(Transitions);\n    A --&gt; D(Initial State);\n</div>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSMBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSMBuilder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSMBuilder",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMBuilder.yml\" sourcestartlinenumber=\"1\">This is your <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMBuilder.yml\" sourcestartlinenumber=\"1\">primary tool for creating and setting up new FSMs (Finite State Machines)</strong>. \uD83D\uDEE0️\nThink of it as a special &quot;construction kit&quot; that lets you easily build complex FSM blueprints step-by-step.</p>\n<div class=\"mermaid\">\ngraph TD\n    A(Create.CreateFiniteStateMachine) --&gt; B(State);\n    B --&gt; B;\n    B --&gt; C(WithInitialState);\n    C --&gt; D(Transition);\n    D --&gt; D;\n    D --&gt; E(AnyTransition);\n    E --&gt; E;\n    E --&gt; F(BuildDefinition);\n</div>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSMHandle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSMHandle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSMHandle",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMHandle.yml\" sourcestartlinenumber=\"1\">This is your direct link, or <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMHandle.yml\" sourcestartlinenumber=\"1\">&quot;handle,&quot;</strong> to a specific, live FSM (Finite State Machine) instance. \uD83C\uDFAE\nThink of it as the remote control for one particular character or object that's using an FSM.</p>\n<div class=\"mermaid\">\ngraph TD\n   A[FSMHandle (The Logic)] --&gt;|Commands| B[IStateContext (The Data)];\n   B --&gt;|Returns Data/Status| A;\n</div>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSMState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSMState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSMState",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMState.yml\" sourcestartlinenumber=\"1\">This represents a single <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMState.yml\" sourcestartlinenumber=\"1\">&quot;state&quot;</strong> within your FSM (Finite State Machine) blueprint. \uD83C\uDF1F\nThink of it as a specific condition or behavior an object can be in, like &quot;Standing,&quot; &quot;Jumping,&quot; or &quot;Attacking.&quot;</p>\n<div class=\"mermaid\">\nsequenceDiagram\n   participant E as onEnter\n   participant U as onUpdate\n   participant X as onExit\n   E-&gt;&gt;U: Start state actions\n   U--&gt;&gt;U: Loop actions\n   U-&gt;&gt;X: Exit state\n</div>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSMTransition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSMTransition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSMTransition",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMTransition.yml\" sourcestartlinenumber=\"1\">This class represents a single <strong sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSMTransition.yml\" sourcestartlinenumber=\"1\">&quot;transition rule&quot;</strong> in your FSM (Finite State Machine) blueprint.\nThink of it as a specific pathway \uD83D\uDEE4️ that tells your FSM how to move from one &quot;state&quot;\n(like &quot;Idle&quot;) to another &quot;state&quot; (like &quot;Running&quot;).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Create.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Create.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Create",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Create.yml\" sourcestartlinenumber=\"1\">Provides a centralized entry point for defining and creating instances of\nFinite State Machines (FSMs) within the API.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.yml\" sourcestartlinenumber=\"1\">Represents a delegate for internal API error events.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Error.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Error.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Error",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Error.yml\" sourcestartlinenumber=\"1\">Provides a centralized system for managing and reporting errors and warnings within the FSM API.\nThis class allows you to configure error thresholds for automatic cleanup of misbehaving FSMs\nand subscribe to internal diagnostic notifications.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.yml\" sourcestartlinenumber=\"1\">Provides a simple, static utility for managing named timers based on elapsed float time (e.g., seconds)\nand integer increments (e.g., frames or discrete steps).</p>\n<p>\nThis class is designed to be time-agnostic; it does not acquire time itself but relies on the\ncalling application to provide delta time (<code>dt</code>) and delta integer (<code>di</code>) values.\nIt serves as a convenience for implementing frequency-based updates or delays, complementing\nthe FSM API's core, untimed step mechanism.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Interaction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Interaction",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Interaction.yml\" sourcestartlinenumber=\"1\">Provides a set of methods for interacting with and managing FSM definitions and instances at runtime.\nThis includes querying their existence, retrieving instances, ticking processing groups,\nand destroying definitions or individual instances.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.yml\" sourcestartlinenumber=\"1\">Represents an internal container for an FSM definition and all its active instances.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.Internal.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.Internal.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API.Internal",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.Internal.yml\" sourcestartlinenumber=\"1\">Provides internal access to the core data structures and operational methods\nof the FSM API. Members within this class are not intended for direct use\nby external API consumers.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.FSM_API.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.FSM_API.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.FSM_API",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.FSM_API.yml\" sourcestartlinenumber=\"1\">Provides methods for querying, managing, and interacting with live Finite State Machine (FSM)\ndefinitions and their active instances at runtime. This section enables dynamic control\nover your FSM ecosystem after initial setup.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.IContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.IContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.IContext",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.IContext.yml\" sourcestartlinenumber=\"1\">Base interface for all fundamental context objects within The Singularity Workshop's API ecosystem.</p>\n<p>\nThis interface provides a common contract for any object that needs a unique name for identification,\ndebugging, or management purposes across various systems, including but not limited to Finite State Machines.\nIt serves as a foundational building block, allowing for consistent naming conventions for entities\nthat are processed, tracked, or referenced by higher-level abstractions.\n</p>\n<p>\nWhile primarily used as the base for <xref href=\"TheSingularityWorkshop.FSM_API.IStateContext\" data-throw-if-not-resolved=\"false\"></xref> within the FSM API,\n<code>IContext</code> is designed to be more general. It lays the groundwork for future modular components\n(e.g., \"Atomic\" operations, processing units, or other managed entities) that require\na common identity but may not necessarily involve state transitions.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.IStateContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.IStateContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API.IStateContext",
+      "Summary": "<p sourcefile=\"api/TheSingularityWorkshop.FSM_API.IStateContext.yml\" sourcestartlinenumber=\"1\">Represents the &quot;Context&quot; or &quot;Data Model&quot; for an FSM instance.</p>\n<p>\n**For Non-Coders/Domain Experts:**\nThink of this as the \"thing\" or \"object\" whose behavior you want to control or describe using a Finite State Machine.\nFor example, if you're building a \"Light Switch\" FSM, your <code>LightSwitch</code> class would implement this interface.\nIt holds all the relevant data and properties that the FSM will read and potentially modify as it transitions between states.\n</p>\n<p>\n**For Developers:**\nImplement this interface on any Plain Old C# Object (POCO) that represents the data model\nor entity you want an FSM to manage. This design promotes a clean separation of concerns,\ndecoupling your FSM logic from your application's core data. Your FSM definitions will\noperate directly on instances of this context.\n</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/TheSingularityWorkshop.FSM_API.yml",
+      "output": {
+        ".html": {
+          "relative_path": "TheSingularityWorkshop.FSM_API.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "TheSingularityWorkshop.FSM_API",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

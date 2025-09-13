@@ -1,0 +1,1039 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMHandle
+  id: FSMHandle
+  parent: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.FSMHandle.#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)
+  - TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  - TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  - TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  - TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  - TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  - TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  - TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  - TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  - TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  - TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  - TheSingularityWorkshop.FSM_API.FSMHandle.Update(System.String)
+  langs:
+  - csharp
+  - vb
+  name: FSMHandle
+  nameWithType: FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle
+  type: Class
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: FSMHandle
+    path: FSM_API/FSMHandle.cs
+    startLine: 43
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    This is your direct link, or **"handle,"** to a specific, live FSM (Finite State Machine) instance. 🎮
+
+    Think of it as the remote control for one particular character or object that's using an FSM.
+
+    <div class="mermaid">
+
+    graph TD
+       A[FSMHandle (The Logic)] --&gt;|Commands| B[IStateContext (The Data)];
+       B --&gt;|Returns Data/Status| A;
+    </div>
+  remarks: >-
+    This handle is how you, as a game designer or system integrator, will typically interact with an FSM
+
+    that's currently running. It allows you to:
+
+    <ul><li>Find out **what state** the FSM is currently in (<xref href="TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState" data-throw-if-not-resolved="false"></xref>).</li><li>Tell the FSM to **change states immediately** (<xref href="TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)" data-throw-if-not-resolved="false"></xref>).</li><li>And generally **manage** its life (like starting or stopping it).</li></ul>
+
+    <p>
+
+    It also gives you access to the FSM's <xref href="TheSingularityWorkshop.FSM_API.IStateContext" data-throw-if-not-resolved="false"></xref>, which holds all the unique data
+
+    for *this specific FSM instance*.
+
+    </p>
+
+
+    **Tips for Using Your FSM Handle:**
+
+    <ul><li>
+            ✅ **Safest Way:** Mostly, you'll just want to **check the FSM's <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState" data-throw-if-not-resolved="false"></xref>**.
+            For example: `if (myCharacter.CurrentState == "Idle") { /* do something */ }`.
+            This lets the FSM handle its own internal changes, which is generally best.
+        </li><li>
+            ⚠️ **Advanced Use (Use with Care!):** You *can* directly access and change the
+            <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.Context" data-throw-if-not-resolved="false"></xref> (e.g., `myCharacter.Context.Health = 10;`). This is powerful,
+            but it means you're stepping outside the FSM's own defined rules, so be careful not to
+            break its intended behavior! Usually, context changes happen *inside* your FSM's
+            state actions (<code>OnEnter</code>, <code>OnUpdate</code>, <code>OnExit</code>).
+        </li></ul>
+  example: []
+  syntax:
+    content: public class FSMHandle
+    content.vb: Public Class FSMHandle
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  id: Id
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: FSMHandle.Id
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Id
+    path: FSM_API/FSMHandle.cs
+    startLine: 48
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Handle's Id
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Id As Integer
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.Id*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  commentId: F:TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  id: Definition
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: Definition
+  nameWithType: FSMHandle.Definition
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  type: Field
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Definition
+    path: FSM_API/FSMHandle.cs
+    startLine: 58
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: This is the original **blueprint (definition)** of the FSM that this handle is controlling.
+  remarks: >-
+    It's like having the architectural plans for a house. You can look at them to understand
+
+    the house's design (its states and transitions), but you can't change the house by
+
+    drawing on these plans here. This is set when the FSM instance is first created.
+  example: []
+  syntax:
+    content: public readonly FSM Definition
+    return:
+      type: TheSingularityWorkshop.FSM_API.FSM
+    content.vb: Public ReadOnly Definition As FSM
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  id: Context
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: Context
+  nameWithType: FSMHandle.Context
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Context
+    path: FSM_API/FSMHandle.cs
+    startLine: 74
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: "This is the **data bag** \U0001F392 (context) specific to *this particular* FSM instance."
+  remarks: >-
+    It holds all the changing information that your FSM's actions need to read from or write to
+
+    (like a character's health, speed, or inventory). This "data bag" must follow the rules
+
+    of the <xref href="TheSingularityWorkshop.FSM_API.IStateContext" data-throw-if-not-resolved="false"></xref> interface.
+
+    <p>
+
+    You *can* directly change this context data here (e.g., `handle.Context.Score = 100;`).
+
+    However, it's generally safer and clearer if these changes happen through the
+
+    FSM's own `OnEnter`, `OnUpdate`, or `OnExit` actions for each state.
+
+    Changing it directly from outside might bypass your FSM's carefully planned logic!
+
+    </p>
+  example: []
+  syntax:
+    content: public IStateContext Context { get; set; }
+    parameters: []
+    return:
+      type: TheSingularityWorkshop.FSM_API.IStateContext
+    content.vb: Public Property Context As IStateContext
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.Context*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  id: CurrentState
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: CurrentState
+  nameWithType: FSMHandle.CurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: CurrentState
+    path: FSM_API/FSMHandle.cs
+    startLine: 84
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: This tells you the **current state name** of this FSM instance.
+  remarks: >-
+    For example, if your FSM is for a character, this might tell you "Idle," "Walking," or "Jumping."
+
+    This is the **best and safest way** to check what your FSM is doing.
+
+    This state name is updated automatically when the FSM moves between states.
+  example: []
+  syntax:
+    content: public string CurrentState { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property CurrentState As String
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  id: Name
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: FSMHandle.Name
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Name
+    path: FSM_API/FSMHandle.cs
+    startLine: 92
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: This is the **name of the FSM blueprint** that this handle is using.
+  remarks: It's a quick way to get the name from the <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.Definition" data-throw-if-not-resolved="false"></xref> blueprint itself.
+  example: []
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Name As String
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.Name*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  id: IsValid
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: IsValid
+  nameWithType: FSMHandle.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: IsValid
+    path: FSM_API/FSMHandle.cs
+    startLine: 101
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Tells you if this FSM handle is currently **active and ready to be used**.
+  remarks: >-
+    It's considered `true` if its <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.Context" data-throw-if-not-resolved="false"></xref> (data bag) is not empty
+
+    and that context itself reports that it's valid.
+  example: []
+  syntax:
+    content: public bool IsValid { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsValid As Boolean
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  id: HasEnteredCurrentState
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: HasEnteredCurrentState
+  nameWithType: FSMHandle.HasEnteredCurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  type: Property
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: HasEnteredCurrentState
+    path: FSM_API/FSMHandle.cs
+    startLine: 106
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: 'indicates whether this FSM instance has **already entered its current state**.  ToDo:  IsValid should be enough?'
+  example: []
+  syntax:
+    content: public bool HasEnteredCurrentState { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property HasEnteredCurrentState As Boolean
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)
+  id: '#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)'
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: FSMHandle(FSM, IStateContext, int)
+  nameWithType: FSMHandle.FSMHandle(FSM, IStateContext, int)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.FSMHandle(TheSingularityWorkshop.FSM_API.FSM, TheSingularityWorkshop.FSM_API.IStateContext, int)
+  type: Constructor
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: .ctor
+    path: FSM_API/FSMHandle.cs
+    startLine: 127
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Sets up a new FSM handle, linking it to an FSM blueprint and its specific data.
+  remarks: >-
+    When you create an FSM handle:
+
+    <ul><li>It needs an `FSM` <code class="paramref">definition</code> (the blueprint).</li><li>It needs a `context` (the data bag) specific to this running instance.</li></ul>
+
+    The FSM will immediately enter its <xref href="TheSingularityWorkshop.FSM_API.FSM.InitialState" data-throw-if-not-resolved="false"></xref> as defined in its blueprint.
+  example: []
+  syntax:
+    content: public FSMHandle(FSM definition = null, IStateContext context = null, int id = -1)
+    parameters:
+    - id: definition
+      type: TheSingularityWorkshop.FSM_API.FSM
+      description: The blueprint (<xref href="TheSingularityWorkshop.FSM_API.FSM" data-throw-if-not-resolved="false"></xref>) for this FSM instance.
+    - id: context
+      type: TheSingularityWorkshop.FSM_API.IStateContext
+      description: The data bag (<xref href="TheSingularityWorkshop.FSM_API.IStateContext" data-throw-if-not-resolved="false"></xref>) for this specific FSM instance.
+    - id: id
+      type: System.Int32
+      description: ID of the handle
+    content.vb: Public Sub New(definition As FSM = Nothing, context As IStateContext = Nothing, id As Integer = -1)
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.#ctor*
+  exceptions:
+  - type: System.ArgumentNullException
+    commentId: T:System.ArgumentNullException
+    description: >-
+      This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
+
+      or without a data bag (`context` is `null`).
+  nameWithType.vb: FSMHandle.New(FSM, IStateContext, Integer)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.New(TheSingularityWorkshop.FSM_API.FSM, TheSingularityWorkshop.FSM_API.IStateContext, Integer)
+  name.vb: New(FSM, IStateContext, Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Update(System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.Update(System.String)
+  id: Update(System.String)
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: Update(string)
+  nameWithType: FSMHandle.Update(string)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Update(string)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Update
+    path: FSM_API/FSMHandle.cs
+    startLine: 157
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: "Tells this FSM instance to take one **\"step\"** or \"tick\" forward. \U0001F3C3"
+  remarks: >-
+    During this step:
+
+    <ul><li>The `OnUpdate` action of its <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState" data-throw-if-not-resolved="false"></xref> will run.</li><li>It will then check if any transition rules are met to move to a new state.</li></ul>
+
+    If a transition rule is met, the FSM will exit its current state and enter the new one,
+
+    and its <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState" data-throw-if-not-resolved="false"></xref> will be updated.
+
+    <p>
+
+    **IMPORTANT: Usually, you won't call this directly!** This method is typically called
+
+    automatically by the FSM_API's internal system on a regular schedule (like every frame in a game).
+
+    Only call this manually if you're building a very specific or custom update system for your FSMs.
+
+    Calling it incorrectly can lead to unexpected behavior.
+
+    </p>
+  example: []
+  syntax:
+    content: public void Update(string processGroup = "Update")
+    parameters:
+    - id: processGroup
+      type: System.String
+      description: >-
+        An optional name for the group this FSM belongs to, mainly used for error reporting.
+
+        It defaults to "Update".
+    content.vb: Public Sub Update(processGroup As String = "Update")
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.Update*
+  nameWithType.vb: FSMHandle.Update(String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.Update(String)
+  name.vb: Update(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  id: TransitionTo(System.String)
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: TransitionTo(string)
+  nameWithType: FSMHandle.TransitionTo(string)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(string)
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: TransitionTo
+    path: FSM_API/FSMHandle.cs
+    startLine: 196
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    **Forces** this FSM instance to immediately change to a specific state,
+
+    ignoring any normal transition rules. 🛑
+  remarks: >-
+    Use this when you need absolute control, like manually setting a character's
+
+    state to "Dead" regardless of what they were doing.
+
+    <p>
+
+    When you force a transition, the FSM will:
+
+    <ul><li>Run the `OnExit` action of its current state.</li><li>Immediately run the `OnEnter` action of the <code class="paramref">nextStateName</code>.</li></ul>
+
+    </p>
+
+    **Caution:** Bypassing normal FSM logic can sometimes lead to unexpected results
+
+    if the target state isn't ready for a sudden jump.
+  example: []
+  syntax:
+    content: public void TransitionTo(string nextStateName)
+    parameters:
+    - id: nextStateName
+      type: System.String
+      description: The name of the state you want the FSM to jump to.
+    content.vb: Public Sub TransitionTo(nextStateName As String)
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo*
+  exceptions:
+  - type: System.ArgumentException
+    commentId: T:System.ArgumentException
+    description: >-
+      This happens if the `nextStateName` is empty, or if that state doesn't exist
+
+      in your FSM's blueprint.
+  nameWithType.vb: FSMHandle.TransitionTo(String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(String)
+  name.vb: TransitionTo(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  id: ResetFSMInstance
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: ResetFSMInstance()
+  nameWithType: FSMHandle.ResetFSMInstance()
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance()
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: ResetFSMInstance
+    path: FSM_API/FSMHandle.cs
+    startLine: 230
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: >-
+    Resets this FSM instance back to its **very first state** (the <xref href="TheSingularityWorkshop.FSM_API.FSM.InitialState" data-throw-if-not-resolved="false"></xref>)
+
+    as defined in its blueprint. ↩️
+  remarks: >-
+    This is like pressing a "restart" button for this specific FSM. It will:
+
+    <ul><li>Run the `OnExit` action of its current state.</li><li>Then run the `OnEnter` action of its initial state.</li></ul>
+
+    This is very useful for getting a complex FSM back to a known starting point.
+  example: []
+  syntax:
+    content: public void ResetFSMInstance()
+    content.vb: Public Sub ResetFSMInstance()
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance*
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  id: EvaluateConditions
+  parent: TheSingularityWorkshop.FSM_API.FSMHandle
+  langs:
+  - csharp
+  - vb
+  name: EvaluateConditions()
+  nameWithType: FSMHandle.EvaluateConditions()
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions()
+  type: Method
+  source:
+    remote:
+      path: FSM_API/FSMHandle.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: EvaluateConditions
+    path: FSM_API/FSMHandle.cs
+    startLine: 283
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Manually checks all the rules (conditions) for leaving the FSM's <xref href="TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState" data-throw-if-not-resolved="false"></xref>.
+  remarks: >-
+    This method is particularly useful if your FSM is set up to *not* automatically update
+
+    (meaning its `ProcessRate` in the FSM blueprint is set to `0`). In such cases,
+
+    you would call `EvaluateConditions()` yourself whenever something happens that
+
+    might cause a state change (like a player pressing a button, or an enemy seeing you).
+
+    <p>
+
+    If a transition's condition is met, the FSM will move to that new state.
+
+    Only the *first* transition whose condition is true will be taken in a single evaluation.
+
+    </p>
+  example: []
+  syntax:
+    content: public void EvaluateConditions()
+    content.vb: Public Sub EvaluateConditions()
+  overload: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions*
+references:
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState
+  name: CurrentState
+  nameWithType: FSMHandle.CurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  isExternal: true
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_System_String_
+  name: TransitionTo(string)
+  nameWithType: FSMHandle.TransitionTo(string)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(string)
+  nameWithType.vb: FSMHandle.TransitionTo(String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(String)
+  name.vb: TransitionTo(String)
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+    name: TransitionTo
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+    name: TransitionTo
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: TheSingularityWorkshop.FSM_API.IStateContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IStateContext
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html
+  name: IStateContext
+  nameWithType: IStateContext
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Context
+  name: Context
+  nameWithType: FSMHandle.Context
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Id*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Id
+  name: Id
+  nameWithType: FSMHandle.Id
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: TheSingularityWorkshop.FSM_API.FSM
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM.html
+  name: FSM
+  nameWithType: FSM
+  fullName: TheSingularityWorkshop.FSM_API.FSM
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Context*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Context
+  name: Context
+  nameWithType: FSMHandle.Context
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState
+  name: CurrentState
+  nameWithType: FSMHandle.CurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  commentId: F:TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Definition
+  name: Definition
+  nameWithType: FSMHandle.Definition
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Name*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Name
+  name: Name
+  nameWithType: FSMHandle.Name
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_IsValid
+  name: IsValid
+  nameWithType: FSMHandle.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_HasEnteredCurrentState
+  name: HasEnteredCurrentState
+  nameWithType: FSMHandle.HasEnteredCurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSM.InitialState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM.InitialState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_InitialState
+  name: InitialState
+  nameWithType: FSM.InitialState
+  fullName: TheSingularityWorkshop.FSM_API.FSM.InitialState
+- uid: System.ArgumentNullException
+  commentId: T:System.ArgumentNullException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentnullexception
+  name: ArgumentNullException
+  nameWithType: ArgumentNullException
+  fullName: System.ArgumentNullException
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.#ctor*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.#ctor
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle__ctor_TheSingularityWorkshop_FSM_API_FSM_TheSingularityWorkshop_FSM_API_IStateContext_System_Int32_
+  name: FSMHandle
+  nameWithType: FSMHandle.FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.FSMHandle
+  nameWithType.vb: FSMHandle.New
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.New
+  name.vb: New
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Update*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Update
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Update_System_String_
+  name: Update
+  nameWithType: FSMHandle.Update
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Update
+- uid: System.ArgumentException
+  commentId: T:System.ArgumentException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.argumentexception
+  name: ArgumentException
+  nameWithType: ArgumentException
+  fullName: System.ArgumentException
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_System_String_
+  name: TransitionTo
+  nameWithType: FSMHandle.TransitionTo
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_ResetFSMInstance
+  name: ResetFSMInstance
+  nameWithType: FSMHandle.ResetFSMInstance
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions*
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_EvaluateConditions
+  name: EvaluateConditions
+  nameWithType: FSMHandle.EvaluateConditions
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class FSMBuilder </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class FSMBuilder ">
+    
+    <meta name="description" content="This is your primary tool for creating and setting up new FSMs (Finite State Machines). &#128736;️ Think of it as a special &amp;quot;construction kit&amp;quot; that lets you easily build complex FSM blueprints step-by-step.  graph TD     A(Create.CreateFiniteStateMachine) --&amp;gt; B(State);     B --&amp;gt; B;     B --&amp;gt; C(WithInitialState);     C --&amp;gt; D(Transition);     D --&amp;gt; D;     D --&amp;gt; E(AnyTransition);     E --&amp;gt; E;     E --&amp;gt; F(BuildDefinition);">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_FSMBuilder" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder" class="text-break">Class FSMBuilder</h1>
+  <div class="markdown level0 summary"><p>This is your <strong>primary tool for creating and setting up new FSMs (Finite State Machines)</strong>. 🛠️
+Think of it as a special &quot;construction kit&quot; that lets you easily build complex FSM blueprints step-by-step.</p>
+<div class="mermaid">
+graph TD
+    A(Create.CreateFiniteStateMachine) --&gt; B(State);
+    B --&gt; B;
+    B --&gt; C(WithInitialState);
+    C --&gt; D(Transition);
+    D --&gt; D;
+    D --&gt; E(AnyTransition);
+    E --&gt; E;
+    E --&gt; F(BuildDefinition);
+</div>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">FSMBuilder</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class FSMBuilder</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a> is designed to be very <strong>user-friendly</strong>, allowing you to define
+how your FSM works in a clear, flowing way (this is called a &quot;fluent API&quot;).
+Even if you're not a seasoned coder, you can use this builder to:</p>
+<ul><li>Define each **state** the FSM can be in (like "Idle" or "Running").</li><li>Set up the **rules (transitions)** for moving between these states.</li><li>Choose the FSM's **starting state**.</li><li>And decide **how often** the FSM should check its rules.</li></ul>
+<p>
+You typically use this builder once during your application's setup to create the FSM's blueprint.
+After the blueprint is built, you then create **instances** of that FSM using an <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a>
+to actually make things happen in your game or application.
+</p>
+<p>
+The methods in this builder are designed to be "chained" together, making your FSM definitions
+very readable, almost like telling a story of how your FSM behaves.
+Once you're done setting everything up, you call <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition">BuildDefinition()</a> to save your
+FSM blueprint and make it available for use.
+</p>
+<example>
+Here's a simple example of building an FSM for a player character, showing how readable it can be:
+<pre><code class="lang-csharp">// First, define a "context" (a data bag) for your player FSM.
+// This is where you'll store specific player information like if they are moving or jumping.
+public class PlayerContext : IStateContext
+{
+    public string PlayerName { get; set; } = "Hero";
+    public bool IsMoving { get; set; } = false;
+    public bool HasJumped { get; set; } = false;
+}
+<p>// Now, use the FSMBuilder to create your &quot;PlayerFSM&quot; blueprint.
+// We want it to update 60 times per second and be part of the &quot;GameLoop&quot; group.
+FSM_API.Create.CreateFiniteStateMachine(&quot;PlayerFSM&quot;, 60, &quot;GameLoop&quot;)
+// Define the &quot;Idle&quot; state: what happens when entering, during updates, and when exiting.
+.State(&quot;Idle&quot;,
+onEnter: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} is now Idle.&quot;),
+onUpdate: (ctx) =&gt; { /* Check for player input to move or jump <em>/ },
+onExit: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} stopped being Idle.&quot;))
+// Define the &quot;Moving&quot; state.
+.State(&quot;Moving&quot;,
+onEnter: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} started Moving.&quot;),
+onUpdate: (ctx) =&gt; { /</em> Handle continuous movement, check if player stops or jumps <em>/ },
+onExit: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} stopped Moving.&quot;))
+// Define the &quot;Jumping&quot; state.
+.State(&quot;Jumping&quot;,
+onEnter: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} is Jumping!&quot;),
+onUpdate: (ctx) =&gt; { /</em> Apply jump physics, check for landing */ },
+onExit: (ctx) =&gt; Console.WriteLine($&quot;{((PlayerContext)ctx).PlayerName} landed.&quot;))
+// Tell the FSM that &quot;Idle&quot; is the very first state a new instance will start in.
+.WithInitialState(&quot;Idle&quot;)
+// Set up the rules (transitions) for how the FSM moves between states.
+// These conditions check the player's data in the PlayerContext.
+.Transition(&quot;Idle&quot;, &quot;Moving&quot;, (ctx) =&gt; ((PlayerContext)ctx).IsMoving)
+.Transition(&quot;Moving&quot;, &quot;Idle&quot;, (ctx) =&gt; !((PlayerContext)ctx).IsMoving)
+.Transition(&quot;Moving&quot;, &quot;Jumping&quot;, (ctx) =&gt; ((PlayerContext)ctx).HasJumped)
+.Transition(&quot;Idle&quot;, &quot;Jumping&quot;, (ctx) =&gt; ((PlayerContext)ctx).HasJumped)
+// This is an &quot;Any-State&quot; transition: from <em>any</em> current state, if the player
+// has jumped AND is no longer moving, transition back to &quot;Idle&quot; (e.g., they landed).
+.Transition(FSM.AnyStateIdentifier, &quot;Idle&quot;, (ctx) =&gt; ((PlayerContext)ctx).HasJumped &amp;&amp; !((PlayerContext)ctx).IsMoving)
+// Finish building and save this FSM blueprint so you can create live instances from it.
+.BuildDefinition();</p></code></pre>
+</example>
+</div>
+  <h3 id="constructors">Constructors
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_System_String_System_Int32_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.%23ctor(System.String%2CSystem.Int32%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L110">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_System_String_System_Int32_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor(System.String,System.Int32,System.String)">FSMBuilder(string, int, string)</h4>
+  <div class="markdown level1 summary"><p>Starts a new <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a> to help you create a brand-new FSM blueprint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder(string fsmName, int processRate = 0, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name for your new FSM blueprint (e.g., &quot;PlayerMovementFSM&quot;).</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">processRate</span></td>
+        <td><p>How often instances of this FSM should automatically update. See <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessRate">ProcessRate</a> for details.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>A name for a group this FSM belongs to, which helps organize updates. See <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessingGroup">ProcessingGroup</a> for details.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_System_String_System_Int32_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>You usually won't call this directly. Instead, you'll use a helper method like
+<a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateFiniteStateMachine_System_String_System_Int32_System_String_">CreateFiniteStateMachine(string, int, string)</a>, which then uses this behind the scenes.</p>
+</div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(System.String%2CSystem.Func%7BTheSingularityWorkshop.FSM_API.IStateContext%2CSystem.Boolean%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L308">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})">AnyTransition(string, Func&lt;IStateContext, bool&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds a <strong>global &quot;Any State&quot; transition</strong> to your FSM blueprint. 🌍</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder AnyTransition(string to, Func&lt;IStateContext, bool&gt; condition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">to</span></td>
+        <td><p>The name of the state the FSM will move to if this &quot;Any State&quot; transition's condition is met.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
+        <td><span class="parametername">condition</span></td>
+        <td><p>A function (rule) that must return <code>true</code> for this global transition to occur.
+This function receives the <a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a> (your FSM's data bag) to evaluate the condition.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, for chaining more commands.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>An &quot;Any State&quot; transition is unique because its <code class="paramref">condition</code> is checked
+<strong>regardless of which state the FSM is currently in</strong>. If the condition returns <code>true</code>,
+the FSM will immediately transition to the specified <code class="paramref">to</code> state.
+These transitions are typically evaluated before regular, state-specific transitions.
+If you add multiple &quot;Any State&quot; transitions that lead to the same <code class="paramref">to</code> state,
+the last one added will replace any previous ones leading to that same target.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code class="paramref">to</code> state name is empty.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if the <code class="paramref">condition</code> function is <code>null</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L343">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition">BuildDefinition()</h4>
+  <div class="markdown level1 summary"><p>Finalizes your FSM blueprint and <strong>registers it</strong> with the FSM system. ✅</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BuildDefinition()</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>After calling this, your FSM blueprint is complete and saved. You can then start
+creating live instances of it using <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_">CreateInstance(string, IStateContext, string)</a>.</p>
+<p>
+This method checks for common mistakes like:
+<ul><li>If the FSM `Name` is empty.</li><li>If no states have been added.</li><li>If the `InitialState` you set actually exists.</li></ul>
+If an FSM blueprint with the same name already exists in the system when `BuildDefinition` is called,
+it will be **overwritten** with this new definition.
+
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><p>Thrown if the FSM has no name, no states, or the initial state doesn't exist.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_State_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.State(System.String%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L180">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_State_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.State*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_State_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.State(System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext})">State(string, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds or updates a <strong>&quot;state&quot;</strong> for your FSM blueprint. This is where you define what happens
+when your FSM is in a particular condition or mode.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder State(string name, Action&lt;IStateContext&gt; onEnter, Action&lt;IStateContext&gt; onUpdate, Action&lt;IStateContext&gt; onExit)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The unique name for this state (e.g., &quot;Idle&quot;, &quot;Attacking&quot;).</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onEnter</span></td>
+        <td><p>An optional action to run when entering this state.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onUpdate</span></td>
+        <td><p>An optional action to run repeatedly while in this state.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onExit</span></td>
+        <td><p>An optional action to run when exiting this state.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, so you can chain more commands.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_State_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Each state needs a unique <code class="paramref">name</code>. If you try to add a state with the same
+name twice, you'll get an error.</p>
+<p>
+You also define three key actions for each state:
+<ul><li><span class="term"><code class="paramref">onEnter</code>:</span>What happens **when the FSM first enters** this state.</li><li><span class="term"><code class="paramref">onUpdate</code>:</span>What happens **repeatedly while the FSM is in** this state.</li><li><span class="term"><code class="paramref">onExit</code>:</span>What happens **just before the FSM leaves** this state.</li></ul>
+
+These actions receive a `context` (your <a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a> data bag)
+which lets them interact with the specific object or system that this FSM instance belongs to.
+You can provide `null` for any action if nothing specific needs to happen at that point.
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Happens if the state <code>name</code> is empty or a state with that name already exists.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(System.String%2CSystem.String%2CSystem.Func%7BTheSingularityWorkshop.FSM_API.IStateContext%2CSystem.Boolean%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L270">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.Transition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})">Transition(string, string, Func&lt;IStateContext, bool&gt;)</h4>
+  <div class="markdown level1 summary"><p>Defines a <strong>rule (transition)</strong> for your FSM to move from one specific state to another.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder Transition(string from, string to, Func&lt;IStateContext, bool&gt; condition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">from</span></td>
+        <td><p>The name of the state where this transition starts.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">to</span></td>
+        <td><p>The name of the state where this transition leads to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
+        <td><span class="parametername">condition</span></td>
+        <td><p>A function (rule) that must return <code>true</code> for this transition to happen.
+This function receives the <a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a> (your FSM's data bag).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, for chaining.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean___remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This transition rule will only be considered when the FSM is currently in the <code>from</code> state.
+If you define multiple transitions between the exact same <code>from</code> and <code>to</code> states,
+the last one you define will replace any earlier ones.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Happens if <code>from</code> or <code>to</code> state names are empty, or if the <code>condition</code> is <code>null</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L246">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(System.String)">WithInitialState(string)</h4>
+  <div class="markdown level1 summary"><p>Sets the <strong>starting state</strong> for any new FSM instance created from this blueprint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder WithInitialState(string stateName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">stateName</span></td>
+        <td><p>The name of the state that new FSM instances should start in.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, for chaining.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When an FSM instance is first created, it will immediately enter this state.
+Make sure you've already defined this state using the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_State_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__">State(string, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;)</a> method.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Happens if the <code class="paramref">stateName</code> is empty.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_System_Int32_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L210">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_System_Int32_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(System.Int32)">WithProcessRate(int)</h4>
+  <div class="markdown level1 summary"><p>Sets how often instances of this FSM blueprint should automatically check and update themselves.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder WithProcessRate(int rate)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><span class="parametername">rate</span></td>
+        <td><p>The desired update rate.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, for chaining.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This controls the <strong>&quot;Process Rate&quot;</strong>. See <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessRate">ProcessRate</a> for a detailed explanation:</p>
+<ul><li><span class="term"><code>-1</code></span>Update **every single time** the FSM's group is processed.</li><li><span class="term"><code>0</code></span>Update **only when you manually tell it to** (no automatic updates).</li><li><span class="term"><code>&gt;0</code></span>Update **every Nth time** the FSM's group is processed (e.g., 5 means every 5th update).</li></ul>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L412">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(System.String)">WithProcessingGroup(string)</h4>
+  <div class="markdown level1 summary"><p>Sets the <strong>&quot;processing group&quot;</strong> name for this FSM blueprint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSMBuilder WithProcessingGroup(string groupName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">groupName</span></td>
+        <td><p>The name of the processing group (e.g., &quot;GameLoop&quot;, &quot;UIA&quot;, &quot;PhysicsUpdate&quot;).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMBuilder.html">FSMBuilder</a></td>
+        <td><p>The builder itself, for chaining.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This helps organize your FSMs into categories. You can then tell the FSM system
+to update all FSMs in a specific group at once.
+See <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessingGroup">ProcessingGroup</a> for more context.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Happens if the <code>groupName</code> is empty.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSMBuilder.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSMBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSMBuilder.cs/#L89" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

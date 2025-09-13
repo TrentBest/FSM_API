@@ -49,6 +49,83 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(names.Count, Is.EqualTo(3), "Expected 3 FSM definitions in the default group.");
             
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllDefinitionNames_CustomGroup_ReturnsCorrectNames()
+        {
+            // Arrange
+            string customGroup = "PhysicsUpdate";
+            FSM_API.Create.CreateProcessingGroup(customGroup);
+            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
+            // Also add an FSM to a different group to ensure separation
+            FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
+
+            // Act
+            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
+
+            // Assert
+            Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
+            Assert.That(names.Count, Is.EqualTo(2), $"Expected 2 FSM definitions in the '{customGroup}' group.");
+            Assert.That(names, Is.EquivalentTo(new[] { "PhysFSM_A", "PhysFSM_B" }),
+                "Returned collection should contain the correct FSM names for the custom group.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllDefinitionNames_GroupWithSingleFSM_ReturnsSingleName()
+        {
+            // Arrange
+            string singleFsmGroup = "RenderGroup";
+            string singleFsmName = "CameraFSM";
+            FSM_API.Create.CreateProcessingGroup(singleFsmGroup);
+            FSM_API.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
+
+            // Act
+            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
+
+            // Assert
+            Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
+            Assert.That(names.Count, Is.EqualTo(1), "Expected 1 FSM definition in the group.");
+            Assert.That(names.First(), Is.EqualTo(singleFsmName), "The single FSM name should be correct.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllDefinitionNames_GroupWithNoFSMs_ReturnsEmptyCollection()
+        {
+            // Arrange
+            string emptyGroup = "EmptyGroup";
+            FSM_API.Create.CreateProcessingGroup(emptyGroup);
+
+            // Act
+            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
+
+            // Assert
+            Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
+            Assert.That(names, Is.Empty, $"Expected an empty collection for group '{emptyGroup}' with no FSMs.");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void GetAllDefinitionNames_NonExistentGroup_ReturnsEmptyCollection()
+        {
+            // Arrange (Setup ensures no FSMs and thus no groups exist initially)
+            string nonExistentGroup = "NonExistentGroup";
+
+            // Act
+            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
+
+            // Assert
+            Assert.That(names, Is.Not.Null, "Returned collection should not be null for non-existent group.");
+            Assert.That(names, Is.Empty, $"Expected an empty collection for non-existent group '{nonExistentGroup}'.");
+        }
+
 
         ///// <summary>
         ///// 

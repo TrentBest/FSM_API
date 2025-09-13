@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>11. Frequently Asked Questions (FAQ) </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="11. Frequently Asked Questions (FAQ) ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="11-frequently-asked-questions-faq">11. Frequently Asked Questions (FAQ)</h1>
+
+<blockquote>
+<p>This section addresses common questions about FSM_API, its features, and how to use it effectively. We'll update this as new questions arise!</p>
+</blockquote>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h3 id="q1-what-is-a-finite-state-machine-fsm-and-why-should-i-use-fsm_api"><strong>Q1: What is a Finite State Machine (FSM) and why should I use FSM_API?</strong></h3>
+<p><strong>A1:</strong> A Finite State Machine (FSM) is a powerful concept for managing any system or object whose behavior changes based on its current situation (its &quot;state&quot;). Think of a traffic light (Red, Yellow, Green) or a game character (Idle, Walking, Attacking). FSM_API provides a clear, robust, and performant way to define and manage these states and the rules for moving between them. It helps organize complex logic, reduce bugs, and make your code easier to understand and maintain.</p>
+<hr>
+<h3 id="q2-is-fsm_api-only-for-games-or-unity"><strong>Q2: Is FSM_API only for games or Unity?</strong></h3>
+<p><strong>A2:</strong> No! While FSM_API is incredibly powerful for game development (especially with Unity), it's built in pure C# and can be used in <strong>any C# application</strong>. This includes console applications, backend services, desktop apps, simulations, and more. It helps manage any state-dependent logic, regardless of the application type. See <a href="https://www.google.com/search?q=03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a> for more details.</p>
+<hr>
+<h3 id="q3-what-is-istatecontext-and-why-is-it-important"><strong>Q3: What is <code>IStateContext</code> and why is it important?</strong></h3>
+<p><strong>A3:</strong> <code>IStateContext</code> is an interface that connects your FSM logic to the actual &quot;thing&quot; (your object or data model) the FSM is controlling. It provides your FSM's states and transitions with access to the specific data and methods of your object (e.g., a character's health, a door's open/closed status, or a method to play an animation). This separation keeps your FSM logic generic and reusable, while your specific application data remains encapsulated. It also includes an <code>IsValid</code> property, crucial for FSM_API to know if the object is still active and relevant, preventing errors and aiding cleanup. See <a href="https://www.google.com/search?q=05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a> for a deep dive.</p>
+<hr>
+<h3 id="q4-how-do-i-ensure-good-performance-with-many-fsms"><strong>Q4: How do I ensure good performance with many FSMs?</strong></h3>
+<p><strong>A4:</strong> FSM_API is designed for performance, but optimal use involves some best practices:</p>
+<ul>
+<li><strong>Keep State Actions Lean:</strong> Avoid heavy computations in <code>onUpdate</code> methods.</li>
+<li><strong>Optimize Transition Conditions:</strong> Make conditions as simple and fast to evaluate as possible.</li>
+<li><strong>Use <code>processRate</code> Smartly:</strong> Adjust an FSM's <code>processRate</code> (e.g., <code>processRate = 10</code> for infrequent updates, <code>0</code> for event-driven) to control how often it ticks.</li>
+<li><strong>Leverage Processing Groups:</strong> Organize FSMs into groups and update them at different frequencies (e.g., &quot;AI_Fast&quot; every frame, &quot;AI_Slow&quot; every few frames).
+See <a href="https://www.google.com/search?q=08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a> for a comprehensive guide.</li>
+</ul>
+<hr>
+<h3 id="q5-what-happens-if-my-fsm-code-throws-an-error-eg-a-nullreferenceexception"><strong>Q5: What happens if my FSM code throws an error (e.g., a NullReferenceException)?</strong></h3>
+<p><strong>A5:</strong> FSM_API includes a robust <strong>Cascading Degradation System</strong> (also known as FUBAR). This system catches exceptions within your FSM's state actions or transition conditions, preventing them from crashing your entire application. It reports errors via the <code>FSM_API.Error.OnInternalApiError</code> event, and for persistent issues, it can automatically unregister the problematic FSM instance (or even an entire FSM definition if it's a systemic problem) to maintain overall stability. See <a href="https://www.google.com/search?q=07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a> for more details.</p>
+<hr>
+<h3 id="q6-can-i-change-an-fsms-definition-after-its-been-created"><strong>Q6: Can I change an FSM's definition after it's been created?</strong></h3>
+<p><strong>A6:</strong> Yes! The <code>FSMModifier</code> allows you to dynamically alter an FSM's blueprint (definition) at runtime. You can add or remove states, and add or remove transitions, even while FSM instances based on that definition are active. This is powerful for adaptive AI, dynamic UI, or hot-swappable logic. However, changes affect all active instances of that definition, so plan carefully. See <a href="https://www.google.com/search?q=06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a> for more.</p>
+<hr>
+<h3 id="q7-where-can-i-get-fsm_api-and-is-it-free"><strong>Q7: Where can I get FSM_API and is it free?</strong></h3>
+<p><strong>A7:</strong> FSM_API is currently being prepared for release. We plan to make it available on the <strong>Unity Asset Store</strong> for Unity developers. For pure C# applications, the <code>FSM_API.dll</code> will be provided, and we are also working on integrating it directly into the <code>AnyApp</code> project. Details on licensing (e.g., open-source, commercial) will be provided upon its official release.</p>
+<hr>
+<h3 id="q8-how-does-fsm_api-compare-to-other-fsm-solutions"><strong>Q8: How does FSM_API compare to other FSM solutions?</strong></h3>
+<p><strong>A8:</strong> FSM_API is designed to be:</p>
+<ul>
+<li><strong>Highly Performant:</strong> Built from the ground up for speed and efficiency.</li>
+<li><strong>Decoupled:</strong> Promotes clean separation between FSM logic and your application's data via <code>IStateContext</code>.</li>
+<li><strong>Flexible:</strong> Works seamlessly in both Unity and pure C# environments.</li>
+<li><strong>Robust:</strong> Features a comprehensive error handling system to prevent crashes.</li>
+<li><strong>Dynamic:</strong> Allows for runtime modification of FSM definitions.
+While many FSM solutions exist, FSM_API aims to provide a balanced combination of performance, flexibility, and developer-friendly features.</li>
+</ul>
+<hr>
+<h3 id="q9-whats-next-for-fsm_api"><strong>Q9: What's next for FSM_API?</strong></h3>
+<p><strong>A9:</strong> We are actively working on:</p>
+<ul>
+<li>Finalizing our <code>FSM_UnityIntegration</code> class to ensure seamless integration within Unity.</li>
+<li>Integrating FSM_API directly into our <code>AnyApp</code> project.</li>
+<li>Establishing a private Git repository for source control.</li>
+<li>Setting up Continuous Integration (CI) to streamline development and deployment.</li>
+<li>Submitting the FSM_API package (including the <code>FSM_API.dll</code>, documentation, and demos) to the Unity Asset Store this weekend.</li>
+</ul>
+<hr>
+<h3 id="q10-how-can-i-support-the-fsm_api-project"><strong>Q10: How can I support the FSM_API project?</strong></h3>
+<p><strong>A10:</strong> We appreciate all forms of support! You can contribute by reporting issues, submitting pull requests on our GitHub repository, or by providing financial support to help with development costs. If you'd like to contribute financially, you can do so via <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J">PayPal</a>. Thank you for your support!</p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/11_FAQ.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

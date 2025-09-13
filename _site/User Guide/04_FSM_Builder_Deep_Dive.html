@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>04. FSMBuilder Deep Dive: Building Your FSMs </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="04. FSMBuilder Deep Dive: Building Your FSMs ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="04-fsmbuilder-deep-dive-building-your-fsms">04. FSMBuilder Deep Dive: Building Your FSMs</h1>
+
+<blockquote>
+<p>The <code>FSMBuilder</code> is your primary tool for <strong>designing and configuring the blueprint</strong> for your Finite State Machines. It provides a fluent, step-by-step approach to define complex state behaviors and transitions.</p>
+</blockquote>
+<p>Think of the <code>FSMBuilder</code> as a specialized workshop where you craft the detailed plans for how your FSM will operate. You'll use it to:</p>
+<ul>
+<li><strong>Name</strong> your FSM blueprint.</li>
+<li>Define all its possible <strong>states</strong> and what happens when entering, updating, or exiting them.</li>
+<li>Establish the <strong>transitions</strong> (rules) for moving between these states.</li>
+<li>Set its <strong>initial state</strong> where instances will begin.</li>
+<li>Configure its <strong>default update frequency</strong> and <strong>processing group</strong>.</li>
+</ul>
+<p>Once built, this <strong>FSM Definition</strong> can be used to create many live FSM instances.</p>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-what-is-a-fluent-api">✨ What is a Fluent API?</h2>
+<p>The <code>FSMBuilder</code> is designed with a <strong>fluent API</strong> pattern, meaning most of its methods return the builder instance itself. This allows you to <strong>chain method calls</strong> together, creating highly readable and declarative code that describes your FSM step-by-step.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine(&quot;MyPlayerFSM&quot;)
+    .State(&quot;Idle&quot;, onUpdate: ctx =&gt; Console.WriteLine(&quot;Player is idling...&quot;))
+    .State(&quot;Walking&quot;, onUpdate: ctx =&gt; Console.WriteLine(&quot;Player is walking...&quot;))
+    .WithInitialState(&quot;Idle&quot;)
+    .Transition(&quot;Idle&quot;, &quot;Walking&quot;, ctx =&gt; /* player moves */ true)
+    .Transition(&quot;Walking&quot;, &quot;Idle&quot;, ctx =&gt; /* player stops */ false)
+    .BuildDefinition();
+</code></pre>
+<p>Each call adds to the FSM's structure in a logical, flowing manner.</p>
+<hr>
+<h2 id="-starting-the-build-fsm_apicreatefinitestatemachine">🏁 Starting the Build: <code>FSM_API.CreateFiniteStateMachine()</code></h2>
+<p>You begin defining any FSM blueprint by calling <code>FSM_API.CreateFiniteStateMachine()</code>. This factory method returns an <code>FSMBuilder</code> instance, ready for your configuration.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">var fsmBuilder = FSM_API.CreateFiniteStateMachine(
+    fsmName: &quot;EnemyAI&quot;,
+    processRate: 1, // Optional: default update frequency for instances of this FSM
+    processingGroup: &quot;AI&quot; // Optional: default processing group for instances
+);
+</code></pre>
+<h3 id="parameters">Parameters:</h3>
+<ul>
+<li><code>fsmName</code> (string): <strong>Required.</strong> A <strong>unique identifier</strong> for this FSM definition. This is how you'll retrieve and create instances of this specific FSM later. If an FSM with this name already exists, the builder will allow you to modify its existing definition.</li>
+<li><code>processRate</code> (int, optional): Sets the <strong>default frequency</strong> at which instances of this FSM definition will <code>onUpdate</code> their current state and check for transitions.
+<ul>
+<li><code>processRate = 0</code>: Updates <strong>only when explicitly triggered</strong> (<code>FSM_API.Step()</code>). Ideal for event-driven FSMs (e.g., UI elements that only react to clicks).</li>
+<li><code>processRate = 1</code>: Updates <strong>every tick</strong> of its processing group.</li>
+<li><code>processRate = N</code> (where N &gt; 1): Updates <strong>every N ticks</strong> of its processing group. (e.g., <code>processRate = 2</code> means it updates every other tick).</li>
+<li>Default: <code>1</code></li>
+</ul>
+</li>
+<li><code>processingGroup</code> (string, optional): Assigns a <strong>default processing group</strong> name for instances created from this definition. Processing groups (e.g., &quot;Update&quot;, &quot;FixedUpdate&quot;, &quot;AI_Logic&quot;) allow you to organize and update multiple FSMs together from a single <code>FSM_API.Update(&quot;GroupName&quot;)</code> call.
+<ul>
+<li>Default: &quot;Update&quot; (a common group driven from Unity's <code>Update()</code> or a main C# loop).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-defining-states-state">🟢 Defining States: <code>.State()</code></h2>
+<p>The <code>.State()</code> method is where you define a distinct <strong>mode or phase</strong> for your FSM and specify the actions that occur while in that state.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.State(&quot;Patrol&quot;,
+    onEnter: ctx =&gt; ((EnemyContext)ctx).StartPatrolAnimation(),
+    onUpdate: ctx =&gt; ((EnemyContext)ctx).ExecutePatrolLogic(),
+    onExit: ctx =&gt; ((EnemyContext)ctx).StopPatrolAnimation()
+);
+</code></pre>
+<h3 id="parameters-1">Parameters:</h3>
+<ul>
+<li><code>stateName</code> (string): <strong>Required.</strong> A unique name for this state within the FSM definition (e.g., &quot;Idle&quot;, &quot;Attacking&quot;, &quot;Door_Open&quot;).</li>
+<li><code>onEnter</code> (Action&lt;IStateContext&gt;, optional): A delegate/lambda that executes <strong>once</strong> when the FSM <strong>enters</strong> this state. Ideal for one-time setup (e.g., starting an animation, playing a sound, initializing variables).</li>
+<li><code>onUpdate</code> (Action&lt;IStateContext&gt;, optional): A delegate/lambda that executes <strong>repeatedly</strong> for as long as the FSM <strong>remains</strong> in this state. The frequency depends on the FSM's <code>processRate</code> and its processing group's update cycle. Use for continuous actions (e.g., movement, checking conditions over time).</li>
+<li><code>onExit</code> (Action&lt;IStateContext&gt;, optional): A delegate/lambda that executes <strong>once</strong> when the FSM <strong>exits</strong> this state to transition to another. Useful for cleanup (e.g., stopping animations, resetting values, triggering final actions).</li>
+</ul>
+<h3 id="context-parameter-ctx-or-context">Context Parameter (<code>ctx</code> or <code>context</code>)</h3>
+<p>Notice the <code>ctx</code> (or <code>context</code>) parameter in the state actions. This is your <strong><code>IStateContext</code></strong> object (your MonoBehaviour in Unity, or your plain C# class). You'll typically cast it to your specific context type to access its unique properties and methods.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">.State(&quot;ChargingAttack&quot;,
+    onEnter: context =&gt; {
+        var enemy = (EnemyContext)context; // Cast to your specific context type
+        enemy.PlayChargingSound();
+        enemy.TargetPlayer();
+    },
+    onUpdate: context =&gt; {
+        var enemy = (EnemyContext)context;
+        enemy.IncreaseCharge();
+        if (enemy.IsChargeMaxed()) { /* Trigger transition */ }
+    }
+)
+</code></pre>
+<hr>
+<h2 id="-setting-the-start-point-withinitialstate">↩️ Setting the Start Point: <code>.WithInitialState()</code></h2>
+<p>This method designates the <strong>starting state</strong> for any new <code>FSMHandle</code> instance created from this FSM definition.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.WithInitialState(&quot;Idle&quot;);
+</code></pre>
+<h3 id="parameters-2">Parameters:</h3>
+<ul>
+<li><code>stateName</code> (string): The name of the state that instances of this FSM definition should begin in.
+<ul>
+<li><strong>Important:</strong> This state must already be defined using the <code>.State()</code> method before calling <code>WithInitialState()</code>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-defining-transitions-transition">➡️ Defining Transitions: <code>.Transition()</code></h2>
+<p>The <code>.Transition()</code> method establishes a <strong>directional rule</strong> for moving from a specific &quot;source&quot; state to a &quot;destination&quot; state, based on a given condition.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.Transition(&quot;Idle&quot;, &quot;Walking&quot;, ctx =&gt; ((PlayerContext)ctx).HasMovementInput);
+</code></pre>
+<h3 id="parameters-3">Parameters:</h3>
+<ul>
+<li><code>fromStateName</code> (string): The name of the state from which the transition originates (the &quot;source&quot;).</li>
+<li><code>toStateName</code> (string): The name of the state to which the FSM will move (the &quot;destination&quot;).</li>
+<li><code>condition</code> (Func&lt;IStateContext, bool&gt;): A delegate/lambda that returns <code>true</code> if the transition should occur, and <code>false</code> otherwise. This is your rule for moving between states.
+<ul>
+<li>The <code>condition</code> is checked during the <code>onUpdate</code> phase of the current state.</li>
+<li>If multiple transitions from the current state become true simultaneously, <strong>the order in which they were defined in the <code>FSMBuilder</code> determines priority.</strong> The first true condition found will trigger its transition.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example with multiple conditions:</strong></p>
+<pre><code class="lang-csharp">builder
+    .State(&quot;Chasing&quot;, ...)
+    .State(&quot;Attacking&quot;, ...)
+    .State(&quot;Fleeing&quot;, ...)
+    .Transition(&quot;Chasing&quot;, &quot;Attacking&quot;, ctx =&gt; ((EnemyContext)ctx).IsInAttackRange()) // Checked first
+    .Transition(&quot;Chasing&quot;, &quot;Fleeing&quot;, ctx =&gt; ((EnemyContext)ctx).HealthIsLow())      // Checked second
+    .Transition(&quot;Chasing&quot;, &quot;Idle&quot;, ctx =&gt; ((EnemyContext)ctx).TargetLost());         // Checked third
+</code></pre>
+<hr>
+<h2 id="-global-transitions-anytransition">🌍 Global Transitions: <code>.AnyTransition()</code></h2>
+<p><code>AnyTransition()</code> defines a special type of transition that can occur <strong>from any state</strong> within the FSM to a specified destination state, provided its condition is met. These are often used for &quot;interrupt&quot; or &quot;emergency&quot; behaviors.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.AnyTransition(&quot;Dead&quot;, ctx =&gt; ((CharacterContext)ctx).CurrentHealth &lt;= 0);
+</code></pre>
+<h3 id="parameters-4">Parameters:</h3>
+<ul>
+<li><code>toStateName</code> (string): The name of the state to which the FSM will move.</li>
+<li><code>condition</code> (Func&lt;IStateContext, bool&gt;): A delegate/lambda that returns <code>true</code> if the global transition should occur.</li>
+</ul>
+<h3 id="important-considerations-for-anytransition">Important Considerations for <code>AnyTransition()</code>:</h3>
+<ul>
+<li><strong>Priority:</strong> <code>AnyTransition()</code> conditions are evaluated <strong>before</strong> specific <code>Transition()</code> conditions from the current state. This makes them ideal for critical, high-priority state changes (e.g., &quot;If health drops to zero, immediately go to 'Dead' state, regardless of what I was doing.&quot;).</li>
+<li><strong>Order:</strong> If multiple <code>AnyTransition()</code> conditions are true, their order of definition in the <code>FSMBuilder</code> determines priority.</li>
+</ul>
+<hr>
+<h2 id="-controlling-update-rate-withprocessrate">⏱ Controlling Update Rate: <code>.WithProcessRate()</code></h2>
+<p>While <code>FSM_API.CreateFiniteStateMachine()</code> allows you to set an initial <code>processRate</code>, you can also define or override it explicitly using <code>WithProcessRate()</code>. This method controls how frequently <code>onUpdate</code> methods are called and how often transitions are checked for <em>instances</em> created from this specific FSM definition.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.WithProcessRate(5); // Instances of this FSM will update every 5 ticks of their processing group.
+</code></pre>
+<h3 id="parameters-5">Parameters:</h3>
+<ul>
+<li><code>processRate</code> (int): The update frequency.
+<ul>
+<li><code>0</code>: Only updates when manually stepped using <code>FSM_API.Step()</code>.</li>
+<li><code>1</code>: Updates every tick.</li>
+<li><code>N</code> (where N &gt; 1): Updates every N ticks.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-naming-your-fsm-blueprint-withname">🏷 Naming Your FSM Blueprint: <code>.WithName()</code></h2>
+<p>If you didn't provide a name in <code>FSM_API.CreateFiniteStateMachine()</code>, or if you wish to change the FSM definition's name before building it, use <code>WithName()</code>.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">FSM_API.CreateFiniteStateMachine()
+    .WithName(&quot;DynamicEnemyBehavior&quot;) // Setting the FSM's name
+    .State(...)
+    .BuildDefinition();
+</code></pre>
+<h3 id="parameters-6">Parameters:</h3>
+<ul>
+<li><code>fsmName</code> (string): The unique name for this FSM definition.</li>
+</ul>
+<hr>
+<h2 id="-assigning-a-processing-group-withprocessinggroup">⚙️ Assigning a Processing Group: <code>.WithProcessingGroup()</code></h2>
+<p>This method assigns the <strong>default processing group</strong> for all <code>FSMHandle</code> instances created from this FSM definition. Processing groups are critical for organizing and updating your FSMs efficiently, especially in environments with distinct update loops (like Unity's <code>Update</code>, <code>FixedUpdate</code>).</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">builder.WithProcessingGroup(&quot;GameLogic&quot;); // Instances will default to the &quot;GameLogic&quot; group
+</code></pre>
+<h3 id="parameters-7">Parameters:</h3>
+<ul>
+<li><code>groupName</code> (string): The name of the processing group (e.g., &quot;Gameplay&quot;, &quot;UIA&quot;, &quot;Physics&quot;).</li>
+</ul>
+<h3 id="how-it-integrates-with-fsm_unityintegration-for-unity-users">How it integrates with <code>FSM_UnityIntegration</code> (for Unity users):</h3>
+<p>The <code>FSM_UnityIntegration</code> script (discussed in <strong><a href="02_Getting_Started_Unity.md">02. Getting Started with Unity</a></strong>) will automatically create and update the &quot;Update&quot;, &quot;FixedUpdate&quot;, &quot;LateUpdate&quot;, etc., processing groups. By using <code>WithProcessingGroup(&quot;Update&quot;)</code> or <code>WithProcessingGroup(&quot;FixedUpdate&quot;)</code> in your builder, you're instructing FSM_API to include instances of this definition in those Unity-driven update cycles by default.</p>
+<hr>
+<h2 id="-finalizing-the-blueprint-builddefinition">🚀 Finalizing the Blueprint: <code>.BuildDefinition()</code></h2>
+<p>This is the <strong>essential final step</strong> in the <code>FSMBuilder</code> chain. Calling <code>BuildDefinition()</code> processes all the states, transitions, and configurations you've defined, then <strong>registers this complete FSM blueprint</strong> with the FSM_API system.</p>
+<p><strong>C# Example:</strong></p>
+<pre><code class="lang-csharp">var playerFSMDefinition = FSM_API.CreateFiniteStateMachine(&quot;PlayerFSM&quot;)
+    // ... all your State(), Transition(), etc. calls ...
+    .BuildDefinition(); // Must be called to finalize
+</code></pre>
+<h3 id="what-builddefinition-does">What <code>BuildDefinition()</code> does:</h3>
+<ul>
+<li><strong>Validates:</strong> It performs internal checks to ensure your FSM is valid (e.g., initial state exists, no duplicate state names).</li>
+<li><strong>Registers:</strong> It makes your FSM definition available by its name (<code>&quot;PlayerFSM&quot;</code> in the example) for future instantiation using <code>FSM_API.CreateInstance()</code>.</li>
+<li><strong>Returns:</strong> It returns the <code>IFSMDefinition</code> object, representing your immutable blueprint. You usually don't need to store this, as you'll retrieve FSMs by name for instance creation.</li>
+</ul>
+<hr>
+<h2 id="-summary-of-fsmbuilder-methods">🧩 Summary of <code>FSMBuilder</code> Methods</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>State(...)</code></td>
+<td style="text-align: left;">Defines a named state and its <code>onEnter</code>, <code>onUpdate</code>, and <code>onExit</code> actions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WithInitialState(...)</code></td>
+<td style="text-align: left;">Sets the default starting state for any new FSM instance created from this blueprint.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Transition(...)</code></td>
+<td style="text-align: left;">Defines a conditional rule for moving from a specific source state to a specific destination state. Order matters for priority.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>AnyTransition(...)</code></td>
+<td style="text-align: left;">Defines a global conditional rule for moving from <em>any</em> state to a specific destination state. These have higher priority than regular transitions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WithProcessRate(...)</code></td>
+<td style="text-align: left;">Sets the default update frequency (<code>onUpdate</code> calls and transition checks) for instances of this FSM definition. (e.g., every tick, every N ticks, or only when manually stepped).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WithName(...)</code></td>
+<td style="text-align: left;">Assigns the unique identifier for this FSM definition blueprint.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>WithProcessingGroup(...)</code></td>
+<td style="text-align: left;">Assigns the default processing group for instances of this FSM definition, controlling when they are collectively updated by <code>FSM_API.Update(&quot;GroupName&quot;)</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BuildDefinition()</code></td>
+<td style="text-align: left;"><strong>Finalizes and registers</strong> the FSM blueprint with FSM_API. This is a mandatory last step after configuring your FSM.</td>
+</tr>
+</tbody>
+</table>
+<p><code>FSMBuilder</code> is your FSM factory — design once, reuse everywhere, and rapidly iterate on your state-driven behaviors.</p>
+<hr>
+<p><a href="05_Context_Implementation.html">➡️ Continue to: 05. Understanding and Implementing Your Context (IStateContext)</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/04_FSM_Builder_Deep_Dive.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class FSM_API.Interaction </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class FSM_API.Interaction ">
+    
+    <meta name="description" content="Provides a set of methods for interacting with and managing FSM definitions and instances at runtime. This includes querying their existence, retrieving instances, ticking processing groups, and destroying definitions or individual instances.">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction" class="text-break">Class FSM_API.Interaction</h1>
+  <div class="markdown level0 summary"><p>Provides a set of methods for interacting with and managing FSM definitions and instances at runtime.
+This includes querying their existence, retrieving instances, ticking processing groups,
+and destroying definitions or individual instances.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">FSM_API.Interaction</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class FSM_API.Interaction</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This static class groups all operations related to the lifecycle and real-time management
+of FSMs once they have been defined and instantiated. It serves as the primary
+interface for monitoring and controlling your FSMs after their initial setup.</p>
+</div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_System_String_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(System.String%2CSystem.String%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D%2CSystem.Action%7BTheSingularityWorkshop.FSM_API.IStateContext%7D%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L83">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_System_String_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(System.String,System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.String)">AddStateToFSM(string, string, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;, Action&lt;IStateContext&gt;, string)</h4>
+  <div class="markdown level1 summary"><p>Dynamically adds a new state definition to an existing Finite State Machine blueprint
+at runtime.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddStateToFSM(string fsmName, string stateName, Action&lt;IStateContext&gt; onEnter, Action&lt;IStateContext&gt; onUpdate, Action&lt;IStateContext&gt; onExit, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name of the FSM blueprint to which the state will be added or updated.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">stateName</span></td>
+        <td><p>The name of the state to add or update. This must be unique within the FSM.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onEnter</span></td>
+        <td><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action&lt;T&gt;</a> to execute when an FSM instance enters this state. Can be <code>null</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onUpdate</span></td>
+        <td><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action&lt;T&gt;</a> to execute when an FSM instance is in this state during an <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_">Update(string)</a> call. Can be <code>null</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>&gt;</td>
+        <td><span class="parametername">onExit</span></td>
+        <td><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action&lt;T&gt;</a> to execute when an FSM instance exits this state. Can be <code>null</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_System_String_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method allows you to extend the behavior of an FSM after it has been defined.
+It internally uses an <span class="xref">TheSingularityWorkshop.FSM_API.FSMModifier</span> to apply the changes.
+If a state with the given <code class="paramref">stateName</code> already exists in the FSM,
+its <code>onEnter</code>, <code>onUpdate</code>, and <code>onExit</code> actions will be updated.
+All active instances of this FSM definition will immediately reflect the added or
+updated state when they attempt to transition to or from it, or if they are
+currently in that state and its actions are modified.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code>, <code class="paramref">stateName</code>, or <code class="paramref">processingGroup</code>
+is null, empty, or consists only of white-space characters.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></td>
+        <td><p>Thrown if the FSM definition specified by <code class="paramref">fsmName</code> and <code class="paramref">processingGroup</code>
+cannot be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_System_String_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(System.String%2CSystem.String%2CSystem.String%2CSystem.Func%7BTheSingularityWorkshop.FSM_API.IStateContext%2CSystem.Boolean%7D%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L153">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_System_String_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(System.String,System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean},System.String)">AddTransition(string, string, string, Func&lt;IStateContext, bool&gt;, string)</h4>
+  <div class="markdown level1 summary"><p>Dynamically adds a new transition between two states to an existing Finite State Machine blueprint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddTransition(string fsmName, string fromState, string toState, Func&lt;IStateContext, bool&gt; condition, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name of the FSM blueprint to which the transition will be added or updated.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fromState</span></td>
+        <td><p>The name of the state from which the transition originates. Use <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AnyStateIdentifier">AnyStateIdentifier</a>
+to define a transition that can occur from any state.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">toState</span></td>
+        <td><p>The name of the state to which the transition leads.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</td>
+        <td><span class="parametername">condition</span></td>
+        <td><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func&lt;T, TResult&gt;</a> that returns <code>true</code> when the transition should occur.
+This function operates on the <a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_System_String_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method internally uses an <span class="xref">TheSingularityWorkshop.FSM_API.FSMModifier</span> to apply the changes.
+This allows for changing the flow of your FSMs at runtime. If a transition
+from <code class="paramref">fromState</code> to <code class="paramref">toState</code> with the exact
+same condition already exists, it will be updated with the new <code class="paramref">condition</code>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code>, <code class="paramref">fromState</code>, <code class="paramref">toState</code>,
+or <code class="paramref">processingGroup</code> is null, empty, or consists only of white-space characters,
+or if <code class="paramref">condition</code> is <code>null</code>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></td>
+        <td><p>Thrown if the FSM definition specified by <code class="paramref">fsmName</code> and <code class="paramref">processingGroup</code>
+cannot be found.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><p>Thrown if <code class="paramref">fromState</code> or <code class="paramref">toState</code> does not exist within the FSM's defined states,
+unless <code class="paramref">fromState</code> is <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AnyStateIdentifier">AnyStateIdentifier</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L209">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(System.String,System.String)">DestroyFiniteStateMachine(string, string)</h4>
+  <div class="markdown level1 summary"><p>Removes a registered FSM definition and all its associated active instances
+from a specific processing group. This effectively unregisters the FSM blueprint
+and frees up resources for all its derived instances.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The name of the FSM definition to destroy.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a <strong>destructive operation</strong> for a specific FSM type. All current instances
+of this FSM definition will cease to be managed by the API. Their <span class="xref">TheSingularityWorkshop.FSM_API.FSMHandle.DestroyHandle()</span>
+method will be called to ensure proper <code>OnExit</code> logic is executed.
+Memory will then be eligible for garbage collection once all external references are released.
+If the FSM definition or group does not exist, a warning will be logged via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_">InvokeInternalApiError(string, Exception)</a>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code> or <code class="paramref">processingGroup</code> is null, empty,
+or consists only of white-space characters.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_TheSingularityWorkshop_FSM_API_FSMHandle_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L485">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_TheSingularityWorkshop_FSM_API_FSMHandle_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)">DestroyInstance(FSMHandle)</h4>
+  <div class="markdown level1 summary"><p>Unregisters a specific FSM instance from the system, allowing it to be garbage collected
+if no other references exist. This method searches across all active FSM definitions
+in all groups to find and deregister the instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DestroyInstance(FSMHandle instance)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a></td>
+        <td><span class="parametername">instance</span></td>
+        <td><p>The <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> of the specific live FSM instance to unregister.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_TheSingularityWorkshop_FSM_API_FSMHandle__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Use this method when a particular object managed by an FSM is no longer needed
+or is being destroyed (e.g., a game object being despawned), but its FSM definition
+might still be in use by other instances.</p>
+<p>
+The instance's <span class="xref">TheSingularityWorkshop.FSM_API.FSMHandle.DestroyHandle()</span> method will be called to ensure
+any <code>OnExit</code> logic for its current state is executed before it is removed
+from management.
+</p>
+If the instance is not found (e.g., it was already unregistered or never registered),
+a warning will be logged via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_">InvokeInternalApiError(string, Exception)</a>.
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if the provided <code class="paramref">instance</code> is <code>null</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Exists_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L265">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Exists_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Exists_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(System.String,System.String)">Exists(string, string)</h4>
+  <div class="markdown level1 summary"><p>Checks if an FSM definition with the given name exists within the specified processing group.
+This is useful for verifying if an FSM blueprint has been registered before attempting
+to create instances or modify its definition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Exists(string fsmName, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name of the FSM definition to check for existence.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group to search within. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></td>
+        <td><p><code>true</code> if the FSM definition exists in the specified group; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code> or <code class="paramref">processingGroup</code> is null, empty,
+or consists only of white-space characters.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetAllDefinitionNames_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L300">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetAllDefinitionNames_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetAllDefinitionNames_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(System.String)">GetAllDefinitionNames(string)</h4>
+  <div class="markdown level1 summary"><p>Retrieves the names of all FSM definitions currently registered
+within a specific processing group. This is useful for introspection, debugging, or
+for building dynamic UI elements that list available FSMs.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyCollection&lt;string&gt; GetAllDefinitionNames(string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group to query for FSM definitions. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</td>
+        <td><p>A read-only collection of strings, where each string is the name of an FSM definition.
+If the processing group does not exist, an empty collection is returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">processingGroup</code> is null, empty, or consists only of white-space characters.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetFSMDefinition_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L698">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetFSMDefinition_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetFSMDefinition_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(System.String,System.String)">GetFSMDefinition(string, string)</h4>
+  <div class="markdown level1 summary"><p>Returns the requested definition or a default FSM.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static FSM GetFSMDefinition(string fsmName, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>Name of the FSM Definition to Get</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>Name of the Processing Group to find the FSM in.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html">FSM</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notimplementedexception">NotImplementedException</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(System.String%2CTheSingularityWorkshop.FSM_API.IStateContext%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L685">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)">GetInstance(string, IStateContext, string)</h4>
+  <div class="markdown level1 summary"><p>Retrieves a live <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> for a specific FSM instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static FSMHandle GetInstance(string testFsmName, IStateContext context, string processingGroup)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">testFsmName</span></td>
+        <td><p>The name of the FSM blueprint, e.g., &quot;PlayerMovementFSM&quot;.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.IStateContext.html">IStateContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The unique context object (e.g., your character controller or enemy AI object)
+that identifies a specific FSM instance.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the group that this FSM instance belongs to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a></td>
+        <td><p>A valid <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> if a matching instance is found; otherwise, <code>null</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is the primary public method to access an existing, running FSM instance.
+It uses the provided FSM name, the unique context object associated with the instance,
+and its processing group to locate and return the correct handle. This allows you
+to check the FSM's current state or manually trigger a transition from outside
+of the FSM's own logic.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L342">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(System.String,System.String)">GetInstances(string, string)</h4>
+  <div class="markdown level1 summary"><p>Retrieves all active, live instances of a specific FSM definition
+within a given processing group.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;FSMHandle&gt; GetInstances(string fsmName, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The name of the FSM definition whose active instances you want to retrieve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a>&gt;</td>
+        <td><p>A read-only list of <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> objects, each representing a live
+FSM instance derived from the specified definition.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Each <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> in the returned list represents a currently
+running Finite State Machine, bound to its own unique context object.
+This method allows you to inspect, manage, or interact with all live
+applications of a particular FSM blueprint.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code> or <code class="paramref">processingGroup</code> is null, empty,
+or consists only of white-space characters.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></td>
+        <td><p>Thrown if the FSM definition specified by <code class="paramref">fsmName</code> and <code class="paramref">processingGroup</code>
+cannot be found. Ensure the FSM has been defined prior to attempting to retrieve its instances.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L378">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(System.String)">RemoveProcessingGroup(string)</h4>
+  <div class="markdown level1 summary"><p>Removes an entire FSM processing group from the system, along with all FSM definitions
+and all their active instances associated with that group.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RemoveProcessingGroup(string processingGroup)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a <strong>destructive operation</strong>. Use this method carefully, typically when
+an entire subsystem or module that relies on a specific FSM processing group
+is being unloaded or shut down. All memory and resources tied to FSMs
+in this group will be released and they will no longer be managed by the API.
+If the group does not exist, a warning will be logged via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_">InvokeInternalApiError(string, Exception)</a>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">processingGroup</code> is null, empty, or consists only of white-space characters.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_System_String_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(System.String%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L570">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_System_String_System_String_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(System.String,System.String,System.String,System.String)">RemoveStateFromFSM(string, string, string, string)</h4>
+  <div class="markdown level1 summary"><p>Dynamically removes a state definition from an existing Finite State Machine blueprint at runtime.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RemoveStateFromFSM(string fsmName, string stateName, string fallbackStateName, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name of the FSM blueprint from which the state will be removed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">stateName</span></td>
+        <td><p>The name of the state to remove.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fallbackStateName</span></td>
+        <td><p>Optional: The name of the state to transition existing FSM instances to if they are
+currently in the state being removed. If not provided (null or empty), instances
+will default to transitioning to the FSM's <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_InitialState">InitialState</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_System_String_System_String_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method internally uses an <span class="xref">TheSingularityWorkshop.FSM_API.FSMModifier</span> to apply the changes.</p>
+<p>
+When a state is removed, any active FSM instances currently in that state will be
+immediately transitioned. The transition target is determined as follows:
+<ul><li>If a valid <code class="paramref">fallbackStateName</code> is provided, instances will transition to that state.</li><li>If <code class="paramref">fallbackStateName</code> is null, empty, or consists only of white-space,
+          instances will instead transition to the FSM's <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_InitialState">InitialState</a>.</li></ul>
+The `OnExit` action of the removed state will be called, followed by the `OnEnter` action
+of the determined fallback or initial state.
+
+<p>
+If the specified state to remove does not exist in the FSM, a warning will be logged
+via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_">InvokeInternalApiError(string, Exception)</a>.
+</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code>, <code class="paramref">stateName</code>, or <code class="paramref">processingGroup</code>
+is null, empty, or consists only of white-space characters.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></td>
+        <td><p>Thrown if the FSM definition specified by <code class="paramref">fsmName</code> and <code class="paramref">processingGroup</code>
+cannot be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_System_String_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(System.String%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L639">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_System_String_System_String_System_String_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(System.String,System.String,System.String,System.String)">RemoveTransition(string, string, string, string)</h4>
+  <div class="markdown level1 summary"><p>Dynamically removes a specific transition between two states from an existing Finite State Machine blueprint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RemoveTransition(string fsmName, string fromState, string toState, string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fsmName</span></td>
+        <td><p>The unique name of the FSM blueprint from which the transition will be removed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">fromState</span></td>
+        <td><p>The name of the state from which the transition originates. Use <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AnyStateIdentifier">AnyStateIdentifier</a>
+to remove a transition that occurs from any state.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">toState</span></td>
+        <td><p>The name of the state to which the transition leads.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>The name of the processing group where the FSM definition is registered. Defaults to <code>&quot;Update&quot;</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_System_String_System_String_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method internally uses an <span class="xref">TheSingularityWorkshop.FSM_API.FSMModifier</span> to apply the changes.
+This allows for removing unwanted or obsolete paths in your FSM's logic at runtime.
+If the specified transition does not exist, a warning will be logged via <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_">InvokeInternalApiError(string, Exception)</a>.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if <code class="paramref">fsmName</code>, <code class="paramref">fromState</code>, <code class="paramref">toState</code>,
+or <code class="paramref">processingGroup</code> is null, empty, or consists only of white-space characters.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception">KeyNotFoundException</a></td>
+        <td><p>Thrown if the FSM definition specified by <code class="paramref">fsmName</code> and <code class="paramref">processingGroup</code>
+cannot be found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L443">View Source</a>
+  </span>
+  <a id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update*"></a>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)">Update(string)</h4>
+  <div class="markdown level1 summary"><p>Advances the FSM instance by one logical step. This involves executing the 'OnUpdate'
+action of the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState">CurrentState</a> and evaluating all defined transitions
+from the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState">CurrentState</a>. If a valid transition is found, the FSM will
+move to the next state, executing 'OnExit' for the old state and 'OnEnter' for the new state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Update(string processingGroup = &quot;Update&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></td>
+        <td><span class="parametername">processingGroup</span></td>
+        <td><p>Optional: A string identifying the process group for error reporting, defaults to &quot;Update&quot;.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p><strong>The Crucial Step for FSM Processing:</strong>
+This <code>Update()</code> method is fundamental to the operation of an FSM instance. Without
+it being called, the FSM will not execute its state's update logic, evaluate transitions,
+or progress through its defined states. An FSM definition, no matter how intricate,
+remains static until its instances are actively updated.</p>
+<p><strong>How FSMs are &quot;Ticked&quot;:</strong>
+This method is primarily designed to be invoked by the <code>FSM_API</code>'s internal management
+system (e.g., via <code>FSM_API.Interaction.TickAll(string processingGroup)</code>). The API
+manages the periodic invocation of this method for all registered FSM instances
+within a given processing group, respecting their defined <code>ProcessRate</code>.</p>
+<p><strong>CAUTION: Manual Invocation (Advanced Use Only):</strong>
+While publicly accessible, directly calling <code>Update()</code> manually from your application code
+should only be done by developers who possess a deep understanding of the FSM's internal
+processing cycle and lifecycle management. Manual invocation outside of the
+<code>FSM_API</code>'s managed loop can lead to:</p>
+<ul><li>Unpredictable state behavior due to uncontrolled update rates.</li><li>Performance issues if not integrated into an efficient game loop or update scheduler.</li><li>Conflicts with the <code>FSM_API</code>'s internal error handling and instance management.</li></ul>
+Use with extreme care and only when building a highly customized, self-managed FSM update system.
+</div>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Interaction.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Interaction%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Interaction.cs/#L41" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

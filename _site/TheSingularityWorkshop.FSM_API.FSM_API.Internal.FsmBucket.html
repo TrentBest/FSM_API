@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class FSM_API.Internal.FsmBucket </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class FSM_API.Internal.FsmBucket ">
+    
+    <meta name="description" content="Represents an internal container for an FSM definition and all its active instances.">
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket">
+
+
+
+  <h1 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket" class="text-break">Class FSM_API.Internal.FsmBucket</h1>
+  <div class="markdown level0 summary"><p>Represents an internal container for an FSM definition and all its active instances.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+    <div class="level1"><span class="xref">FSM_API.Internal.FsmBucket</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="TheSingularityWorkshop.html">TheSingularityWorkshop</a>.<a class="xref" href="TheSingularityWorkshop.FSM_API.html">FSM_API</a></h6>
+  <h6><strong>Assembly</strong>: FSM_API.dll</h6>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class FSM_API.Internal.FsmBucket</code></pre>
+  </div>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This class is used <strong>internally</strong> by the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.html">FSM_API</a> to efficiently manage
+FSM definitions and their associated running instances within specific
+processing groups. It tracks the FSM's blueprint, its live instances,
+and properties related to its update rate. Being <code>public</code> (nested within an internal class),
+it's effectively encapsulated within the <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.html">FSM_API</a>'s internal structure.</p>
+</div>
+  <h3 id="fields">Fields
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Counter.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Internal.cs/#L78">View Source</a>
+  </span>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Counter" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter">Counter</h4>
+  <div class="markdown level1 summary"><p>An internal counter used for frame-skipping when <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_ProcessRate">ProcessRate</a> is greater than 0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Counter</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Definition.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Internal.cs/#L54">View Source</a>
+  </span>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Definition" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition">Definition</h4>
+  <div class="markdown level1 summary"><p>The blueprint (definition) of the Finite State Machine.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FSM Definition</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="TheSingularityWorkshop.FSM_API.FSM.html">FSM</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Instances.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Internal.cs/#L63">View Source</a>
+  </span>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Instances" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances">Instances</h4>
+  <div class="markdown level1 summary"><p>A list of all active <a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a> instances created from this definition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;FSMHandle&gt; Instances</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="TheSingularityWorkshop.FSM_API.FSMHandle.html">FSMHandle</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Instances_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Instances are added to this list upon creation and removed upon unregistration
+or automatic removal due to error thresholds. The list itself is never null.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_ProcessRate.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Internal.cs/#L73">View Source</a>
+  </span>
+  <h4 id="TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_ProcessRate" data-uid="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate">ProcessRate</h4>
+  <div class="markdown level1 summary"><p>The desired processing rate for instances of this FSM definition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int ProcessRate</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></td>
+        <td><p><code>-1</code>: Process every frame (or every call to <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_">Update(string)</a>).
+<code>0</code>: Event-driven only (will not be processed by <a class="xref" href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_">Update(string)</a>'s internal tick).
+<code>&gt;0</code>: Process every Nth frame, where N is the value of <code>ProcessRate</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/new/master/apiSpec/new?filename=TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket.md&amp;value=---%0Auid%3A%20TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/FSM_API/FSM_API.Internal.cs/#L44" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

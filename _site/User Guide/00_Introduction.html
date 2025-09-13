@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>00. Introduction to FSM_API </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="00. Introduction to FSM_API ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="00-introduction-to-fsm_api">00. Introduction to FSM_API</h1>
+
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<h2 id="-welcome-to-fsm_api">👋 Welcome to FSM_API!</h2>
+<p>FSM_API is a powerful, performance-driven library designed to help you easily manage complex behaviors in your applications and games using <strong>Finite State Machines (FSMs)</strong>. It provides a robust and flexible framework for defining, managing, and executing state-based logic.</p>
+<a href="Visuals/Light_Switch_FSM.png" target="_blank">
+    <img src="Visuals/Light_Switch_FSM.png" alt="Diagram of a simple light switch FSM" height="200" style="display: block;">
+</a>
+<em>At its core, an FSM is a simple concept we see every day. A light switch has two states, 'On' and 'Off', and a clear action, 'flipping the switch', causes a transition between them.</em>
+<hr>
+<h2 id="-what-is-the-unityintegration">🎮 What is the UnityIntegration?</h2>
+<blockquote>
+<p><strong>Note:</strong> This FSM_API project is a pure C# library and is completely engine-agnostic. It does not include any Unity-specific code or dependencies.</p>
+</blockquote>
+<p>Unity integration is available as a separate package, which provides the necessary bridge for using FSM_API within Unity projects. If you are looking to use FSM_API in Unity, please see:</p>
+<p><strong><a href="https://github.com/TrentBest/FSM_API_Unity">FSM_API_Unity GitHub Repository</a></strong></p>
+<p>All Unity-specific documentation and examples are maintained in that repository. This documentation focuses on the core, engine-agnostic FSM_API.</p>
+<a href="Visuals/API_vs_Integrations.png" target="_blank">
+    <img src="Visuals/API_vs_Integrations.png" alt="Diagram of the FSM_API Ecosystem" height="200" style="display: block;">
+</a>
+*A diagram showing the Core API connecting to various integrations.*
+<hr>
+<h2 id="-why-and-where-can-you-use-fsm_api">🎯 Why and Where Can You Use FSM_API?</h2>
+<p>FSM_API can be used anywhere you need structured, predictable, and maintainable state-driven logic. Its applications span numerous domains:</p>
+<pre><code>Application &amp; System Logic: Manage complex workflows like a document moving from Draft to Review to Published. Control UI states, such as enabling or disabling form elements based on user progress. Build robust data processing pipelines or manage the lifecycle of network connections.
+
+AI &amp; Agent Behavior: Define the logic for any autonomous entity, whether it's an enemy in a game (Patrolling, Chasing, Attacking) or a robot in a warehouse (Charging, Fetching Item, Returning to Base).
+
+Interactive Systems: Control the states of any interactive object, such as a door (Open, Closed, Locked) or a vending machine (Idle, Awaiting Selection, Dispensing).
+</code></pre>
+<p>Its benefits include:</p>
+<ul>
+<li><strong>Performance-Driven:</strong> Designed for <strong>efficiency</strong> and <strong>responsiveness</strong>, even when managing <strong>hundreds or thousands</strong> of active state machines.</li>
+<li><strong>Clarity &amp; Maintainability:</strong> Designed for <strong>readability and elegance</strong>, FSM_API helps teams collaborate with ease and maintain codebases confidently.
+<a href="Visuals/Clarity_Comparison.png" target="_blank">
+<img src="Visuals/Clarity_Comparison.png" alt="Diagram comparing tangled spaghetti code to a clean FSM flowchart" height="200" style="display: block;">
+</a>
+<em>Transform tangled logic into a clear, manageable flow.</em></li>
+<li><strong>Testability:</strong> FSM_API’s clean <strong>separation of logic and context</strong> makes it easy to write <strong>automated unit tests</strong> for your state machines.</li>
+</ul>
+<a href="Visuals/FSM.png" target="_blank">
+    <img src="Visuals/FSM.png" alt="Visual of a Finite State Machine" height="200" style="display: block;">
+</a>
+*A concrete example of an FSM for character AI.*
+<a href="Visuals/Character_AI_FSM.png" target="_blank">
+    <img src="Visuals/Character_AI_FSM.png" alt="An FSM for enemy AI in a game" height="200" style="display: block;">
+</a>
+<em>An FSM for enemy AI in a game.</em>
+<a href="Visuals/Document_Workflow_FSM.png" target="_blank">
+    <img src="Visuals/Document_Workflow_FSM.png" alt="An FSM for a document workflow in a business application" height="200" style="display: block;">
+</a>
+<em>An FSM for a document workflow in a business application.</em>
+<hr>
+<h2 id="-where-to-go-next">📚 Where to Go Next?</h2>
+<p>To best navigate this documentation, please consider your current understanding:</p>
+<ul>
+<li><p><strong>New to Finite State Machines (FSMs)?</strong>
+If terms like &quot;states,&quot; &quot;transitions,&quot; &quot;event-driven,&quot; or &quot;stepped&quot; are new to you, begin with our <strong>Theory folder</strong> for comprehensive explanations and definitions:</p>
+<ul>
+<li><strong><a href="Theory/01_What_is_an_FSM.md">Theory/01_What_is_an_FSM.md</a></strong></li>
+<li><strong><a href="Theory/02_States_and_Transitions.md">Theory/02_States_and_Transitions.md</a></strong></li>
+<li><strong><a href="Theory/03_Stepped_vs_Event_Driven.md">Theory/03_Stepped_vs_Event_Driven.md</a></strong></li>
+<li><strong><a href="Theory/04_Advanced_FSM_Concepts.md">Theory/04_Advanced_FSM_Concepts.md</a></strong> (if applicable)</li>
+</ul>
+</li>
+<li><p><strong>Familiar with FSMs, but new to FSM_API?</strong>
+For an abridged overview of how FSM_API implements core FSM concepts, proceed to the <strong><a href="01_Core_Concepts.html">01. Core Concepts: Your Guide to FSM_API</a></strong> section.</p>
+</li>
+<li><p><strong>Ready to start coding?</strong>
+Jump straight into our C# guide: <strong><a href="/User%20Guide/03_Getting_Started_CSharp.md">02. Getting Started with c#</a></strong>.</p>
+</li>
+<li><p><strong>Are you a non-coder looking for a high-level understanding?</strong>
+Get a broad overview of what FSM_API does and its benefits without diving into code in <strong><a href="10_Non_Coder_Overview.html">10. FSM_API for Non-Coders: A Big Picture Overview</a></strong>.</p>
+</li>
+</ul>
+<hr>
+<p><a href="01_Core_Concepts.html">Continue to: 01. Core Concepts: Your Guide to FSM_API</a></p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/00_Introduction.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

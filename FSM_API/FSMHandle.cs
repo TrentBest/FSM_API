@@ -7,6 +7,28 @@ namespace TheSingularityWorkshop.FSM_API
     /// This is your direct link, or **"handle,"** to a specific, live FSM (Finite State Machine) instance. 🎮
     /// Think of it as the remote control for one particular character or object that's using an FSM.
     /// <div class="mermaid">
+    /// classDiagram
+    ///    direction BT
+    ///    class FSMHandle {
+    ///        +string Name
+    ///        +string CurrentState
+    ///        +IStateContext Context
+    ///        +FSM Definition
+    ///    }
+    ///    class FSM {
+    ///        +string Name
+    ///        +string InitialState
+    ///    }
+    ///    class IStateContext {
+    ///        <<interface>>
+    ///        +string Name
+    ///        +bool IsValid
+    ///    }
+    ///
+    ///    FSMHandle "1" *-- "1" FSM : <<uses>>
+    ///    FSMHandle "1" *-- "1" IStateContext : <<controls>>
+    /// </div>
+    /// <div class="mermaid">
     /// graph TD
     ///    A[FSMHandle (The Logic)] -->|Commands| B[IStateContext (The Data)];
     ///    B -->|Returns Data/Status| A;
@@ -159,9 +181,8 @@ namespace TheSingularityWorkshop.FSM_API
         {
             try
             {
-                // The Step method will internally handle state transitions and update CurrentState
-                Definition.Step(CurrentState, Context, out string nextState);
-                Console.WriteLine($"Here3");
+                string nextState;
+                Definition.Step(CurrentState, Context, out nextState);
                 CurrentState = nextState;
             }
             catch (Exception ex)

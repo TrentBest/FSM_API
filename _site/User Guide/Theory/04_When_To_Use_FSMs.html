@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>04. When to Use Finite State Machines </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="04. When to Use Finite State Machines ">
+    
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="04-when-to-use-finite-state-machines">04. When to Use Finite State Machines</h1>
+
+<blockquote>
+<p>Finite State Machines (FSMs) are not a silver bullet for every programming problem, but they are an incredibly powerful and elegant solution for specific types of challenges. This document outlines common scenarios and characteristics of problems where employing an FSM, especially with FSM_API, will yield significant benefits in terms of clarity, maintainability, and robustness.</p>
+</blockquote>
+<hr>
+<h2 id="-table-of-contents-for-theory-folder">📚 Table of Contents (for Theory Folder)</h2>
+<ul>
+<li><a href="01_What_Are_FSMs.html">01. What Are Finite State Machines (FSMs)? - A Deeper Dive</a></li>
+<li><a href="02_Types_Of_FSMs.html">02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent</a></li>
+<li><a href="03_Advantages_And_Disadvantages.html">03. Advantages and Disadvantages of Using FSMs</a></li>
+<li><a href="04_When_To_Use_FSMs.html">04. When to Use Finite State Machines</a></li>
+<li><a href="05_FSM_Limitations_And_Alternatives.html">05. FSM Limitations and Alternatives</a></li>
+</ul>
+<hr>
+<h2 id="-ideal-scenarios-for-fsm-implementation">🎯 Ideal Scenarios for FSM Implementation</h2>
+<p>Consider using an FSM when your system or entity exhibits one or more of the following characteristics:</p>
+<h3 id="1-discrete-well-defined-states-">1. <strong>Discrete, Well-Defined States</strong> 🚦</h3>
+<p>The system can clearly be in one of a finite number of distinct modes or conditions.</p>
+<ul>
+<li><strong>Examples:</strong> A traffic light (Red, Yellow, Green), a user's login status (Logged Out, Logging In, Logged In, Failed Login), a door (Open, Closed, Opening, Closing).</li>
+<li><strong>Why FSMs Shine:</strong> FSMs naturally map to these discrete states, enforcing that the system is <em>only</em> in one state at a time, making behavior predictable.</li>
+</ul>
+<h3 id="2-state-dependent-behavior-">2. <strong>State-Dependent Behavior</strong> 🚶‍♀️⚔️</h3>
+<p>The system's actions, valid inputs, or responses change significantly based on its current state.</p>
+<ul>
+<li><strong>Examples:</strong> A game character can only <code>Attack</code> if it's in the <code>Idle</code> or <code>Attacking</code> state, not <code>Stunned</code>. A button is only <code>Clickable</code> if the application is in the <code>Ready</code> state.</li>
+<li><strong>Why FSMs Shine:</strong> FSMs encapsulate state-specific logic, preventing invalid actions and simplifying the code for each mode.</li>
+</ul>
+<h3 id="3-event-driven-transitions-">3. <strong>Event-Driven Transitions</strong> ⚡</h3>
+<p>Changes between states occur in response to specific events or conditions being met.</p>
+<ul>
+<li><strong>Examples:</strong> A player character transitions from <code>Idle</code> to <code>Walking</code> when an &quot;input received&quot; event occurs. A download manager transitions from <code>Downloading</code> to <code>Completed</code> when a &quot;download finished&quot; event fires.</li>
+<li><strong>Why FSMs Shine:</strong> FSMs provide a clear, structured way to define what triggers a state change, improving clarity over scattered conditional logic.</li>
+</ul>
+<h3 id="4-complex-conditional-logic-tied-to-behavior-">4. <strong>Complex Conditional Logic Tied to Behavior</strong> 🌳</h3>
+<p>When you find yourself writing many nested <code>if-else if</code> statements to manage an entity's behavior that is difficult to untangle.</p>
+<ul>
+<li><strong>Example:</strong> An AI's decision-making process involving multiple factors like health, distance to target, current enemy count, and ammunition, all influencing its next action.</li>
+<li><strong>Why FSMs Shine:</strong> FSMs break down this complexity into manageable states, where each state focuses on a subset of the logic, leading to cleaner, more readable code.</li>
+</ul>
+<h3 id="5-clear-lifecycle-or-workflow-stages-">5. <strong>Clear Lifecycle or Workflow Stages</strong> 🔄</h3>
+<p>Processes that move through a defined sequence of steps or phases.</p>
+<ul>
+<li><strong>Examples:</strong> An order processing system (Pending, Confirmed, Shipped, Delivered), a build process (Compiling, Linking, Testing, Deploying).</li>
+<li><strong>Why FSMs Shine:</strong> FSMs provide a visual and programmatic blueprint for these workflows, ensuring steps are followed correctly and transitions are valid.</li>
+</ul>
+<h3 id="6-when-you-need-a-visual-representation-">6. <strong>When You Need a Visual Representation</strong> 📊</h3>
+<p>For systems where it's beneficial to communicate behavior clearly to both technical and non-technical team members.</p>
+<ul>
+<li><strong>Examples:</strong> Game designers, product managers, or QA testers need to understand AI behavior or UI flow without reading code.</li>
+<li><strong>Why FSMs Shine:</strong> FSMs are easily visualized as state diagrams, serving as excellent documentation and communication tools.</li>
+</ul>
+<h3 id="7-managing-concurrent-or-hierarchical-behaviors-with-advanced-fsms-">7. <strong>Managing Concurrent or Hierarchical Behaviors (with advanced FSMs)</strong> 👯‍♀️🌲</h3>
+<p>When a single entity has multiple independent behaviors running in parallel, or when states naturally nest within each other.</p>
+<ul>
+<li><strong>Examples:</strong> A game character can be simultaneously <code>Walking</code> (movement FSM) and <code>Reloading</code> (combat FSM). Or, a character's <code>Combat</code> superstate contains <code>Attacking</code>, <code>Defending</code>, and <code>Dodging</code> substates.</li>
+<li><strong>Why FSMs Shine:</strong> While basic FSMs struggle here, <strong>Hierarchical</strong> and <strong>Concurrent FSMs</strong> (which FSM_API supports) offer elegant solutions to manage this complexity, promoting modularity and reusability.</li>
+</ul>
+<hr>
+<h2 id="-fsm_apis-strengths-in-these-scenarios">✅ FSM_API's Strengths in These Scenarios</h2>
+<p>FSM_API is specifically engineered to excel in these contexts by providing:</p>
+<ul>
+<li><strong>Clean Separation (IStateContext):</strong> Ensures your FSM logic is reusable and decoupled from your specific game objects or data models.</li>
+<li><strong>Performance:</strong> Designed to handle numerous FSM instances efficiently, crucial for games with many AI entities.</li>
+<li><strong>Robustness:</strong> Built-in error handling (Cascading Degradation System) prevents crashes even if individual states or transitions encounter issues.</li>
+<li><strong>Flexibility:</strong> Supports both Unity and pure C# environments, making it versatile for any project requiring state management.</li>
+</ul>
+<p>By recognizing these patterns in your problem domain, you can effectively leverage FSM_API to build more organized, predictable, and maintainable software.</p>
+<hr>
+<p><a href="05_FSM_Limitations_And_Alternatives.html">➡️ Continue to: 05. FSM Limitations and Alternatives</a></p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/Theory/04_When_To_Use_FSMs.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

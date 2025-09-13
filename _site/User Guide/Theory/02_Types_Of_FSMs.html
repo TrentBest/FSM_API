@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent ">
+    
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="02-types-of-fsms-mealy-moore-hierarchical-and-concurrent">02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent</h1>
+
+<blockquote>
+<p>While all Finite State Machines share the core concepts of states and transitions, their specific behavior and structure can vary. Understanding these different types allows you to choose the most appropriate FSM model for your particular problem, from simple reactive systems to highly complex, adaptive behaviors.</p>
+</blockquote>
+<p>This document explores the common classifications and architectural patterns of FSMs.</p>
+<hr>
+<h2 id="-table-of-contents-for-theory-folder">📚 Table of Contents (for Theory Folder)</h2>
+<ul>
+<li><a href="01_What_Are_FSMs.html">01. What Are Finite State Machines (FSMs)? - A Deeper Dive</a></li>
+<li><a href="02_Types_Of_FSMs.html">02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent</a></li>
+<li><a href="03_Advantages_And_Disadvantages.html">03. Advantages and Disadvantages of Using FSMs</a></li>
+<li><a href="04_When_To_Use_FSMs.html">04. When to Use Finite State Machines</a></li>
+<li><a href="05_FSM_Limitations_And_Alternatives.html">05. FSM Limitations and Alternatives</a></li>
+</ul>
+<hr>
+<h2 id="-fundamental-types-mealy-vs-moore-machines">🔬 Fundamental Types: Mealy vs. Moore Machines</h2>
+<p>These are two classic, foundational types of FSMs, primarily differing in when and how they produce an <strong>output</strong>.</p>
+<h3 id="1-moore-machines-">1. <strong>Moore Machines</strong> 🎭</h3>
+<p>In a <strong>Moore Machine</strong>, the <strong>output is associated solely with the state itself</strong>. When the FSM enters a state, it produces that state's defined output. The output <em>only</em> changes when the state changes.</p>
+<ul>
+<li><strong>Characteristics:</strong>
+<ul>
+<li>Outputs are tied to <strong>states</strong>.</li>
+<li>Simpler to design and understand because the output is predictable once you know the current state.</li>
+<li>One common use for Moore machines is in vending machine logic where the action (e.g., dispensing a drink) happens <em>after</em> the correct state (e.g., &quot;Enough Money Deposited&quot;) is reached.</li>
+</ul>
+</li>
+<li><strong>Analogy:</strong> Think of a radio with a display showing &quot;Playing Music&quot; or &quot;On Standby.&quot; The display (output) reflects the current mode (state) of the radio.</li>
+<li><strong>FSM_API Relevance:</strong> The <code>onEnter</code> and <code>onExit</code> actions in FSM_API states are highly aligned with the Moore machine concept, as they execute code <em>upon entering</em> or <em>exiting</em> a state. The <code>onUpdate</code> is also state-dependent.</li>
+</ul>
+<hr>
+<h3 id="2-mealy-machines-">2. <strong>Mealy Machines</strong> ⚙️</h3>
+<p>In a <strong>Mealy Machine</strong>, the <strong>output is associated with the transitions between states</strong>. An output is produced when a particular transition occurs, meaning the same state might lead to different outputs depending on <em>how</em> it was entered or <em>what transition</em> is taken out of it.</p>
+<ul>
+<li><strong>Characteristics:</strong>
+<ul>
+<li>Outputs are tied to <strong>transitions</strong>.</li>
+<li>Can often have fewer states than a Moore machine for the same functionality because outputs are more granular.</li>
+<li>More flexible in expressing complex behaviors where an action is directly dependent on the <em>event</em> that causes a state change.</li>
+</ul>
+</li>
+<li><strong>Analogy:</strong> Imagine a simple doorbell. The &quot;ringing&quot; sound (output) happens <em>during</em> the transition from &quot;Button Not Pressed&quot; to &quot;Button Pressed,&quot; not while the button is just &quot;Pressed.&quot;</li>
+<li><strong>FSM_API Relevance:</strong> While FSM_API primarily emphasizes Moore-like state actions, you can simulate Mealy-like behavior by putting output logic directly within the <code>condition</code> lambda of a transition or by having <code>onExit</code> actions that depend on the <em>next</em> state being transitioned to (though this requires more manual checking).</li>
+</ul>
+<hr>
+<h2 id="-advanced-architectures">🌳 Advanced Architectures</h2>
+<p>Beyond the fundamental Mealy and Moore models, FSMs can be structured in more complex ways to manage intricate behaviors.</p>
+<h3 id="3-hierarchical-state-machines-hsms-">3. <strong>Hierarchical State Machines (HSMs)</strong> 🌲</h3>
+<p>Also known as <strong>nested FSMs</strong>, HSMs allow states to contain their own sub-FSMs. This introduces the concept of <strong>superstates</strong> and <strong>substates</strong>.</p>
+<ul>
+<li><strong>Superstate (Parent State):</strong> A state that contains an entire FSM within it. When the parent FSM enters a superstate, the sub-FSM inside it becomes active and enters its own initial state.</li>
+<li><strong>Substate (Child State):</strong> A state within a superstate's FSM.</li>
+<li><strong>Benefits:</strong>
+<ul>
+<li><strong>Reduced Complexity:</strong> Breaking down a large FSM into smaller, manageable sub-FSMs makes design and debugging much easier.</li>
+<li><strong>Code Reusability:</strong> Common behaviors (e.g., <code>Attacking</code> in both <code>MeleeCombat</code> and <code>RangedCombat</code> superstates) can be represented once in a sub-FSM.</li>
+<li><strong>Easier Global Transitions:</strong> A transition out of a superstate means exiting <em>any</em> of its substates and moving to a new state in the parent FSM, simplifying global exits (like a &quot;Stunned&quot; state interrupting any combat action).</li>
+</ul>
+</li>
+<li><strong>FSM_API Relevance:</strong> FSM_API can support Hierarchical FSMs by having separate FSM definitions that are activated/deactivated by the <code>onEnter</code> and <code>onExit</code> methods of a parent FSM's states. Your context object (IStateContext) would typically manage the active sub-FSM handle.</li>
+</ul>
+<hr>
+<h3 id="4-concurrent-parallel-state-machines-">4. <strong>Concurrent (Parallel) State Machines</strong> 👯</h3>
+<p>Concurrent FSMs allow a system to be in <strong>multiple states simultaneously</strong>, with each FSM controlling a different, independent aspect of the system's behavior.</p>
+<ul>
+<li><strong>Characteristics:</strong>
+<ul>
+<li>Instead of one FSM for an entire entity, you have multiple FSMs running in parallel for that same entity.</li>
+<li>Each concurrent FSM manages a distinct aspect (e.g., <code>MovementFSM</code>, <code>CombatFSM</code>, <code>AnimationFSM</code>, <code>InventoryFSM</code>).</li>
+<li>These FSMs might interact by reading each other's current states or by sending events.</li>
+</ul>
+</li>
+<li><strong>Benefits:</strong>
+<ul>
+<li><strong>Modularity:</strong> Clearly separates different behavioral concerns.</li>
+<li><strong>Flexibility:</strong> Allows for more complex combinations of behaviors than a single, monolithic FSM.</li>
+<li><strong>Scalability:</strong> Easier to add or remove independent behaviors without affecting others.</li>
+</ul>
+</li>
+<li><strong>FSM_API Relevance:</strong> FSM_API natively supports this by allowing you to create multiple <code>FSMHandle</code> instances for a single <code>IStateContext</code> object. Each handle would correspond to a different FSM definition (e.g., <code>FSM_API.CreateInstance(&quot;PlayerMovement&quot;, this); FSM_API.CreateInstance(&quot;PlayerCombat&quot;, this);</code>). You can then update these concurrently via different processing groups or manual <code>Step()</code> calls.</li>
+</ul>
+<hr>
+<p>By understanding these different types, you can leverage FSM_API to build systems that are not only robust and performant but also elegant and maintainable, regardless of their behavioral complexity.</p>
+<hr>
+<p><a href="03_Advantages_And_Disadvantages.html">➡️ Continue to: 03. Advantages and Disadvantages of Using FSMs</a></p>
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/Theory/02_Types_Of_FSMs.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

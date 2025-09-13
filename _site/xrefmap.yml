@@ -1,0 +1,1827 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: TheSingularityWorkshop.FSM_API
+  name: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.html
+  commentId: N:TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+- uid: TheSingularityWorkshop.FSM_API.FSM
+  name: FSM
+  href: TheSingularityWorkshop.FSM_API.FSM.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM
+  fullName: TheSingularityWorkshop.FSM_API.FSM
+  nameWithType: FSM
+- uid: TheSingularityWorkshop.FSM_API.FSM.#ctor
+  name: FSM()
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM__ctor
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.#ctor
+  name.vb: New()
+  fullName: TheSingularityWorkshop.FSM_API.FSM.FSM()
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.New()
+  nameWithType: FSM.FSM()
+  nameWithType.vb: FSM.New()
+- uid: TheSingularityWorkshop.FSM_API.FSM.#ctor*
+  name: FSM
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM__ctor_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: TheSingularityWorkshop.FSM_API.FSM.FSM
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.New
+  nameWithType: FSM.FSM
+  nameWithType.vb: FSM.New
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name: AddAnyStateTransition(string, Func<IStateContext, bool>)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddAnyStateTransition_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name.vb: AddAnyStateTransition(String, Func(Of IStateContext, Boolean))
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean))
+  nameWithType: FSM.AddAnyStateTransition(string, Func<IStateContext, bool>)
+  nameWithType.vb: FSM.AddAnyStateTransition(String, Func(Of IStateContext, Boolean))
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(TheSingularityWorkshop.FSM_API.FSMTransition)
+  name: AddAnyStateTransition(FSMTransition)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddAnyStateTransition_TheSingularityWorkshop_FSM_API_FSMTransition_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(TheSingularityWorkshop.FSM_API.FSMTransition)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition(TheSingularityWorkshop.FSM_API.FSMTransition)
+  nameWithType: FSM.AddAnyStateTransition(FSMTransition)
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition*
+  name: AddAnyStateTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddAnyStateTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddAnyStateTransition
+  nameWithType: FSM.AddAnyStateTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddState(TheSingularityWorkshop.FSM_API.FSMState)
+  name: AddState(FSMState)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddState_TheSingularityWorkshop_FSM_API_FSMState_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.AddState(TheSingularityWorkshop.FSM_API.FSMState)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddState(TheSingularityWorkshop.FSM_API.FSMState)
+  nameWithType: FSM.AddState(FSMState)
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddState*
+  name: AddState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.AddState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddState
+  nameWithType: FSM.AddState
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddTransition(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name: AddTransition(string, string, Func<IStateContext, bool>)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddTransition_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.AddTransition(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name.vb: AddTransition(String, String, Func(Of IStateContext, Boolean))
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddTransition(string, string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.AddTransition(String, String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean))
+  nameWithType: FSM.AddTransition(string, string, Func<IStateContext, bool>)
+  nameWithType.vb: FSM.AddTransition(String, String, Func(Of IStateContext, Boolean))
+- uid: TheSingularityWorkshop.FSM_API.FSM.AddTransition*
+  name: AddTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AddTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.AddTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AddTransition
+  nameWithType: FSM.AddTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.AnyStateIdentifier
+  name: AnyStateIdentifier
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_AnyStateIdentifier
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM.AnyStateIdentifier
+  fullName: TheSingularityWorkshop.FSM_API.FSM.AnyStateIdentifier
+  nameWithType: FSM.AnyStateIdentifier
+- uid: TheSingularityWorkshop.FSM_API.FSM.EnterInitial(TheSingularityWorkshop.FSM_API.IStateContext)
+  name: EnterInitial(IStateContext)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_EnterInitial_TheSingularityWorkshop_FSM_API_IStateContext_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.EnterInitial(TheSingularityWorkshop.FSM_API.IStateContext)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.EnterInitial(TheSingularityWorkshop.FSM_API.IStateContext)
+  nameWithType: FSM.EnterInitial(IStateContext)
+- uid: TheSingularityWorkshop.FSM_API.FSM.EnterInitial*
+  name: EnterInitial
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_EnterInitial_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.EnterInitial
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.EnterInitial
+  nameWithType: FSM.EnterInitial
+- uid: TheSingularityWorkshop.FSM_API.FSM.ForceTransition(System.String,System.String,TheSingularityWorkshop.FSM_API.IStateContext)
+  name: ForceTransition(string, string, IStateContext)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ForceTransition_System_String_System_String_TheSingularityWorkshop_FSM_API_IStateContext_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.ForceTransition(System.String,System.String,TheSingularityWorkshop.FSM_API.IStateContext)
+  name.vb: ForceTransition(String, String, IStateContext)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ForceTransition(string, string, TheSingularityWorkshop.FSM_API.IStateContext)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.ForceTransition(String, String, TheSingularityWorkshop.FSM_API.IStateContext)
+  nameWithType: FSM.ForceTransition(string, string, IStateContext)
+  nameWithType.vb: FSM.ForceTransition(String, String, IStateContext)
+- uid: TheSingularityWorkshop.FSM_API.FSM.ForceTransition*
+  name: ForceTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ForceTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.ForceTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ForceTransition
+  nameWithType: FSM.ForceTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAllStates
+  name: GetAllStates()
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAllStates
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.GetAllStates
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAllStates()
+  nameWithType: FSM.GetAllStates()
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAllStates*
+  name: GetAllStates
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAllStates_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.GetAllStates
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAllStates
+  nameWithType: FSM.GetAllStates
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions
+  name: GetAllTransitions()
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAllTransitions
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions()
+  nameWithType: FSM.GetAllTransitions()
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions*
+  name: GetAllTransitions
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAllTransitions_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAllTransitions
+  nameWithType: FSM.GetAllTransitions
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions
+  name: GetAnyStateTransitions()
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAnyStateTransitions
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions()
+  nameWithType: FSM.GetAnyStateTransitions()
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions*
+  name: GetAnyStateTransitions
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetAnyStateTransitions_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetAnyStateTransitions
+  nameWithType: FSM.GetAnyStateTransitions
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetState(System.String)
+  name: GetState(string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetState_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.GetState(System.String)
+  name.vb: GetState(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetState(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.GetState(String)
+  nameWithType: FSM.GetState(string)
+  nameWithType.vb: FSM.GetState(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetState*
+  name: GetState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.GetState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetState
+  nameWithType: FSM.GetState
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetTransition(System.Tuple{System.String,System.String})
+  name: GetTransition(Tuple<string, string>)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetTransition_System_Tuple_System_String_System_String__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.GetTransition(System.Tuple{System.String,System.String})
+  name.vb: GetTransition(Tuple(Of String, String))
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetTransition(System.Tuple<string, string>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.GetTransition(System.Tuple(Of String, String))
+  nameWithType: FSM.GetTransition(Tuple<string, string>)
+  nameWithType.vb: FSM.GetTransition(Tuple(Of String, String))
+- uid: TheSingularityWorkshop.FSM_API.FSM.GetTransition*
+  name: GetTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_GetTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.GetTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.GetTransition
+  nameWithType: FSM.GetTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.HasState(System.String)
+  name: HasState(string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_HasState_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.HasState(System.String)
+  name.vb: HasState(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.HasState(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.HasState(String)
+  nameWithType: FSM.HasState(string)
+  nameWithType.vb: FSM.HasState(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.HasState*
+  name: HasState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_HasState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.HasState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.HasState
+  nameWithType: FSM.HasState
+- uid: TheSingularityWorkshop.FSM_API.FSM.HasTransition(System.String,System.String)
+  name: HasTransition(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_HasTransition_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.HasTransition(System.String,System.String)
+  name.vb: HasTransition(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.HasTransition(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.HasTransition(String, String)
+  nameWithType: FSM.HasTransition(string, string)
+  nameWithType.vb: FSM.HasTransition(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.HasTransition*
+  name: HasTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_HasTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.HasTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.HasTransition
+  nameWithType: FSM.HasTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.InitialState
+  name: InitialState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_InitialState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM.InitialState
+  fullName: TheSingularityWorkshop.FSM_API.FSM.InitialState
+  nameWithType: FSM.InitialState
+- uid: TheSingularityWorkshop.FSM_API.FSM.InitialState*
+  name: InitialState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_InitialState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.InitialState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.InitialState
+  nameWithType: FSM.InitialState
+- uid: TheSingularityWorkshop.FSM_API.FSM.Name
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_Name
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM.Name
+  fullName: TheSingularityWorkshop.FSM_API.FSM.Name
+  nameWithType: FSM.Name
+- uid: TheSingularityWorkshop.FSM_API.FSM.Name*
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_Name_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.Name
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.Name
+  nameWithType: FSM.Name
+- uid: TheSingularityWorkshop.FSM_API.FSM.ProcessRate
+  name: ProcessRate
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessRate
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM.ProcessRate
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ProcessRate
+  nameWithType: FSM.ProcessRate
+- uid: TheSingularityWorkshop.FSM_API.FSM.ProcessRate*
+  name: ProcessRate
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessRate_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.ProcessRate
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ProcessRate
+  nameWithType: FSM.ProcessRate
+- uid: TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup
+  name: ProcessingGroup
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessingGroup
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup
+  nameWithType: FSM.ProcessingGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup*
+  name: ProcessingGroup
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ProcessingGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ProcessingGroup
+  nameWithType: FSM.ProcessingGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM.RemoveState(System.String)
+  name: RemoveState(string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_RemoveState_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.RemoveState(System.String)
+  name.vb: RemoveState(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.RemoveState(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.RemoveState(String)
+  nameWithType: FSM.RemoveState(string)
+  nameWithType.vb: FSM.RemoveState(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.RemoveState*
+  name: RemoveState
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_RemoveState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.RemoveState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.RemoveState
+  nameWithType: FSM.RemoveState
+- uid: TheSingularityWorkshop.FSM_API.FSM.RemoveTransition(System.String,System.String)
+  name: RemoveTransition(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_RemoveTransition_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.RemoveTransition(System.String,System.String)
+  name.vb: RemoveTransition(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.RemoveTransition(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.RemoveTransition(String, String)
+  nameWithType: FSM.RemoveTransition(string, string)
+  nameWithType.vb: FSM.RemoveTransition(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.RemoveTransition*
+  name: RemoveTransition
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_RemoveTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.RemoveTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.RemoveTransition
+  nameWithType: FSM.RemoveTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM.Step(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String@)
+  name: Step(string, IStateContext, out string)
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_Step_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.Step(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String@)
+  name.vb: Step(String, IStateContext, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM.Step(string, TheSingularityWorkshop.FSM_API.IStateContext, out string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM.Step(String, TheSingularityWorkshop.FSM_API.IStateContext, String)
+  nameWithType: FSM.Step(string, IStateContext, out string)
+  nameWithType.vb: FSM.Step(String, IStateContext, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM.Step*
+  name: Step
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_Step_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.Step
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.Step
+  nameWithType: FSM.Step
+- uid: TheSingularityWorkshop.FSM_API.FSM.ToString
+  name: ToString()
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ToString
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM.ToString
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ToString()
+  nameWithType: FSM.ToString()
+- uid: TheSingularityWorkshop.FSM_API.FSM.ToString*
+  name: ToString
+  href: TheSingularityWorkshop.FSM_API.FSM.html#TheSingularityWorkshop_FSM_API_FSM_ToString_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM.ToString
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM.ToString
+  nameWithType: FSM.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder
+  name: FSMBuilder
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMBuilder
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder
+  nameWithType: FSMBuilder
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor(System.String,System.Int32,System.String)
+  name: FSMBuilder(string, int, string)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_System_String_System_Int32_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor(System.String,System.Int32,System.String)
+  name.vb: New(String, Integer, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.FSMBuilder(string, int, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.New(String, Integer, String)
+  nameWithType: FSMBuilder.FSMBuilder(string, int, string)
+  nameWithType.vb: FSMBuilder.New(String, Integer, String)
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor*
+  name: FSMBuilder
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder__ctor_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.FSMBuilder
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.New
+  nameWithType: FSMBuilder.FSMBuilder
+  nameWithType.vb: FSMBuilder.New
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name: AnyTransition(string, Func<IStateContext, bool>)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name.vb: AnyTransition(String, Func(Of IStateContext, Boolean))
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition(String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean))
+  nameWithType: FSMBuilder.AnyTransition(string, Func<IStateContext, bool>)
+  nameWithType.vb: FSMBuilder.AnyTransition(String, Func(Of IStateContext, Boolean))
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition*
+  name: AnyTransition
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_AnyTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.AnyTransition
+  nameWithType: FSMBuilder.AnyTransition
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition
+  name: BuildDefinition()
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition()
+  nameWithType: FSMBuilder.BuildDefinition()
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition*
+  name: BuildDefinition
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_BuildDefinition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.BuildDefinition
+  nameWithType: FSMBuilder.BuildDefinition
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.State(System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name: State(string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_State_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.State(System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name.vb: State(String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext))
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.State(string, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.State(String, System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext))
+  nameWithType: FSMBuilder.State(string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>)
+  nameWithType.vb: FSMBuilder.State(String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext))
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.State*
+  name: State
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_State_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.State
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.State
+  nameWithType: FSMBuilder.State
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name: Transition(string, string, Func<IStateContext, bool>)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name.vb: Transition(String, String, Func(Of IStateContext, Boolean))
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(string, string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.Transition(String, String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean))
+  nameWithType: FSMBuilder.Transition(string, string, Func<IStateContext, bool>)
+  nameWithType.vb: FSMBuilder.Transition(String, String, Func(Of IStateContext, Boolean))
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.Transition*
+  name: Transition
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_Transition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.Transition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.Transition
+  nameWithType: FSMBuilder.Transition
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(System.String)
+  name: WithInitialState(string)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(System.String)
+  name.vb: WithInitialState(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState(String)
+  nameWithType: FSMBuilder.WithInitialState(string)
+  nameWithType.vb: FSMBuilder.WithInitialState(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState*
+  name: WithInitialState
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithInitialState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithInitialState
+  nameWithType: FSMBuilder.WithInitialState
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(System.Int32)
+  name: WithProcessRate(int)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_System_Int32_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(System.Int32)
+  name.vb: WithProcessRate(Integer)
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(int)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate(Integer)
+  nameWithType: FSMBuilder.WithProcessRate(int)
+  nameWithType.vb: FSMBuilder.WithProcessRate(Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate*
+  name: WithProcessRate
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessRate_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessRate
+  nameWithType: FSMBuilder.WithProcessRate
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(System.String)
+  name: WithProcessingGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(System.String)
+  name.vb: WithProcessingGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup(String)
+  nameWithType: FSMBuilder.WithProcessingGroup(string)
+  nameWithType.vb: FSMBuilder.WithProcessingGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup*
+  name: WithProcessingGroup
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html#TheSingularityWorkshop_FSM_API_FSMBuilder_WithProcessingGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder.WithProcessingGroup
+  nameWithType: FSMBuilder.WithProcessingGroup
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle
+  name: FSMHandle
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle
+  nameWithType: FSMHandle
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)
+  name: FSMHandle(FSM, IStateContext, int)
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle__ctor_TheSingularityWorkshop_FSM_API_FSM_TheSingularityWorkshop_FSM_API_IStateContext_System_Int32_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.#ctor(TheSingularityWorkshop.FSM_API.FSM,TheSingularityWorkshop.FSM_API.IStateContext,System.Int32)
+  name.vb: New(FSM, IStateContext, Integer)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.FSMHandle(TheSingularityWorkshop.FSM_API.FSM, TheSingularityWorkshop.FSM_API.IStateContext, int)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.New(TheSingularityWorkshop.FSM_API.FSM, TheSingularityWorkshop.FSM_API.IStateContext, Integer)
+  nameWithType: FSMHandle.FSMHandle(FSM, IStateContext, int)
+  nameWithType.vb: FSMHandle.New(FSM, IStateContext, Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.#ctor*
+  name: FSMHandle
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle__ctor_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.FSMHandle
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.New
+  nameWithType: FSMHandle.FSMHandle
+  nameWithType.vb: FSMHandle.New
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  name: Context
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Context
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  nameWithType: FSMHandle.Context
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Context*
+  name: Context
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Context_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Context
+  nameWithType: FSMHandle.Context
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  name: CurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  nameWithType: FSMHandle.CurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState*
+  name: CurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_CurrentState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.CurrentState
+  nameWithType: FSMHandle.CurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  name: Definition
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Definition
+  commentId: F:TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Definition
+  nameWithType: FSMHandle.Definition
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  name: EvaluateConditions()
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_EvaluateConditions
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions()
+  nameWithType: FSMHandle.EvaluateConditions()
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions*
+  name: EvaluateConditions
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_EvaluateConditions_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.EvaluateConditions
+  nameWithType: FSMHandle.EvaluateConditions
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  name: HasEnteredCurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_HasEnteredCurrentState
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  nameWithType: FSMHandle.HasEnteredCurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState*
+  name: HasEnteredCurrentState
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_HasEnteredCurrentState_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.HasEnteredCurrentState
+  nameWithType: FSMHandle.HasEnteredCurrentState
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  name: Id
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Id
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  nameWithType: FSMHandle.Id
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Id*
+  name: Id
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Id_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Id
+  nameWithType: FSMHandle.Id
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  name: IsValid
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_IsValid
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  nameWithType: FSMHandle.IsValid
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid*
+  name: IsValid
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_IsValid_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.IsValid
+  nameWithType: FSMHandle.IsValid
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Name
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  nameWithType: FSMHandle.Name
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Name*
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Name_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Name
+  nameWithType: FSMHandle.Name
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  name: ResetFSMInstance()
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_ResetFSMInstance
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance()
+  nameWithType: FSMHandle.ResetFSMInstance()
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance*
+  name: ResetFSMInstance
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_ResetFSMInstance_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.ResetFSMInstance
+  nameWithType: FSMHandle.ResetFSMInstance
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  name: TransitionTo(string)
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(System.String)
+  name.vb: TransitionTo(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo(String)
+  nameWithType: FSMHandle.TransitionTo(string)
+  nameWithType.vb: FSMHandle.TransitionTo(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo*
+  name: TransitionTo
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_TransitionTo_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.TransitionTo
+  nameWithType: FSMHandle.TransitionTo
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Update(System.String)
+  name: Update(string)
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Update_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMHandle.Update(System.String)
+  name.vb: Update(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Update(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMHandle.Update(String)
+  nameWithType: FSMHandle.Update(string)
+  nameWithType.vb: FSMHandle.Update(String)
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle.Update*
+  name: Update
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html#TheSingularityWorkshop_FSM_API_FSMHandle_Update_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMHandle.Update
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle.Update
+  nameWithType: FSMHandle.Update
+- uid: TheSingularityWorkshop.FSM_API.FSMState
+  name: FSMState
+  href: TheSingularityWorkshop.FSM_API.FSMState.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMState
+  fullName: TheSingularityWorkshop.FSM_API.FSMState
+  nameWithType: FSMState
+- uid: TheSingularityWorkshop.FSM_API.FSMState.#ctor(System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name: FSMState(string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState__ctor_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.#ctor(System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name.vb: New(String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext))
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.FSMState(string, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMState.New(String, System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext))
+  nameWithType: FSMState.FSMState(string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>)
+  nameWithType.vb: FSMState.New(String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext))
+- uid: TheSingularityWorkshop.FSM_API.FSMState.#ctor*
+  name: FSMState
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState__ctor_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.FSMState
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMState.New
+  nameWithType: FSMState.FSMState
+  nameWithType.vb: FSMState.New
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Enter(TheSingularityWorkshop.FSM_API.IStateContext)
+  name: Enter(IStateContext)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Enter_TheSingularityWorkshop_FSM_API_IStateContext_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.Enter(TheSingularityWorkshop.FSM_API.IStateContext)
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Enter(TheSingularityWorkshop.FSM_API.IStateContext)
+  nameWithType: FSMState.Enter(IStateContext)
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Enter*
+  name: Enter
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Enter_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.Enter
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Enter
+  nameWithType: FSMState.Enter
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Exit(TheSingularityWorkshop.FSM_API.IStateContext)
+  name: Exit(IStateContext)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Exit_TheSingularityWorkshop_FSM_API_IStateContext_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.Exit(TheSingularityWorkshop.FSM_API.IStateContext)
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Exit(TheSingularityWorkshop.FSM_API.IStateContext)
+  nameWithType: FSMState.Exit(IStateContext)
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Exit*
+  name: Exit
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Exit_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.Exit
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Exit
+  nameWithType: FSMState.Exit
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Name
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Name
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMState.Name
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Name
+  nameWithType: FSMState.Name
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Name*
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Name_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.Name
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Name
+  nameWithType: FSMState.Name
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name: SetOnEnter(Action<IStateContext>)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnEnter_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name.vb: SetOnEnter(Action(Of IStateContext))
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter(System.Action<TheSingularityWorkshop.FSM_API.IStateContext>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter(System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext))
+  nameWithType: FSMState.SetOnEnter(Action<IStateContext>)
+  nameWithType.vb: FSMState.SetOnEnter(Action(Of IStateContext))
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter*
+  name: SetOnEnter
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnEnter_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnEnter
+  nameWithType: FSMState.SetOnEnter
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnExit(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name: SetOnExit(Action<IStateContext>)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnExit_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.SetOnExit(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name.vb: SetOnExit(Action(Of IStateContext))
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnExit(System.Action<TheSingularityWorkshop.FSM_API.IStateContext>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMState.SetOnExit(System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext))
+  nameWithType: FSMState.SetOnExit(Action<IStateContext>)
+  nameWithType.vb: FSMState.SetOnExit(Action(Of IStateContext))
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnExit*
+  name: SetOnExit
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnExit_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.SetOnExit
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnExit
+  nameWithType: FSMState.SetOnExit
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name: SetOnUpdate(Action<IStateContext>)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnUpdate_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate(System.Action{TheSingularityWorkshop.FSM_API.IStateContext})
+  name.vb: SetOnUpdate(Action(Of IStateContext))
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate(System.Action<TheSingularityWorkshop.FSM_API.IStateContext>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate(System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext))
+  nameWithType: FSMState.SetOnUpdate(Action<IStateContext>)
+  nameWithType.vb: FSMState.SetOnUpdate(Action(Of IStateContext))
+- uid: TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate*
+  name: SetOnUpdate
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_SetOnUpdate_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.SetOnUpdate
+  nameWithType: FSMState.SetOnUpdate
+- uid: TheSingularityWorkshop.FSM_API.FSMState.ToString
+  name: ToString()
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_ToString
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.ToString
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.ToString()
+  nameWithType: FSMState.ToString()
+- uid: TheSingularityWorkshop.FSM_API.FSMState.ToString*
+  name: ToString
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_ToString_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.ToString
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.ToString
+  nameWithType: FSMState.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Update(TheSingularityWorkshop.FSM_API.IStateContext)
+  name: Update(IStateContext)
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Update_TheSingularityWorkshop_FSM_API_IStateContext_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMState.Update(TheSingularityWorkshop.FSM_API.IStateContext)
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Update(TheSingularityWorkshop.FSM_API.IStateContext)
+  nameWithType: FSMState.Update(IStateContext)
+- uid: TheSingularityWorkshop.FSM_API.FSMState.Update*
+  name: Update
+  href: TheSingularityWorkshop.FSM_API.FSMState.html#TheSingularityWorkshop_FSM_API_FSMState_Update_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMState.Update
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMState.Update
+  nameWithType: FSMState.Update
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition
+  name: FSMTransition
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMTransition
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition
+  nameWithType: FSMTransition
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.#ctor(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name: FSMTransition(string, string, Func<IStateContext, bool>)
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition__ctor_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMTransition.#ctor(System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean})
+  name.vb: New(String, String, Func(Of IStateContext, Boolean))
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.FSMTransition(string, string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMTransition.New(String, String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean))
+  nameWithType: FSMTransition.FSMTransition(string, string, Func<IStateContext, bool>)
+  nameWithType.vb: FSMTransition.New(String, String, Func(Of IStateContext, Boolean))
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.#ctor*
+  name: FSMTransition
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition__ctor_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMTransition.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.FSMTransition
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSMTransition.New
+  nameWithType: FSMTransition.FSMTransition
+  nameWithType.vb: FSMTransition.New
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.Condition
+  name: Condition
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_Condition
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMTransition.Condition
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.Condition
+  nameWithType: FSMTransition.Condition
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.Condition*
+  name: Condition
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_Condition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMTransition.Condition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.Condition
+  nameWithType: FSMTransition.Condition
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.From
+  name: From
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_From
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMTransition.From
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.From
+  nameWithType: FSMTransition.From
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.From*
+  name: From
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_From_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMTransition.From
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.From
+  nameWithType: FSMTransition.From
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.To
+  name: To
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_To
+  commentId: P:TheSingularityWorkshop.FSM_API.FSMTransition.To
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.To
+  nameWithType: FSMTransition.To
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.To*
+  name: To
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_To_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMTransition.To
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.To
+  nameWithType: FSMTransition.To
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.ToString
+  name: ToString()
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_ToString
+  commentId: M:TheSingularityWorkshop.FSM_API.FSMTransition.ToString
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.ToString()
+  nameWithType: FSMTransition.ToString()
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition.ToString*
+  name: ToString
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html#TheSingularityWorkshop_FSM_API_FSMTransition_ToString_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSMTransition.ToString
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition.ToString
+  nameWithType: FSMTransition.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSM_API
+  name: FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API
+  nameWithType: FSM_API
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create
+  name: FSM_API.Create
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Create
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create
+  nameWithType: FSM_API.Create
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine(System.String,System.Int32,System.String)
+  name: CreateFiniteStateMachine(string, int, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateFiniteStateMachine_System_String_System_Int32_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine(System.String,System.Int32,System.String)
+  name.vb: CreateFiniteStateMachine(String, Integer, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine(string, int, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine(String, Integer, String)
+  nameWithType: FSM_API.Create.CreateFiniteStateMachine(string, int, string)
+  nameWithType.vb: FSM_API.Create.CreateFiniteStateMachine(String, Integer, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine*
+  name: CreateFiniteStateMachine
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateFiniteStateMachine_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateFiniteStateMachine
+  nameWithType: FSM_API.Create.CreateFiniteStateMachine
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name: CreateInstance(string, IStateContext, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name.vb: CreateInstance(String, IStateContext, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance(string, TheSingularityWorkshop.FSM_API.IStateContext, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance(String, TheSingularityWorkshop.FSM_API.IStateContext, String)
+  nameWithType: FSM_API.Create.CreateInstance(string, IStateContext, string)
+  nameWithType.vb: FSM_API.Create.CreateInstance(String, IStateContext, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance*
+  name: CreateInstance
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateInstance_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateInstance
+  nameWithType: FSM_API.Create.CreateInstance
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup(System.String)
+  name: CreateProcessingGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateProcessingGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup(System.String)
+  name.vb: CreateProcessingGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup(String)
+  nameWithType: FSM_API.Create.CreateProcessingGroup(string)
+  nameWithType.vb: FSM_API.Create.CreateProcessingGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup*
+  name: CreateProcessingGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html#TheSingularityWorkshop_FSM_API_FSM_API_Create_CreateProcessingGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup
+  nameWithType: FSM_API.Create.CreateProcessingGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  name: FSM_API.Error
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  nameWithType: FSM_API.Error
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  name: DefinitionErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  nameWithType: FSM_API.Error.DefinitionErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold*
+  name: DefinitionErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_DefinitionErrorThreshold_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.DefinitionErrorThreshold
+  nameWithType: FSM_API.Error.DefinitionErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  name: GetDefinitionErrorCounts()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts()
+  nameWithType: FSM_API.Error.GetDefinitionErrorCounts()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts*
+  name: GetDefinitionErrorCounts
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetDefinitionErrorCounts_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts
+  nameWithType: FSM_API.Error.GetDefinitionErrorCounts
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  name: GetErrorCounts()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts()
+  nameWithType: FSM_API.Error.GetErrorCounts()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts*
+  name: GetErrorCounts
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_GetErrorCounts_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts
+  nameWithType: FSM_API.Error.GetErrorCounts
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  name: InstanceErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  nameWithType: FSM_API.Error.InstanceErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold*
+  name: InstanceErrorThreshold
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InstanceErrorThreshold_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InstanceErrorThreshold
+  nameWithType: FSM_API.Error.InstanceErrorThreshold
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  name: FSM_API.Error.InternalApiErrorEventHandler
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  nameWithType: FSM_API.Error.InternalApiErrorEventHandler
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  name: InvokeDefinitionError(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(System.String,System.String)
+  name.vb: InvokeDefinitionError(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(String, String)
+  nameWithType: FSM_API.Error.InvokeDefinitionError(string, string)
+  nameWithType.vb: FSM_API.Error.InvokeDefinitionError(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError*
+  name: InvokeDefinitionError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeDefinitionError_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError
+  nameWithType: FSM_API.Error.InvokeDefinitionError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  name: InvokeInstanceError(FSMHandle, string, Exception, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_TheSingularityWorkshop_FSM_API_FSMHandle_System_String_System_Exception_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle,System.String,System.Exception,System.String)
+  name.vb: InvokeInstanceError(FSMHandle, String, Exception, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, string, System.Exception, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(TheSingularityWorkshop.FSM_API.FSMHandle, String, System.Exception, String)
+  nameWithType: FSM_API.Error.InvokeInstanceError(FSMHandle, string, Exception, string)
+  nameWithType.vb: FSM_API.Error.InvokeInstanceError(FSMHandle, String, Exception, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError*
+  name: InvokeInstanceError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInstanceError_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError
+  nameWithType: FSM_API.Error.InvokeInstanceError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)
+  name: InvokeInternalApiError(string, Exception)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_System_String_System_Exception_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(System.String,System.Exception)
+  name.vb: InvokeInternalApiError(String, Exception)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(string, System.Exception)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(String, System.Exception)
+  nameWithType: FSM_API.Error.InvokeInternalApiError(string, Exception)
+  nameWithType.vb: FSM_API.Error.InvokeInternalApiError(String, Exception)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError*
+  name: InvokeInternalApiError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_InvokeInternalApiError_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError
+  nameWithType: FSM_API.Error.InvokeInternalApiError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  name: OnInternalApiError
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_OnInternalApiError
+  commentId: E:TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.OnInternalApiError
+  nameWithType: FSM_API.Error.OnInternalApiError
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  name: Reset()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset()
+  nameWithType: FSM_API.Error.Reset()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset*
+  name: Reset
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_Reset_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.Reset
+  nameWithType: FSM_API.Error.Reset
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)
+  name: ResetDefinitionErrorCount(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(System.String)
+  name.vb: ResetDefinitionErrorCount(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(String)
+  nameWithType: FSM_API.Error.ResetDefinitionErrorCount(string)
+  nameWithType.vb: FSM_API.Error.ResetDefinitionErrorCount(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount*
+  name: ResetDefinitionErrorCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetDefinitionErrorCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount
+  nameWithType: FSM_API.Error.ResetDefinitionErrorCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  name: ResetInstanceErrorCount(FSMHandle)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_TheSingularityWorkshop_FSM_API_FSMHandle_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(TheSingularityWorkshop.FSM_API.FSMHandle)
+  nameWithType: FSM_API.Error.ResetInstanceErrorCount(FSMHandle)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount*
+  name: ResetInstanceErrorCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html#TheSingularityWorkshop_FSM_API_FSM_API_Error_ResetInstanceErrorCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount
+  nameWithType: FSM_API.Error.ResetInstanceErrorCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  name: FSM_API.Interaction
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  nameWithType: FSM_API.Interaction
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(System.String,System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.String)
+  name: AddStateToFSM(string, string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_System_String_System_String_System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_Action_TheSingularityWorkshop_FSM_API_IStateContext__System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(System.String,System.String,System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.Action{TheSingularityWorkshop.FSM_API.IStateContext},System.String)
+  name.vb: AddStateToFSM(String, String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext), String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(string, string, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, System.Action<TheSingularityWorkshop.FSM_API.IStateContext>, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(String, String, System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), System.Action(Of TheSingularityWorkshop.FSM_API.IStateContext), String)
+  nameWithType: FSM_API.Interaction.AddStateToFSM(string, string, Action<IStateContext>, Action<IStateContext>, Action<IStateContext>, string)
+  nameWithType.vb: FSM_API.Interaction.AddStateToFSM(String, String, Action(Of IStateContext), Action(Of IStateContext), Action(Of IStateContext), String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM*
+  name: AddStateToFSM
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddStateToFSM_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM
+  nameWithType: FSM_API.Interaction.AddStateToFSM
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(System.String,System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean},System.String)
+  name: AddTransition(string, string, string, Func<IStateContext, bool>, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_System_String_System_String_System_String_System_Func_TheSingularityWorkshop_FSM_API_IStateContext_System_Boolean__System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(System.String,System.String,System.String,System.Func{TheSingularityWorkshop.FSM_API.IStateContext,System.Boolean},System.String)
+  name.vb: AddTransition(String, String, String, Func(Of IStateContext, Boolean), String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(string, string, string, System.Func<TheSingularityWorkshop.FSM_API.IStateContext, bool>, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(String, String, String, System.Func(Of TheSingularityWorkshop.FSM_API.IStateContext, Boolean), String)
+  nameWithType: FSM_API.Interaction.AddTransition(string, string, string, Func<IStateContext, bool>, string)
+  nameWithType.vb: FSM_API.Interaction.AddTransition(String, String, String, Func(Of IStateContext, Boolean), String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition*
+  name: AddTransition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_AddTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition
+  nameWithType: FSM_API.Interaction.AddTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(System.String,System.String)
+  name: DestroyFiniteStateMachine(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(System.String,System.String)
+  name.vb: DestroyFiniteStateMachine(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(String, String)
+  nameWithType: FSM_API.Interaction.DestroyFiniteStateMachine(string, string)
+  nameWithType.vb: FSM_API.Interaction.DestroyFiniteStateMachine(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine*
+  name: DestroyFiniteStateMachine
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyFiniteStateMachine_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine
+  nameWithType: FSM_API.Interaction.DestroyFiniteStateMachine
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  name: DestroyInstance(FSMHandle)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_TheSingularityWorkshop_FSM_API_FSMHandle_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  nameWithType: FSM_API.Interaction.DestroyInstance(FSMHandle)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance*
+  name: DestroyInstance
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_DestroyInstance_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance
+  nameWithType: FSM_API.Interaction.DestroyInstance
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(System.String,System.String)
+  name: Exists(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Exists_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(System.String,System.String)
+  name.vb: Exists(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(String, String)
+  nameWithType: FSM_API.Interaction.Exists(string, string)
+  nameWithType.vb: FSM_API.Interaction.Exists(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists*
+  name: Exists
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Exists_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists
+  nameWithType: FSM_API.Interaction.Exists
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  name: FSM_API.Interaction.FSMTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  nameWithType: FSM_API.Interaction.FSMTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(System.String,System.Single)
+  name: AddOrSetFloatTimer(string, float)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetFloatTimer_System_String_System_Single_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(System.String,System.Single)
+  name.vb: AddOrSetFloatTimer(String, Single)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(string, float)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(String, Single)
+  nameWithType: FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(string, float)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer(String, Single)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer*
+  name: AddOrSetFloatTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetFloatTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.AddOrSetFloatTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(System.String,System.Int32)
+  name: AddOrSetIntTimer(string, int)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetIntTimer_System_String_System_Int32_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(System.String,System.Int32)
+  name.vb: AddOrSetIntTimer(String, Integer)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(string, int)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(String, Integer)
+  nameWithType: FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(string, int)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.AddOrSetIntTimer(String, Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer*
+  name: AddOrSetIntTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_AddOrSetIntTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.AddOrSetIntTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.AddOrSetIntTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers
+  name: FloatTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_FloatTimers
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers
+  nameWithType: FSM_API.Interaction.FSMTimers.FloatTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers*
+  name: FloatTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_FloatTimers_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.FloatTimers
+  nameWithType: FSM_API.Interaction.FSMTimers.FloatTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers
+  name: IntTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_IntTimers
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers
+  nameWithType: FSM_API.Interaction.FSMTimers.IntTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers*
+  name: IntTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_IntTimers_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.IntTimers
+  nameWithType: FSM_API.Interaction.FSMTimers.IntTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime
+  name: LastFloatTime
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastFloatTime
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime
+  nameWithType: FSM_API.Interaction.FSMTimers.LastFloatTime
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime*
+  name: LastFloatTime
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastFloatTime_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastFloatTime
+  nameWithType: FSM_API.Interaction.FSMTimers.LastFloatTime
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime
+  name: LastIntTime
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastIntTime
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime
+  nameWithType: FSM_API.Interaction.FSMTimers.LastIntTime
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime*
+  name: LastIntTime
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_LastIntTime_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.LastIntTime
+  nameWithType: FSM_API.Interaction.FSMTimers.LastIntTime
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(System.String)
+  name: RemoveFloatTimer(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveFloatTimer_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(System.String)
+  name.vb: RemoveFloatTimer(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer(String)
+  nameWithType: FSM_API.Interaction.FSMTimers.RemoveFloatTimer(string)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.RemoveFloatTimer(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer*
+  name: RemoveFloatTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveFloatTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveFloatTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.RemoveFloatTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(System.String)
+  name: RemoveIntTimer(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveIntTimer_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(System.String)
+  name.vb: RemoveIntTimer(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer(String)
+  nameWithType: FSM_API.Interaction.FSMTimers.RemoveIntTimer(string)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.RemoveIntTimer(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer*
+  name: RemoveIntTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_RemoveIntTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.RemoveIntTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.RemoveIntTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(System.String,System.Single)
+  name: ResetFloatTimer(string, float)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetFloatTimer_System_String_System_Single_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(System.String,System.Single)
+  name.vb: ResetFloatTimer(String, Single)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(string, float)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer(String, Single)
+  nameWithType: FSM_API.Interaction.FSMTimers.ResetFloatTimer(string, float)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.ResetFloatTimer(String, Single)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer*
+  name: ResetFloatTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetFloatTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetFloatTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.ResetFloatTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(System.String,System.Int32)
+  name: ResetIntTimer(string, int)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetIntTimer_System_String_System_Int32_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(System.String,System.Int32)
+  name.vb: ResetIntTimer(String, Integer)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(string, int)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer(String, Integer)
+  nameWithType: FSM_API.Interaction.FSMTimers.ResetIntTimer(string, int)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.ResetIntTimer(String, Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer*
+  name: ResetIntTimer
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_ResetIntTimer_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.ResetIntTimer
+  nameWithType: FSM_API.Interaction.FSMTimers.ResetIntTimer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(System.Single,System.Int32)
+  name: UpdateTimers(float, int)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_System_Single_System_Int32_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(System.Single,System.Int32)
+  name.vb: UpdateTimers(Single, Integer)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(float, int)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers(Single, Integer)
+  nameWithType: FSM_API.Interaction.FSMTimers.UpdateTimers(float, int)
+  nameWithType.vb: FSM_API.Interaction.FSMTimers.UpdateTimers(Single, Integer)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers*
+  name: UpdateTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_FSMTimers_UpdateTimers_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.UpdateTimers
+  nameWithType: FSM_API.Interaction.FSMTimers.UpdateTimers
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(System.String)
+  name: GetAllDefinitionNames(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetAllDefinitionNames_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(System.String)
+  name.vb: GetAllDefinitionNames(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(String)
+  nameWithType: FSM_API.Interaction.GetAllDefinitionNames(string)
+  nameWithType.vb: FSM_API.Interaction.GetAllDefinitionNames(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames*
+  name: GetAllDefinitionNames
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetAllDefinitionNames_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames
+  nameWithType: FSM_API.Interaction.GetAllDefinitionNames
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(System.String,System.String)
+  name: GetFSMDefinition(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetFSMDefinition_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(System.String,System.String)
+  name.vb: GetFSMDefinition(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(String, String)
+  nameWithType: FSM_API.Interaction.GetFSMDefinition(string, string)
+  nameWithType.vb: FSM_API.Interaction.GetFSMDefinition(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition*
+  name: GetFSMDefinition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetFSMDefinition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition
+  nameWithType: FSM_API.Interaction.GetFSMDefinition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name: GetInstance(string, IStateContext, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name.vb: GetInstance(String, IStateContext, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(string, TheSingularityWorkshop.FSM_API.IStateContext, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(String, TheSingularityWorkshop.FSM_API.IStateContext, String)
+  nameWithType: FSM_API.Interaction.GetInstance(string, IStateContext, string)
+  nameWithType.vb: FSM_API.Interaction.GetInstance(String, IStateContext, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance*
+  name: GetInstance
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstance_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance
+  nameWithType: FSM_API.Interaction.GetInstance
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(System.String,System.String)
+  name: GetInstances(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(System.String,System.String)
+  name.vb: GetInstances(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(String, String)
+  nameWithType: FSM_API.Interaction.GetInstances(string, string)
+  nameWithType.vb: FSM_API.Interaction.GetInstances(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances*
+  name: GetInstances
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_GetInstances_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances
+  nameWithType: FSM_API.Interaction.GetInstances
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(System.String)
+  name: RemoveProcessingGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(System.String)
+  name.vb: RemoveProcessingGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(String)
+  nameWithType: FSM_API.Interaction.RemoveProcessingGroup(string)
+  nameWithType.vb: FSM_API.Interaction.RemoveProcessingGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup*
+  name: RemoveProcessingGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveProcessingGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup
+  nameWithType: FSM_API.Interaction.RemoveProcessingGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(System.String,System.String,System.String,System.String)
+  name: RemoveStateFromFSM(string, string, string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_System_String_System_String_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(System.String,System.String,System.String,System.String)
+  name.vb: RemoveStateFromFSM(String, String, String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(string, string, string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(String, String, String, String)
+  nameWithType: FSM_API.Interaction.RemoveStateFromFSM(string, string, string, string)
+  nameWithType.vb: FSM_API.Interaction.RemoveStateFromFSM(String, String, String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM*
+  name: RemoveStateFromFSM
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveStateFromFSM_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM
+  nameWithType: FSM_API.Interaction.RemoveStateFromFSM
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(System.String,System.String,System.String,System.String)
+  name: RemoveTransition(string, string, string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_System_String_System_String_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(System.String,System.String,System.String,System.String)
+  name.vb: RemoveTransition(String, String, String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(string, string, string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(String, String, String, String)
+  nameWithType: FSM_API.Interaction.RemoveTransition(string, string, string, string)
+  nameWithType.vb: FSM_API.Interaction.RemoveTransition(String, String, String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition*
+  name: RemoveTransition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_RemoveTransition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition
+  nameWithType: FSM_API.Interaction.RemoveTransition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+  name: Update(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+  name.vb: Update(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(String)
+  nameWithType: FSM_API.Interaction.Update(string)
+  nameWithType.vb: FSM_API.Interaction.Update(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update*
+  name: Update
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update
+  nameWithType: FSM_API.Interaction.Update
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  name: FSM_API.Internal
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  nameWithType: FSM_API.Internal
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup
+  name: AverageFsmDefinitionsPerGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_AverageFsmDefinitionsPerGroup
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup
+  nameWithType: FSM_API.Internal.AverageFsmDefinitionsPerGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup*
+  name: AverageFsmDefinitionsPerGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_AverageFsmDefinitionsPerGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmDefinitionsPerGroup
+  nameWithType: FSM_API.Internal.AverageFsmDefinitionsPerGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition
+  name: AverageFsmHandlesPerDefinition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_AverageFsmHandlesPerDefinition
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition
+  nameWithType: FSM_API.Internal.AverageFsmHandlesPerDefinition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition*
+  name: AverageFsmHandlesPerDefinition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_AverageFsmHandlesPerDefinition_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.AverageFsmHandlesPerDefinition
+  nameWithType: FSM_API.Internal.AverageFsmHandlesPerDefinition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine(System.String,System.String)
+  name: DestroyFiniteStateMachine(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DestroyFiniteStateMachine_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine(System.String,System.String)
+  name.vb: DestroyFiniteStateMachine(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine(String, String)
+  nameWithType: FSM_API.Internal.DestroyFiniteStateMachine(string, string)
+  nameWithType.vb: FSM_API.Internal.DestroyFiniteStateMachine(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine*
+  name: DestroyFiniteStateMachine
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DestroyFiniteStateMachine_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyFiniteStateMachine
+  nameWithType: FSM_API.Internal.DestroyFiniteStateMachine
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  name: DestroyInstance(FSMHandle)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DestroyInstance_TheSingularityWorkshop_FSM_API_FSMHandle_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance(TheSingularityWorkshop.FSM_API.FSMHandle)
+  nameWithType: FSM_API.Internal.DestroyInstance(FSMHandle)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance*
+  name: DestroyInstance
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DestroyInstance_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DestroyInstance
+  nameWithType: FSM_API.Internal.DestroyInstance
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist(System.String,System.String)
+  name: DoesFsmDefinitionExist(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DoesFsmDefinitionExist_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist(System.String,System.String)
+  name.vb: DoesFsmDefinitionExist(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist(String, String)
+  nameWithType: FSM_API.Internal.DoesFsmDefinitionExist(string, string)
+  nameWithType.vb: FSM_API.Internal.DoesFsmDefinitionExist(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist*
+  name: DoesFsmDefinitionExist
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_DoesFsmDefinitionExist_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.DoesFsmDefinitionExist
+  nameWithType: FSM_API.Internal.DoesFsmDefinitionExist
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  name: FSM_API.Internal.FsmBucket
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  nameWithType: FSM_API.Internal.FsmBucket
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  name: Counter
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Counter
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  nameWithType: FSM_API.Internal.FsmBucket.Counter
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  name: Definition
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Definition
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  nameWithType: FSM_API.Internal.FsmBucket.Definition
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  name: Instances
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_Instances
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  nameWithType: FSM_API.Internal.FsmBucket.Instances
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  name: ProcessRate
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_ProcessRate
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  nameWithType: FSM_API.Internal.FsmBucket.ProcessRate
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles
+  name: GetAllFsmHandles()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetAllFsmHandles
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles()
+  nameWithType: FSM_API.Internal.GetAllFsmHandles()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles*
+  name: GetAllFsmHandles
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetAllFsmHandles_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetAllFsmHandles
+  nameWithType: FSM_API.Internal.GetAllFsmHandles
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket(System.String,System.String)
+  name: GetBucket(string, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetBucket_System_String_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket(System.String,System.String)
+  name.vb: GetBucket(String, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket(string, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket(String, String)
+  nameWithType: FSM_API.Internal.GetBucket(string, string)
+  nameWithType.vb: FSM_API.Internal.GetBucket(String, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket*
+  name: GetBucket
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetBucket_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBucket
+  nameWithType: FSM_API.Internal.GetBucket
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets
+  name: GetBuckets()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetBuckets
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets()
+  nameWithType: FSM_API.Internal.GetBuckets()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets*
+  name: GetBuckets
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetBuckets_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetBuckets
+  nameWithType: FSM_API.Internal.GetBuckets
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name: GetFSMHandle(string, IStateContext, string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFSMHandle_System_String_TheSingularityWorkshop_FSM_API_IStateContext_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle(System.String,TheSingularityWorkshop.FSM_API.IStateContext,System.String)
+  name.vb: GetFSMHandle(String, IStateContext, String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle(string, TheSingularityWorkshop.FSM_API.IStateContext, string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle(String, TheSingularityWorkshop.FSM_API.IStateContext, String)
+  nameWithType: FSM_API.Internal.GetFSMHandle(string, IStateContext, string)
+  nameWithType.vb: FSM_API.Internal.GetFSMHandle(String, IStateContext, String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle*
+  name: GetFSMHandle
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFSMHandle_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandle
+  nameWithType: FSM_API.Internal.GetFSMHandle
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup(System.String)
+  name: GetFSMHandleCountInGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFSMHandleCountInGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup(System.String)
+  name.vb: GetFSMHandleCountInGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup(String)
+  nameWithType: FSM_API.Internal.GetFSMHandleCountInGroup(string)
+  nameWithType.vb: FSM_API.Internal.GetFSMHandleCountInGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup*
+  name: GetFSMHandleCountInGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFSMHandleCountInGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFSMHandleCountInGroup
+  nameWithType: FSM_API.Internal.GetFSMHandleCountInGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup(System.String)
+  name: GetFsmDefinitionCountInGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFsmDefinitionCountInGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup(System.String)
+  name.vb: GetFsmDefinitionCountInGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup(String)
+  nameWithType: FSM_API.Internal.GetFsmDefinitionCountInGroup(string)
+  nameWithType.vb: FSM_API.Internal.GetFsmDefinitionCountInGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup*
+  name: GetFsmDefinitionCountInGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFsmDefinitionCountInGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionCountInGroup
+  nameWithType: FSM_API.Internal.GetFsmDefinitionCountInGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup(System.String)
+  name: GetFsmDefinitionNamesInGroup(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFsmDefinitionNamesInGroup_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup(System.String)
+  name.vb: GetFsmDefinitionNamesInGroup(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup(String)
+  nameWithType: FSM_API.Internal.GetFsmDefinitionNamesInGroup(string)
+  nameWithType.vb: FSM_API.Internal.GetFsmDefinitionNamesInGroup(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup*
+  name: GetFsmDefinitionNamesInGroup
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetFsmDefinitionNamesInGroup_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetFsmDefinitionNamesInGroup
+  nameWithType: FSM_API.Internal.GetFsmDefinitionNamesInGroup
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames
+  name: GetProcessingGroupNames()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroupNames
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames()
+  nameWithType: FSM_API.Internal.GetProcessingGroupNames()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames*
+  name: GetProcessingGroupNames
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroupNames_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupNames
+  nameWithType: FSM_API.Internal.GetProcessingGroupNames
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount(System.String)
+  name: GetProcessingGroupTickCount(string)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroupTickCount_System_String_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount(System.String)
+  name.vb: GetProcessingGroupTickCount(String)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount(string)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount(String)
+  nameWithType: FSM_API.Internal.GetProcessingGroupTickCount(string)
+  nameWithType.vb: FSM_API.Internal.GetProcessingGroupTickCount(String)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount*
+  name: GetProcessingGroupTickCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroupTickCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroupTickCount
+  nameWithType: FSM_API.Internal.GetProcessingGroupTickCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups
+  name: GetProcessingGroups()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroups
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups()
+  nameWithType: FSM_API.Internal.GetProcessingGroups()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups*
+  name: GetProcessingGroups
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_GetProcessingGroups_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.GetProcessingGroups
+  nameWithType: FSM_API.Internal.GetProcessingGroups
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications
+  name: ProcessDeferredModifications()
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ProcessDeferredModifications
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications()
+  nameWithType: FSM_API.Internal.ProcessDeferredModifications()
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications*
+  name: ProcessDeferredModifications
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ProcessDeferredModifications_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessDeferredModifications
+  nameWithType: FSM_API.Internal.ProcessDeferredModifications
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount
+  name: ProcessingGroupCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ProcessingGroupCount
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount
+  nameWithType: FSM_API.Internal.ProcessingGroupCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount*
+  name: ProcessingGroupCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ProcessingGroupCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ProcessingGroupCount
+  nameWithType: FSM_API.Internal.ProcessingGroupCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI(System.Boolean)
+  name: ResetAPI(bool)
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ResetAPI_System_Boolean_
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI(System.Boolean)
+  name.vb: ResetAPI(Boolean)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI(bool)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI(Boolean)
+  nameWithType: FSM_API.Internal.ResetAPI(bool)
+  nameWithType.vb: FSM_API.Internal.ResetAPI(Boolean)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI*
+  name: ResetAPI
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_ResetAPI_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.ResetAPI
+  nameWithType: FSM_API.Internal.ResetAPI
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs
+  name: TickPerformanceWarningThresholdMs
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TickPerformanceWarningThresholdMs
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs
+  nameWithType: FSM_API.Internal.TickPerformanceWarningThresholdMs
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs*
+  name: TickPerformanceWarningThresholdMs
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TickPerformanceWarningThresholdMs_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TickPerformanceWarningThresholdMs
+  nameWithType: FSM_API.Internal.TickPerformanceWarningThresholdMs
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount
+  name: TotalFsmDefinitionCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TotalFsmDefinitionCount
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount
+  nameWithType: FSM_API.Internal.TotalFsmDefinitionCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount*
+  name: TotalFsmDefinitionCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TotalFsmDefinitionCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmDefinitionCount
+  nameWithType: FSM_API.Internal.TotalFsmDefinitionCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount
+  name: TotalFsmHandleCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TotalFsmHandleCount
+  commentId: P:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount
+  nameWithType: FSM_API.Internal.TotalFsmHandleCount
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount*
+  name: TotalFsmHandleCount
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_TotalFsmHandleCount_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.TotalFsmHandleCount
+  nameWithType: FSM_API.Internal.TotalFsmHandleCount
+- uid: TheSingularityWorkshop.FSM_API.IContext
+  name: IContext
+  href: TheSingularityWorkshop.FSM_API.IContext.html
+  commentId: T:TheSingularityWorkshop.FSM_API.IContext
+  fullName: TheSingularityWorkshop.FSM_API.IContext
+  nameWithType: IContext
+- uid: TheSingularityWorkshop.FSM_API.IContext.Name
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.IContext.html#TheSingularityWorkshop_FSM_API_IContext_Name
+  commentId: P:TheSingularityWorkshop.FSM_API.IContext.Name
+  fullName: TheSingularityWorkshop.FSM_API.IContext.Name
+  nameWithType: IContext.Name
+- uid: TheSingularityWorkshop.FSM_API.IContext.Name*
+  name: Name
+  href: TheSingularityWorkshop.FSM_API.IContext.html#TheSingularityWorkshop_FSM_API_IContext_Name_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.IContext.Name
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.IContext.Name
+  nameWithType: IContext.Name
+- uid: TheSingularityWorkshop.FSM_API.IStateContext
+  name: IStateContext
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html
+  commentId: T:TheSingularityWorkshop.FSM_API.IStateContext
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext
+  nameWithType: IStateContext
+- uid: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  name: IsValid
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html#TheSingularityWorkshop_FSM_API_IStateContext_IsValid
+  commentId: P:TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  nameWithType: IStateContext.IsValid
+- uid: TheSingularityWorkshop.FSM_API.IStateContext.IsValid*
+  name: IsValid
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html#TheSingularityWorkshop_FSM_API_IStateContext_IsValid_
+  commentId: Overload:TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  isSpec: "True"
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext.IsValid
+  nameWithType: IStateContext.IsValid

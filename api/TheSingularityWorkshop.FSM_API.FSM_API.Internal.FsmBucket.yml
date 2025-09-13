@@ -1,0 +1,605 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  id: FSM_API.Internal.FsmBucket
+  parent: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  langs:
+  - csharp
+  - vb
+  name: FSM_API.Internal.FsmBucket
+  nameWithType: FSM_API.Internal.FsmBucket
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  type: Class
+  source:
+    remote:
+      path: FSM_API/FSM_API.Internal.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: FsmBucket
+    path: FSM_API/FSM_API.Internal.cs
+    startLine: 43
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: Represents an internal container for an FSM definition and all its active instances.
+  remarks: >-
+    This class is used **internally** by the <xref href="TheSingularityWorkshop.FSM_API.FSM_API" data-throw-if-not-resolved="false"></xref> to efficiently manage
+
+    FSM definitions and their associated running instances within specific
+
+    processing groups. It tracks the FSM's blueprint, its live instances,
+
+    and properties related to its update rate. Being <code>public</code> (nested within an internal class),
+
+    it's effectively encapsulated within the <xref href="TheSingularityWorkshop.FSM_API.FSM_API" data-throw-if-not-resolved="false"></xref>'s internal structure.
+  example: []
+  syntax:
+    content: public class FSM_API.Internal.FsmBucket
+    content.vb: Public Class FSM_API.Internal.FsmBucket
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  id: Definition
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  langs:
+  - csharp
+  - vb
+  name: Definition
+  nameWithType: FSM_API.Internal.FsmBucket.Definition
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Definition
+  type: Field
+  source:
+    remote:
+      path: FSM_API/FSM_API.Internal.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Definition
+    path: FSM_API/FSM_API.Internal.cs
+    startLine: 53
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: The blueprint (definition) of the Finite State Machine.
+  example: []
+  syntax:
+    content: public FSM Definition
+    return:
+      type: TheSingularityWorkshop.FSM_API.FSM
+    content.vb: Public Definition As FSM
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  id: Instances
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  langs:
+  - csharp
+  - vb
+  name: Instances
+  nameWithType: FSM_API.Internal.FsmBucket.Instances
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Instances
+  type: Field
+  source:
+    remote:
+      path: FSM_API/FSM_API.Internal.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Instances
+    path: FSM_API/FSM_API.Internal.cs
+    startLine: 62
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: A list of all active <xref href="TheSingularityWorkshop.FSM_API.FSMHandle" data-throw-if-not-resolved="false"></xref> instances created from this definition.
+  remarks: >-
+    Instances are added to this list upon creation and removed upon unregistration
+
+    or automatic removal due to error thresholds. The list itself is never null.
+  example: []
+  syntax:
+    content: public List<FSMHandle> Instances
+    return:
+      type: System.Collections.Generic.List{TheSingularityWorkshop.FSM_API.FSMHandle}
+    content.vb: Public Instances As List(Of FSMHandle)
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  id: ProcessRate
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  langs:
+  - csharp
+  - vb
+  name: ProcessRate
+  nameWithType: FSM_API.Internal.FsmBucket.ProcessRate
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  type: Field
+  source:
+    remote:
+      path: FSM_API/FSM_API.Internal.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: ProcessRate
+    path: FSM_API/FSM_API.Internal.cs
+    startLine: 72
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: The desired processing rate for instances of this FSM definition.
+  example: []
+  syntax:
+    content: public int ProcessRate
+    return:
+      type: System.Int32
+      description: >-
+        <code>-1</code>: Process every frame (or every call to <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)" data-throw-if-not-resolved="false"></xref>).
+
+        <code>0</code>: Event-driven only (will not be processed by <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)" data-throw-if-not-resolved="false"></xref>'s internal tick).
+
+        <code>&gt;0</code>: Process every Nth frame, where N is the value of <code>ProcessRate</code>.
+    content.vb: Public ProcessRate As Integer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  id: Counter
+  parent: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  langs:
+  - csharp
+  - vb
+  name: Counter
+  nameWithType: FSM_API.Internal.FsmBucket.Counter
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.Counter
+  type: Field
+  source:
+    remote:
+      path: FSM_API/FSM_API.Internal.cs
+      branch: master
+      repo: https://github.com/TrentBest/FSM_API.git
+    id: Counter
+    path: FSM_API/FSM_API.Internal.cs
+    startLine: 77
+  assemblies:
+  - FSM_API
+  namespace: TheSingularityWorkshop.FSM_API
+  summary: An internal counter used for frame-skipping when <xref href="TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate" data-throw-if-not-resolved="false"></xref> is greater than 0.
+  example: []
+  syntax:
+    content: public int Counter
+    return:
+      type: System.Int32
+    content.vb: Public Counter As Integer
+references:
+- uid: TheSingularityWorkshop.FSM_API.FSM_API
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API
+  nameWithType: FSM_API
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: TheSingularityWorkshop.FSM_API.FSM
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM.html
+  name: FSM
+  nameWithType: FSM
+  fullName: TheSingularityWorkshop.FSM_API.FSM
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMHandle
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  name: FSMHandle
+  nameWithType: FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle
+- uid: System.Collections.Generic.List{TheSingularityWorkshop.FSM_API.FSMHandle}
+  commentId: T:System.Collections.Generic.List{TheSingularityWorkshop.FSM_API.FSMHandle}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<FSMHandle>
+  nameWithType: List<FSMHandle>
+  fullName: System.Collections.Generic.List<TheSingularityWorkshop.FSM_API.FSMHandle>
+  nameWithType.vb: List(Of FSMHandle)
+  fullName.vb: System.Collections.Generic.List(Of TheSingularityWorkshop.FSM_API.FSMHandle)
+  name.vb: List(Of FSMHandle)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: TheSingularityWorkshop.FSM_API.FSMHandle
+    name: FSMHandle
+    href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+  commentId: M:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+  isExternal: true
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_
+  name: Update(string)
+  nameWithType: FSM_API.Interaction.Update(string)
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(string)
+  nameWithType.vb: FSM_API.Interaction.Update(String)
+  fullName.vb: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(String)
+  name.vb: Update(String)
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+    name: Update
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(System.String)
+    name: Update
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html#TheSingularityWorkshop_FSM_API_FSM_API_Interaction_Update_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  commentId: F:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate
+  href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html#TheSingularityWorkshop_FSM_API_FSM_API_Internal_FsmBucket_ProcessRate
+  name: ProcessRate
+  nameWithType: FSM_API.Internal.FsmBucket.ProcessRate
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.ProcessRate

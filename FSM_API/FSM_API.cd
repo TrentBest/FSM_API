@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TheSingularityWorkshop.FSM_API.FSM_API">
+    <Position X="4.5" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="TheSingularityWorkshop.FSM_API.FSM_API.Create" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>FSM_API.Create.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TheSingularityWorkshop.FSM_API.FSM_API.Error" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>FSM_API.Error.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TheSingularityWorkshop.FSM_API.FSM_API.Interaction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>FSM_API.Interaction.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="TheSingularityWorkshop.FSM_API.FSM_API.Internal" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>FSM_API.Internal.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FSM_API.Create.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSM">
+    <Position X="15.25" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AEIAAEAAAAAAAABEAAAFAEQkgAQABgICIAAAAAAELAA=</HashCode>
+      <FileName>FSM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSMTransition">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAACAAAAEAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FSMTransition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSMState">
+    <Position X="7" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAAAAAAAAEAAEAAASRAAIEQAAAIAAAEAAAAAA=</HashCode>
+      <FileName>FSMState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSMHandle">
+    <Position X="0.75" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQCEAAAAgAACAEAAAgAACQAAIAAAABAAAAAAAAAACA=</HashCode>
+      <FileName>FSMHandle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSMBuilder">
+    <Position X="9.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAgAAAEAgBAECEBAFAAAAAAARACAAAA=</HashCode>
+      <FileName>FSMBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheSingularityWorkshop.FSM_API.FSMModifier">
+    <Position X="5.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIABAAAIAAAUBEACAogQgDAAAAAAQEIAAAAAAAAA=</HashCode>
+      <FileName>FSMModifier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TheSingularityWorkshop.FSM_API.IContext" Collapsed="true">
+    <Position X="18.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TheSingularityWorkshop.FSM_API.IStateContext" Collapsed="true">
+    <Position X="16.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IStateContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Arial" Size="10" />
+</ClassDiagram>

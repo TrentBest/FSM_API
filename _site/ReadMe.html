@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title> </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content=" ">
+    
+    
+      <link rel="shortcut icon" href="favicon.ico">
+      <link rel="stylesheet" href="styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="styles/docfx.css">
+      <link rel="stylesheet" href="styles/main.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<p>FSM_API</p>
+<p><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+<a href="https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API"><img src="https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&amp;logo=nuget&amp;logoColor=white" alt="NuGet version"></a>
+<a href="https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API"><img src="https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&amp;style=flat-square" alt="NuGet downloads"></a></p>
+<p><a href="https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&amp;style=flat-square&amp;logo=github" alt="Build Status"></a>
+<a href="https://github.com/TrentBest/FSM_API/commits/master"><img src="https://img.shields.io/github/last-commit/TrentBest/FSM_API/master" alt="Last commit"></a>
+<a href="https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster"><img src="https://img.shields.io/codecov/c/github/TrentBest/FSM_API" alt="Code Coverage"></a>
+<a href="https://snyk.io/test/github/TrentBest/FSM_API"><img src="https://snyk.io/test/github/TrentBest/FSM_API/badge.svg" alt="Known Vulnerabilities"></a></p>
+<p><a href="https://github.com/TrentBest/FSM_API/stargazers"><img src="https://img.shields.io/github/stars/TrentBest/FSM_API?style=social" alt="GitHub stars"></a>
+<a href="https://github.com/TrentBest/FSM_API/graphs/contributors"><img src="https://img.shields.io/github/contributors/TrentBest/FSM_API" alt="GitHub contributors"></a>
+<a href="https://github.com/TrentBest/FSM_API/issues"><img src="https://img.shields.io/github/issues/TrentBest/FSM_API" alt="Open Issues"></a></p>
+<p><a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>💖 Support Us</strong></a></p>
+<p>Blazing-fast, software-agnostic Finite State Machine system for any C# application.</p>
+<p>🔍 Overview</p>
+<p>FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (FSM)
+system designed to plug directly into any C# application from enterprise software to
+games, simulations, robotics, or reactive systems. It provides a powerful and decoupled
+approach to managing complex state-driven logic, ensuring clarity, consistency, and
+control across diverse domains.</p>
+<pre><code>✅ Thread-safe operations (main thread only, deferred mutation handling)
+
+🧠 Decoupled state logic from data (POCO-friendly)
+
+🏗️ Define once, instantiate many
+
+🛠️ Error-tolerant FSM lifecycle management
+
+🧪 Dynamic update ticking with frame/process throttling
+</code></pre>
+<p>No external dependencies. No frameworks required. No boilerplate setup. Pure C# power for your
+application's core logic.</p>
+<p>💡 Why FSM_API?</p>
+<p>Traditional FSM systems often suffer from tight coupling to specific environments or force rigid
+coding patterns. FSM_API liberates your state management:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>FSM_API ✅</th>
+<th>Traditional FSM ❌</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Framework agnostic</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Runtime-modifiable definitions</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Deferred mutation safety</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Named FSMs &amp; Processing Groups</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Built-in diagnostics &amp; thresholds</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Pure C# with no external deps</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<p>🚀 Quickstart</p>
+<ol>
+<li>Define a simple context (your data model):
+C#</li>
+</ol>
+<pre><code class="lang-csharp">public class LightSwitch : IStateContext
+{
+    public bool IsOn = false;
+    public bool IsValid =&gt; true; // FSM API will not operate on this if IsValid is false.
+    public string Name { get; set; } = &quot;KitchenLight&quot;;
+}
+</code></pre>
+<ol start="2">
+<li>Define and build your FSM:
+C#</li>
+</ol>
+<pre><code class="lang-csharp">// Optional: Create a named processing group for organizing FSM updates
+FSM_API.CreateProcessingGroup(&quot;MainLoop&quot;);
+
+// Define a simple condition function
+private static bool CheckUserInput(IStateContext ctx)
+{
+    // A simplified example of checking for input
+    // In a real app, this would check for a key press or a UI event
+    return ((LightSwitch)ctx).IsOn; // This is a placeholder
+}
+
+FSM_API.Create.CreateFiniteStateMachine(&quot;LightSwitchFSM&quot;, processRate: 1, processingGroup: &quot;MainLoop&quot;)
+    .State(&quot;Off&quot;, 
+        onEnter: (ctx) =&gt; { 
+            if (ctx is LightSwitch l) l.IsOn = false; 
+        }, 
+        onUpdate: null, 
+        onExit: null)
+    .State(&quot;On&quot;, 
+        onEnter: (ctx) =&gt; { 
+            if (ctx is LightSwitch l) l.IsOn = true; 
+        }, 
+        onUpdate: null, 
+        onExit: null)
+    .WithInitialState(&quot;Off&quot;) // Must set an initial state
+    // Now define the transitions between states
+    .Transition(&quot;Off&quot;, &quot;On&quot;, (ctx) =&gt; ((LightSwitch)ctx).IsOn)
+    .Transition(&quot;On&quot;, &quot;Off&quot;, (ctx) =&gt; !((LightSwitch)ctx).IsOn)
+    .BuildDefinition(); // Finalize the FSM definition
+</code></pre>
+<ol start="3">
+<li>Create an instance for your context:
+C#</li>
+</ol>
+<pre><code class="lang-csharp">var kitchenLight = new LightSwitch();
+// Associate your context with an FSM instance and assign it to a processing group
+var handle = FSM_API.Create.CreateInstance(&quot;LightSwitchFSM&quot;, kitchenLight, &quot;MainLoop&quot;);
+</code></pre>
+<ol start="4">
+<li>Tick the FSM from your application's main loop:
+C#</li>
+</ol>
+<pre><code class="lang-csharp">// Process all FSMs in the &quot;MainLoop&quot; group
+FSM_API.Interaction.Update(&quot;MainLoop&quot;);
+</code></pre>
+<p>🔧 Core Concepts</p>
+<pre><code>FSMBuilder: Fluently define states, transitions, and associated OnEnter/OnExit actions. 
+This is your declarative interface for FSM construction.
+
+FSMHandle: Represents a runtime instance of an FSM operating on a specific context. 
+Provides full control over instance lifecycle, including pausing, resetting, and 
+retrieving current state.
+
+IStateContext: The interface your custom data models (Plain Old C# Objects - POCOs) 
+must implement. This ensures clean separation of FSM logic from your application's data.
+
+Processing Groups: Organize and control the update cycles of multiple FSM instances. Ideal 
+for managing FSMs that need to tick together or at different rates (e.g., UI, AI, physics). 
+ If you were to use the API across multiple threads you would need to ensure context isn't 
+ accessed across different process groups, each process group will itself be sequential...  
+
+Error Handling: Built-in thresholds and diagnostics prevent runaway logic or invalid state
+ contexts, ensuring application stability without crashing.
+
+Thread-Safe by Design: All modifications to FSM definitions and instances are meticulously 
+deferred and processed safely on the main thread post-update, eliminating common concurrency
+ issues.
+</code></pre>
+<h2 id="-features-at-a-glance">📦 Features at a Glance</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Capability</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">🔄 <strong>Deterministic State Logic</strong></td>
+<td style="text-align: left;">Effortlessly define <strong>predictable state changes</strong> based on <strong>dynamic conditions</strong> or <strong>explicit triggers</strong>, ensuring your application's behavior is consistent and, where applicable, <strong>mathematically provable</strong>. Ideal for complex workflows and reliable automation.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🎭 <strong>Context-Driven Behavior</strong></td>
+<td style="text-align: left;">Your FSM logic directly operates on <strong>any custom C# object (POCO)</strong> that implements <code>IStateContext</code>. This enables <strong>clean separation of concerns</strong> (logic vs. data) and allows domain experts (e.g., BIM specifiers) to define behavior patterns that developers then implement.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🧪 <strong>Flexible Update Control</strong></td>
+<td style="text-align: left;">Choose how FSMs are processed: <strong>event-driven</strong>, <strong>tick-based</strong> (every N frames), or <strong>manual</strong>. This adaptability means it's perfect for <strong>real-time systems, background processes, or even complex user interactions</strong> within any application loop.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🧯 <strong>Robust Error Escalation</strong></td>
+<td style="text-align: left;">Benefit from <strong>per-instance and per-definition error tracking</strong>, providing immediate insights to prevent runaway logic or invalid states <strong>without crashing your application</strong>. Critical for long-running services and mission-critical software.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🔁 <strong>Runtime Redefinition</strong></td>
+<td style="text-align: left;">Adapt your application on the fly! FSM definitions can be <strong>redefined while actively running</strong>, enabling <strong>dynamic updates, live patching, and extreme behavioral variation</strong> without recompilation or downtime. Perfect for highly configurable systems.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🎯 <strong>Lightweight &amp; Performant</strong></td>
+<td style="text-align: left;">Engineered for <strong>minimal memory allocations</strong> and <strong>optimized performance</strong>, ensuring your FSMs are efficient even in demanding enterprise or simulation scenarios. No overhead, just pure C# power.</td>
+</tr>
+<tr>
+<td style="text-align: left;">✅ <strong>Easy to Unit Test</strong></td>
+<td style="text-align: left;">The inherent <strong>decoupling of FSM logic from context data</strong> ensures your state machines are <strong>highly testable in isolation</strong>, leading to more robust and reliable code with simplified unit testing.</td>
+</tr>
+<tr>
+<td style="text-align: left;">💯 <strong>Mathematically Provable</strong></td>
+<td style="text-align: left;">With clearly defined states and transitions, the FSM architecture lends itself to <strong>formal verification and rigorous analysis</strong>, providing a strong foundation for high-assurance systems where correctness is paramount.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🤝 <strong>Collaborative Design</strong></td>
+<td style="text-align: left;">FSMs provide a <strong>visual and structured way to define complex behaviors</strong>, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🎮 Unity Integration Available</td>
+<td style="text-align: left;">Now preparing for submission to the Unity Asset Store.</td>
+</tr>
+</tbody>
+</table>
+<p>📘 What’s Next?</p>
+<pre><code>📖 Full Documentation &amp; Wiki (TBD)
+
+🧪 Unit Tests &amp; Benchmarks (Currently Under Development)
+
+🔌 Plugins &amp; Extension Framework (e.g., for visual editors, debugging tools)
+</code></pre>
+<p>🤝 Contributing</p>
+<p>Contributions welcome! Whether you're integrating FSM_API into your enterprise application,
+designing new extensions, or just fixing typos, PRs and issues are appreciated.</p>
+<p>📄 License</p>
+<p>MIT License. Use it, hack it, build amazing things with it.</p>
+<p>🧠 Brought to you by:</p>
+<p>The Singularity Workshop - Tools for the curious, the bold, and the systemically inclined.</p>
+<img src="TheSingularityWorkshop.jpg" alt="The Singularity Workshop" width="200" height="200">
+<p>Because state shouldn't be a mess.</p>
+<p><strong>Support the project:</strong> <a href="https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J"><strong>Donate via PayPal</strong></a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/README.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

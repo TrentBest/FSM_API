@@ -1,0 +1,288 @@
+### YamlMime:ManagedReference
+items:
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  id: TheSingularityWorkshop.FSM_API
+  children:
+  - TheSingularityWorkshop.FSM_API.FSM
+  - TheSingularityWorkshop.FSM_API.FSMBuilder
+  - TheSingularityWorkshop.FSM_API.FSMHandle
+  - TheSingularityWorkshop.FSM_API.FSMState
+  - TheSingularityWorkshop.FSM_API.FSMTransition
+  - TheSingularityWorkshop.FSM_API.FSM_API
+  - TheSingularityWorkshop.FSM_API.FSM_API.Create
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error
+  - TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  - TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  - TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  - TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  - TheSingularityWorkshop.FSM_API.IContext
+  - TheSingularityWorkshop.FSM_API.IStateContext
+  langs:
+  - csharp
+  - vb
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  type: Namespace
+  assemblies:
+  - FSM_API
+references:
+- uid: TheSingularityWorkshop.FSM_API.FSM
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM.html
+  name: FSM
+  nameWithType: FSM
+  fullName: TheSingularityWorkshop.FSM_API.FSM
+- uid: TheSingularityWorkshop.FSM_API.FSMBuilder
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMBuilder
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMBuilder.html
+  name: FSMBuilder
+  nameWithType: FSMBuilder
+  fullName: TheSingularityWorkshop.FSM_API.FSMBuilder
+- uid: TheSingularityWorkshop.FSM_API.FSMHandle
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMHandle
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMHandle.html
+  name: FSMHandle
+  nameWithType: FSMHandle
+  fullName: TheSingularityWorkshop.FSM_API.FSMHandle
+- uid: TheSingularityWorkshop.FSM_API.FSMState
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMState
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMState.html
+  name: FSMState
+  nameWithType: FSMState
+  fullName: TheSingularityWorkshop.FSM_API.FSMState
+- uid: TheSingularityWorkshop.FSM_API.FSM_API
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API
+  nameWithType: FSM_API
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Interaction
+  nameWithType: FSM_API.Interaction
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+    name: Interaction
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+    name: Interaction
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Interaction.FSMTimers
+  nameWithType: FSM_API.Interaction.FSMTimers
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+    name: Interaction
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+    name: FSMTimers
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction
+    name: Interaction
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers
+    name: FSMTimers
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Interaction.FSMTimers.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Create
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Create
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Create
+  nameWithType: FSM_API.Create
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Create
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Create
+    name: Create
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Create
+    name: Create
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Create.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Error
+  nameWithType: FSM_API.Error
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Error.InternalApiErrorEventHandler
+  nameWithType: FSM_API.Error.InternalApiErrorEventHandler
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    name: InternalApiErrorEventHandler
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error
+    name: Error
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler
+    name: InternalApiErrorEventHandler
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Internal
+  nameWithType: FSM_API.Internal
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+    name: Internal
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+    name: Internal
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html
+- uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  commentId: T:TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  name: FSM_API.Internal.FsmBucket
+  nameWithType: FSM_API.Internal.FsmBucket
+  fullName: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+  spec.csharp:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+    name: Internal
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+    name: FsmBucket
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html
+  spec.vb:
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.FSM_API.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal
+    name: Internal
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket
+    name: FsmBucket
+    href: TheSingularityWorkshop.FSM_API.FSM_API.Internal.FsmBucket.html
+- uid: TheSingularityWorkshop.FSM_API.FSMTransition
+  commentId: T:TheSingularityWorkshop.FSM_API.FSMTransition
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.FSMTransition.html
+  name: FSMTransition
+  nameWithType: FSMTransition
+  fullName: TheSingularityWorkshop.FSM_API.FSMTransition
+- uid: TheSingularityWorkshop.FSM_API.IContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IContext
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.IContext.html
+  name: IContext
+  nameWithType: IContext
+  fullName: TheSingularityWorkshop.FSM_API.IContext
+- uid: TheSingularityWorkshop.FSM_API.IStateContext
+  commentId: T:TheSingularityWorkshop.FSM_API.IStateContext
+  parent: TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.FSM_API.IStateContext.html
+  name: IStateContext
+  nameWithType: IStateContext
+  fullName: TheSingularityWorkshop.FSM_API.IStateContext
+- uid: TheSingularityWorkshop.FSM_API
+  commentId: N:TheSingularityWorkshop.FSM_API
+  href: TheSingularityWorkshop.html
+  name: TheSingularityWorkshop.FSM_API
+  nameWithType: TheSingularityWorkshop.FSM_API
+  fullName: TheSingularityWorkshop.FSM_API
+  spec.csharp:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html
+  spec.vb:
+  - uid: TheSingularityWorkshop
+    name: TheSingularityWorkshop
+    href: TheSingularityWorkshop.html
+  - name: .
+  - uid: TheSingularityWorkshop.FSM_API
+    name: FSM_API
+    href: TheSingularityWorkshop.FSM_API.html

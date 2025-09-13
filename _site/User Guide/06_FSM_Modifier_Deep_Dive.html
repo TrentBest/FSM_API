@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="06-fsmmodifier-deep-dive-modifying-your-fsms-at-runtime">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</h1>
+
+<blockquote>
+<p>The <code>FSMModifier</code> provides advanced capabilities to <strong>dynamically alter the blueprint (definition) of your Finite State Machines at runtime</strong>. This allows for highly adaptive behaviors, hot-swappable logic, or configuration changes without rebuilding your application.</p>
+</blockquote>
+<p>While the <code>FSMBuilder</code> is used to <strong>initially design and build</strong> an FSM's definition, the <code>FSMModifier</code> allows you to <strong>change that definition after it has been created and registered</strong> with <code>FSM_API</code>. This is a powerful feature for scenarios requiring:</p>
+<ul>
+<li><strong>Adaptive AI:</strong> Changing an enemy's behavior patterns on the fly (e.g., learning new attacks, adapting to player strategies).</li>
+<li><strong>Dynamic UI:</strong> Adding or removing navigation paths or UI states based on user unlocks or content downloads.</li>
+<li><strong>Hot Reloading:</strong> Modifying FSM logic in a live environment (e.g., development tools for rapid iteration).</li>
+<li><strong>A/B Testing:</strong> Dynamically switching between different FSM behaviors for experimentation.</li>
+</ul>
+<hr>
+<h2 id="-table-of-contents">📚 Table of Contents</h2>
+<p><a href="User%20Guide/00_Introduction.md">00. Introduction to FSM_API</a></p>
+<p><a href="User%20Guide/01_Core_Concepts.md">01. Core Concepts: Your Guide to FSM_API</a></p>
+<p><a href="User%20Guide/03_Getting_Started_CSharp.md">03. Getting Started with C# (Non-Unity)</a></p>
+<p><a href="User%20Guide/04_FSM_Builder_Deep_Dive.md">04. FSMBuilder Deep Dive: Building Your FSMs</a></p>
+<p><a href="User%20Guide/05_Context_Implementation.md">05. Understanding and Implementing Your Context (IStateContext)</a></p>
+<p><a href="User%20Guide/06_FSM_Modifier_Deep_Dive.md">06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime</a></p>
+<p><a href="User%20Guide/07_Error_Handling.md">07. Robust Error Handling: Cascading Degradation System</a></p>
+<p><a href="User%20Guide/08_Performance_Tips.md">08. Performance Tips &amp; Best Practices</a></p>
+<p><a href="User%20Guide/09_Common_Use_Cases.md">09. Common Use Cases &amp; Examples</a></p>
+<p><a href="User%20Guide/10_Non_Coder_Overview.md">10. FSM_API for Non-Coders: A Big Picture Overview</a></p>
+<p><a href="User%20Guide/11_FAQ.md">11. Frequently Asked Questions (FAQ)</a></p>
+<hr>
+<ol start="6">
+<li>FSMModifier Deep Dive: Modifying Your FSMs at Runtime</li>
+</ol>
+<p>The FSMModifier provides advanced capabilities to dynamically alter the blueprint (definition) of your Finite State Machines at runtime. This allows for highly adaptive behaviors, hot-swappable logic, or configuration changes without rebuilding your application.</p>
+<p>While the FSMBuilder is used to initially design and build an FSM's definition, the FSMModifier is the tool you use to change that definition after it has been created and registered.</p>
+<p>This is a powerful feature for scenarios requiring:</p>
+<pre><code>Adaptive AI: Changing an enemy's behavior patterns on the fly (e.g., learning new attacks, adapting to player strategies).
+
+Dynamic UI: Adding or removing navigation paths or UI states based on user unlocks or content downloads.
+
+Hot Reloading: Modifying FSM logic in a live environment (e.g., development tools for rapid iteration).
+
+A/B Testing: Dynamically switching between different FSM behaviors for experimentation.
+</code></pre>
+<p>🔑 Accessing and Using the FSMModifier</p>
+<p>The FSMModifier is an internal class, so you can't create it directly. Instead, you access its functionality through a set of public, static helper methods on FSM_API.Interaction. These methods are designed to simplify common modification tasks like adding or removing states and transitions.</p>
+<p>The FSMModifier uses a fluent API pattern where you first stage the changes you want to make and then apply them with a single ModifyDefinition() call. All changes are batched and applied sequentially when ModifyDefinition() is called, making the process safe and predictable.</p>
+<p>🛠 FSMModifier Methods: Altering the Blueprint</p>
+<p>All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FSM_API.Interaction.</p>
+<p>Staging Changes with With... and Without...</p>
+<p>WithState(): Adding a New State</p>
+<p>This method adds a new state to an existing FSM definition. If a state with the given name already exists, the operation is ignored. Use WithModifiedState() to change an existing state.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">
+FSM_API.Interaction.AddStateToFSM(
+    &quot;PlayerFSM&quot;,
+    &quot;SpecialAttack&quot;,
+    onEnter: ctx =&gt; Console.WriteLine(&quot;Prepare special attack!&quot;),
+    onUpdate: ctx =&gt; Console.WriteLine(&quot;Execute special attack.&quot;),
+    onExit: ctx =&gt; Console.WriteLine(&quot;Cleanup after special attack.&quot;)
+);
+</code></pre>
+<p>WithModifiedState(): Updating an Existing State</p>
+<p>This method modifies the actions (onEnter, onUpdate, and onExit) of a state that is already part of the FSM blueprint. If the state doesn't exist, the operation is ignored.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">
+// Change the &quot;Idle&quot; state's behavior
+FSM_API.Interaction.ModifyState(
+    &quot;PlayerFSM&quot;,
+    &quot;Idle&quot;,
+    onEnter: ctx =&gt; Console.WriteLine(&quot;Entered a NEW and improved Idle state.&quot;),
+    onUpdate: null, // You can pass null to remove an action
+    onExit: ctx =&gt; Console.WriteLine(&quot;Exiting new Idle state.&quot;)
+);
+</code></pre>
+<p>WithoutState(): Removing a State</p>
+<p>This method stages a state for removal from the FSM definition.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">// Remove a state and transition all instances to &quot;InitialState&quot;
+FSM_API.Interaction.RemoveStateFromFSM(&quot;PlayerFSM&quot;, &quot;Dead&quot;, null);
+</code></pre>
+<p>Important: When a state is removed, any active FSMHandle instances currently in that state will be immediately transitioned to a specified fallbackStateName. If you pass null or an empty string for the fallback, instances will automatically transition to the FSM's InitialState. The OnExit action of the removed state will be executed for these instances.</p>
+<p>WithTransition(): Creating a New Path</p>
+<p>This method adds a new transition rule between two states. If the transition already exists, the operation is ignored. Use WithModifiedTransition() to change an existing one.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">// Add a new transition from &quot;Idle&quot; to &quot;Sleeping&quot;
+FSM_API.Interaction.AddTransition(
+    &quot;PlayerFSM&quot;,
+    &quot;Idle&quot;,
+    &quot;Sleeping&quot;,
+    ctx =&gt; ((PlayerContext)ctx).IsTired() &amp;&amp; DateTime.Now.Hour &gt; 21
+);
+</code></pre>
+<p>WithModifiedTransition(): Updating a Transition</p>
+<p>This method updates the condition of an existing transition between two states. If the transition doesn't exist, the operation is ignored.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">// Change the condition for the &quot;Damaged&quot; -&gt; &quot;CriticallyInjured&quot; transition
+FSM_API.Interaction.ModifyTransition(
+    &quot;PlayerFSM&quot;,
+    &quot;Damaged&quot;,
+    &quot;CriticallyInjured&quot;,
+    ctx =&gt; ((CharacterContext)ctx).Health &lt;= 10 // Change from 25 to 10
+);
+</code></pre>
+<p>WithoutTransition(): Blocking a Path</p>
+<p>This method removes a specific transition rule. It requires the fromState and toState names to uniquely identify the transition.</p>
+<p>C# Example:</p>
+<pre><code class="lang-csharp">// Remove the transition from &quot;Running&quot; to &quot;Jumping&quot;
+FSM_API.Interaction.RemoveTransition(&quot;PlayerFSM&quot;, &quot;Running&quot;, &quot;Jumping&quot;);
+</code></pre>
+<p>🔄 Manipulating Live FSM Instances (FSMHandle)</p>
+<p>While FSMModifier changes the FSM blueprint, the FSMHandle provides methods to directly influence individual, live FSMHandle instances at runtime. These operations do not alter the underlying FSM definition.</p>
+<pre><code>TransitionTo(): Forces an FSMHandle instance to immediately transition to a specified state, bypassing any conditions. This is useful for debug commands or for recovering from an error state.
+
+ResetFSMInstance(): Resets the FSM instance to its initial state, as defined in its blueprint.
+
+EvaluateConditions(): Manually checks all transition rules from the current state. This is especially useful for FSMs with a ProcessRate of 0, which do not update automatically.
+
+DestroyHandle(): Shuts down this FSM instance, removes it from the API's internal system, and calls the OnExit action of its current state. This is a crucial cleanup step for any live instance that is no longer needed.
+</code></pre>
+<p>💡 Important Considerations and Best Practices</p>
+<pre><code>Affects All Instances: Remember that changes made with FSMModifier affect the shared blueprint. All active FSMHandle instances created from that blueprint will immediately use the new states, transitions, and properties on their next update cycle.
+
+Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
+
+State Removal is Handled Gracefully: The API will automatically handle instances in a removed state by transitioning them to a fallback state, ensuring your application doesn't crash or get stuck in an invalid state.
+</code></pre>
+<hr>
+<p><a href="07_Error_Handling.html">➡️ Continue to: 07. Robust Error Handling: Cascading Degradation System</a></p>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User Guide/06_FSM_Modifier_Deep_Dive.md/#L1" class="contribution-link">Edit this page</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
