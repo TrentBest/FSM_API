@@ -20,6 +20,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
     [TestFixture]
     public class FSM_API_Internal_GetBuckets_Tests
     {
+        private const string FsmName = "TestFSM";
+        private const string ProcessGroup = "Update";
         /// <summary>
         /// 
         /// </summary>
@@ -27,6 +29,58 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+        }
+
+        /// <summary>
+        /// Tests that GetBuckets returns an empty dictionary when no groups exist.
+        /// </summary>
+        [Test]
+        public void GetBuckets_ReturnsEmptyDictionaryWhenNoGroupsExist()
+        {
+            // Act
+            var buckets = FSM_API.Internal.GetBuckets();
+
+            // Assert
+            Assert.That(buckets, Is.Empty, "The buckets dictionary should be empty.");
+        }
+
+        /// <summary>
+        /// Tests that GetBuckets returns a dictionary with one group and its FSM bucket.
+        /// </summary>
+        [Test]
+        public void GetBuckets_ReturnsCorrectDictionaryWithOneGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+
+            // Act
+            var buckets = FSM_API.Internal.GetBuckets();
+
+            // Assert
+            Assert.That(buckets.Count, Is.EqualTo(1));
+            Assert.That(buckets.ContainsKey(ProcessGroup), Is.True);
+            Assert.That(buckets[ProcessGroup].ContainsKey(FsmName), Is.True);
+        }
+
+        /// <summary>
+        /// Tests that GetBuckets returns a dictionary with multiple groups and their FSM buckets.
+        /// </summary>
+        [Test]
+        public void GetBuckets_ReturnsCorrectDictionaryWithMultipleGroups()
+        {
+            // Arrange
+            string groupA = "GroupA";
+            string groupB = "GroupB";
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: groupA).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: groupB).BuildDefinition();
+
+            // Act
+            var buckets = FSM_API.Internal.GetBuckets();
+
+            // Assert
+            Assert.That(buckets.Count, Is.EqualTo(2));
+            Assert.That(buckets.ContainsKey(groupA), Is.True);
+            Assert.That(buckets.ContainsKey(groupB), Is.True);
         }
 
         /// <summary>

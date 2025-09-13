@@ -20,6 +20,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
     [TestFixture]
     public class FSM_API_Internal_GetFsmDefinitionNamesInGroup_Tests
     {
+        private const string ProcessGroup = "Update";
+
         /// <summary>
         /// 
         /// </summary>
@@ -27,6 +29,53 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionNamesInGroup returns an empty list when no FSM definitions exist.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionNamesInGroup_ReturnsEmptyListWhenNoDefinitionsExist()
+        {
+            // Act
+            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
+
+            // Assert
+            Assert.That(names, Is.Empty);
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionNamesInGroup returns the correct names for a single group.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionNamesInGroup_ReturnsCorrectNamesForSingleGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
+
+            // Act
+            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
+
+            // Assert
+            Assert.That(names.Count(), Is.EqualTo(2));
+            Assert.That(names.OrderBy(n => n), Is.EqualTo(new[] { "FSM1", "FSM2" }));
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionNamesInGroup returns an empty list for a non-existent group.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionNamesInGroup_ReturnsEmptyListForNonExistentGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+
+            // Act
+            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup("NonExistentGroup");
+
+            // Assert
+            Assert.That(names, Is.Empty);
         }
 
         /// <summary>

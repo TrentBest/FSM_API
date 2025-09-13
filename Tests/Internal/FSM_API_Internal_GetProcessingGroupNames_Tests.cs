@@ -38,5 +38,36 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             Assert.That(FSM_API.Internal.GetProcessingGroupNames(), Is.Not.Null, "GetProcessingGroupNames should not return null.");
             Assert.That(FSM_API.Internal.GetProcessingGroupNames(), Is.Empty, "GetProcessingGroup");
         }
+
+        /// <summary>
+        /// Tests that GetProcessingGroupNames returns an empty list when no groups exist.
+        /// </summary>
+        [Test]
+        public void GetProcessingGroupNames_ReturnsEmptyListWhenNoGroupsExist()
+        {
+            // Act
+            var names = FSM_API.Internal.GetProcessingGroupNames();
+
+            // Assert
+            Assert.That(names, Is.Empty);
+        }
+
+        /// <summary>
+        /// Tests that GetProcessingGroupNames returns the correct names when groups exist.
+        /// </summary>
+        [Test]
+        public void GetProcessingGroupNames_ReturnsCorrectNamesForExistingGroups()
+        {
+            // Arrange
+            FSM_API.Create.CreateProcessingGroup("GroupA");
+            FSM_API.Create.CreateProcessingGroup("GroupB");
+
+            // Act
+            var names = FSM_API.Internal.GetProcessingGroupNames();
+
+            // Assert
+            Assert.That(names.Count(), Is.EqualTo(2));
+            Assert.That(names.OrderBy(n => n), Is.EqualTo(new[] { "GroupA", "GroupB" }));
+        }
     }
 }

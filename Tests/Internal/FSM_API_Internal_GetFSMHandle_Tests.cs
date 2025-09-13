@@ -14,12 +14,15 @@ using TheSingularityWorkshop.FSM_API.Tests;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.Internal
 {
+
     /// <summary>
     /// 
     /// </summary>
     [TestFixture]
     public class FSM_API_Internal_GetFSMHandle_Tests
     {
+        private const string FsmName = "TestFSM";
+        private const string ProcessGroup = "Update";
         /// <summary>
         /// 
         /// </summary>
@@ -27,6 +30,75 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+        }
+
+        /// <summary>
+        /// Tests that GetFSMHandle returns the correct handle when it exists.
+        /// </summary>
+        [Test]
+        public void GetFSMHandle_SucceedsWithExistingHandle()
+        {
+            // Arrange
+            var context = new FSMTestContext();
+            var handle = FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+
+            // Act
+            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, context, ProcessGroup);
+
+            // Assert
+            Assert.That(retrievedHandle, Is.Not.Null);
+            Assert.That(retrievedHandle, Is.EqualTo(handle));
+        }
+
+        /// <summary>
+        /// Tests that GetFSMHandle returns null for a non-existent FSM name.
+        /// </summary>
+        [Test]
+        public void GetFSMHandle_ReturnsNullForNonExistentFsm()
+        {
+            // Arrange
+            var context = new FSMTestContext();
+            FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+
+            // Act
+            var retrievedHandle = FSM_API.Internal.GetFSMHandle("NonExistentFSM", context, ProcessGroup);
+
+            // Assert
+            Assert.That(retrievedHandle, Is.Null);
+        }
+
+        /// <summary>
+        /// Tests that GetFSMHandle returns null for a non-existent processing group.
+        /// </summary>
+        [Test]
+        public void GetFSMHandle_ReturnsNullForNonExistentProcessingGroup()
+        {
+            // Arrange
+            var context = new FSMTestContext();
+            FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+
+            // Act
+            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, context, "NonExistentGroup");
+
+            // Assert
+            Assert.That(retrievedHandle, Is.Null);
+        }
+
+        /// <summary>
+        /// Tests that GetFSMHandle returns null for a non-existent context.
+        /// </summary>
+        [Test]
+        public void GetFSMHandle_ReturnsNullForNonExistentContext()
+        {
+            // Arrange
+            FSM_API.Create.CreateInstance(FsmName, new FSMTestContext(), ProcessGroup);
+
+            // Act
+            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, new FSMTestContext(), ProcessGroup);
+
+            // Assert
+            Assert.That(retrievedHandle, Is.Null);
         }
 
         /// <summary>

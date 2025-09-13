@@ -372,5 +372,75 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.Throws<KeyNotFoundException>(() => FSM_API.Interaction.GetInstances(fsmName, nonExistentGroup),
                 "Expected KeyNotFoundException when the processing group itself does not exist.");
         }
+
+       
+        /// <summary>
+        /// Tests that GetInstances returns a single handle when one exists for a given FSM name.
+        /// </summary>
+        [Test]
+        public void GetInstances_ReturnsOneHandleWhenOneExists()
+        {
+            // Arrange
+            string fsmName = "TestFSM";
+            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            var handle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+
+            // Act
+            var handles = FSM_API.Interaction.GetInstances(fsmName);
+
+            // Assert
+            Assert.That(handles.Count(), Is.EqualTo(1), "Expected one handle to be returned.");
+            Assert.That(handles.First(), Is.EqualTo(handle), "The correct handle should be returned.");
+        }
+
+        /// <summary>
+        /// Tests that GetInstances returns all handles for a single FSM definition.
+        /// </summary>
+        [Test]
+        public void GetInstances_ReturnsAllHandlesForSingleDefinition()
+        {
+            // Arrange
+            string fsmName = "TestFSM";
+            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+
+            // Act
+            var handles = FSM_API.Interaction.GetInstances(fsmName);
+
+            // Assert
+            Assert.That(handles.Count(), Is.EqualTo(3), "Expected three handles to be returned.");
+        }
+
+        /// <summary>
+        /// Tests that GetInstances returns handles from a specific processing group when one is specified.
+        /// </summary>
+        [Test]
+        public void GetInstances_WithGroupName_ReturnsOnlyHandlesFromThatGroup()
+        {
+            // Arrange
+            string fsmName1 = "FSMGroupA";
+            string fsmName2 = "FSMGroupB";
+            string groupA = "GroupA";
+            string groupB = "GroupB";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName1, processingGroup: groupA).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine(fsmName2, processingGroup: groupB).BuildDefinition();
+
+            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+
+            // Act
+            var handlesInGroupA = FSM_API.Interaction.GetInstances(fsmName1, groupA);
+            var handlesInGroupB = FSM_API.Interaction.GetInstances(fsmName2, groupB);
+
+            // Assert
+            Assert.That(handlesInGroupA.Count(), Is.EqualTo(2), "Expected two FSM handles from 'GroupA' to be returned.");
+            Assert.That(handlesInGroupB.Count(), Is.EqualTo(3), "Expected three FSM handles from 'GroupB' to be returned.");
+        }
     }
 }

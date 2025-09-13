@@ -92,6 +92,73 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             Assert.That(FSM_API.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(49.5));
         }
 
+        /// <summary>
+        /// Tests that the average is 0 when no FSM definitions exist.
+        /// </summary>
+        [Test]
+        public void AverageFsmDefinitionsPerGroup_ReturnsZeroWhenNoDefinitionsExist()
+        {
+            // Act
+            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+
+            // Assert
+            Assert.That(average, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Tests that the average is correct when a single FSM definition exists in one group.
+        /// </summary>
+        [Test]
+        public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForSingleDefinition()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
+
+            // Act
+            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+
+            // Assert
+            Assert.That(average, Is.EqualTo(1));
+        }
+
+        /// <summary>
+        /// Tests that the average is correct when multiple FSM definitions exist in one group.
+        /// </summary>
+        [Test]
+        public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForMultipleDefinitionsInOneGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM2").BuildDefinition();
+
+            // Act
+            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+
+            // Assert
+            Assert.That(average, Is.EqualTo(2));
+        }
+
+        /// <summary>
+        /// Tests that the average is correct when FSM definitions are spread across multiple groups.
+        /// </summary>
+        [Test]
+        public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForMultipleGroups()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: "GroupA").BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: "GroupB").BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM3", processingGroup: "GroupB").BuildDefinition();
+
+            // Act
+            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+
+            // Assert
+            // Total definitions: 3
+            // Total groups: 2
+            // Average = 3 / 2 = 1.5
+            Assert.That(average, Is.EqualTo(1.5));
+        }
+
         private void Helper_CreateFSM(string fsmName, string processGroup)
         {
             FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, processGroup)

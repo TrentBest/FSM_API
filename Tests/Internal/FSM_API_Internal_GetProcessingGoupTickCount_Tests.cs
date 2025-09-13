@@ -18,6 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     [TestFixture]
     public class FSM_API_Internal_GetProcessingGoupTickCount_Tests
     {
+        private const string GroupName = "TestGroup";
         /// <summary>
         /// 
         /// </summary>
@@ -25,6 +26,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+            FSM_API.Create.CreateProcessingGroup(GroupName);
+        }
+
+        /// <summary>
+        /// Tests that GetProcessingGoupTickCount returns 0 for a new group.
+        /// </summary>
+        [Test]
+        public void GetProcessingGoupTickCount_ReturnsZeroForNewGroup()
+        {
+            // Act
+            var tickCount = FSM_API.Internal.GetProcessingGroupTickCount(GroupName);
+
+            // Assert
+            Assert.That(tickCount, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Tests that GetProcessingGoupTickCount returns 0 for a non-existent group.
+        /// </summary>
+        [Test]
+        public void GetProcessingGoupTickCount_ReturnsZeroForNonExistentGroup()
+        {
+            // Act
+            var tickCount = FSM_API.Internal.GetProcessingGroupTickCount("NonExistentGroup");
+
+            // Assert
+            Assert.That(tickCount, Is.EqualTo(0));
         }
 
         /// <summary>

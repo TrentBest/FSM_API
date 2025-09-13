@@ -21,6 +21,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
     [TestFixture]
     public class FSM_API_Internal_GetFsmHandleCountInGroup_Tests
     {
+        private const string FsmName = "TestFSM";
+        private const string ProcessGroup = "Update";
         /// <summary>
         /// 
         /// </summary>
@@ -28,7 +30,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
         }
+
+       
+
+       
+
+      
 
         /// <summary>
         /// 

@@ -20,6 +20,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
     [TestFixture]
     public class FSM_API_Internal_GetFsmDefinitionCountInGroup_Tests
     {
+        private const string ProcessGroup = "Update";
         /// <summary>
         /// 
         /// </summary>
@@ -27,6 +28,52 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionCountInGroup returns 0 when no FSM definitions exist.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionCountInGroup_ReturnsZeroWhenNoDefinitionsExist()
+        {
+            // Act
+            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
+
+            // Assert
+            Assert.That(count, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionCountInGroup returns the correct count for a single group.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionCountInGroup_ReturnsCorrectCountForSingleGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
+
+            // Act
+            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
+
+            // Assert
+            Assert.That(count, Is.EqualTo(2));
+        }
+
+        /// <summary>
+        /// Tests that GetFsmDefinitionCountInGroup returns 0 for a non-existent group.
+        /// </summary>
+        [Test]
+        public void GetFsmDefinitionCountInGroup_ReturnsZeroForNonExistentGroup()
+        {
+            // Arrange
+            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+
+            // Act
+            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup("NonExistentGroup");
+
+            // Assert
+            Assert.That(count, Is.EqualTo(0));
         }
 
         /// <summary>
