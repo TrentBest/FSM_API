@@ -464,7 +464,7 @@ namespace TheSingularityWorkshop.FSM_API
            
             foreach (var t in _transitions)
             {
-                Console.WriteLine("Here");
+               
                 if (t.From == current) // Only consider transitions *from* the current state
                 {
                     // Check if the target state exists before evaluating condition
@@ -479,7 +479,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                     try
                     {
-                        Console.WriteLine("Here2");
+                       
                         if (t.Condition(ctx))
                         {
                             currentState.Exit(ctx);

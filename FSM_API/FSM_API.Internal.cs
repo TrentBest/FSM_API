@@ -497,7 +497,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             public static void ProcessDeferredModifications()
             {
-                Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
+                //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
                 while (_deferredModifications.Count > 0)
                 {
                     var action = _deferredModifications.Dequeue();
@@ -826,7 +826,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 foreach (var bucket in bucketsToTick)
                 {
-                    //Console.WriteLine($"Here9");
+                    
                     if (bucket.ProcessRate == 0)
                     {
 
@@ -857,29 +857,29 @@ namespace TheSingularityWorkshop.FSM_API
                         if (handle != null && handle.Context != null && handle.Context.IsValid)
                         {
 
-                            //Console.WriteLine($"Here17");
+                           
                             try
                             {
                                 if (!handle.HasEnteredCurrentState)
                                 {
-                                    //Console.WriteLine($"Here18");
+                                   
                                     bucket.Definition.GetState(bucket.Definition.InitialState).Enter(handle.Context);
                                     handle.HasEnteredCurrentState = true;
                                 }
-                                //Console.WriteLine($"Here19");
+                                
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
-                                //Console.WriteLine($"Here20");
+                              
                                 var transitions = bucket.Definition.GetAllTransitions();
                                 foreach (var transition in transitions)
                                 {
-                                    Console.WriteLine($"HereAgain");
+                                    
                                     if (transition.From == handle.CurrentState)
                                     {
-                                        Console.WriteLine($"HereAgain2");
+                                        
                                         var result = transition.Condition.Invoke(handle.Context);
                                         if (result)
                                         {
-                                            Console.WriteLine($"HereAgain3");
+                                           
                                             bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
                                             handle.CurrentState = transition.To;
                                             handle.HasEnteredCurrentState = false;

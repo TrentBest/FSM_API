@@ -443,10 +443,10 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             public static void Update(string processingGroup = "Update")
             {
-                Console.WriteLine($"Here4");
+                
                 var sw = Stopwatch.StartNew();
                 Internal.TickAll(processingGroup);
-                Console.WriteLine($"Here5");
+               
                 Internal.ProcessDeferredModifications();
                 sw.Stop();
                 if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)

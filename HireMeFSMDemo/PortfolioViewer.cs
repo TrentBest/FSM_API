@@ -449,7 +449,7 @@ namespace MyReviewerShowcaseFSM
                     break;
                 default:
                     // If we are in another state, don't display options immediately
-                    Console.WriteLine($"Here");
+                   
                     break;
             }
             Console.Write("Your action: ");
