@@ -144,4 +144,4 @@ By thoughtfully applying these performance tips and best practices, you can ensu
 
 -----
 
-[➡️ Continue to: 09. Common Use Cases & Examples](https://www.google.com/search?q=09_Common_Use_Cases.md)
+[➡️ Continue to: 09. Common Use Cases & Examples](09_Common_Use_Cases.md)

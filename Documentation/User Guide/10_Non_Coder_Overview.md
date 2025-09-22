@@ -125,8 +125,7 @@ If you're interested in learning about the coding side of things from a clear, p
 
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-</a>
-<em>Support The Singularity Workshop on Patreon.</em>
+    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
 </a>
 
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)

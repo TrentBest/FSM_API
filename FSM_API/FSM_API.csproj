@@ -8,7 +8,7 @@
 
     <IsPackable>true</IsPackable>
     <PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <Authors>Trent Best</Authors>
     <Company>The Singularity Workshop</Company>
     <Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
@@ -17,15 +17,18 @@
     <PackageTags>fsm;state-machine;unity;net;Finite State Machine</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
-    <PackageIcon>TheSingularityWorkshop.png</PackageIcon>
+    <None Include=".\Branding\TheSingularityWorkshop.png" Pack="true" PackagePath="Branding\" />
     <PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
     <Copyright>Copyright © 2025 The Singularity Workshop. All rights reserved.</Copyright>
   </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
-		<None Include=".\Assets\TheSingularityWorkshop.png" Pack="true" PackagePath="" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Branding\TheSingularityWorkshop.png" Pack="true" />
+    <None Update="Branding\TheSingularityWorkshop.png" Pack="true" />
+  </ItemGroup>
 
 </Project>
