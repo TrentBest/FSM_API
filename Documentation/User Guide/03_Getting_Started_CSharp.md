@@ -30,7 +30,6 @@ This guide shows how to use FSM\_API in non-Unity environments (console, service
 
 [11. Frequently Asked Questions (FAQ)](User%20Guide/11_FAQ.md)
 
-
 -----
 
 ## 🎯 What This Example Will Demonstrate

@@ -33,8 +33,4 @@
 	  <None Remove=".\Documentation\User Guide\Tutorials\**\*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Branding\TheSingularityWorkshop.png" Pack="true" />
-  </ItemGroup>
-
 </Project>

@@ -33,7 +33,7 @@ For those already familiar with the concept, a **Finite State Machine (FSM)** is
 
 * **Example**: A character in a game moving from an `Idle` state to a `Walking` state, or a UI button transitioning from `Enabled` to `Pressed`.
 
-If you need a more in-depth theoretical understanding of FSMs, including states, transitions, and different FSM paradigms, please refer to our **[Theory folder](Theory/01_What_is_an_FSM.md)**.
+If you need a more in-depth theoretical understanding of FSMs, including states, transitions, and different FSM paradigms, please refer to our **[Theory folder](../Theory/01_What_is_an_FSM.md)**.
 
 ---
 
