@@ -45,9 +45,9 @@ For developers working with Unity, please consult the official Unity integration
 This revised ReadMe.md is more effective because it's concise, provides clear signposts to other documents, and accurately describes the content of those files. It serves its intended purpose without cluttering the user's view with redundant information or API-specific diagrams that belong elsewhere.
 
 
-<br>
+
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
 </a>
 
 

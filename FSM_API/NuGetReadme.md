@@ -180,7 +180,9 @@ MIT License – use it, hack it, build amazing things with it.
 
 **The Singularity Workshop – Tools for the curious, the bold, and the systemically inclined.**
 
-<img src="TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" height="200">
+<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
+    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+</a>
 
 Because state shouldn’t be a mess.
 

@@ -8,11 +8,11 @@ This document will outline the key pros and cons of using FSMs in software devel
 
 ## 📚 Table of Contents (for Theory Folder)
 
-  * [01. What Are Finite State Machines (FSMs)? - A Deeper Dive](https://www.google.com/search?q=01_What_Are_FSMs.md)
-  * [02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent](https://www.google.com/search?q=02_Types_Of_FSMs.md)
-  * [03. Advantages and Disadvantages of Using FSMs](https://www.google.com/search?q=03_Advantages_And_Disadvantages.md)
-  * [04. When to Use Finite State Machines](https://www.google.com/search?q=04_When_To_Use_FSMs.md)
-  * [05. FSM Limitations and Alternatives](https://www.google.com/search?q=05_FSM_Limitations_And_Alternatives.md)
+* [01. What Are Finite State Machines (FSMs)? - A Deeper Dive](01_What_Are_FSMs.md)
+* [02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent](02_Types_Of_FSMs.md)
+* [03. Advantages and Disadvantages of Using FSMs](03_Advantages_And_Disadvantages.md)
+* [04. When to Use Finite State Machines](04_When_To_Use_FSMs.md)
+* [05. FSM Limitations and Alternatives](05_FSM_Limitations_And_Alternatives.md)
 
 -----
 
@@ -88,7 +88,7 @@ By understanding these trade-offs, you can effectively decide `When to Use Finit
 
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Visuals/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
 </a>
 
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
