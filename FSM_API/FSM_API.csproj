@@ -23,7 +23,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+	  <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+
+	  <None Include=".\Branding\**\*" Pack="true" PackagePath="Branding\" />
+
+	  <None Include=".\Documentation\**\*.md" Pack="true" PackagePath="Documentation\" />
+	  <None Include=".\Documentation\**\Visuals\*.png" Pack="true" PackagePath="Documentation\Visuals\" />
+
+	  <None Remove=".\Documentation\User Guide\Tutorials\**\*" />
   </ItemGroup>
 
   <ItemGroup>
