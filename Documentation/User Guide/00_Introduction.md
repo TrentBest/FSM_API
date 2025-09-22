@@ -97,22 +97,23 @@ To best navigate this documentation, please consider your current understanding:
 * **New to Finite State Machines (FSMs)?**
     If terms like "states," "transitions," "event-driven," or "stepped" are new to you, begin with our **Theory folder** for comprehensive explanations and definitions:
     * **[Theory/01_What_is_an_FSM.md](Theory/01_What_is_an_FSM.md)**
-    * **[Theory/02_States_and_Transitions.md](Theory/02_States_and_Transitions.md)**
-    * **[Theory/03_Stepped_vs_Event_Driven.md](Theory/03_Stepped_vs_Event_Driven.md)**
-    * **[Theory/04_Advanced_FSM_Concepts.md](Theory/04_Advanced_FSM_Concepts.md)** (if applicable)
+    * **[Theory/02_Types_Of_FSMs.md](Theory/02_Types_Of_FSMs.md)**
+    * **[Theory/03_Advantages_And_Disadvantages.md](Theory/03_Advantages_And_Disadvantages.md)**
+    * **[Theory/04_When_To_Use_FSMs.md](Theory/04_When_To_Use_FSMs.md)**
+    * **[Theory/05_FSM_Limitations_And_Alternatives.md](Theory/05_FSM_Limitations_And_Alternatives.md)**
 
 * **Familiar with FSMs, but new to FSM_API?**
     For an abridged overview of how FSM_API implements core FSM concepts, proceed to the **[01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)** section.
 
 * **Ready to start coding?**
-    Jump straight into our C# guide: **[02. Getting Started with c#](/User%20Guide/03_Getting_Started_CSharp.md)**.
+    Jump straight into our C# guide: **[03. Getting Started with c#](03_Getting_Started_CSharp.md)**.
 
 * **Are you a non-coder looking for a high-level understanding?**
     Get a broad overview of what FSM_API does and its benefits without diving into code in **[10. FSM_API for Non-Coders: A Big Picture Overview](10_Non_Coder_Overview.md)**.
 
 ---
 
-[Continue to: 01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
+[➡️ Continue to: 01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
 
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
