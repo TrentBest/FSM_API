@@ -52,6 +52,8 @@ jobs:
       run: |
         mkdir publish
         cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
+        cp FSM_API/bin/Release/net6.0/FSM_API.dll publish/FSM_API_net6.dll
+        cp FSM_API/bin/Release/net47/FSM_API.dll publish/FSM_API_net47.dll
         cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
         cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
 
