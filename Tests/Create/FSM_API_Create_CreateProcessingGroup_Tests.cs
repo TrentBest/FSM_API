@@ -1,6 +1,7 @@
 using NUnit.Framework;
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TheSingularityWorkshop.FSM_API.Tests
@@ -36,6 +37,54 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(buckets, Contains.Key(groupName), "Processing group should be created.");
             Assert.That(buckets[groupName], Is.Not.Null, "Created processing group dictionary should not be null.");
             Assert.That(buckets[groupName], Is.Empty, "Newly created processing group should be empty.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test]
+        public void CreateProcessingGroup_MaximumLengthName_Succeeds()
+        {
+            // ARRANGE
+            var maxLengthName = new string('A', 255); // Assuming 255 is the max length allowed
+            // ACT
+            FSM_API.Create.CreateProcessingGroup(maxLengthName);
+            // ASSERT
+            var buckets = FSM_API.Internal.GetBuckets();
+            Assert.That(buckets, Contains.Key(maxLengthName), "Processing group with maximum length name should be created.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test, Explicit("Stress tests take time and memory. Run manually.")]
+        public void CreateProcessingGroup_CanHandle_LargeVolume_OfGroups()
+        {
+            // ARRANGE
+            // 100,000 is a heavy load but safe for most CI/CD runners and dev machines.
+            // Going higher (e.g. 1 million) might trigger OutOfMemory depending on your RAM.
+            const int largeVolume = 100_000;
+
+            // ACT
+            var sw = Stopwatch.StartNew();
+
+            for (int i = 0; i < largeVolume; i++)
+            {
+                // Using a simple index as the name ensures uniqueness
+                FSM_API.Create.CreateProcessingGroup($"Group_{i}");
+            }
+
+            sw.Stop();
+            Console.WriteLine($"Created {largeVolume} groups in {sw.ElapsedMilliseconds}ms");
+
+            // ASSERT
+            var buckets = FSM_API.Internal.GetBuckets();
+
+            Assert.That(buckets.Count, Is.EqualTo(largeVolume),
+                $"Should have successfully created {largeVolume} distinct processing groups.");
+
+            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(largeVolume),
+                "Internal property ProcessingGroupCount should match the dictionary count.");
         }
 
         /// <summary>

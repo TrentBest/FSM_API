@@ -8,16 +8,17 @@
 
     <IsPackable>true</IsPackable>
     <PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-    <Version>1.0.12</Version>
+	<RootNamespace>TheSingularityWorkshop.FSM_API</RootNamespace>
+    <Version>1.0.13</Version>
     <Authors>Trent Best</Authors>
     <Company>The Singularity Workshop</Company>
-    <Description>A robust, thread-safe, and highly configurable Finite State Machine API for .NET.</Description>
+    <Description>A blueprint-based, runtime-modifiable Finite State Machine system for .NET. Features thread-safe deferred execution, zero-dependency architecture, and decoupled POCO contexts.</Description>
     <RepositoryUrl>https://github.com/TrentBest/FSM_API</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>fsm;state-machine;net;Finite State Machine;singularity</PackageTags>
+    <PackageTags>fsm;state-machine;net;Finite State Machine;singularity;TheSingularityWorkshop</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
-    
+	  <PackageIcon>Branding\TheSingularityWorkshop.png</PackageIcon>
     <PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
     <Copyright>Copyright © 2025 The Singularity Workshop. All rights reserved.</Copyright>
   </PropertyGroup>

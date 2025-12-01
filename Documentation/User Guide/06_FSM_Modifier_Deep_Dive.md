@@ -38,7 +38,7 @@ While the `FSMBuilder` is used to **initially design and build** an FSM's defini
 
 -----
 
-06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime
+## 06. FSMModifier Deep Dive: Modifying Your FSMs at Runtime
 
 The FSMModifier provides advanced capabilities to dynamically alter the blueprint (definition) of your Finite State Machines at runtime. This allows for highly adaptive behaviors, hot-swappable logic, or configuration changes without rebuilding your application.
 
@@ -46,27 +46,27 @@ While the FSMBuilder is used to initially design and build an FSM's definition, 
 
 This is a powerful feature for scenarios requiring:
 
-    Adaptive AI: Changing an enemy's behavior patterns on the fly (e.g., learning new attacks, adapting to player strategies).
+A) Adaptive AI: Changing an enemy's behavior patterns on the fly (e.g., learning new attacks, adapting to player strategies).
 
-    Dynamic UI: Adding or removing navigation paths or UI states based on user unlocks or content downloads.
+B) Dynamic UI: Adding or removing navigation paths or UI states based on user unlocks or content downloads.
 
-    Hot Reloading: Modifying FSM logic in a live environment (e.g., development tools for rapid iteration).
+C)  Hot Reloading: Modifying FSM logic in a live environment (e.g., development tools for rapid iteration).
 
-    A/B Testing: Dynamically switching between different FSM behaviors for experimentation.
+D)  A/B Testing: Dynamically switching between different FSM behaviors for experimentation.
 
-🔑 Accessing and Using the FSMModifier
+## 🔑 Accessing and Using the FSMModifier
 
 The FSMModifier is an internal class, so you can't create it directly. Instead, you access its functionality through a set of public, static helper methods on FSM_API.Interaction. These methods are designed to simplify common modification tasks like adding or removing states and transitions.
 
 The FSMModifier uses a fluent API pattern where you first stage the changes you want to make and then apply them with a single ModifyDefinition() call. All changes are batched and applied sequentially when ModifyDefinition() is called, making the process safe and predictable.
 
-🛠 FSMModifier Methods: Altering the Blueprint
+## 🛠 FSMModifier Methods: Altering the Blueprint
 
 All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FSM_API.Interaction.
 
 Staging Changes with With... and Without...
 
-WithState(): Adding a New State
+## WithState(): Adding a New State
 
 This method adds a new state to an existing FSM definition. If a state with the given name already exists, the operation is ignored. Use WithModifiedState() to change an existing state.
 
@@ -82,7 +82,7 @@ FSM_API.Interaction.AddStateToFSM(
 );
 ```
 
-WithModifiedState(): Updating an Existing State
+## WithModifiedState(): Updating an Existing State
 
 This method modifies the actions (onEnter, onUpdate, and onExit) of a state that is already part of the FSM blueprint. If the state doesn't exist, the operation is ignored.
 
@@ -99,7 +99,7 @@ FSM_API.Interaction.ModifyState(
 );
 ```
 
-WithoutState(): Removing a State
+## WithoutState(): Removing a State
 
 This method stages a state for removal from the FSM definition.
 
@@ -111,7 +111,7 @@ FSM_API.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
 
 Important: When a state is removed, any active FSMHandle instances currently in that state will be immediately transitioned to a specified fallbackStateName. If you pass null or an empty string for the fallback, instances will automatically transition to the FSM's InitialState. The OnExit action of the removed state will be executed for these instances.
 
-WithTransition(): Creating a New Path
+## WithTransition(): Creating a New Path
 
 This method adds a new transition rule between two states. If the transition already exists, the operation is ignored. Use WithModifiedTransition() to change an existing one.
 
@@ -125,7 +125,7 @@ FSM_API.Interaction.AddTransition(
     ctx => ((PlayerContext)ctx).IsTired() && DateTime.Now.Hour > 21
 );
 ```
-WithModifiedTransition(): Updating a Transition
+## WithModifiedTransition(): Updating a Transition
 
 This method updates the condition of an existing transition between two states. If the transition doesn't exist, the operation is ignored.
 
@@ -140,7 +140,7 @@ FSM_API.Interaction.ModifyTransition(
 );
 ```
 
-WithoutTransition(): Blocking a Path
+## WithoutTransition(): Blocking a Path
 
 This method removes a specific transition rule. It requires the fromState and toState names to uniquely identify the transition.
 
@@ -149,25 +149,25 @@ C# Example:
 // Remove the transition from "Running" to "Jumping"
 FSM_API.Interaction.RemoveTransition("PlayerFSM", "Running", "Jumping");
 ```
-🔄 Manipulating Live FSM Instances (FSMHandle)
+## 🔄 Manipulating Live FSM Instances (FSMHandle)
 
 While FSMModifier changes the FSM blueprint, the FSMHandle provides methods to directly influence individual, live FSMHandle instances at runtime. These operations do not alter the underlying FSM definition.
 
-    TransitionTo(): Forces an FSMHandle instance to immediately transition to a specified state, bypassing any conditions. This is useful for debug commands or for recovering from an error state.
+  TransitionTo(): Forces an FSMHandle instance to immediately transition to a specified state, bypassing any conditions. This is useful for debug commands or for recovering from an error state.
 
-    ResetFSMInstance(): Resets the FSM instance to its initial state, as defined in its blueprint.
+  ResetFSMInstance(): Resets the FSM instance to its initial state, as defined in its blueprint.
 
-    EvaluateConditions(): Manually checks all transition rules from the current state. This is especially useful for FSMs with a ProcessRate of 0, which do not update automatically.
+  EvaluateConditions(): Manually checks all transition rules from the current state. This is especially useful for FSMs with a ProcessRate of 0, which do not update automatically.
 
-    DestroyHandle(): Shuts down this FSM instance, removes it from the API's internal system, and calls the OnExit action of its current state. This is a crucial cleanup step for any live instance that is no longer needed.
+  DestroyHandle(): Shuts down this FSM instance, removes it from the API's internal system, and calls the OnExit action of its current state. This is a crucial cleanup step for any live instance that is no longer needed.
 
-💡 Important Considerations and Best Practices
+## 💡 Important Considerations and Best Practices
 
-    Affects All Instances: Remember that changes made with FSMModifier affect the shared blueprint. All active FSMHandle instances created from that blueprint will immediately use the new states, transitions, and properties on their next update cycle.
+  Affects All Instances: Remember that changes made with FSMModifier affect the shared blueprint. All active FSMHandle instances created from that blueprint will immediately use the new states, transitions, and properties on their next update cycle.
 
-    Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
+  Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
 
-    State Removal is Handled Gracefully: The API will automatically handle instances in a removed state by transitioning them to a fallback state, ensuring your application doesn't crash or get stuck in an invalid state.
+  State Removal is Handled Gracefully: The API will automatically handle instances in a removed state by transitioning them to a fallback state, ensuring your application doesn't crash or get stuck in an invalid state.
 
 -----
 

@@ -566,5 +566,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                (ctx) => Console.WriteLine($"Updating {stateName}"),
                (ctx) => Console.WriteLine($"Exiting {stateName}")));
         }
+
+        
     }
 }

@@ -1,6 +1,6 @@
 # 03\. Getting Started with FSM\_API in Pure C\#
 
-> Use FSM\_API with pure C\# classes — completely decoupled from Unity — for backend logic, simulations, AI, networking, or any state-based system.
+ Use FSM\_API with pure C\# classes — completely decoupled from Unity — for backend logic, simulations, AI, networking, or any state-based system.
 
 This guide shows how to use FSM\_API in non-Unity environments (console, services, backends, robotics, etc.) with clean, minimal dependencies.
 
@@ -31,6 +31,28 @@ This guide shows how to use FSM\_API in non-Unity environments (console, service
 [11. Frequently Asked Questions (FAQ)](11_FAQ.md)
 
 -----
+
+## Install FSM_API into your c# project using Nuget Package
+
+Within your preferred IDE find FSM_API within the NuGet Package Manager and click install.
+
+## Install FSM_API into your project using .NET CLI:
+
+dotnet add package TheSingularityWorkshop.FSM_API
+
+## Integrate the API into your project
+
+Integrating the API with any c# application is foremost establishing the heartbeat or cadence of when your FSMs operate.  
+
+Example c#:
+```csharp
+FSM_API.Interaction.Update("YourProcessingGroupName");//Updates all FSMs registered to this processing group.
+```
+
+To help with this understanding we will describe an example below along with additional samples which are available on our samples repo.
+
+[Samples Repo](https://github.com/TrentBest/SimpleDemos)
+
 
 ## 🎯 What This Example Will Demonstrate
 
@@ -66,6 +88,8 @@ Create a standard C\# class to represent the "thing" your FSM will manage — li
 It must implement the `IStateContext` interface. Recall from the **[01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)** that `IStateContext` requires `Name` and `IsValid` properties.
 
 ### 🛠 Example: `GameCharacterContext.cs`
+
+Example c#:
 
 ```csharp
 using System;
@@ -147,6 +171,7 @@ With your context ready, you can now define your FSM using `FSM_API.CreateFinite
 
 This class will set up our FSM definition and manage the FSM instance within a simulated game loop.
 
+Example c#:
 ```csharp
 using System;
 using TheSingularityWorkshop.FSM_API;
@@ -226,6 +251,7 @@ Since you don’t have an engine's `Update()` or `FixedUpdate()` loop, you'll ex
 *A timeline of the 20-tick simulation showing key events and state changes.*
 </a>
 
+Example c#:
 ```csharp
 using System;
 using System.Threading; // For Thread.Sleep

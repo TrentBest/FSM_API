@@ -13,6 +13,9 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
 [![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
 
+[![CoderLegion](https://coderlegion.com/cl_badge_logo1.png) Join the CoderLegion Community](https://coderlegion.com/user/The+Singularity+Workshop)
+
+
 [**💖 Support Us**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
 
 ---
@@ -51,6 +54,16 @@ Traditional FSM systems often suffer from tight coupling to specific environment
 | Named FSMs & Processing Groups   | ✅         | ❌                 |
 | Built-in diagnostics & thresholds| ✅         | ❌                 |
 | Pure C# with no external deps    | ✅         | ❌                 |
+
+---
+
+High-Performance Stress Testing & Benchmarks The FSM API is built for scale. Our initial baseline stress tests demonstrate the capacity to handle over 240,000 active agents at playable framerates (>30 FPS) using standard time-slicing techniques.
+
+We are currently optimizing our backend lookup architecture, moving from string-based identifiers to a hash-based system. This change is anticipated to significantly reduce memory allocation overhead and CPU cycles per logic operation.
+
+View the full Benchmark Report & Optimization Roadmap here
+
+: [Benchmark Report & Roadmap](InitialBenchmark.md)
 
 ---
 

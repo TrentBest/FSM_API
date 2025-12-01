@@ -447,8 +447,12 @@ namespace TheSingularityWorkshop.FSM_API
                     if (t.Condition(ctx))
                     {
                         currentState.Exit(ctx);
-                        next = t.To;
-                        return; // Transition occurred, exit
+                        var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                        if (handle != null)
+                        {
+                            handle.CurrentState = t.To; // Update the FSM handle's current state
+                            handle.HasEnteredCurrentState = false;
+                        }
                     }
                 }
                 catch (Exception ex)

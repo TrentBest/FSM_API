@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NUnit.Framework;
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 using TheSingularityWorkshop.FSM_API.Tests.Internal;
@@ -228,5 +229,56 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
             // You could further assert that handle.Definition.Name matches the default FSM name if GetDefaultFSM has a known name.
             // Assert.AreEqual(FSM_API.Internal.GetDefaultFSM().Name, handle.Definition.Name);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test, Explicit("Performance: Stress tests take time and memory. Run manually.")]
+        public void CreateInstance_CanHandle_LargeVolume()
+        {
+            // ARRANGE
+            const int volume = 100_000;
+            const string fsmName = "Stress_FSM";
+
+            // 1. We need a blueprint to create instances from
+            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+
+            // 2. We need a lightweight context to avoid GC pressure skewing the test
+            var ctxList = new List<StressContext>(volume);
+            for (int i = 0; i < volume; i++)
+            {
+                ctxList.Add(new StressContext());
+            }
+
+            var sw = Stopwatch.StartNew();
+
+            // ACT
+            for (int i = 0; i < volume; i++)
+            {
+                // Creating 100k instances of the same FSM
+                // This validates the 'Instances' list in the bucket and Handle ID generation
+                FSM_API.Create.CreateInstance(fsmName, ctxList[i]);
+            }
+
+            sw.Stop();
+            Console.WriteLine($"[Stress] Created {volume} FSM Instances in {sw.ElapsedMilliseconds}ms");
+
+            // ASSERT
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(volume),
+                "Total FSM Handles (Instances) should match the requested volume.");
+
+            // Optional: Verify strict lookups still work under load
+            var firstHandle = FSM_API.Interaction.GetInstance(fsmName, ctxList[0], "Update");
+            Assert.That(firstHandle, Is.Not.Null, "Should be able to retrieve the first instance created.");
+
+            var lastHandle = FSM_API.Interaction.GetInstance(fsmName, ctxList[volume - 1], "Update");
+            Assert.That(lastHandle, Is.Not.Null, "Should be able to retrieve the last instance created.");
+        }
+    }
+
+    public class StressContext : IStateContext
+    {
+        public bool IsValid { get; set; } = true;
+        public string Name { get; set; }
     }
 }

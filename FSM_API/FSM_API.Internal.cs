@@ -862,8 +862,8 @@ namespace TheSingularityWorkshop.FSM_API
                             {
                                 if (!handle.HasEnteredCurrentState)
                                 {
-                                   
-                                    bucket.Definition.GetState(bucket.Definition.InitialState).Enter(handle.Context);
+                                   //1.0.13 fixed from always using the initial state to using the current state.
+                                    bucket.Definition.GetState(handle.CurrentState).Enter(handle.Context);
                                     handle.HasEnteredCurrentState = true;
                                 }
                                 
@@ -900,7 +900,7 @@ namespace TheSingularityWorkshop.FSM_API
                             Error.InvokeInstanceError(handle,
                                 "FSM instance or its context became null/invalid (IsValid returned false). Automatically shutting down due to instability.",
                                 new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
-
+                            DestroyInstance(handle);//Fixed 1.0.13 - automatically destroy invalid instances.
                         }
                     }
                 }

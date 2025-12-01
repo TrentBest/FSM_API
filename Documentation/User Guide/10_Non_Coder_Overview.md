@@ -1,6 +1,6 @@
 # 10\. FSM\_API for Non-Coders: A Big Picture Overview
 
-> Have you ever tried to describe a complex process to someone, like making coffee ☕ or building a LEGO castle 🏰, and found yourself saying, "First you do this, *then* if that happens, you do this other thing, *otherwise* you do something else entirely"? If so, you've already grasped the core idea behind **Finite State Machines (FSMs)**\!
+ Have you ever tried to describe a complex process to someone, like making coffee ☕ or building a LEGO castle 🏰, and found yourself saying, "First you do this, *then* if that happens, you do this other thing, *otherwise* you do something else entirely"? If so, you've already grasped the core idea behind **Finite State Machines (FSMs)**\!
 
 At its heart, FSM\_API is a powerful tool designed to make complex software behaviors predictable, organized, and easier to manage, even if you don't write code yourself. It helps turn messy, "if-this-then-that" logic into clear, step-by-step instructions.
 

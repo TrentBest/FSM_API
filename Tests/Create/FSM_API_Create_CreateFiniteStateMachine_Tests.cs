@@ -1,15 +1,16 @@
-﻿using System;
+﻿using NUnit.Framework;
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-
 using TheSingularityWorkshop.FSM_API;
+using TheSingularityWorkshop.FSM_API.Tests;
 
 using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
-using TheSingularityWorkshop.FSM_API.Tests;
 
 
 namespace TheSingularityWorkshop.FSM_API.Tests.Create
@@ -184,6 +185,32 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
             // If FSM_API.Error had a mockable or inspectable interface:
             // MockErrorLogging.VerifyErrorLoggedContains("Invalid processRate '-5'", Times.Once);
             // Assert.IsTrue(loggedErrors.Any(msg => msg.Contains("Invalid processRate '-5'") && msg.Contains("Setting to 0")), "Error message about rate coercion should be logged.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test, Explicit("Performance: Stress tests take time and memory. Run manually.")]
+        public void CreateFiniteStateMachine_CanHandle_LargeVolume()
+        {
+            // ARRANGE
+            const int volume = 100000;
+            var sw = Stopwatch.StartNew();
+
+            // ACT
+            for (int i = 0; i < volume; i++)
+            {
+                // Creating 100k distinct FSM definitions
+                // This validates the FsmBucket dictionary expansion capabilities
+                FSM_API.Create.CreateFiniteStateMachine($"FSM_Def_{i}").BuildDefinition();
+            }
+
+            sw.Stop();
+            Console.WriteLine($"[Stress] Created {volume} FSM Definitions in {sw.ElapsedMilliseconds}ms");
+
+            // ASSERT
+            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(volume),
+                "Total FSM definitions should match the requested volume.");
         }
     }
 }

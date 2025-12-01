@@ -1,6 +1,6 @@
 ﻿# 01. What Are Finite State Machines (FSMs)? - A Deeper Dive
 
-> A **Finite State Machine (FSM)** is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of **states** at any given time. The FSM can change from one state to another in response to some inputs; the change from one state to another is called a **transition**. An FSM is defined by a list of its states, its initial state, and the conditions for each transition.
+A **Finite State Machine (FSM)** is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of **states** at any given time. The FSM can change from one state to another in response to some inputs; the change from one state to another is called a **transition**. An FSM is defined by a list of its states, its initial state, and the conditions for each transition.
 
 While our "Non-Coder Overview" (10. FSM_API for Non-Coders) introduced the concept simply, this document delves into the more formal and detailed understanding of what FSMs are, laying the groundwork for why they are so widely used in software development.
 
