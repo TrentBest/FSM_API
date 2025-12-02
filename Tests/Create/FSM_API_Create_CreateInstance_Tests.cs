@@ -276,9 +276,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class StressContext : IStateContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsValid { get; set; } = true;
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name { get; set; }
     }
 }

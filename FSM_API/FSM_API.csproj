@@ -21,6 +21,14 @@
 	  <PackageIcon>Branding\TheSingularityWorkshop.png</PackageIcon>
     <PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
     <Copyright>Copyright © 2025 The Singularity Workshop. All rights reserved.</Copyright>
+	  <PackageReleaseNotes>
+		  - Critical Fix: Resolved InvalidOperationException in TickAll/Destroy where collection modification during iteration caused crashes.
+		  - Logic Fix: Fixed OnEnter behavior to correctly target CurrentState rather than defaulting to InitialState on re-entry.
+		  - Stability: Automatically destroys FSM instances if their context becomes invalid (IsValid returns false).
+		  - Internal API: Enhanced null safety and internal documentation.
+		  - Increased Unit Test Coverage.
+		  - Cleanup: Removed legacy 'HireMeFSMDemo' proof-of-concept project.
+	  </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

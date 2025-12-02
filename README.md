@@ -202,6 +202,27 @@ FSM_API.Interaction.Update("MainLoop");
 | 🤝 **Collaborative Design** | FSMs provide a **visual and structured way to define complex behaviors**, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.   |
 |  🎮 Unity Integration Available | Now preparing for submission to the Unity Asset Store.  |
 
+
+---
+
+## 🔬 Internal Architecture (Advanced)
+
+For academic interest or advanced debugging, the `FSM_API.Internal` namespace exposes the engine's core machinery. 
+
+> **Warning:** These methods are intended for internal use. Direct modification may bypass safety checks.
+
+### Core Components
+* **FsmBucket**: The atomic container holding an FSM Definition (`FSM`) and its active Instances (`List<FSMHandle>`).
+* **TickAll(group)**: The heart of the system. It iterates `FsmBucket`s, respects `ProcessRate`, and executes the `Update` -> `Transition` -> `State Change` cycle.
+* **Deferred Modifications**: To ensure thread safety on the main loop, structural changes (like destroying an FSM) are queued and executed only *after* the tick cycle completes.
+
+### Cycle logic
+1. **Update**: The `OnUpdate` action of the `CurrentState` is executed.
+2. **Evaluate**: Transitions attached to the `CurrentState` are evaluated.
+3. **Transition**: If a condition is met, `OnExit` (current) -> `OnEnter` (next) fires immediately.
+
+---
+
 🤝 Contributing
 
 Contributions welcome\! Whether you're integrating FSM\_API into your enterprise application,
@@ -216,7 +237,7 @@ MIT License. Use it, hack it, build amazing things with it.
 The Singularity Workshop - Tools for the curious, the bold, and the systemically inclined.
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+    <img src="/FSM_API/Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
 </a>
 
 Because state shouldn't be a mess.

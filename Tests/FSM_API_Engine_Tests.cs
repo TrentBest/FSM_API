@@ -6,15 +6,24 @@ using TheSingularityWorkshop.FSM_API;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.Engine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestFixture]
     public class FSM_API_Engine_Tests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [SetUp]
         public void Setup()
         {
             FSM_API.Internal.ResetAPI(true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void Engine_Respects_ProcessRate_Throttling()
         {
@@ -50,6 +59,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
                 $"FSM with rate {processRate} should have updated 3 times in 10 ticks, but updated {updateCount} times.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void Engine_Handles_Zombie_Instance_Gracefully()
         {
@@ -97,6 +109,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
                 "CRITICAL: The victim instance executed its Update logic AFTER being destroyed in the same frame.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void Engine_AutoShutdown_On_Invalid_Context()
         {
@@ -127,9 +142,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
                 "Engine should have automatically destroyed the instance with invalid context.");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private class MockContext : IStateContext
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public bool IsValid { get; set; } = true;
+            /// <summary>
+            /// 
+            /// </summary>
             public string Name { get; set; }
         }
     }
