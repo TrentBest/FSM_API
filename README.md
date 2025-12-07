@@ -202,7 +202,6 @@ FSM_API.Interaction.Update("MainLoop");
 | 🤝 **Collaborative Design** | FSMs provide a **visual and structured way to define complex behaviors**, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.   |
 |  🎮 Unity Integration Available | Now preparing for submission to the Unity Asset Store.  |
 
-
 ---
 
 ## 🔬 Internal Architecture (Advanced)
@@ -213,13 +212,20 @@ For academic interest or advanced debugging, the `FSM_API.Internal` namespace ex
 
 ### Core Components
 * **FsmBucket**: The atomic container holding an FSM Definition (`FSM`) and its active Instances (`List<FSMHandle>`).
-* **TickAll(group)**: The heart of the system. It iterates `FsmBucket`s, respects `ProcessRate`, and executes the `Update` -> `Transition` -> `State Change` cycle.
+* **TickAll(group)**: The heart of the system. It iterates `FsmBucket`s, respects `ProcessRate`, and executes the logic cycle.
 * **Deferred Modifications**: To ensure thread safety on the main loop, structural changes (like destroying an FSM) are queued and executed only *after* the tick cycle completes.
 
-### Cycle logic
-1. **Update**: The `OnUpdate` action of the `CurrentState` is executed.
-2. **Evaluate**: Transitions attached to the `CurrentState` are evaluated.
-3. **Transition**: If a condition is met, `OnExit` (current) -> `OnEnter` (next) fires immediately.
+### Tick Cycle Logic
+A single tick performs at most one "Enter", one "Update", and one "Exit" operation to ensure deterministic execution time.
+
+1. **Enter (If Needed)**: If the instance is new to its current state, `OnEnter` is executed and the `HasEntered` flag is set.
+2. **Update**: The `OnUpdate` action of the `CurrentState` is executed.
+3. **Evaluate & Transition**: Transitions attached to the `CurrentState` are evaluated.
+    * If a condition is met:
+        1. `OnExit` (current state) is executed.
+        2. `CurrentState` is updated to the **Target State**.
+        3. `HasEntered` is reset to `false`.
+    * **Note:** The `OnEnter` logic for the *new* state will not execute until the **next tick**.
 
 ---
 
@@ -237,7 +243,7 @@ MIT License. Use it, hack it, build amazing things with it.
 The Singularity Workshop - Tools for the curious, the bold, and the systemically inclined.
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="/FSM_API/Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
+    <img src="FSM_API/Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
 </a>
 
 Because state shouldn't be a mess.
