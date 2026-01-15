@@ -28,9 +28,27 @@ namespace TheSingularityWorkshop.FSM_API
         public string From { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int FromID { get; private set; }
+
+        /// <summary>
         /// This is the **name of the state** where this transition leads to.
         /// </summary>
         public string To { get; set; }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int ToID { get; private set; }
+
 
         /// <summary>
         /// This is the **condition** (a function that returns `true` or `false`)

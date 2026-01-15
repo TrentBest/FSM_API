@@ -456,9 +456,47 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-           
 
-           
+            /// <summary>
+            /// Dynamically moves an FSM definition and all its active instances to a different processing group.
+            /// </summary>
+            /// <remarks>
+            /// This allows for re-assigning FSMs at runtime to be ticked by a different game loop (e.g., from "Update" to "FixedUpdate").
+            /// It internally uses an <see cref="FSMModifier"/> to apply the change.
+            /// Added in V1.0.14
+            /// </remarks>
+            /// <param name="fsmName">The unique name of the FSM definition to move.</param>
+            /// <param name="newProcessingGroup">The name of the new processing group.</param>
+            /// <param name="currentProcessingGroup">The name of the processing group where the FSM is currently registered. Defaults to <c>"Update"</c>.</param>
+            /// <exception cref="ArgumentException">Thrown if any name is null, empty, or white-space.</exception>
+            /// <exception cref="KeyNotFoundException">Thrown if the FSM definition cannot be found in the current group.</exception>
+            public static void ChangeProcessingGroup(string fsmName, string newProcessingGroup, string currentProcessingGroup = "Update")
+            {
+                if (string.IsNullOrWhiteSpace(fsmName))
+                {
+                    throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
+                }
+                if (string.IsNullOrWhiteSpace(newProcessingGroup))
+                {
+                    throw new ArgumentException("New processing group cannot be null or empty.", nameof(newProcessingGroup));
+                }
+                if (string.IsNullOrWhiteSpace(currentProcessingGroup))
+                {
+                    throw new ArgumentException("Current processing group cannot be null or empty.", nameof(currentProcessingGroup));
+                }
+
+                var fsm = Internal.GetFSM(fsmName, currentProcessingGroup);
+                if (fsm == null)
+                {
+                    throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{currentProcessingGroup}'.");
+                }
+
+                // FSMModifier handles the heavy lifting of moving the FsmBucket
+                new FSMModifier(fsm)
+                   .WithProcessGroup(newProcessingGroup)
+                   .ModifyDefinition();
+            }
+
 
             /// <summary>
             /// Unregisters a specific FSM instance from the system, allowing it to be garbage collected
@@ -476,6 +514,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </para>
             /// If the instance is not found (e.g., it was already unregistered or never registered),
             /// a warning will be logged via <see cref="Error.InvokeInternalApiError(string, Exception)"/>.
+            /// Added in V1.0.14
             /// </remarks>
             /// <param name="instance">
             /// The <see cref="FSMHandle"/> of the specific live FSM instance to unregister.

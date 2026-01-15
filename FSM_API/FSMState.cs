@@ -39,6 +39,13 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int StateID { get; private set; }
         private Action<IStateContext> _onEnter;
 
         /// <summary>
@@ -106,6 +113,11 @@ namespace TheSingularityWorkshop.FSM_API
             _onEnter = onEnter != null ? onEnter : defaultOnEnter;
             _onUpdate = onUpdate != null ? onUpdate : defaultOnUpdate;
             _onExit = onExit != null ? onExit : defaultOnExit;
+        }
+
+        public FSMState(string name, Action<IStateContext> onEnter, Action<IStateContext> onUpdate, Action<IStateContext> onExit)
+        {
+
         }
 
         private void defaultOnExit(IStateContext context) { }

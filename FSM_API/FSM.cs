@@ -46,6 +46,14 @@ namespace TheSingularityWorkshop.FSM_API
         public string Name { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int FSM_ID { get; private set; } = 0;
+
+        /// <summary>
         /// This is the name of the **first state** your FSM will enter
         /// when it starts up.
         /// </summary>
@@ -56,6 +64,14 @@ namespace TheSingularityWorkshop.FSM_API
         /// using the <see cref="AddState(FSMState)"/> method.
         /// </remarks>
         public string InitialState { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int InitialState_ID { get; private set; } = 0;
 
         /// <summary>
         /// This controls how often instances of this FSM blueprint will automatically
@@ -105,7 +121,13 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public string ProcessingGroup { get; internal set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int ProcessingGroup_ID { get; private set; } = 0;
 
         /// <summary>
         /// Creates a new, empty FSM blueprint with some default settings.
@@ -160,6 +182,8 @@ namespace TheSingularityWorkshop.FSM_API
                 InitialState = s.Name;
             }
         }
+
+       
 
         /// <summary>
         /// Adds a **normal transition** between two specific states in your FSM blueprint.
@@ -737,8 +761,41 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public const string AnyStateIdentifier = "__ANY_STATE__"; // Using a unique, unlikely string
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public const int AnyStateIdentifierHash = 0;
+
         private readonly Dictionary<string, FSMState> _states = new Dictionary<string, FSMState>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        private readonly Dictionary<int, FSMState> _stateID = new Dictionary<int, FSMState>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        private readonly List<int> _transitionIDs = new List<int>();
+
         private readonly List<FSMTransition> _transitions = new List<FSMTransition>(); // Regular transitions
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        private readonly List<int> _anyStateTransitionIDs = new List<int>();
         private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>(); // Any State transitions
     }
 }

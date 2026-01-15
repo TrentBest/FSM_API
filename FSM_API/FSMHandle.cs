@@ -93,6 +93,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// Handle's Id
         /// </summary>
         public int Id { get; internal set; } = -1;
+
         /// <summary>
         /// This is the original **blueprint (definition)** of the FSM that this handle is controlling.
         /// </summary>
@@ -101,8 +102,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// the house's design (its states and transitions), but you can't change the house by
         /// drawing on these plans here. This is set when the FSM instance is first created.
         /// </remarks>
-
         public readonly FSM Definition;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public readonly int FSM_ID;
 
         /// <summary>
         /// This is the **data bag** 🎒 (context) specific to *this particular* FSM instance.
@@ -131,6 +139,14 @@ namespace TheSingularityWorkshop.FSM_API
         public string CurrentState { get; internal set; } = "UnknownState";
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int CurrentStateID { get; internal set; }
+
+        /// <summary>
         /// This is the **name of the FSM blueprint** that this handle is using.
         /// </summary>
         /// <remarks>
@@ -138,6 +154,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public string Name => Definition.Name;
 
+       
         /// <summary>
         /// Tells you if this FSM handle is currently **active and ready to be used**.
         /// </summary>
