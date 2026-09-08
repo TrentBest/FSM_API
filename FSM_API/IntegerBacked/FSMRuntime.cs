@@ -7,15 +7,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// Owns integer-backed FSM definitions and their live handles.
     /// </summary>
     /// <remarks>
-    /// This is the runtime orchestration layer above <see cref="FSM"/> and
-    /// <see cref="FSMHandleInt"/>. It deliberately identifies definitions and
-    /// processing groups by integer IDs so the runtime path does not require
-    /// the string-backed registry.
+    /// FSM identities are indexes into the definition array. The runtime therefore resolves an FSM
+    /// definition by direct integer indexing rather than hashing an integer key. State identities use
+    /// the same model inside <see cref="FSM"/>. The string-backed API remains a separate representation
+    /// and is translated at the boundary rather than consulted by this runtime.
     /// </remarks>
     public sealed class FSMRuntime
     {
-        private readonly Dictionary<int, FSM> _definitions = new Dictionary<int, FSM>();
-        private readonly Dictionary<int, int> _processCounters = new Dictionary<int, int>();
+        private FSM[] _definitions = new FSM[0];
+        private int[] _processCounters = new int[0];
         private readonly List<FSMHandleInt> _handles = new List<FSMHandleInt>();
         private int _nextHandleID;
 
@@ -27,10 +27,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(definition));
             }
 
+            if (definition.FSM_ID < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
+            }
+
             definition.ProcessingGroupID = processingGroupID;
+            EnsureDefinitionCapacity(definition.FSM_ID + 1);
 
             // A replacement definition supersedes the previous definition and its live instances.
-            if (_definitions.ContainsKey(definition.FSM_ID))
+            if (_definitions[definition.FSM_ID] != null)
             {
                 for (var i = _handles.Count - 1; i >= 0; i--)
                 {
@@ -48,14 +54,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Returns whether an FSM definition is registered.</summary>
         public bool Contains(int fsmID)
         {
-            return _definitions.ContainsKey(fsmID);
+            return TryGetDefinition(fsmID, out _);
         }
 
         /// <summary>Gets a registered FSM definition by integer identity.</summary>
         public FSM GetDefinition(int fsmID)
         {
-            _definitions.TryGetValue(fsmID, out var definition);
-            return definition;
+            return TryGetDefinition(fsmID, out var definition) ? definition : null;
         }
 
         /// <summary>Creates and initializes a live integer handle for a registered FSM definition.</summary>
@@ -66,7 +71,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public FSMHandleInt CreateInstance(int fsmID, IStateContext context)
         {
-            if (!_definitions.TryGetValue(fsmID, out var definition))
+            if (!TryGetDefinition(fsmID, out var definition))
             {
                 throw new KeyNotFoundException($"FSM definition '{fsmID}' is not registered.");
             }
@@ -95,12 +100,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
         public bool Unregister(int fsmID)
         {
-            if (!_definitions.Remove(fsmID))
+            if (!TryGetDefinition(fsmID, out _))
             {
                 return false;
             }
 
-            _processCounters.Remove(fsmID);
+            _definitions[fsmID] = null;
+            _processCounters[fsmID] = 0;
 
             for (var i = _handles.Count - 1; i >= 0; i--)
             {
@@ -116,9 +122,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Updates eligible live instances in the specified processing group.</summary>
         public void Update(int processingGroupID)
         {
-            foreach (var definition in _definitions.Values)
+            for (var i = 0; i < _definitions.Length; i++)
             {
-                if (definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
+                var definition = _definitions[i];
+                if (definition == null || definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
                 {
                     continue;
                 }
@@ -130,9 +137,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Updates eligible live instances regardless of processing group.</summary>
         public void UpdateAll()
         {
-            foreach (var definition in _definitions.Values)
+            for (var i = 0; i < _definitions.Length; i++)
             {
-                if (ShouldProcess(definition))
+                var definition = _definitions[i];
+                if (definition != null && ShouldProcess(definition))
                 {
                     UpdateDefinitionInstances(definition.FSM_ID);
                 }
@@ -187,6 +195,35 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     handle.Update();
                 }
             }
+        }
+
+        private bool TryGetDefinition(int fsmID, out FSM definition)
+        {
+            if (fsmID >= 0 && fsmID < _definitions.Length)
+            {
+                definition = _definitions[fsmID];
+                return definition != null;
+            }
+
+            definition = null;
+            return false;
+        }
+
+        private void EnsureDefinitionCapacity(int requiredLength)
+        {
+            if (requiredLength <= _definitions.Length)
+            {
+                return;
+            }
+
+            var newLength = _definitions.Length == 0 ? 4 : _definitions.Length;
+            while (newLength < requiredLength)
+            {
+                newLength *= 2;
+            }
+
+            Array.Resize(ref _definitions, newLength);
+            Array.Resize(ref _processCounters, newLength);
         }
     }
 }
