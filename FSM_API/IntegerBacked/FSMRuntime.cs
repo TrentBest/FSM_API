@@ -57,7 +57,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return definition;
         }
 
-        /// <summary>Creates a live handle for a registered FSM definition.</summary>
+        /// <summary>Creates and initializes a live handle for a registered FSM definition.</summary>
+        /// <remarks>
+        /// Runtime creation owns the instance lifecycle boundary: construction creates the handle,
+        /// then initialization enters the initial state exactly once before the handle is returned.
+        /// </remarks>
         public FSMHandle CreateInstance(int fsmID, IStateContext context)
         {
             if (!_definitions.TryGetValue(fsmID, out var definition))
@@ -66,6 +70,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             var handle = new FSMHandle(definition, context, _nextHandleID++);
+            handle.Initialize();
             _handles.Add(handle);
             return handle;
         }
@@ -111,6 +116,23 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 var handle = _handles[i];
                 if (handle.IsValid && handle.Definition.ProcessingGroupID == processingGroupID)
+                {
+                    handle.Update();
+                }
+            }
+        }
+
+        /// <summary>Updates every valid live instance regardless of processing group.</summary>
+        /// <remarks>
+        /// This provides a single runtime tick for hosts that do not need group-specific scheduling.
+        /// Group-specific callers should continue to use <see cref="Update(int)"/>.
+        /// </remarks>
+        public void UpdateAll()
+        {
+            for (var i = 0; i < _handles.Count; i++)
+            {
+                var handle = _handles[i];
+                if (handle.IsValid)
                 {
                     handle.Update();
                 }
