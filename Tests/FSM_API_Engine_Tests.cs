@@ -155,6 +155,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             /// 
             /// </summary>
             public string Name { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
+            public int Context_ID => Name?.GetHashCode() ?? 0;
         }
     }
 }
