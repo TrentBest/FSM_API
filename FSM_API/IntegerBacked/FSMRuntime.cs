@@ -68,6 +68,28 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return _handles.Remove(handle);
         }
 
+        /// <summary>
+        /// Unregisters an FSM definition and removes its live instances from this runtime.
+        /// </summary>
+        /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
+        public bool Unregister(int fsmID)
+        {
+            if (!_definitions.Remove(fsmID))
+            {
+                return false;
+            }
+
+            for (var i = _handles.Count - 1; i >= 0; i--)
+            {
+                if (_handles[i].FSM_ID == fsmID)
+                {
+                    _handles.RemoveAt(i);
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>Updates every valid live instance in the specified processing group.</summary>
         public void Update(int processingGroupID)
         {
