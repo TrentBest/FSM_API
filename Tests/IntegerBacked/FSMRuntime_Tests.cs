@@ -52,9 +52,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var firstUpdates = 0;
             var secondUpdates = 0;
-            var first = new IntegerFSM(1);
+            // This test exercises UpdateAll scheduling across groups, so both
+            // definitions must be eligible for automatic processing.
+            var first = new IntegerFSM(1, processRate: -1);
             first.AddState(new IntegerFSMState(10, null, _ => firstUpdates++, null));
-            var second = new IntegerFSM(2);
+            var second = new IntegerFSM(2, processRate: -1);
             second.AddState(new IntegerFSMState(20, null, _ => secondUpdates++, null));
             var runtime = new IntegerFSMRuntime();
             runtime.Register(first, 100);
