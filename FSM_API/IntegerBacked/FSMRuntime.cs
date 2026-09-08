@@ -15,6 +15,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     public sealed class FSMRuntime
     {
         private readonly Dictionary<int, FSM> _definitions = new Dictionary<int, FSM>();
+        private readonly Dictionary<int, int> _processCounters = new Dictionary<int, int>();
         private readonly List<FSMHandle> _handles = new List<FSMHandle>();
         private int _nextHandleID;
 
@@ -42,6 +43,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             _definitions[definition.FSM_ID] = definition;
+            _processCounters[definition.FSM_ID] = 0;
         }
 
         /// <summary>Returns whether an FSM definition is registered.</summary>
@@ -98,6 +100,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return false;
             }
 
+            _processCounters.Remove(fsmID);
+
             for (var i = _handles.Count - 1; i >= 0; i--)
             {
                 if (_handles[i].FSM_ID == fsmID)
@@ -109,32 +113,37 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return true;
         }
 
-        /// <summary>Updates every valid live instance in the specified processing group.</summary>
+        /// <summary>Updates eligible live instances in the specified processing group.</summary>
+        /// <remarks>
+        /// Process rate semantics match the string-backed engine: -1 processes every tick,
+        /// 0 is event-driven/manual, and positive values process every Nth call for that definition.
+        /// All instances of a definition share the definition-level schedule.
+        /// </remarks>
         public void Update(int processingGroupID)
         {
-            for (var i = 0; i < _handles.Count; i++)
+            foreach (var definition in _definitions.Values)
             {
-                var handle = _handles[i];
-                if (handle.IsValid && handle.Definition.ProcessingGroupID == processingGroupID)
+                if (definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
                 {
-                    handle.Update();
+                    continue;
                 }
+
+                UpdateDefinitionInstances(definition.FSM_ID);
             }
         }
 
-        /// <summary>Updates every valid live instance regardless of processing group.</summary>
+        /// <summary>Updates eligible live instances regardless of processing group.</summary>
         /// <remarks>
         /// This provides a single runtime tick for hosts that do not need group-specific scheduling.
         /// Group-specific callers should continue to use <see cref="Update(int)"/>.
         /// </remarks>
         public void UpdateAll()
         {
-            for (var i = 0; i < _handles.Count; i++)
+            foreach (var definition in _definitions.Values)
             {
-                var handle = _handles[i];
-                if (handle.IsValid)
+                if (ShouldProcess(definition))
                 {
-                    handle.Update();
+                    UpdateDefinitionInstances(definition.FSM_ID);
                 }
             }
         }
@@ -152,6 +161,41 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             return count;
+        }
+
+        private bool ShouldProcess(FSM definition)
+        {
+            if (definition.ProcessRate < 0)
+            {
+                return true;
+            }
+
+            if (definition.ProcessRate == 0)
+            {
+                return false;
+            }
+
+            var counter = _processCounters[definition.FSM_ID] + 1;
+            if (counter < definition.ProcessRate)
+            {
+                _processCounters[definition.FSM_ID] = counter;
+                return false;
+            }
+
+            _processCounters[definition.FSM_ID] = 0;
+            return true;
+        }
+
+        private void UpdateDefinitionInstances(int fsmID)
+        {
+            for (var i = 0; i < _handles.Count; i++)
+            {
+                var handle = _handles[i];
+                if (handle.FSM_ID == fsmID && handle.IsValid)
+                {
+                    handle.Update();
+                }
+            }
         }
     }
 }
