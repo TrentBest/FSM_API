@@ -74,6 +74,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void AddTransition_ReplacesMatchingEndpoint()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+            fsm.AddTransition(10, 30, _ => true);
+
+            fsm.AddTransition(10, 20, _ => false);
+
+            Assert.That(fsm.GetAllTransitions(), Has.Count.EqualTo(2));
+            Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(30));
+        }
+
+        [Test]
         public void Step_FollowsTrueRegularTransition()
         {
             var fsm = new IntegerFSM(1);
@@ -103,6 +119,24 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.That(exited, Is.True);
             Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void Step_UpdatesCurrentStateBeforeEvaluatingTransition()
+        {
+            var order = string.Empty;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, _ => order += "U", _ => order += "E"));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                order += "C";
+                return true;
+            });
+
+            fsm.Step(10, new TestContext());
+
+            Assert.That(order, Is.EqualTo("UCE"));
         }
 
         [Test]
@@ -153,6 +187,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             fsm.EnterInitial(new TestContext());
 
             Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void EnterInitial_RejectsEmptyFSM()
+        {
+            var fsm = new IntegerFSM(1);
+
+            Assert.Throws<InvalidOperationException>(() => fsm.EnterInitial(new TestContext()));
         }
 
         [Test]
