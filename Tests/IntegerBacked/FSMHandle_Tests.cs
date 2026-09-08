@@ -23,6 +23,22 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void Constructor_RejectsNullDefinition()
+        {
+            Assert.That(
+                () => new IntegerFSMHandle(null, new TestContext()),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_RejectsNullContext()
+        {
+            Assert.That(
+                () => new IntegerFSMHandle(CreateBasicFSM(), null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void Update_FollowsIntegerTransition()
         {
             var fsm = CreateBasicFSM();
@@ -57,6 +73,17 @@ namespace FSM_API_Tests.IntegerBacked
 
             Assert.That(handle.CurrentStateID, Is.EqualTo(20));
             Assert.That(handle.HasEnteredCurrentState, Is.True);
+        }
+
+        [Test]
+        public void TransitionTo_RejectsMissingTargetState()
+        {
+            var handle = new IntegerFSMHandle(CreateBasicFSM(), new TestContext());
+
+            Assert.That(
+                () => handle.TransitionTo(999),
+                Throws.InvalidOperationException);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
         }
 
         [Test]
