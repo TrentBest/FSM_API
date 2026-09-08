@@ -53,6 +53,51 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void AddState_ReplacingInitialStatePreservesInitialIdentity()
+        {
+            var fsm = new IntegerFSM(1);
+            var first = new IntegerFSMState(10, null, null, null);
+            var replacement = new IntegerFSMState(10, null, null, null);
+
+            fsm.AddState(first);
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(replacement);
+
+            Assert.That(fsm.InitialStateID, Is.EqualTo(10));
+            Assert.That(fsm.GetState(10), Is.SameAs(replacement));
+        }
+
+        [Test]
+        public void AddState_ReplacementChangesLifecycleBehaviorForFutureSteps()
+        {
+            var firstUpdated = false;
+            var replacementUpdated = false;
+            var fsm = new IntegerFSM(1);
+            var first = new IntegerFSMState(10, null, _ => firstUpdated = true, null);
+            var replacement = new IntegerFSMState(10, null, _ => replacementUpdated = true, null);
+            fsm.AddState(first);
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+
+            fsm.Step(10, new TestContext());
+            fsm.AddState(replacement);
+            fsm.Step(10, new TestContext());
+
+            Assert.That(firstUpdated, Is.True);
+            Assert.That(replacementUpdated, Is.True);
+        }
+
+        [Test]
+        public void AddState_ReplacementDoesNotCreateDuplicateState()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+
+            Assert.That(fsm.GetAllStates(), Has.Count.EqualTo(2));
+        }
+
+        [Test]
         public void AddState_RejectsNull()
         {
             var fsm = new IntegerFSM(1);
