@@ -64,6 +64,37 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void EvaluateConditions_FollowsIntegerTransitionWithoutUpdate()
+        {
+            var fsm = CreateBasicFSM();
+            var events = "";
+            fsm.GetState(10).SetOnUpdate(_ => events += "U");
+            fsm.GetState(10).SetOnExit(_ => events += "X");
+            fsm.GetState(20).SetOnEnter(_ => events += "E");
+            fsm.AddTransition(10, 20, _ => true);
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(events, Is.EqualTo("XE"));
+        }
+
+        [Test]
+        public void EvaluateConditions_WhenFalseRemainsInCurrentState()
+        {
+            var fsm = CreateBasicFSM();
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+            fsm.AddTransition(10, 20, _ => false);
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+        }
+
+        [Test]
         public void TransitionTo_UsesIntegerIdentity()
         {
             var fsm = CreateBasicFSM();
