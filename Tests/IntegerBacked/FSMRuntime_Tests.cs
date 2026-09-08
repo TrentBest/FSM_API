@@ -39,6 +39,14 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void Register_RejectsNullDefinition()
+        {
+            var runtime = new IntegerFSMRuntime();
+
+            Assert.Throws<System.ArgumentNullException>(() => runtime.Register(null));
+        }
+
+        [Test]
         public void CreateInstance_RequiresRegisteredDefinition()
         {
             var runtime = new IntegerFSMRuntime();
@@ -120,6 +128,40 @@ namespace FSM_API_Tests.IntegerBacked
             Assert.That(runtime.GetHandleCount(1), Is.EqualTo(2));
             Assert.That(runtime.GetHandleCount(2), Is.EqualTo(1));
             Assert.That(runtime.GetHandleCount(99), Is.Zero);
+        }
+
+        [Test]
+        public void RemoveInstance_RemovesRegisteredHandle()
+        {
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(CreateBasicFSM(7), 1);
+            var handle = runtime.CreateInstance(7, new TestContext());
+
+            Assert.That(runtime.RemoveInstance(handle), Is.True);
+            Assert.That(runtime.GetHandleCount(1), Is.Zero);
+        }
+
+        [Test]
+        public void RemoveInstance_ReturnsFalseForUnknownHandle()
+        {
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(CreateBasicFSM(7), 1);
+            var registered = runtime.CreateInstance(7, new TestContext());
+            var otherRuntime = new IntegerFSMRuntime();
+            otherRuntime.Register(CreateBasicFSM(7), 1);
+            var unknown = otherRuntime.CreateInstance(7, new TestContext());
+
+            Assert.That(runtime.RemoveInstance(unknown), Is.False);
+            Assert.That(runtime.GetHandleCount(1), Is.EqualTo(1));
+            Assert.That(registered, Is.Not.SameAs(unknown));
+        }
+
+        [Test]
+        public void RemoveInstance_IsSafeForNull()
+        {
+            var runtime = new IntegerFSMRuntime();
+
+            Assert.That(runtime.RemoveInstance(null), Is.False);
         }
 
         private static IntegerFSM CreateBasicFSM(int id)
