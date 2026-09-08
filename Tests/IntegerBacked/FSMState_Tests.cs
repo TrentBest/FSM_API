@@ -13,7 +13,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             public string Name { get; set; }
             public int Context_ID => Name == null ? 0 : Name.GetHashCode();
-            public bool IsValid => true;
+            public bool IsValid { get; set; } = true;
         }
 
         [Test]
