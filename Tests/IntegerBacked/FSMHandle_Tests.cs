@@ -1,8 +1,11 @@
+using System.Reflection;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle;
+using IntegerFSMHandleInt = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
@@ -29,6 +32,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(handle.CurrentStateID, Is.EqualTo(10));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
             Assert.That(entered, Is.False);
+        }
+
+        [Test]
+        public void IntegerRuntime_ReturnsExplicitIntegerHandle()
+        {
+            var fsm = new IntegerFSM(7);
+            fsm.AddState(new IntegerFSMState(0, null, null, null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+
+            var handle = runtime.CreateInstance(7, new TestContext());
+
+            Assert.That(handle, Is.TypeOf<IntegerFSMHandleInt>());
+            Assert.That(handle.CurrentStateID, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void IntegerHandle_HasNoStringCurrentStateProperty()
+        {
+            var property = typeof(IntegerFSMHandleInt).GetProperty("CurrentState", BindingFlags.Instance | BindingFlags.Public);
+
+            Assert.That(property, Is.Null);
+            Assert.That(typeof(IntegerFSMHandleInt).GetProperty("CurrentStateID"), Is.Not.Null);
         }
 
         [Test]
