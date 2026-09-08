@@ -164,6 +164,56 @@ namespace FSM_API_Tests.IntegerBacked
             Assert.That(runtime.RemoveInstance(null), Is.False);
         }
 
+        [Test]
+        public void Unregister_RemovesDefinition()
+        {
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(CreateBasicFSM(7));
+
+            Assert.That(runtime.Unregister(7), Is.True);
+            Assert.That(runtime.Contains(7), Is.False);
+            Assert.That(runtime.GetDefinition(7), Is.Null);
+        }
+
+        [Test]
+        public void Unregister_RemovesLiveInstancesOfDefinition()
+        {
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(CreateBasicFSM(7), 1);
+            runtime.Register(CreateBasicFSM(8), 1);
+            runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(8, new TestContext());
+
+            Assert.That(runtime.Unregister(7), Is.True);
+            Assert.That(runtime.GetHandleCount(1), Is.EqualTo(1));
+            Assert.That(runtime.CreateInstance(7, new TestContext()), Is.Null);
+        }
+
+        [Test]
+        public void Unregister_ReturnsFalseForUnknownDefinition()
+        {
+            var runtime = new IntegerFSMRuntime();
+
+            Assert.That(runtime.Unregister(99), Is.False);
+        }
+
+        [Test]
+        public void Unregister_DoesNotRemoveOtherDefinitions()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var retained = CreateBasicFSM(8);
+            runtime.Register(CreateBasicFSM(7), 1);
+            runtime.Register(retained, 2);
+            runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(8, new TestContext());
+
+            runtime.Unregister(7);
+
+            Assert.That(runtime.GetDefinition(8), Is.SameAs(retained));
+            Assert.That(runtime.GetHandleCount(2), Is.EqualTo(1));
+        }
+
         private static IntegerFSM CreateBasicFSM(int id)
         {
             var fsm = new IntegerFSM(id);
