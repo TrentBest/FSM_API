@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -28,7 +28,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBuckets_ReturnsEmptyDictionaryWhenNoGroupsExist()
         {
             // Act
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
 
             // Assert
             Assert.That(buckets, Is.Empty, "The buckets dictionary should be empty.");
@@ -51,10 +51,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBuckets_ReturnsCorrectDictionaryWithOneGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
 
             // Act
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
 
             // Assert
             Assert.That(buckets.Count, Is.EqualTo(1));
@@ -71,11 +71,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // Arrange
             string groupA = "GroupA";
             string groupB = "GroupB";
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: groupA).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: groupB).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: groupA).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2", processingGroup: groupB).BuildDefinition();
 
             // Act
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
 
             // Assert
             Assert.That(buckets.Count, Is.EqualTo(2));
@@ -90,7 +90,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBuckets_InitiallyEmpty()
         {
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Is.Not.Null, "GetBuckets should never return null.");
             Assert.That(buckets, Is.Empty, "Buckets should be empty after a hard reset.");
@@ -104,9 +104,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "NewProcessingGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the newly created processing group '{groupName}'.");
             Assert.That(buckets[groupName], Is.Not.Null, $"The bucket for '{groupName}' should not be null.");
@@ -120,11 +120,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "TestGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the processing group '{groupName}'.");
             Assert.That(buckets[groupName], Contains.Key(fsmName), $"The bucket for '{groupName}' should contain the FSM '{fsmName}'.");
@@ -138,13 +138,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "TestGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             string fsmName1 = "TestFSM1";
             string fsmName2 = "TestFSM2";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the processing group '{groupName}'.");
             Assert.That(buckets[groupName], Contains.Key(fsmName1), $"The bucket for '{groupName}' should contain the FSM '{fsmName1}'.");
@@ -159,13 +159,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "TestGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
             FSMTestContext context = new FSMTestContext();
-            FSM_API.Create.CreateInstance(fsmName, context, groupName);
+            FsmApi.Create.CreateInstance(fsmName, context, groupName);
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the processing group '{groupName}'.");
             Assert.That(buckets[groupName], Contains.Key(fsmName), $"The bucket for '{groupName}' should contain the FSM '{fsmName}'.");
@@ -179,15 +179,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "TestGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
             FSMTestContext context1 = new FSMTestContext();
             FSMTestContext context2 = new FSMTestContext();
-            FSM_API.Create.CreateInstance(fsmName, context1, groupName);
-            FSM_API.Create.CreateInstance(fsmName, context2, groupName);
+            FsmApi.Create.CreateInstance(fsmName, context1, groupName);
+            FsmApi.Create.CreateInstance(fsmName, context2, groupName);
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the processing group '{groupName}'.");
             Assert.That(buckets[groupName], Contains.Key(fsmName), $"The bucket for '{groupName}' should contain the FSM '{fsmName}'.");
@@ -201,15 +201,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // ARRANGE
             var groupName = "TestGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
             FSMTestContext context1 = new FSMTestContext();
             FSMTestContext context2 = new FSMTestContext();
-            FSM_API.Create.CreateInstance(fsmName, context1, groupName);
-            FSM_API.Create.CreateInstance(fsmName, context2, groupName);
+            FsmApi.Create.CreateInstance(fsmName, context1, groupName);
+            FsmApi.Create.CreateInstance(fsmName, context2, groupName);
             // ACT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             // ASSERT
             Assert.That(buckets, Contains.Key(groupName), $"Buckets should contain the processing group '{groupName}'.");
             Assert.That(buckets[groupName], Contains.Key(fsmName), $"The bucket for '{groupName}' should contain the FSM '{fsmName}'.");

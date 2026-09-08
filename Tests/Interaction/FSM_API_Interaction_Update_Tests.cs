@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -161,7 +161,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Reset the API state before each test to ensure test isolation.
             // This is a crucial step for unit testing static APIs.
-            FSM_API.Internal.ResetAPI();
+            FsmApi.Internal.ResetAPI();
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public void Update_ShouldHandleMultipleIndependentInstances()
         {
             // Arrange
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
@@ -181,13 +181,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
             // Create two completely separate contexts and handles
             var ctx1 = new TestContext();
-            var handle1 = FSM_API.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
+            var handle1 = FsmApi.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
 
             var ctx2 = new TestContext();
-            var handle2 = FSM_API.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
+            var handle2 = FsmApi.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
 
             // Act 1: Initial update
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             // Assertions for both instances after the first update
             // Both should have entered StateA once and updated once.
@@ -203,7 +203,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
             // Act 2: Trigger transition on only one instance
             ctx1.ShouldTransition = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             // Assertions after the second update
             // Instance 1 should have transitioned, while Instance 2 should have not.
@@ -225,8 +225,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldPrioritizeAnyStateTransition()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null) // Target for regular transition
         //        .State("StateC", null, null, null) // Target for any-state transition
@@ -238,10 +238,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //        .BuildDefinition();
 
         //    var ctx = new TestContext();
-        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+        //    var handle = FsmApi.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
         //    // Initial update to put it in StateA and run OnEnter/OnUpdate
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
         //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
         //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
@@ -250,7 +250,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // Act: Trigger both the regular transition condition AND the Any-State transition condition
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
         //    ctx.AnyStateShouldTransition = true; // Condition for Any-State transition
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
         //    // FSM should have exited StateA and entered StateC
@@ -267,18 +267,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [Test]
         public void Update_Succeeds()
         {
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
 
             Assert.That(handle.HasEnteredCurrentState, Is.False, "FSM should not have entered the initial state before the first update.");
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
             Assert.That(handle.CurrentState, Is.EqualTo("StateA"), "FSM should be in StateA after the first update.");
             Assert.That(handle.HasEnteredCurrentState, Is.True, "FSM should have entered StateA after the first update.");
         }
@@ -290,7 +290,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldHandleMultipleIndependentInstances()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null)
         //        .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
@@ -299,13 +299,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Create two completely separate contexts and handles
         //    var ctx1 = new TestContext();
-        //    var handle1 = FSM_API.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
+        //    var handle1 = FsmApi.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
 
         //    var ctx2 = new TestContext();
-        //    var handle2 = FSM_API.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
+        //    var handle2 = FsmApi.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
 
         //    // Act 1: Initial update
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assertions for both instances after the first update
         //    // Both should have entered StateA once and updated once.
@@ -321,7 +321,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Act 2: Trigger transition on only one instance
         //    ctx1.ShouldTransition = true;
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assertions after the second update
         //    // Instance 1 should have transitioned, while Instance 2 should have not.
@@ -344,7 +344,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldPrioritizeAnyStateTransition()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null) // Target for regular transition
         //        .State("StateC", null, null, null) // Target for any-state transition
@@ -356,10 +356,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //        .BuildDefinition();
 
         //    var ctx = new TestContext();
-        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+        //    var handle = FsmApi.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
         //    // Initial update to put it in StateA and run OnEnter/OnUpdate
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
         //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
         //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
@@ -368,7 +368,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // Act: Trigger both the regular transition condition AND the Any-State transition condition
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
         //    ctx.AnyStateShouldTransition = true; // Condition for Any-State transition
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
         //    // FSM should have exited StateA and entered StateC

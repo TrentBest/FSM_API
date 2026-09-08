@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TheSingularityWorkshop.FSM_API
 {
-    public static partial class FSM_API
+    public static partial class FsmApi
     {
         /// <summary>
         /// Provides a centralized system for managing and reporting errors and warnings within the FSM API.

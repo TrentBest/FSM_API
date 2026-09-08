@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -33,18 +33,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             int updateCount = 0;
             string fsmName = "ThrottledFSM";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: processRate)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processRate: processRate)
                 .State("Idle",null,
                     onUpdate: (ctx) => updateCount++, null) // Increment counter every time Update actually runs
                 .BuildDefinition();
 
-            FSM_API.Create.CreateInstance(fsmName, new MockContext());
+            FsmApi.Create.CreateInstance(fsmName, new MockContext());
 
             // ACT
             // Simulate 10 frames of the engine
             for (int i = 0; i < 10; i++)
             {
-                FSM_API.Interaction.Update();
+                FsmApi.Interaction.Update();
             }
 
             // ASSERT
@@ -79,15 +79,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             var ctxB = new MockContext { Name = "Victim" };
 
             // Define FSM
-            FSM_API.Create.CreateFiniteStateMachine("ZombieTestFSM", processRate: -1, "Update")
+            FsmApi.Create.CreateFiniteStateMachine("ZombieTestFSM", processRate: -1, "Update")
                 .State("Active", null,
                     onUpdate: (ctx) =>
                     {
                         if (ctx == ctxA)
                         {
                             // A kills B
-                            var handleB = FSM_API.Interaction.GetInstance("ZombieTestFSM", ctxB, "Update");
-                            if (handleB != null) FSM_API.Interaction.DestroyInstance(handleB);
+                            var handleB = FsmApi.Interaction.GetInstance("ZombieTestFSM", ctxB, "Update");
+                            if (handleB != null) FsmApi.Interaction.DestroyInstance(handleB);
                         }
                         else if (ctx == ctxB)
                         {
@@ -98,11 +98,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
                 .BuildDefinition();
 
             // Create instances. Ensure A is processed before B (List order usually follows creation order)
-            FSM_API.Create.CreateInstance("ZombieTestFSM", ctxA);
-            FSM_API.Create.CreateInstance("ZombieTestFSM", ctxB);
+            FsmApi.Create.CreateInstance("ZombieTestFSM", ctxA);
+            FsmApi.Create.CreateInstance("ZombieTestFSM", ctxB);
 
             // ACT
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
 
             // ASSERT
             Assert.That(zombieUpdated, Is.False,
@@ -121,24 +121,24 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             var context = new MockContext();
             string fsmName = "SafetyNetFSM";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).WithProcessRate(-1).BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance(fsmName, context);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).WithProcessRate(-1).BuildDefinition();
+            var handle = FsmApi.Create.CreateInstance(fsmName, context);
 
             // Run once to prove it's alive
-            FSM_API.Interaction.Update();
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            FsmApi.Interaction.Update();
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1));
 
             // ACT
             // Corrupt the context
             context.IsValid = false;
 
             // Run update loop - this should detect the invalid context and trigger error/cleanup
-            FSM_API.Interaction.Update();
-            FSM_API.Interaction.Update(); // Needs 2 ticks? 1 for error detection, 1 for deferred cleanup?
+            FsmApi.Interaction.Update();
+            FsmApi.Interaction.Update(); // Needs 2 ticks? 1 for error detection, 1 for deferred cleanup?
 
             // ASSERT
             // We expect the handle to be removed because it became invalid
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0),
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0),
                 "Engine should have automatically destroyed the instance with invalid context.");
         }
 

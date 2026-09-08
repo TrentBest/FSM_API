@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -27,7 +27,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionCountInGroup_ReturnsZeroWhenNoDefinitionsExist()
         {
             // Act
-            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
+            var count = FsmApi.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
 
             // Assert
             Assert.That(count, Is.EqualTo(0));
@@ -50,11 +50,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionCountInGroup_ReturnsCorrectCountForSingleGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
 
             // Act
-            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
+            var count = FsmApi.Internal.GetFsmDefinitionCountInGroup(ProcessGroup);
 
             // Assert
             Assert.That(count, Is.EqualTo(2));
@@ -67,10 +67,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionCountInGroup_ReturnsZeroForNonExistentGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
 
             // Act
-            var count = FSM_API.Internal.GetFsmDefinitionCountInGroup("NonExistentGroup");
+            var count = FsmApi.Internal.GetFsmDefinitionCountInGroup("NonExistentGroup");
 
             // Assert
             Assert.That(count, Is.EqualTo(0));
@@ -84,10 +84,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
            Helper_CreateTestFSM("TestFSM", "Update");
             //TestContext tc = new TestContext();
-            //var handle = FSM_API.Create.CreateInstance("TestFSM", tc, "Update");
+            //var handle = FsmApi.Create.CreateInstance("TestFSM", tc, "Update");
             //Assert.That(handle, Is.Not.Null);
             //Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(1));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             Helper_CreateTestFSM("TestFSM", "Update");
             Helper_CreateTestFSM("TestFSM2", "Update");
 
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(2));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(2));
         }
         /// <summary>
         /// 
@@ -109,8 +109,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             Helper_CreateTestFSM("TestFSM", "Update");
             Helper_CreateTestFSM("TestFSM2", "FixedUpdate");
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(1));
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("FixedUpdate"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("FixedUpdate"), Is.EqualTo(1));
         }
         /// <summary>
         /// 
@@ -125,8 +125,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
                 string processingGroup = i % 2 == 0 ? "Update" : "FixedUpdate";
                 Helper_CreateTestFSM(fsmName, processingGroup);
             }
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(100));
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("FixedUpdate"), Is.EqualTo(100));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("Update"), Is.EqualTo(100));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("FixedUpdate"), Is.EqualTo(100));
         }
         /// <summary>
         /// 
@@ -134,12 +134,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void CountIsZeroForNonExistentGroup_Test()
         {
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup("NonExistentGroup"), Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup("NonExistentGroup"), Is.EqualTo(0));
         }
 
         private void Helper_CreateTestFSM(string fsmName, string processingGroup)
         {
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
                 .State("TestState", null, null, null)
                 .BuildDefinition();
         }

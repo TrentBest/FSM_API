@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void SoftResetAPI_RemovesProcessingGroupTest()
         {
-            FSM_API.Create.CreateProcessingGroup("TestPG");
+            FsmApi.Create.CreateProcessingGroup("TestPG");
 
-            FSM_API.Internal.ResetAPI();
-            var count = FSM_API.Internal.GetProcessingGroups().Count;
+            FsmApi.Internal.ResetAPI();
+            var count = FsmApi.Internal.GetProcessingGroups().Count;
             Console.WriteLine($"count:  {count}");
             Assert.That(count, Is.EqualTo(0));
         }
@@ -49,11 +49,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void SoftResetAPI_RemovesFSMTest()
         {
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
 
-            FSM_API.Internal.ResetAPI();
+            FsmApi.Internal.ResetAPI();
 
-            var count = FSM_API.Internal.GetBuckets().Count;
+            var count = FsmApi.Internal.GetBuckets().Count;
             Console.WriteLine($"count:  {count}");
 
             Assert.That(count, Is.EqualTo(0));
@@ -65,11 +65,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void SoftResetAPI_RemovesFSMInstanceTest()
         {
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext());
-            FSM_API.Internal.ResetAPI();
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext());
+            FsmApi.Internal.ResetAPI();
 
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -78,10 +78,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void HardResetAPI_RemovesProcessingGroupTest()
         {
-            FSM_API.Create.CreateProcessingGroup("TestPG");
+            FsmApi.Create.CreateProcessingGroup("TestPG");
 
-            FSM_API.Internal.ResetAPI(true);
-            var count = FSM_API.Internal.GetProcessingGroups().Count;
+            FsmApi.Internal.ResetAPI(true);
+            var count = FsmApi.Internal.GetProcessingGroups().Count;
             Console.WriteLine($"count:  {count}");
             Assert.That(count, Is.EqualTo(0));
         }
@@ -92,11 +92,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void HardResetAPI_RemovesFSMTest()
         {
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
 
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
 
-            var count = FSM_API.Internal.GetBuckets().Count;
+            var count = FsmApi.Internal.GetBuckets().Count;
             Console.WriteLine($"count:  {count}");
 
             Assert.That(count, Is.EqualTo(0));
@@ -108,11 +108,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void HardResetAPI_RemovesFSMInstanceTest()
         {
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext());
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext());
+            FsmApi.Internal.ResetAPI(true);
 
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0));
         }
     }
 

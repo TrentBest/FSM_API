@@ -9,20 +9,20 @@ namespace TheSingularityWorkshop.FSM_API
 {
     /// <summary>
     /// This partial class contains the internal data structures and helper methods
-    /// essential for the operation of the <see cref="FSM_API"/>.
+    /// essential for the operation of the <see cref="FsmApi"/>.
     /// </summary>
     /// <remarks>
-    /// While the <see cref="FSM_API"/> class itself is public, the members within this
+    /// While the <see cref="FsmApi"/> class itself is public, the members within this
     /// partial file are generally marked <c>private</c> or <c>internal</c>. This
     /// ensures that the core mechanics and state management of the FSM system are
     /// encapsulated and not directly exposed to external API consumers, maintaining
     /// a clean and controlled public interface.
     /// <para>
-    /// **Important:** The declaration <c>public static partial class FSM_API</c> must
-    /// be consistent across all partial files defining the <see cref="FSM_API"/> class.
+    /// **Important:** The declaration <c>public static partial class FsmApi</c> must
+    /// be consistent across all partial files defining the <see cref="FsmApi"/> class.
     /// </para>
     /// </remarks>
-    public static partial class FSM_API
+    public static partial class FsmApi
     {
         /// <summary>
         /// Provides internal access to the core data structures and operational methods
@@ -35,11 +35,11 @@ namespace TheSingularityWorkshop.FSM_API
             /// Represents an internal container for an FSM definition and all its active instances.
             /// </summary>
             /// <remarks>
-            /// This class is used **internally** by the <see cref="FSM_API"/> to efficiently manage
+            /// This class is used **internally** by the <see cref="FsmApi"/> to efficiently manage
             /// FSM definitions and their associated running instances within specific
             /// processing groups. It tracks the FSM's blueprint, its live instances,
             /// and properties related to its update rate. Being <c>public</c> (nested within an internal class),
-            /// it's effectively encapsulated within the <see cref="FSM_API"/>'s internal structure.
+            /// it's effectively encapsulated within the <see cref="FsmApi"/>'s internal structure.
             /// </remarks>
             public class FsmBucket
             {
@@ -576,7 +576,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// Retrieves a specific Finite State Machine (FSM) definition by its name within a given processing group.
             /// </summary>
             /// <remarks>
-            /// This is an **internal-use only** method, primarily utilized by the FSM_API
+            /// This is an **internal-use only** method, primarily utilized by the FsmApi
             /// for managing and accessing registered FSM blueprints. It provides a safe mechanism
             /// to attempt retrieval of an FSM definition without raising exceptions if the specified
             /// processing group or the FSM itself does not currently exist.
@@ -628,7 +628,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// If the group does not exist, it will be created automatically.
             /// </summary>
             /// <remarks>
-            /// This method is designed for **internal use** within the <see cref="FSM_API"/> assembly
+            /// This method is designed for **internal use** within the <see cref="FsmApi"/> assembly
             /// and is not part of the public API surface. It ensures that any requested processing group
             /// exists within the internal <c>_buckets</c> dictionary, creating it if necessary,
             /// thereby preventing <see cref="KeyNotFoundException"/> when attempting to add FSM definitions

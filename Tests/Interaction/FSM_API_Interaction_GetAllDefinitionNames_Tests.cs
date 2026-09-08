@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -37,12 +37,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string group = "Update";
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: group).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: group).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM3", processingGroup: group).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: group).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2", processingGroup: group).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM3", processingGroup: group).BuildDefinition();
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(); // Using default "Update"
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(); // Using default "Update"
 
             // Assert
             Assert.That(names, Is.EqualTo(new[] { "FSM1", "FSM2", "FSM3" }), "Returned collection should not be null.");
@@ -57,14 +57,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string customGroup = "PhysicsUpdate";
-            FSM_API.Create.CreateProcessingGroup(customGroup);
-            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
+            FsmApi.Create.CreateProcessingGroup(customGroup);
+            FsmApi.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
             // Also add an FSM to a different group to ensure separation
-            FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(customGroup);
 
             // Assert
             Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
@@ -81,11 +81,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string singleFsmGroup = "RenderGroup";
             string singleFsmName = "CameraFSM";
-            FSM_API.Create.CreateProcessingGroup(singleFsmGroup);
-            FSM_API.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
+            FsmApi.Create.CreateProcessingGroup(singleFsmGroup);
+            FsmApi.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(singleFsmGroup);
 
             // Assert
             Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
@@ -100,10 +100,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string emptyGroup = "EmptyGroup";
-            FSM_API.Create.CreateProcessingGroup(emptyGroup);
+            FsmApi.Create.CreateProcessingGroup(emptyGroup);
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(emptyGroup);
 
             // Assert
             Assert.That(names, Is.Not.Null, "Returned collection should not be null.");
@@ -119,7 +119,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string nonExistentGroup = "NonExistentGroup";
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(nonExistentGroup);
 
             // Assert
             Assert.That(names, Is.Not.Null, "Returned collection should not be null for non-existent group.");
@@ -135,13 +135,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //{
         //    // Arrange
         //    string customGroup = "PhysicsUpdate";
-        //    FSM_API.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
-        //    FSM_API.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine("PhysFSM_A", processingGroup: customGroup).BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine("PhysFSM_B", processingGroup: customGroup).BuildDefinition();
         //    // Also add an FSM to a different group to ensure separation
-        //    FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "DifferentGroup").BuildDefinition();
 
         //    // Act
-        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(customGroup);
+        //    IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(customGroup);
 
         //    // Assert
         //    Assert.That(names, Is.True, "Returned collection should not be null.");
@@ -159,10 +159,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // Arrange
         //    string singleFsmGroup = "RenderGroup";
         //    string singleFsmName = "CameraFSM";
-        //    FSM_API.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine(singleFsmName, processingGroup: singleFsmGroup).BuildDefinition();
 
         //    // Act
-        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(singleFsmGroup);
+        //    IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(singleFsmGroup);
 
         //    // Assert
         //    Assert.That(names, Is.True, "Returned collection should not be null.");
@@ -181,11 +181,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // retrieving a group that exists but has no FSMs (not directly supported by current API).
         //    // Simplest way to ensure a group exists but is empty is to check after ResetAPI.
         //    // Or, to be explicit, define one FSM in another group.
-        //    FSM_API.Create.CreateFiniteStateMachine("DummyFSM", processingGroup: "OtherGroup").BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine("DummyFSM", processingGroup: "OtherGroup").BuildDefinition();
         //    string emptyGroup = "EmptyGroup"; // This group hasn't had any FSMs defined.
 
         //    // Act
-        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(emptyGroup);
+        //    IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(emptyGroup);
 
         //    // Assert
         //    Assert.That(names, Is.True, "Returned collection should not be null.");
@@ -203,7 +203,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    string nonExistentGroup = "NonExistentGroup";
 
         //    // Act
-        //    IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(nonExistentGroup);
+        //    IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(nonExistentGroup);
 
         //    // Assert
         //    Assert.That(names, Is.True, "Returned collection should not be null for non-existent group.");
@@ -219,10 +219,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string group = "ReadOnlyTestGroup";
-            FSM_API.Create.CreateFiniteStateMachine("FSM_A", processingGroup: group).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM_A", processingGroup: group).BuildDefinition();
 
             // Act
-            IReadOnlyCollection<string> names = FSM_API.Interaction.GetAllDefinitionNames(group);
+            IReadOnlyCollection<string> names = FsmApi.Interaction.GetAllDefinitionNames(group);
 
             // Assert
             // 1. Ensure it's not null.
@@ -250,7 +250,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string nullProcessingGroup = string.Empty;
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetAllDefinitionNames(nullProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetAllDefinitionNames(nullProcessingGroup),
                 "Expected ArgumentException for null processing group.");
         }
 
@@ -264,7 +264,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string emptyProcessingGroup = "";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetAllDefinitionNames(emptyProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetAllDefinitionNames(emptyProcessingGroup),
                 "Expected ArgumentException for empty processing group.");
         }
 
@@ -278,7 +278,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string whitespaceProcessingGroup = "   ";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetAllDefinitionNames(whitespaceProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetAllDefinitionNames(whitespaceProcessingGroup),
                 "Expected ArgumentException for whitespace processing group.");
         }
     }

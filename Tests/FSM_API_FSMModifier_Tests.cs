@@ -78,7 +78,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         private static void FSM_Setup()
         {
             // Create a simple FSM to use for modification tests
-            FSM_API.Create.CreateFiniteStateMachine(FsmName)
+            FsmApi.Create.CreateFiniteStateMachine(FsmName)
                 .State("Idle",
                     onEnter: (ctx) => { ((MockStateContext)ctx).ContextData = "Idle"; },
                     onUpdate: null,
@@ -100,7 +100,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Setup()
         {
             // Reset the API for a clean test environment before each test.
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
             FSM_Setup();
         }
         /// <summary>
@@ -112,10 +112,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Arrange
             
             // Act
-            FSM_API.Interaction.AddStateToFSM(FsmName, "AddedState", null, null, null, "Update");
+            FsmApi.Interaction.AddStateToFSM(FsmName, "AddedState", null, null, null, "Update");
            
            //Assert
-            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, "Update");
+            var fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, "Update");
             Assert.That(fsmDef, Is.Not.Null, "FSM definition should not be null");
             Assert.That(fsmDef.GetAllStates().ToList().Any(s=>s.Name == "AddedState"), Is.True, "FSM should contain the newly added state");
         }
@@ -128,15 +128,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMModifier_RemoveStateFromFSM_Succeeds()
         {
             // Arrange
-            FSM_API.Interaction.AddStateToFSM(FsmName, "StateToRemove", null, null, null, ProcessGroup);
-            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            FsmApi.Interaction.AddStateToFSM(FsmName, "StateToRemove", null, null, null, ProcessGroup);
+            var fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             var initialCount = fsmDef.GetAllStates().Count;
 
             // Act
-            FSM_API.Interaction.RemoveStateFromFSM(FsmName, "StateToRemove", ProcessGroup);
+            FsmApi.Interaction.RemoveStateFromFSM(FsmName, "StateToRemove", ProcessGroup);
 
             // Assert
-            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             Assert.That(fsmDef.GetAllStates().Count, Is.EqualTo(initialCount - 1), "State count should be one less after removal.");
             Assert.That(fsmDef.HasState("StateToRemove"), Is.False, "The state should no longer exist.");
         }
@@ -149,16 +149,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMModifier_AddTransition_Succeeds()
         {
             // Arrange
-            FSM_API.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
-            FSM_API.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
-            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            FsmApi.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
+            FsmApi.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
+            var fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             var initialTransitionCount = fsmDef.GetAllTransitions().Count;
 
             // Act
-            FSM_API.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
+            FsmApi.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
 
             // Assert
-            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             Assert.That(fsmDef.GetAllTransitions().Count, Is.EqualTo(initialTransitionCount + 1), "A new transition should have been added.");
             Assert.That(fsmDef.HasTransition("StateA", "StateB"), Is.True, "The transition from StateA to StateB should exist.");
         }
@@ -170,17 +170,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMModifier_RemoveTransition_Succeeds()
         {
             // Arrange
-            FSM_API.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
-            FSM_API.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
-            FSM_API.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
-            var fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            FsmApi.Interaction.AddStateToFSM(FsmName, "StateA", null, null, null, ProcessGroup);
+            FsmApi.Interaction.AddStateToFSM(FsmName, "StateB", null, null, null, ProcessGroup);
+            FsmApi.Interaction.AddTransition(FsmName, "StateA", "StateB", (ctx) => true, ProcessGroup);
+            var fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             var initialTransitionCount = fsmDef.GetAllTransitions().Count;
 
             // Act
-            FSM_API.Interaction.RemoveTransition(FsmName, "StateA", "StateB", ProcessGroup);
+            FsmApi.Interaction.RemoveTransition(FsmName, "StateA", "StateB", ProcessGroup);
 
             // Assert
-            fsmDef = FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup);
+            fsmDef = FsmApi.Internal.GetFsmDefinition(FsmName, ProcessGroup);
             Assert.That(fsmDef.GetAllTransitions().Count, Is.EqualTo(initialTransitionCount - 1), "One transition should have been removed.");
             Assert.That(fsmDef.HasTransition("StateA", "StateB"), Is.False, "The transition from StateA to StateB should no longer exist.");
         }

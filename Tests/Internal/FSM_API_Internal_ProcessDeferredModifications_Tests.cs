@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void ProcessDeferredModifications_Empty()
         {
             // Arrange
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
             // Act
-            FSM_API.Internal.ProcessDeferredModifications();
+            FsmApi.Internal.ProcessDeferredModifications();
             // Assert
             Assert.Pass("No exceptions thrown for empty deferred modifications.");
         }

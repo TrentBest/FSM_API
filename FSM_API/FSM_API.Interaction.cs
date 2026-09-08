@@ -15,7 +15,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// over your FSM ecosystem after initial setup.
     /// </summary>
     /// <remarks>
-    /// This partial class, alongside others, forms the comprehensive <see cref="FSM_API"/> from The Singularity Workshop.
+    /// This partial class, alongside others, forms the comprehensive <see cref="FsmApi"/> from The Singularity Workshop.
     /// Methods here allow users to check for the existence of FSMs, retrieve lists of defined
     /// FSMs or their running instances, initiate the FSM processing loop for specific groups,
     /// and gracefully remove FSM definitions or individual instances from the system.
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// in live production environments.
     /// </para>
     /// </remarks>
-    public static partial class FSM_API
+    public static partial class FsmApi
     {
         /// <summary>
         /// Provides a set of methods for interacting with and managing FSM definitions and instances at runtime.
@@ -424,8 +424,8 @@ namespace TheSingularityWorkshop.FSM_API
             /// remains static until its instances are actively updated.
             ///
             /// **How FSMs are "Ticked":**
-            /// This method is primarily designed to be invoked by the <c>FSM_API</c>'s internal management
-            /// system (e.g., via <c>FSM_API.Interaction.TickAll(string processingGroup)</c>). The API
+            /// This method is primarily designed to be invoked by the <c>FsmApi</c>'s internal management
+            /// system (e.g., via <c>FsmApi.Interaction.TickAll(string processingGroup)</c>). The API
             /// manages the periodic invocation of this method for all registered FSM instances
             /// within a given processing group, respecting their defined <c>ProcessRate</c>.
             ///
@@ -433,11 +433,11 @@ namespace TheSingularityWorkshop.FSM_API
             /// While publicly accessible, directly calling <c>Update()</c> manually from your application code
             /// should only be done by developers who possess a deep understanding of the FSM's internal
             /// processing cycle and lifecycle management. Manual invocation outside of the
-            /// <c>FSM_API</c>'s managed loop can lead to:
+            /// <c>FsmApi</c>'s managed loop can lead to:
             /// <list type="bullet">
             ///     <item><description>Unpredictable state behavior due to uncontrolled update rates.</description></item>
             ///     <item><description>Performance issues if not integrated into an efficient game loop or update scheduler.</description></item>
-            ///     <item><description>Conflicts with the <c>FSM_API</c>'s internal error handling and instance management.</description></item>
+            ///     <item><description>Conflicts with the <c>FsmApi</c>'s internal error handling and instance management.</description></item>
             /// </list>
             /// Use with extreme care and only when building a highly customized, self-managed FSM update system.
             /// </remarks>
@@ -737,12 +737,12 @@ namespace TheSingularityWorkshop.FSM_API
             /// <exception cref="NotImplementedException"></exception>
             public static FSM GetFSMDefinition(string fsmName, string processingGroup = "Update")
             {
-                if (FSM_API.Internal.DoesFsmDefinitionExist(processingGroup, fsmName))
+                if (FsmApi.Internal.DoesFsmDefinitionExist(processingGroup, fsmName))
                 {
-                    return FSM_API.Internal.GetFSM(fsmName, processingGroup);
+                    return FsmApi.Internal.GetFSM(fsmName, processingGroup);
                 }
                 FSM fsm = new FSM() { Name = fsmName, ProcessingGroup = processingGroup };
-                FSM_API.Internal.Register(fsmName, fsm, 0, processingGroup);
+                FsmApi.Internal.Register(fsmName, fsm, 0, processingGroup);
                 return fsm;
             }
         }

@@ -28,9 +28,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true); // Resets the API for a clean test environment
+            FsmApi.Internal.ResetAPI(true); // Resets the API for a clean test environment
             _capturedErrors = new List<(string message, Exception exception)>();
-            FSM_API.Error.OnInternalApiError += CaptureInternalApiError;
+            FsmApi.Error.OnInternalApiError += CaptureInternalApiError;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [TearDown]
         public void TearDown()
         {
-            FSM_API.Error.OnInternalApiError -= CaptureInternalApiError; // Unsubscribe
-                                                                         // Any other cleanup for FSM_API if needed
+            FsmApi.Error.OnInternalApiError -= CaptureInternalApiError; // Unsubscribe
+                                                                         // Any other cleanup for FsmApi if needed
         }
 
         private void CaptureInternalApiError(string message, Exception exception)
