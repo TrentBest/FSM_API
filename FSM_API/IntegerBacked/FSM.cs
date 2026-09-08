@@ -20,18 +20,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Integer identity of the initial state.</summary>
         public int InitialStateID { get; private set; }
 
-        /// <summary>Update frequency. -1 means every tick; 0 means manual.</summary>
+        /// <summary>Update frequency. -1 means every tick; 0 means manual; positive values mean every Nth tick.</summary>
         public int ProcessRate { get; internal set; }
 
         /// <summary>Integer identity of the processing group.</summary>
         public int ProcessingGroupID { get; internal set; }
 
         /// <summary>Creates an empty integer-backed FSM blueprint.</summary>
-        public FSM(int fsmID = 0)
+        /// <param name="fsmID">Unique integer identity of this FSM.</param>
+        /// <param name="processRate">Update frequency: -1 every tick, 0 manual, positive values every Nth tick.</param>
+        public FSM(int fsmID = 0, int processRate = 0)
         {
             FSM_ID = fsmID;
             InitialStateID = AnyStateIdentifier;
-            ProcessRate = 0;
+            ProcessRate = processRate;
         }
 
         /// <summary>Adds or replaces a state by its integer identity.</summary>
