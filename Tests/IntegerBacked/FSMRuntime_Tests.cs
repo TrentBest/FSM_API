@@ -187,7 +187,7 @@ namespace FSM_API_Tests.IntegerBacked
 
             Assert.That(runtime.Unregister(7), Is.True);
             Assert.That(runtime.GetHandleCount(1), Is.EqualTo(1));
-            Assert.That(runtime.CreateInstance(7, new TestContext()), Is.Null);
+            Assert.Throws<KeyNotFoundException>(() => runtime.CreateInstance(7, new TestContext()));
         }
 
         [Test]
