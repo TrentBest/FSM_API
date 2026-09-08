@@ -8,7 +8,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </summary>
     /// <remarks>
     /// This is the runtime orchestration layer above <see cref="FSM"/> and
-    /// <see cref="FSMHandle"/>. It deliberately identifies definitions and
+    /// <see cref="FSMHandleInt"/>. It deliberately identifies definitions and
     /// processing groups by integer IDs so the runtime path does not require
     /// the string-backed registry.
     /// </remarks>
@@ -16,7 +16,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     {
         private readonly Dictionary<int, FSM> _definitions = new Dictionary<int, FSM>();
         private readonly Dictionary<int, int> _processCounters = new Dictionary<int, int>();
-        private readonly List<FSMHandle> _handles = new List<FSMHandle>();
+        private readonly List<FSMHandleInt> _handles = new List<FSMHandleInt>();
         private int _nextHandleID;
 
         /// <summary>Registers an integer-backed FSM definition for a processing group.</summary>
@@ -30,7 +30,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             definition.ProcessingGroupID = processingGroupID;
 
             // A replacement definition supersedes the previous definition and its live instances.
-            // Do not leave handles attached to a definition that is no longer registered.
             if (_definitions.ContainsKey(definition.FSM_ID))
             {
                 for (var i = _handles.Count - 1; i >= 0; i--)
@@ -59,27 +58,28 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return definition;
         }
 
-        /// <summary>Creates and initializes a live handle for a registered FSM definition.</summary>
+        /// <summary>Creates and initializes a live integer handle for a registered FSM definition.</summary>
         /// <remarks>
-        /// Runtime creation owns the instance lifecycle boundary: construction creates the handle,
-        /// then initialization enters the initial state exactly once before the handle is returned.
+        /// Runtime creation owns the instance lifecycle boundary: construction creates the explicitly
+        /// integer-backed handle, then initialization enters the initial state exactly once before the
+        /// handle is returned.
         /// </remarks>
-        public FSMHandle CreateInstance(int fsmID, IStateContext context)
+        public FSMHandleInt CreateInstance(int fsmID, IStateContext context)
         {
             if (!_definitions.TryGetValue(fsmID, out var definition))
             {
                 throw new KeyNotFoundException($"FSM definition '{fsmID}' is not registered.");
             }
 
-            var handle = new FSMHandle(definition, context, _nextHandleID++);
+            var handle = new FSMHandleInt(definition, context, _nextHandleID++);
             handle.Initialize();
             _handles.Add(handle);
             return handle;
         }
 
-        /// <summary>Removes a live handle from this runtime.</summary>
+        /// <summary>Removes a live integer handle from this runtime.</summary>
         /// <returns><c>true</c> when the handle was registered with this runtime.</returns>
-        public bool RemoveInstance(FSMHandle handle)
+        public bool RemoveInstance(FSMHandleInt handle)
         {
             if (handle == null)
             {
@@ -114,11 +114,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         }
 
         /// <summary>Updates eligible live instances in the specified processing group.</summary>
-        /// <remarks>
-        /// Process rate semantics match the string-backed engine: -1 processes every tick,
-        /// 0 is event-driven/manual, and positive values process every Nth call for that definition.
-        /// All instances of a definition share the definition-level schedule.
-        /// </remarks>
         public void Update(int processingGroupID)
         {
             foreach (var definition in _definitions.Values)
@@ -133,10 +128,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         }
 
         /// <summary>Updates eligible live instances regardless of processing group.</summary>
-        /// <remarks>
-        /// This provides a single runtime tick for hosts that do not need group-specific scheduling.
-        /// Group-specific callers should continue to use <see cref="Update(int)"/>.
-        /// </remarks>
         public void UpdateAll()
         {
             foreach (var definition in _definitions.Values)
