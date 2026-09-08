@@ -7,7 +7,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </summary>
     /// <remarks>
     /// The handle deliberately stores only integer FSM/state identities and the instance context.
-    /// The hot Update path does not perform string state lookup or create temporary collections.
+    /// The hot Update path does not perform string state lookup or create temporary allocations on the successful path.
     /// </remarks>
     public sealed class FSMHandle
     {
@@ -17,7 +17,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>The integer-backed FSM blueprint controlled by this handle.</summary>
         public readonly FSM Definition;
 
-        /// <summary>The FSM blueprint identity.</summary>
+        /// <summary>The blueprint identity.</summary>
         public int FSM_ID => Definition.FSM_ID;
 
         /// <summary>The instance-specific state context.</summary>
@@ -61,6 +61,19 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // used by the legacy Error subsystem. Diagnostics will be added at the integer boundary.
                 throw new InvalidOperationException($"Integer FSMHandle {FSM_ID} failed during update.", ex);
             }
+        }
+
+        /// <summary>
+        /// Manually evaluates transition conditions without running the current state's Update action.
+        /// </summary>
+        /// <remarks>
+        /// This mirrors the string-backed manual evaluation path while keeping the current state identity
+        /// entirely integer-backed. At most one transition is taken during an evaluation.
+        /// </remarks>
+        public void EvaluateConditions()
+        {
+            CurrentStateID = Definition.EvaluateConditions(CurrentStateID, Context);
+            HasEnteredCurrentState = true;
         }
 
         /// <summary>Forces an immediate transition to an integer state identity.</summary>
