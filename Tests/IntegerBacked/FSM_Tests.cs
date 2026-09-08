@@ -90,6 +90,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Step_EntersTargetStateOnRegularTransition()
+        {
+            var exited = false;
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exited = true));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            fsm.Step(10, new TestContext());
+
+            Assert.That(exited, Is.True);
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
         public void Step_RemainsInCurrentStateWhenConditionIsFalse()
         {
             var fsm = new IntegerFSM(1);
@@ -111,6 +127,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             fsm.AddTransition(10, 20, _ => true);
 
             Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(30));
+        }
+
+        [Test]
+        public void Step_EntersTargetStateOnAnyStateTransition()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, _ => entered = true, null, null));
+            fsm.AddAnyStateTransition(30, _ => true);
+
+            fsm.Step(10, new TestContext());
+
+            Assert.That(entered, Is.True);
         }
 
         [Test]
@@ -137,6 +167,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             fsm.ForceTransition(10, 20, new TestContext());
 
             Assert.That(exited, Is.True);
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void ForceTransition_RejectsMissingTargetState()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+
+            Assert.Throws<ArgumentException>(() =>
+                fsm.ForceTransition(10, 99, new TestContext()));
+        }
+
+        [Test]
+        public void Step_WithUnknownCurrentState_ResetsToInitial()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, _ => entered = true, null, null));
+
+            var result = fsm.Step(99, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
             Assert.That(entered, Is.True);
         }
 
