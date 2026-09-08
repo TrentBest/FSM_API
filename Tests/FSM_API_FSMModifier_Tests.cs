@@ -46,6 +46,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public string Name { get; set; } = "MockState";
 
         /// <summary>
+        /// Mock Context ID
+        /// </summary>
+        public int Context_ID => Name?.GetHashCode() ?? 0;
+
+        /// <summary>
         /// Mock value
         /// </summary>
         public string Value { get; }
@@ -135,6 +140,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(fsmDef.GetAllStates().Count, Is.EqualTo(initialCount - 1), "State count should be one less after removal.");
             Assert.That(fsmDef.HasState("StateToRemove"), Is.False, "The state should no longer exist.");
         }
+
 
         /// <summary>
         /// Tests that a regular transition can be added between two states using the Interaction API.
