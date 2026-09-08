@@ -122,6 +122,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Implement any required interface members here if IStateContext has them
             public bool IsValid { get; set; } = true;
             public string Name { get; set; }
+            public int Context_ID => Name?.GetHashCode() ?? 0;
         }
 
 
