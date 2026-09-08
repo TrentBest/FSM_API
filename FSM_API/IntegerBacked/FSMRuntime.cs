@@ -56,6 +56,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return handle;
         }
 
+        /// <summary>Removes a live handle from this runtime.</summary>
+        /// <returns><c>true</c> when the handle was registered with this runtime.</returns>
+        public bool RemoveInstance(FSMHandle handle)
+        {
+            if (handle == null)
+            {
+                return false;
+            }
+
+            return _handles.Remove(handle);
+        }
+
         /// <summary>Updates every valid live instance in the specified processing group.</summary>
         public void Update(int processingGroupID)
         {
