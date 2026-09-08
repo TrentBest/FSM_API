@@ -30,6 +30,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public string Name { get; set; } = "TestContext";
 
         /// <summary>
+        /// Context identifier derived from the test context name.
+        /// </summary>
+        public int Context_ID => Name?.GetHashCode() ?? 0;
+
+        /// <summary>
         /// 
         /// </summary>
         public int OnEnterCounter { get; set; } = 0;
@@ -244,8 +249,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Act: Trigger both the regular transition condition AND the Any-State transition condition
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
-        //    ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
-
+        //    ctx.AnyStateShouldTransition = true; // Condition for Any-State transition
         //    FSM_API.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
@@ -363,8 +367,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Act: Trigger both the regular transition condition AND the Any-State transition condition
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
-        //    ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
-
+        //    ctx.AnyStateShouldTransition = true; // Condition for Any-State transition
         //    FSM_API.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
