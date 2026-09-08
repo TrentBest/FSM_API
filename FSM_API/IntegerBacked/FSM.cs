@@ -121,6 +121,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             _transitions.RemoveAll(t => t.FromID == stateID || t.ToID == stateID);
             _anyStateTransitions.RemoveAll(t => t.ToID == stateID);
+
+            if (InitialStateID == stateID)
+            {
+                InitialStateID = AnyStateIdentifier;
+                foreach (var remainingStateID in _states.Keys)
+                {
+                    InitialStateID = remainingStateID;
+                    break;
+                }
+            }
         }
 
         /// <summary>Removes a normal transition.</summary>
