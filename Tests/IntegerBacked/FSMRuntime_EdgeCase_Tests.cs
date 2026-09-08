@@ -20,8 +20,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var groupOneUpdated = false;
             var groupTwoUpdated = false;
 
-            var groupOne = CreateFSM(1, _ => groupOneUpdated = true);
-            var groupTwo = CreateFSM(2, _ => groupTwoUpdated = true);
+            // This test is about processing-group routing, so both definitions
+            // must be eligible for automatic processing on the tick being tested.
+            var groupOne = CreateFSM(1, _ => groupOneUpdated = true, processRate: -1);
+            var groupTwo = CreateFSM(2, _ => groupTwoUpdated = true, processRate: -1);
 
             runtime.Register(groupOne, 10);
             runtime.Register(groupTwo, 20);
@@ -77,9 +79,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(runtime.GetHandleCount(30), Is.Zero);
         }
 
-        private static IntegerFSM CreateFSM(int id, System.Action<IStateContext> update)
+        private static IntegerFSM CreateFSM(int id, System.Action<IStateContext> update, int processRate = 0)
         {
-            var fsm = new IntegerFSM(id);
+            var fsm = new IntegerFSM(id, processRate);
             fsm.AddState(new IntegerFSMState(10, null, update, null));
             return fsm;
         }
