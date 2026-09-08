@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 {
@@ -8,9 +7,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// Integer-backed FSM blueprint for runtime-oriented state-machine execution.
     /// </summary>
     /// <remarks>
-    /// This is the first composite layer built from the integer-backed atoms.
-    /// State identity and transition endpoints are represented directly by integers;
-    /// no string lookup is required by the state-machine definition itself.
+    /// State identities are array indexes. The integer-backed runtime therefore uses direct indexed
+    /// access for state lookup instead of hashing or string lookup. The string-backed API remains a
+    /// separate authoring/runtime surface; translation between the two representations belongs at
+    /// the boundary rather than in this hot-path representation.
     /// </remarks>
     public class FSM
     {
@@ -36,7 +36,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             ProcessRate = processRate;
         }
 
-        /// <summary>Adds or replaces a state by its integer identity.</summary>
+        /// <summary>
+        /// Adds or replaces a state at its integer identity.
+        /// </summary>
+        /// <remarks>
+        /// State IDs are indexes into the internal state array. IDs must therefore be non-negative and
+        /// are intentionally not hashed. Sparse IDs are supported for compatibility with pre-existing
+        /// integer definitions, although compiled definitions should normally use dense IDs beginning at zero.
+        /// </remarks>
         public void AddState(FSMState state)
         {
             if (state == null)
@@ -44,8 +51,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(state));
             }
 
+            if (state.StateID < 0 || state.StateID == AnyStateIdentifier)
+            {
+                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes.");
+            }
+
+            EnsureStateCapacity(state.StateID + 1);
+
+            var wasEmpty = _states[state.StateID] == null;
             _states[state.StateID] = state;
-            if (_states.Count == 1)
+
+            if (wasEmpty && InitialStateID == AnyStateIdentifier)
             {
                 InitialStateID = state.StateID;
             }
@@ -78,20 +94,29 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Checks whether a state exists.</summary>
         public bool HasState(int stateID)
         {
-            return _states.ContainsKey(stateID);
+            return TryGetState(stateID, out _);
         }
 
         /// <summary>Gets a state by integer identity.</summary>
         public FSMState GetState(int stateID)
         {
-            _states.TryGetValue(stateID, out var state);
-            return state;
+            return TryGetState(stateID, out var state) ? state : null;
         }
 
         /// <summary>Returns all states defined by this blueprint.</summary>
+        /// <remarks>This is a cold-path inspection operation; runtime state access uses direct array indexing.</remarks>
         public IReadOnlyCollection<FSMState> GetAllStates()
         {
-            return _states.Values.ToList().AsReadOnly();
+            var states = new List<FSMState>();
+            for (var i = 0; i < _states.Length; i++)
+            {
+                if (_states[i] != null)
+                {
+                    states.Add(_states[i]);
+                }
+            }
+
+            return states.AsReadOnly();
         }
 
         /// <summary>Returns all regular and Any-State transitions.</summary>
@@ -107,30 +132,50 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (fromID == AnyStateIdentifier)
             {
-                return _anyStateTransitions.Any(t => t.ToID == toID);
+                for (var i = 0; i < _anyStateTransitions.Count; i++)
+                {
+                    if (_anyStateTransitions[i].ToID == toID)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
-            return _transitions.Any(t => t.FromID == fromID && t.ToID == toID);
+            for (var i = 0; i < _transitions.Count; i++)
+            {
+                if (_transitions[i].FromID == fromID && _transitions[i].ToID == toID)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>Removes a state and transitions connected to it.</summary>
         public void RemoveState(int stateID)
         {
-            if (!_states.Remove(stateID))
+            if (!TryGetState(stateID, out _))
             {
                 return;
             }
 
+            _states[stateID] = null;
             _transitions.RemoveAll(t => t.FromID == stateID || t.ToID == stateID);
             _anyStateTransitions.RemoveAll(t => t.ToID == stateID);
 
             if (InitialStateID == stateID)
             {
                 InitialStateID = AnyStateIdentifier;
-                foreach (var remainingStateID in _states.Keys)
+                for (var i = 0; i < _states.Length; i++)
                 {
-                    InitialStateID = remainingStateID;
-                    break;
+                    if (_states[i] != null)
+                    {
+                        InitialStateID = i;
+                        break;
+                    }
                 }
             }
         }
@@ -144,8 +189,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Enters the initial state.</summary>
         public void EnterInitial(IStateContext context)
         {
-            var state = GetState(InitialStateID);
-            if (state == null)
+            if (!TryGetState(InitialStateID, out var state))
             {
                 throw new InvalidOperationException($"Initial state '{InitialStateID}' does not exist in FSM '{FSM_ID}'.");
             }
@@ -161,42 +205,35 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// Any-State transitions are considered first, followed by regular transitions. At most one
         /// transition is taken during an evaluation.
         /// </remarks>
-        /// <param name="currentID">Integer identity of the current state.</param>
-        /// <param name="context">Context supplied to transition conditions and state lifecycle actions.</param>
-        /// <returns>The resulting current state identity.</returns>
         public int EvaluateConditions(int currentID, IStateContext context)
         {
-            if (!_states.ContainsKey(currentID))
+            if (!TryGetState(currentID, out _))
             {
                 return currentID;
             }
 
-            foreach (var transition in _anyStateTransitions)
+            for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
-                if (!_states.ContainsKey(transition.ToID))
+                var transition = _anyStateTransitions[i];
+                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                if (transition.Evaluate(context))
-                {
-                    ForceTransition(currentID, transition.ToID, context);
-                    return transition.ToID;
-                }
+                ForceTransition(currentID, transition.ToID, context);
+                return transition.ToID;
             }
 
-            foreach (var transition in _transitions)
+            for (var i = 0; i < _transitions.Count; i++)
             {
-                if (transition.FromID != currentID || !_states.ContainsKey(transition.ToID))
+                var transition = _transitions[i];
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                if (transition.Evaluate(context))
-                {
-                    ForceTransition(currentID, transition.ToID, context);
-                    return transition.ToID;
-                }
+                ForceTransition(currentID, transition.ToID, context);
+                return transition.ToID;
             }
 
             return currentID;
@@ -205,9 +242,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>
         /// Executes one FSM step and returns the resulting current state identity.
         /// </summary>
+        /// <remarks>
+        /// The current state is retrieved by direct array indexing. No string state identity is created,
+        /// compared, or resolved by this execution path.
+        /// </remarks>
         public int Step(int currentID, IStateContext context)
         {
-            if (!_states.TryGetValue(currentID, out var currentState))
+            if (!TryGetState(currentID, out var currentState))
             {
                 ForceTransition(currentID, InitialStateID, context);
                 return InitialStateID;
@@ -215,36 +256,30 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             currentState.Update(context);
 
-            foreach (var transition in _anyStateTransitions)
+            for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
-                if (!_states.ContainsKey(transition.ToID))
+                var transition = _anyStateTransitions[i];
+                if (!TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                if (transition.Evaluate(context))
-                {
-                    currentState.Exit(context);
-                    var nextState = _states[transition.ToID];
-                    nextState.Enter(context);
-                    return transition.ToID;
-                }
+                currentState.Exit(context);
+                nextState.Enter(context);
+                return transition.ToID;
             }
 
-            foreach (var transition in _transitions)
+            for (var i = 0; i < _transitions.Count; i++)
             {
-                if (transition.FromID != currentID || !_states.ContainsKey(transition.ToID))
+                var transition = _transitions[i];
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                if (transition.Evaluate(context))
-                {
-                    currentState.Exit(context);
-                    var nextState = _states[transition.ToID];
-                    nextState.Enter(context);
-                    return transition.ToID;
-                }
+                currentState.Exit(context);
+                nextState.Enter(context);
+                return transition.ToID;
             }
 
             return currentID;
@@ -253,12 +288,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Forces an immediate transition between integer state identities.</summary>
         public void ForceTransition(int fromID, int toID, IStateContext context)
         {
-            if (_states.TryGetValue(fromID, out var fromState))
+            if (TryGetState(fromID, out var fromState))
             {
                 fromState.Exit(context);
             }
 
-            if (!_states.TryGetValue(toID, out var toState))
+            if (!TryGetState(toID, out var toState))
             {
                 throw new ArgumentException($"Target state '{toID}' does not exist in FSM '{FSM_ID}'.", nameof(toID));
             }
@@ -269,8 +304,36 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Reserved integer identity representing Any-State.</summary>
         public const int AnyStateIdentifier = int.MinValue;
 
-        private readonly Dictionary<int, FSMState> _states = new Dictionary<int, FSMState>();
+        private FSMState[] _states = new FSMState[0];
         private readonly List<FSMTransition> _transitions = new List<FSMTransition>();
         private readonly List<FSMTransition> _anyStateTransitions = new List<FSMTransition>();
+
+        private bool TryGetState(int stateID, out FSMState state)
+        {
+            if (stateID >= 0 && stateID < _states.Length)
+            {
+                state = _states[stateID];
+                return state != null;
+            }
+
+            state = null;
+            return false;
+        }
+
+        private void EnsureStateCapacity(int requiredLength)
+        {
+            if (requiredLength <= _states.Length)
+            {
+                return;
+            }
+
+            var newLength = _states.Length == 0 ? 4 : _states.Length;
+            while (newLength < requiredLength)
+            {
+                newLength *= 2;
+            }
+
+            Array.Resize(ref _states, newLength);
+        }
     }
 }
