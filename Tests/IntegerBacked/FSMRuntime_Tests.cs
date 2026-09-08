@@ -119,6 +119,44 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void Update_CompletesStateLifecycleThroughRuntime()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            var events = "";
+            fsm.GetState(10).SetOnUpdate(_ => events += "U");
+            fsm.GetState(10).SetOnExit(_ => events += "X");
+            fsm.GetState(20).SetOnEnter(_ => events += "E");
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm, 3);
+            var handle = runtime.CreateInstance(7, new TestContext());
+
+            runtime.Update(3);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(events, Is.EqualTo("UXE"));
+        }
+
+        [Test]
+        public void Update_DoesNotTouchOtherGroupOrInvalidInstances()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm, 3);
+            var valid = runtime.CreateInstance(7, new TestContext());
+            var invalid = runtime.CreateInstance(7, new TestContext { IsValid = false });
+
+            runtime.Update(99);
+
+            Assert.That(valid.CurrentStateID, Is.EqualTo(10));
+            Assert.That(invalid.CurrentStateID, Is.EqualTo(10));
+            Assert.That(valid.HasEnteredCurrentState, Is.False);
+            Assert.That(invalid.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void Update_SkipsInvalidContext()
         {
             var runtime = new IntegerFSMRuntime();
