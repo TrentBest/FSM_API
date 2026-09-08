@@ -98,5 +98,63 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
             Assert.That(runtime.RemoveInstance(first), Is.False);
         }
+
+        [Test]
+        public void UpdateAll_RespectsPositiveProcessRate()
+        {
+            var updates = 0;
+            var fsm = new IntegerFSM(7, processRate: 3);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            runtime.CreateInstance(7, new TestContext());
+
+            for (var i = 0; i < 10; i++)
+            {
+                runtime.UpdateAll();
+            }
+
+            Assert.That(updates, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void UpdateAll_DoesNotProcessManualRate()
+        {
+            var updates = 0;
+            var fsm = new IntegerFSM(7, processRate: 0);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            runtime.CreateInstance(7, new TestContext());
+
+            runtime.UpdateAll();
+            runtime.UpdateAll();
+
+            Assert.That(updates, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void UpdateAll_ProcessRateIsSharedByAllInstancesOfDefinition()
+        {
+            var updates = 0;
+            var fsm = new IntegerFSM(7, processRate: 2);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(7, new TestContext());
+
+            runtime.UpdateAll();
+            Assert.That(updates, Is.EqualTo(0));
+
+            runtime.UpdateAll();
+            Assert.That(updates, Is.EqualTo(2));
+
+            runtime.UpdateAll();
+            Assert.That(updates, Is.EqualTo(2));
+
+            runtime.UpdateAll();
+            Assert.That(updates, Is.EqualTo(4));
+        }
     }
 }
