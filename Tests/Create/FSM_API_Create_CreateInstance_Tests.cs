@@ -289,5 +289,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Create
         /// 
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Context identifier derived from the stress context name.
+        /// </summary>
+        public int Context_ID => Name?.GetHashCode() ?? 0;
     }
 }
