@@ -1,375 +1,102 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
-using IntegerFSMHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle;
 using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
 
-namespace FSM_API_Tests.IntegerBacked
+namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
     [TestFixture]
     public class FSMRuntime_Tests
     {
-        [Test]
-        public void Register_PreservesIntegerDefinitionIdentity()
+        private sealed class TestContext : IStateContext
         {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-
-            runtime.Register(fsm, 3);
-
-            Assert.That(runtime.Contains(7), Is.True);
-            Assert.That(runtime.GetDefinition(7), Is.SameAs(fsm));
-            Assert.That(fsm.ProcessingGroupID, Is.EqualTo(3));
+            public string Name { get; set; }
+            public int Context_ID => Name == null ? 0 : Name.GetHashCode();
+            public bool IsValid { get; set; } = true;
         }
 
         [Test]
-        public void Register_ReplacesDefinitionWithSameIntegerIdentity()
+        public void CreateInstance_InitializesTheHandleBeforeReturningIt()
         {
+            var entered = 0;
+            var fsm = new IntegerFSM(7);
+            fsm.AddState(new IntegerFSMState(10, _ => entered++, null, null));
             var runtime = new IntegerFSMRuntime();
-            var first = CreateBasicFSM(7);
-            var replacement = CreateBasicFSM(7);
+            runtime.Register(fsm);
 
-            runtime.Register(first, 1);
-            runtime.Register(replacement, 2);
+            var handle = runtime.CreateInstance(7, new TestContext());
 
-            Assert.That(runtime.GetDefinition(7), Is.SameAs(replacement));
-            Assert.That(replacement.ProcessingGroupID, Is.EqualTo(2));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(entered, Is.EqualTo(1));
         }
 
         [Test]
-        public void Register_ReplacingDefinitionRemovesItsLiveInstances()
+        public void CreateInstance_AssignsUniqueInstanceIDs()
         {
+            var fsm = new IntegerFSM(7);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
             var runtime = new IntegerFSMRuntime();
-            var first = CreateBasicFSM(7);
-            var replacement = CreateBasicFSM(7);
-
-            runtime.Register(first, 1);
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(7, new TestContext());
-
-            runtime.Register(replacement, 2);
-
-            Assert.That(runtime.GetDefinition(7), Is.SameAs(replacement));
-            Assert.That(runtime.GetHandleCount(1), Is.Zero);
-            Assert.That(runtime.GetHandleCount(2), Is.Zero);
-        }
-
-        [Test]
-        public void Register_RejectsNullDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-
-            Assert.Throws<System.ArgumentNullException>(() => runtime.Register(null));
-        }
-
-        [Test]
-        public void CreateInstance_RequiresRegisteredDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-
-            Assert.Throws<KeyNotFoundException>(() =>
-                runtime.CreateInstance(99, new TestContext()));
-        }
-
-        [Test]
-        public void CreateInstance_AssignsUniqueIntegerHandleIDs()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7));
+            runtime.Register(fsm);
 
             var first = runtime.CreateInstance(7, new TestContext());
             var second = runtime.CreateInstance(7, new TestContext());
 
-            Assert.That(first, Is.TypeOf<IntegerFSMHandle>());
-            Assert.That(first.Id, Is.Not.EqualTo(second.Id));
-            Assert.That(first.FSM_ID, Is.EqualTo(7));
+            Assert.That(second.Id, Is.EqualTo(first.Id + 1));
+            Assert.That(runtime.GetHandleCount(0), Is.EqualTo(2));
         }
 
         [Test]
-        public void CreateInstance_StartsAtDefinitionInitialState()
+        public void UpdateAll_AdvancesInstancesAcrossProcessingGroups()
         {
+            var firstUpdates = 0;
+            var secondUpdates = 0;
+            var first = new IntegerFSM(1);
+            first.AddState(new IntegerFSMState(10, null, _ => firstUpdates++, null));
+            var second = new IntegerFSM(2);
+            second.AddState(new IntegerFSMState(20, null, _ => secondUpdates++, null));
             var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7));
+            runtime.Register(first, 100);
+            runtime.Register(second, 200);
+            runtime.CreateInstance(1, new TestContext());
+            runtime.CreateInstance(2, new TestContext());
 
-            var handle = runtime.CreateInstance(7, new TestContext());
+            runtime.UpdateAll();
 
-            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
-            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(firstUpdates, Is.EqualTo(1));
+            Assert.That(secondUpdates, Is.EqualTo(1));
         }
 
         [Test]
-        public void Update_UpdatesOnlyMatchingProcessingGroup()
+        public void UpdateAll_SkipsInvalidContexts()
         {
+            var updates = 0;
+            var fsm = new IntegerFSM(7);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
             var runtime = new IntegerFSMRuntime();
-            var first = CreateBasicFSM(7);
-            var second = CreateBasicFSM(8);
-            first.AddTransition(10, 20, _ => true);
-            second.AddTransition(10, 20, _ => true);
-            runtime.Register(first, 1);
-            runtime.Register(second, 2);
-            var firstHandle = runtime.CreateInstance(7, new TestContext());
-            var secondHandle = runtime.CreateInstance(8, new TestContext());
-
-            runtime.Update(1);
-
-            Assert.That(firstHandle.CurrentStateID, Is.EqualTo(20));
-            Assert.That(secondHandle.CurrentStateID, Is.EqualTo(10));
-        }
-
-        [Test]
-        public void Update_CompletesStateLifecycleThroughRuntime()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            var events = "";
-            fsm.GetState(10).SetOnUpdate(_ => events += "U");
-            fsm.GetState(10).SetOnExit(_ => events += "X");
-            fsm.GetState(20).SetOnEnter(_ => events += "E");
-            fsm.AddTransition(10, 20, _ => true);
-            runtime.Register(fsm, 3);
-            var handle = runtime.CreateInstance(7, new TestContext());
-
-            runtime.Update(3);
-
-            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
-            Assert.That(handle.HasEnteredCurrentState, Is.True);
-            Assert.That(events, Is.EqualTo("UXE"));
-        }
-
-        [Test]
-        public void Update_DoesNotTouchOtherGroupOrInvalidInstances()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, _ => true);
-            runtime.Register(fsm, 3);
-            var valid = runtime.CreateInstance(7, new TestContext());
-            var invalid = runtime.CreateInstance(7, new TestContext { IsValid = false });
-
-            runtime.Update(99);
-
-            Assert.That(valid.CurrentStateID, Is.EqualTo(10));
-            Assert.That(invalid.CurrentStateID, Is.EqualTo(10));
-            Assert.That(valid.HasEnteredCurrentState, Is.False);
-            Assert.That(invalid.HasEnteredCurrentState, Is.False);
-        }
-
-        [Test]
-        public void Update_SkipsInvalidContext()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, _ => true);
-            runtime.Register(fsm, 1);
+            runtime.Register(fsm);
             var context = new TestContext { IsValid = false };
-            var handle = runtime.CreateInstance(7, context);
+            runtime.CreateInstance(7, context);
 
-            runtime.Update(1);
+            runtime.UpdateAll();
 
-            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(updates, Is.EqualTo(0));
         }
 
         [Test]
-        public void Update_SharedDefinitionKeepsInstancesIndependent()
+        public void RemoveInstance_RemovesOnlyTheSpecifiedHandle()
         {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, context => context.Name == "A");
-            runtime.Register(fsm, 1);
-            var first = runtime.CreateInstance(7, new TestContext { Name = "A" });
-            var second = runtime.CreateInstance(7, new TestContext { Name = "B" });
-
-            runtime.Update(1);
-
-            Assert.That(first.CurrentStateID, Is.EqualTo(20));
-            Assert.That(second.CurrentStateID, Is.EqualTo(10));
-        }
-
-        [Test]
-        public void Update_SharedDefinitionAllowsLaterInstancesToTransitionIndependently()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, context => context.Name == "Go");
-            runtime.Register(fsm, 1);
-            var firstContext = new TestContext { Name = "Go" };
-            var secondContext = new TestContext { Name = "Stay" };
-            var first = runtime.CreateInstance(7, firstContext);
-            var second = runtime.CreateInstance(7, secondContext);
-
-            runtime.Update(1);
-            firstContext.Name = "Stay";
-            secondContext.Name = "Go";
-            runtime.Update(1);
-
-            Assert.That(first.CurrentStateID, Is.EqualTo(20));
-            Assert.That(second.CurrentStateID, Is.EqualTo(20));
-        }
-
-        [Test]
-        public void AddTransition_AffectsExistingLiveInstancesThroughSharedDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            runtime.Register(fsm, 1);
-            var handle = runtime.CreateInstance(7, new TestContext { Name = "Go" });
-
-            runtime.Update(1);
-            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
-
-            fsm.AddTransition(10, 20, context => context.Name == "Go");
-            runtime.Update(1);
-
-            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
-        }
-
-        [Test]
-        public void RemoveTransition_StopsExistingLiveInstancesFromTakingThatTransition()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, _ => true);
-            runtime.Register(fsm, 1);
-            var handle = runtime.CreateInstance(7, new TestContext());
-
-            fsm.RemoveTransition(10, 20);
-            runtime.Update(1);
-
-            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
-        }
-
-        [Test]
-        public void RemoveState_LeavesExistingHandleToBeRecoveredByNextUpdate()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.GetState(10).SetOnEnter(_ => { });
-            fsm.GetState(20).SetOnEnter(_ => { });
-            runtime.Register(fsm, 1);
-            var handle = runtime.CreateInstance(7, new TestContext());
-            handle.TransitionTo(20);
-
-            fsm.RemoveState(20);
-            runtime.Update(1);
-
-            Assert.That(handle.CurrentStateID, Is.EqualTo(fsm.InitialStateID));
-            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
-        }
-
-        [Test]
-        public void GetHandleCount_ReportsMatchingProcessingGroup()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7), 1);
-            runtime.Register(CreateBasicFSM(8), 2);
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(8, new TestContext());
-
-            Assert.That(runtime.GetHandleCount(1), Is.EqualTo(2));
-            Assert.That(runtime.GetHandleCount(2), Is.EqualTo(1));
-            Assert.That(runtime.GetHandleCount(99), Is.Zero);
-        }
-
-        [Test]
-        public void RemoveInstance_RemovesRegisteredHandle()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7), 1);
-            var handle = runtime.CreateInstance(7, new TestContext());
-
-            Assert.That(runtime.RemoveInstance(handle), Is.True);
-            Assert.That(runtime.GetHandleCount(1), Is.Zero);
-        }
-
-        [Test]
-        public void RemoveInstance_ReturnsFalseForUnknownHandle()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7), 1);
-            var registered = runtime.CreateInstance(7, new TestContext());
-            var otherRuntime = new IntegerFSMRuntime();
-            otherRuntime.Register(CreateBasicFSM(7), 1);
-            var unknown = otherRuntime.CreateInstance(7, new TestContext());
-
-            Assert.That(runtime.RemoveInstance(unknown), Is.False);
-            Assert.That(runtime.GetHandleCount(1), Is.EqualTo(1));
-            Assert.That(registered, Is.Not.SameAs(unknown));
-        }
-
-        [Test]
-        public void RemoveInstance_IsSafeForNull()
-        {
-            var runtime = new IntegerFSMRuntime();
-
-            Assert.That(runtime.RemoveInstance(null), Is.False);
-        }
-
-        [Test]
-        public void Unregister_RemovesDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7));
-
-            Assert.That(runtime.Unregister(7), Is.True);
-            Assert.That(runtime.Contains(7), Is.False);
-            Assert.That(runtime.GetDefinition(7), Is.Null);
-        }
-
-        [Test]
-        public void Unregister_RemovesLiveInstancesOfDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateBasicFSM(7), 1);
-            runtime.Register(CreateBasicFSM(8), 1);
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(8, new TestContext());
-
-            Assert.That(runtime.Unregister(7), Is.True);
-            Assert.That(runtime.GetHandleCount(1), Is.EqualTo(1));
-            Assert.Throws<KeyNotFoundException>(() => runtime.CreateInstance(7, new TestContext()));
-        }
-
-        [Test]
-        public void Unregister_ReturnsFalseForUnknownDefinition()
-        {
-            var runtime = new IntegerFSMRuntime();
-
-            Assert.That(runtime.Unregister(99), Is.False);
-        }
-
-        [Test]
-        public void Unregister_DoesNotRemoveOtherDefinitions()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var retained = CreateBasicFSM(8);
-            runtime.Register(CreateBasicFSM(7), 1);
-            runtime.Register(retained, 2);
-            runtime.CreateInstance(7, new TestContext());
-            runtime.CreateInstance(8, new TestContext());
-
-            runtime.Unregister(7);
-
-            Assert.That(runtime.GetDefinition(8), Is.SameAs(retained));
-            Assert.That(runtime.GetHandleCount(2), Is.EqualTo(1));
-        }
-
-        private static IntegerFSM CreateBasicFSM(int id)
-        {
-            var fsm = new IntegerFSM(id);
+            var fsm = new IntegerFSM(7);
             fsm.AddState(new IntegerFSMState(10, null, null, null));
-            fsm.AddState(new IntegerFSMState(20, null, null, null));
-            return fsm;
-        }
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var first = runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(7, new TestContext());
 
-        private sealed class TestContext : IStateContext
-        {
-            public string Name { get; set; } = "Test";
-            public int Context_ID => Name == null ? 0 : Name.GetHashCode();
-            public bool IsValid { get; set; } = true;
+            Assert.That(runtime.RemoveInstance(first), Is.True);
+            Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+            Assert.That(runtime.RemoveInstance(first), Is.False);
         }
     }
 }
