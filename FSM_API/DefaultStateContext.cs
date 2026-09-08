@@ -23,6 +23,12 @@
         /// Always "DefaultStateContext".
         /// </summary>
         public string Name { get; set; } = "DefaultStateContext";
+
+        /// <summary>
+        /// Gets the integer identity associated with this context name.
+        /// </summary>
+        public int Context_ID => Name.GetHashCode();
+
         public bool HasEnteredCurrentState { get; set; }
     }
 }
