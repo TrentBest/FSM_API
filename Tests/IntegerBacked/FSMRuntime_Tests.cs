@@ -39,6 +39,24 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void Register_ReplacingDefinitionRemovesItsLiveInstances()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var first = CreateBasicFSM(7);
+            var replacement = CreateBasicFSM(7);
+
+            runtime.Register(first, 1);
+            runtime.CreateInstance(7, new TestContext());
+            runtime.CreateInstance(7, new TestContext());
+
+            runtime.Register(replacement, 2);
+
+            Assert.That(runtime.GetDefinition(7), Is.SameAs(replacement));
+            Assert.That(runtime.GetHandleCount(1), Is.Zero);
+            Assert.That(runtime.GetHandleCount(2), Is.Zero);
+        }
+
+        [Test]
         public void Register_RejectsNullDefinition()
         {
             var runtime = new IntegerFSMRuntime();
