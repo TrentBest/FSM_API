@@ -178,6 +178,84 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void EvaluateConditions_FollowsTrueRegularTransition()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            var result = fsm.EvaluateConditions(10, new TestContext());
+
+            Assert.That(result, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void EvaluateConditions_DoesNotRunCurrentStateUpdate()
+        {
+            var updated = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updated = true, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            fsm.EvaluateConditions(10, new TestContext());
+
+            Assert.That(updated, Is.False);
+        }
+
+        [Test]
+        public void EvaluateConditions_UsesAnyStateBeforeRegularTransition()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
+            fsm.AddAnyStateTransition(30, _ => true);
+            fsm.AddTransition(10, 20, _ => true);
+
+            Assert.That(fsm.EvaluateConditions(10, new TestContext()), Is.EqualTo(30));
+        }
+
+        [Test]
+        public void EvaluateConditions_RemainsInCurrentStateWhenConditionIsFalse()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ => false);
+
+            Assert.That(fsm.EvaluateConditions(10, new TestContext()), Is.EqualTo(10));
+        }
+
+        [Test]
+        public void EvaluateConditions_EntersTargetStateOnTransition()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            fsm.EvaluateConditions(10, new TestContext());
+
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void EvaluateConditions_WithUnknownCurrentStateDoesNotResetToInitial()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, _ => entered = true, null, null));
+
+            var result = fsm.EvaluateConditions(99, new TestContext());
+
+            Assert.That(result, Is.EqualTo(99));
+            Assert.That(entered, Is.False);
+        }
+
+        [Test]
         public void EnterInitial_InvokesInitialStateEnter()
         {
             var entered = false;
