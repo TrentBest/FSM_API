@@ -252,6 +252,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void RemoveState_RemovingInitialStateLeavesValidInitialState()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+
+            fsm.RemoveState(10);
+
+            Assert.That(fsm.HasState(fsm.InitialStateID), Is.True);
+            Assert.That(fsm.InitialStateID, Is.EqualTo(20));
+        }
+
+        [Test]
         public void RemoveTransition_RemovesOnlyMatchingTransition()
         {
             var fsm = new IntegerFSM(1);
