@@ -57,7 +57,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                FsmApi.Error.InvokeInstanceError(this, $"Integer FSMHandle: {FSM_ID} has crashed: {ex.Message}", ex, processGroup);
+                // Integer-backed handles are deliberately isolated from the string-backed FSMHandle
+                // used by the legacy Error subsystem. Diagnostics will be added at the integer boundary.
+                throw new InvalidOperationException($"Integer FSMHandle {FSM_ID} failed during update.", ex);
             }
         }
 
@@ -72,8 +74,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                FsmApi.Error.InvokeInstanceError(this, $"Transition to: {nextStateID} failed.", ex);
-                throw;
+                throw new InvalidOperationException($"Transition to integer state {nextStateID} failed.", ex);
             }
         }
 
