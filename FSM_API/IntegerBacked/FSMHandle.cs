@@ -8,8 +8,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// <remarks>
     /// The handle deliberately stores only integer FSM/state identities and the instance context.
     /// The hot Update path does not perform string state lookup or create temporary allocations on the successful path.
+    /// <para>
+    /// <see cref="FSMHandleInt"/> is the explicit public handle type returned by the integer runtime.
+    /// This base remains available so existing IntegerBacked callers continue to compile while the API
+    /// establishes the representation-specific handle boundary.
+    /// </para>
     /// </remarks>
-    public sealed class FSMHandle
+    public class FSMHandle
     {
         /// <summary>Unique identity of this running FSM instance.</summary>
         public int Id { get; internal set; }
@@ -77,8 +82,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                // Integer-backed handles are deliberately isolated from the string-backed FSMHandle
-                // used by the legacy Error subsystem. Diagnostics will be added at the integer boundary.
                 throw new InvalidOperationException($"Integer FSMHandle {FSM_ID} failed during update.", ex);
             }
         }
