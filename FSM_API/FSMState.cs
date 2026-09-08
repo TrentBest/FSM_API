@@ -115,11 +115,6 @@ namespace TheSingularityWorkshop.FSM_API
             _onExit = onExit != null ? onExit : defaultOnExit;
         }
 
-        public FSMState(string name, Action<IStateContext> onEnter, Action<IStateContext> onUpdate, Action<IStateContext> onExit)
-        {
-
-        }
-
         private void defaultOnExit(IStateContext context) { }
         private void defaultOnUpdate(IStateContext context) { }
         private void defaultOnEnter(IStateContext context) { }
@@ -141,14 +136,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// Runs the 'OnUpdate' action for this state.
         /// </summary>
         /// <remarks>
-        /// The FSM system typically calls this method regularly while an FSM instance
-        /// is staying in this state, often as part of a game's update loop.
+        /// This action is called by the FSM system while the FSM remains in this state.
         /// </remarks>
         /// <param name="c">The context object specific to this FSM instance, providing data access.</param>
         public void Update(IStateContext c)
         {
             _onUpdate.Invoke(c);
-
         }
 
         /// <summary>
