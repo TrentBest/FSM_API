@@ -42,6 +42,26 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         }
 
         /// <summary>
+        /// Enters the current initial state before the first update.
+        /// </summary>
+        /// <remarks>
+        /// Initialization is explicit and idempotent. This keeps construction allocation-free while
+        /// preserving the state lifecycle contract: the initial state's Enter action occurs exactly once
+        /// until the instance is reset.
+        /// </remarks>
+        public void Initialize()
+        {
+            if (HasEnteredCurrentState)
+            {
+                return;
+            }
+
+            Definition.EnterInitial(Context);
+            CurrentStateID = Definition.InitialStateID;
+            HasEnteredCurrentState = true;
+        }
+
+        /// <summary>
         /// Advances this FSM instance by one step.
         /// </summary>
         /// <remarks>
