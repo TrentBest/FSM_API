@@ -100,6 +100,51 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
+        public void CreateInstances_ShareDefinitionButKeepIndependentState()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, context => ((TestContext)context).ShouldTransition);
+            runtime.Register(fsm, 1);
+
+            var first = runtime.CreateInstance(7, new TestContext { ShouldTransition = true });
+            var second = runtime.CreateInstance(7, new TestContext { ShouldTransition = false });
+
+            runtime.Update(1);
+
+            Assert.That(first.CurrentStateID, Is.EqualTo(20));
+            Assert.That(second.CurrentStateID, Is.EqualTo(10));
+            Assert.That(first.Definition, Is.SameAs(second.Definition));
+            Assert.That(first.Context, Is.Not.SameAs(second.Context));
+        }
+
+        [Test]
+        public void CreateInstances_ContinueIndependentlyAcrossMultipleUpdates()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, context => ((TestContext)context).ShouldTransition);
+            runtime.Register(fsm, 1);
+
+            var firstContext = new TestContext { ShouldTransition = true };
+            var secondContext = new TestContext { ShouldTransition = false };
+            var first = runtime.CreateInstance(7, firstContext);
+            var second = runtime.CreateInstance(7, secondContext);
+
+            runtime.Update(1);
+
+            Assert.That(first.CurrentStateID, Is.EqualTo(20));
+            Assert.That(second.CurrentStateID, Is.EqualTo(10));
+
+            firstContext.ShouldTransition = false;
+            secondContext.ShouldTransition = true;
+            runtime.Update(1);
+
+            Assert.That(first.CurrentStateID, Is.EqualTo(20));
+            Assert.That(second.CurrentStateID, Is.EqualTo(20));
+        }
+
+        [Test]
         public void Update_UpdatesOnlyMatchingProcessingGroup()
         {
             var runtime = new IntegerFSMRuntime();
@@ -283,6 +328,7 @@ namespace FSM_API_Tests.IntegerBacked
             public string Name { get; set; } = "Test";
             public int Context_ID => Name == null ? 0 : Name.GetHashCode();
             public bool IsValid { get; set; } = true;
+            public bool ShouldTransition { get; set; }
         }
     }
 }
