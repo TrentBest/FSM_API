@@ -29,7 +29,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void AddState_PreservesIntegerIdentityAndSetsFirstStateInitial()
         {
             var fsm = new IntegerFSM(1);
-            var state = new IntegerFSMState(10);
+            var state = new IntegerFSMState(10, null, null, null);
 
             fsm.AddState(state);
 
@@ -42,8 +42,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void AddState_ReplacesExistingState()
         {
             var fsm = new IntegerFSM(1);
-            var first = new IntegerFSMState(10);
-            var replacement = new IntegerFSMState(10);
+            var first = new IntegerFSMState(10, null, null, null);
+            var replacement = new IntegerFSMState(10, null, null, null);
 
             fsm.AddState(first);
             fsm.AddState(replacement);
@@ -64,8 +64,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void AddTransition_PreservesIntegerEndpoints()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
 
             fsm.AddTransition(10, 20, _ => true);
 
@@ -77,8 +77,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void Step_FollowsTrueRegularTransition()
         {
             var fsm = new IntegerFSM(1);
-            var first = new IntegerFSMState(10);
-            var second = new IntegerFSMState(20);
+            var first = new IntegerFSMState(10, null, null, null);
+            var second = new IntegerFSMState(20, null, null, null);
             fsm.AddState(first);
             fsm.AddState(second);
             fsm.AddTransition(10, 20, _ => true);
@@ -93,8 +93,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void Step_RemainsInCurrentStateWhenConditionIsFalse()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
             fsm.AddTransition(10, 20, _ => false);
 
             Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(10));
@@ -104,9 +104,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void Step_EvaluatesAnyStateBeforeRegularTransition()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
-            fsm.AddState(new IntegerFSMState(30));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
             fsm.AddAnyStateTransition(30, _ => true);
             fsm.AddTransition(10, 20, _ => true);
 
@@ -118,7 +118,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var entered = false;
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10).SetOnEnter(_ => entered = true));
+            fsm.AddState(new IntegerFSMState(10, _ => entered = true, null, null));
 
             fsm.EnterInitial(new TestContext());
 
@@ -131,8 +131,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var exited = false;
             var entered = false;
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10).SetOnExit(_ => exited = true));
-            fsm.AddState(new IntegerFSMState(20).SetOnEnter(_ => entered = true));
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exited = true));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
 
             fsm.ForceTransition(10, 20, new TestContext());
 
@@ -144,8 +144,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void RemoveState_RemovesConnectedTransitions()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
             fsm.AddTransition(10, 20, _ => true);
             fsm.AddAnyStateTransition(20, _ => true);
 
@@ -160,9 +160,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void RemoveTransition_RemovesOnlyMatchingTransition()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
-            fsm.AddState(new IntegerFSMState(30));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
             fsm.AddTransition(10, 20, _ => true);
             fsm.AddTransition(10, 30, _ => true);
 
@@ -176,8 +176,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void AddAnyStateTransition_UsesReservedAnyStateIdentity()
         {
             var fsm = new IntegerFSM(1);
-            fsm.AddState(new IntegerFSMState(10));
-            fsm.AddState(new IntegerFSMState(20));
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
             fsm.AddAnyStateTransition(20, _ => true);
 
             Assert.That(fsm.HasTransition(IntegerFSM.AnyStateIdentifier, 20), Is.True);
