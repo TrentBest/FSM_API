@@ -164,6 +164,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 if (transition.Evaluate(context))
                 {
                     currentState.Exit(context);
+                    var nextState = _states[transition.ToID];
+                    nextState.Enter(context);
                     return transition.ToID;
                 }
             }
@@ -178,6 +180,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 if (transition.Evaluate(context))
                 {
                     currentState.Exit(context);
+                    var nextState = _states[transition.ToID];
+                    nextState.Enter(context);
                     return transition.ToID;
                 }
             }
