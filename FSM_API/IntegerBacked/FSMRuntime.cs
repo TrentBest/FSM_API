@@ -27,6 +27,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             definition.ProcessingGroupID = processingGroupID;
+
+            // A replacement definition supersedes the previous definition and its live instances.
+            // Do not leave handles attached to a definition that is no longer registered.
+            if (_definitions.ContainsKey(definition.FSM_ID))
+            {
+                for (var i = _handles.Count - 1; i >= 0; i--)
+                {
+                    if (_handles[i].FSM_ID == definition.FSM_ID)
+                    {
+                        _handles.RemoveAt(i);
+                    }
+                }
+            }
+
             _definitions[definition.FSM_ID] = definition;
         }
 
