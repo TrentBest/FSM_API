@@ -100,51 +100,6 @@ namespace FSM_API_Tests.IntegerBacked
         }
 
         [Test]
-        public void CreateInstances_ShareDefinitionButKeepIndependentState()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, context => ((TestContext)context).ShouldTransition);
-            runtime.Register(fsm, 1);
-
-            var first = runtime.CreateInstance(7, new TestContext { ShouldTransition = true });
-            var second = runtime.CreateInstance(7, new TestContext { ShouldTransition = false });
-
-            runtime.Update(1);
-
-            Assert.That(first.CurrentStateID, Is.EqualTo(20));
-            Assert.That(second.CurrentStateID, Is.EqualTo(10));
-            Assert.That(first.Definition, Is.SameAs(second.Definition));
-            Assert.That(first.Context, Is.Not.SameAs(second.Context));
-        }
-
-        [Test]
-        public void CreateInstances_ContinueIndependentlyAcrossMultipleUpdates()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateBasicFSM(7);
-            fsm.AddTransition(10, 20, context => ((TestContext)context).ShouldTransition);
-            runtime.Register(fsm, 1);
-
-            var firstContext = new TestContext { ShouldTransition = true };
-            var secondContext = new TestContext { ShouldTransition = false };
-            var first = runtime.CreateInstance(7, firstContext);
-            var second = runtime.CreateInstance(7, secondContext);
-
-            runtime.Update(1);
-
-            Assert.That(first.CurrentStateID, Is.EqualTo(20));
-            Assert.That(second.CurrentStateID, Is.EqualTo(10));
-
-            firstContext.ShouldTransition = false;
-            secondContext.ShouldTransition = true;
-            runtime.Update(1);
-
-            Assert.That(first.CurrentStateID, Is.EqualTo(20));
-            Assert.That(second.CurrentStateID, Is.EqualTo(20));
-        }
-
-        [Test]
         public void Update_UpdatesOnlyMatchingProcessingGroup()
         {
             var runtime = new IntegerFSMRuntime();
@@ -213,6 +168,93 @@ namespace FSM_API_Tests.IntegerBacked
 
             runtime.Update(1);
 
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void Update_SharedDefinitionKeepsInstancesIndependent()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, context => context.Name == "A");
+            runtime.Register(fsm, 1);
+            var first = runtime.CreateInstance(7, new TestContext { Name = "A" });
+            var second = runtime.CreateInstance(7, new TestContext { Name = "B" });
+
+            runtime.Update(1);
+
+            Assert.That(first.CurrentStateID, Is.EqualTo(20));
+            Assert.That(second.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void Update_SharedDefinitionAllowsLaterInstancesToTransitionIndependently()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, context => context.Name == "Go");
+            runtime.Register(fsm, 1);
+            var firstContext = new TestContext { Name = "Go" };
+            var secondContext = new TestContext { Name = "Stay" };
+            var first = runtime.CreateInstance(7, firstContext);
+            var second = runtime.CreateInstance(7, secondContext);
+
+            runtime.Update(1);
+            firstContext.Name = "Stay";
+            secondContext.Name = "Go";
+            runtime.Update(1);
+
+            Assert.That(first.CurrentStateID, Is.EqualTo(20));
+            Assert.That(second.CurrentStateID, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void AddTransition_AffectsExistingLiveInstancesThroughSharedDefinition()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            runtime.Register(fsm, 1);
+            var handle = runtime.CreateInstance(7, new TestContext { Name = "Go" });
+
+            runtime.Update(1);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+
+            fsm.AddTransition(10, 20, context => context.Name == "Go");
+            runtime.Update(1);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void RemoveTransition_StopsExistingLiveInstancesFromTakingThatTransition()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm, 1);
+            var handle = runtime.CreateInstance(7, new TestContext());
+
+            fsm.RemoveTransition(10, 20);
+            runtime.Update(1);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void RemoveState_LeavesExistingHandleToBeRecoveredByNextUpdate()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateBasicFSM(7);
+            fsm.GetState(10).SetOnEnter(_ => { });
+            fsm.GetState(20).SetOnEnter(_ => { });
+            runtime.Register(fsm, 1);
+            var handle = runtime.CreateInstance(7, new TestContext());
+            handle.TransitionTo(20);
+
+            fsm.RemoveState(20);
+            runtime.Update(1);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(fsm.InitialStateID));
             Assert.That(handle.CurrentStateID, Is.EqualTo(10));
         }
 
@@ -328,7 +370,6 @@ namespace FSM_API_Tests.IntegerBacked
             public string Name { get; set; } = "Test";
             public int Context_ID => Name == null ? 0 : Name.GetHashCode();
             public bool IsValid { get; set; } = true;
-            public bool ShouldTransition { get; set; }
         }
     }
 }
