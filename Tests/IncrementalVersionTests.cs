@@ -74,6 +74,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string staticVersionString = "1.0.20";
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
+
+        /// <summary>Records package version 1.0.21 for this development commit.</summary>
+        [Test]
+        public void IncrementalVersion_008_RecordsPackageVersion_1_0_21()
+        {
+            const string staticVersionString = "1.0.21";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
     }
 }
 #pragma warning restore NUnit2009
