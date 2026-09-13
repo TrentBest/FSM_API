@@ -7,11 +7,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </summary>
     /// <remarks>
     /// The handle deliberately stores only integer FSM/state identities and the instance context.
-    /// The hot Update path does not perform string state lookup or create temporary allocations on the successful path.
+    /// The successful execution path performs no string state lookup and exposes no string process-group identity.
     /// <para>
     /// <see cref="FSMHandleInt"/> is the explicit public handle type returned by the integer runtime.
-    /// This base remains available so existing IntegerBacked callers continue to compile while the API
-    /// establishes the representation-specific handle boundary.
+    /// This base remains available so the representation-specific runtime can share one implementation.
     /// </para>
     /// </remarks>
     public class FSMHandle
@@ -50,9 +49,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// Enters the current initial state before the first update.
         /// </summary>
         /// <remarks>
-        /// Initialization is explicit and idempotent. This keeps construction allocation-free while
-        /// preserving the state lifecycle contract: the initial state's Enter action occurs exactly once
-        /// until the instance is reset.
+        /// Initialization is explicit and idempotent. The successful lifecycle path contains no string identity.
         /// </remarks>
         public void Initialize()
         {
@@ -66,14 +63,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             HasEnteredCurrentState = true;
         }
 
-        /// <summary>
-        /// Advances this FSM instance by one step.
-        /// </summary>
+        /// <summary>Advances this FSM instance by one step.</summary>
         /// <remarks>
-        /// Normal execution uses integer identities throughout the path from the handle to the FSM,
-        /// avoiding string-based state lookup and avoiding temporary allocations on the successful path.
+        /// Normal execution uses integer identities throughout the path from the handle to the FSM.
         /// </remarks>
-        public void Update(string processGroup = "Update")
+        public void Update()
         {
             try
             {
@@ -89,10 +83,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>
         /// Manually evaluates transition conditions without running the current state's Update action.
         /// </summary>
-        /// <remarks>
-        /// This mirrors the string-backed manual evaluation path while keeping the current state identity
-        /// entirely integer-backed. At most one transition is taken during an evaluation.
-        /// </remarks>
         public void EvaluateConditions()
         {
             CurrentStateID = Definition.EvaluateConditions(CurrentStateID, Context);
