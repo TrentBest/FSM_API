@@ -7,7 +7,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </summary>
     /// <remarks>
     /// The integer-backed API intentionally exposes a distinct handle type so callers cannot accidentally
-    /// cross the representation boundary. <see cref="CurrentStateID"/> is the authoritative current-state
+    /// cross the representation boundary. <see cref="FSMHandle.CurrentStateID"/> is the authoritative current-state
     /// value; no string state name is exposed by this handle.
     ///
     /// This type inherits the integer-only execution behavior from <see cref="FSMHandle"/>. The inherited

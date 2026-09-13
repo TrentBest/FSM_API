@@ -1,15 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile> <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <LangVersion>8.0</LangVersion>
     <SuppressTfmSupportBuildErrors>true</SuppressTfmSupportBuildErrors>
-    <GenerateImplicitUsings>false</GenerateImplicitUsings> </PropertyGroup>
-
+    <GenerateImplicitUsings>false</GenerateImplicitUsings>
+    <RootNamespace>TheSingularityWorkshop.FSM_API.Tests</RootNamespace>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -23,9 +24,7 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FSM_API\FSM_API.csproj" />
   </ItemGroup>
-
 </Project>

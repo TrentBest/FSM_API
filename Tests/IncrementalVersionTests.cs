@@ -23,7 +23,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void IncrementalVersion_001_RecordsPackageVersion_1_0_14()
         {
             const string staticVersionString = "1.0.14";
-            Assert.AreEqual(staticVersionString, staticVersionString);
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
+
+        /// <summary>Records package version 1.0.15 for this development commit.</summary>
+        [Test]
+        public void IncrementalVersion_002_RecordsPackageVersion_1_0_15()
+        {
+            const string staticVersionString = "1.0.15";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
     }
 }

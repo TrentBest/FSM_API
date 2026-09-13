@@ -1,45 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-	  <TargetFrameworks>net8.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net47</TargetFrameworks>
-	  <ImplicitUsings>disable</ImplicitUsings>
+    <TargetFrameworks>net8.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net47</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-
     <IsPackable>true</IsPackable>
     <PackageId>TheSingularityWorkshop.FSM_API</PackageId>
-	<RootNamespace>TheSingularityWorkshop.FSM_API</RootNamespace>
-    <Version>1.0.14</Version>
+    <RootNamespace>TheSingularityWorkshop.FSM_API</RootNamespace>
+    <Version>1.0.15</Version>
     <Authors>Trent Best</Authors>
     <Company>The Singularity Workshop</Company>
-    <Description>A blueprint-based, runtime-modifiable Finite State Machine system for .NET. Features thread-safe deferred execution, zero-dependency architecture, and decoupled POCO contexts.</Description>
+    <Description>A blueprint-based, runtime-modifiable Finite State Machine system for .NET.</Description>
     <RepositoryUrl>https://github.com/TrentBest/FSM_API</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>fsm;state-machine;net;Finite State Machine;singularity;TheSingularityWorkshop</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>NuGetReadme.md</PackageReadmeFile>
-	  <PackageIcon>Branding\TheSingularityWorkshop.png</PackageIcon>
+    <PackageIcon>Branding\TheSingularityWorkshop.png</PackageIcon>
     <PackageProjectUrl>https://github.com/TrentBest/FSM_API</PackageProjectUrl>
     <Copyright>Copyright © 2025 The Singularity Workshop. All rights reserved.</Copyright>
-	  <PackageReleaseNotes>
-		  - Critical Fix: Resolved InvalidOperationException in TickAll/Destroy where collection modification during iteration caused crashes.
-		  - Logic Fix: Fixed OnEnter behavior to correctly target CurrentState rather than defaulting to InitialState on re-entry.
-		  - Stability: Automatically destroys FSM instances if their context becomes invalid (IsValid returns false).
-		  - Internal API: Enhanced null safety and internal documentation.
-		  - Increased Unit Test Coverage.
-		  - Cleanup: Removed legacy 'HireMeFSMDemo' proof-of-concept project.
-	  </PackageReleaseNotes>
+    <PackageReleaseNotes>- Critical Fix: Resolved InvalidOperationException in TickAll/Destroy where collection modification during iteration caused crashes.
+- Logic Fix: Fixed OnEnter behavior to correctly target CurrentState rather than defaulting to InitialState on re-entry.
+- Stability: Automatically destroys FSM instances if their context becomes invalid (IsValid returns false).
+- Internal API: Enhanced null safety and internal documentation.
+- Increased Unit Test Coverage.
+- Cleanup: Removed legacy 'HireMeFSMDemo' proof-of-concept project.</PackageReleaseNotes>
   </PropertyGroup>
-
   <ItemGroup>
-	  <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
-
-	  <None Include=".\Branding\**\*" Pack="true" PackagePath="Branding\" />
-
-	  <None Include=".\Documentation\**\*.md" Pack="true" PackagePath="Documentation\" />
-	  <None Include=".\Documentation\**\Visuals\*.png" Pack="true" PackagePath="Documentation\Visuals\" />
-
-	  <None Remove=".\Documentation\User Guide\Tutorials\**\*" />
+    <None Include="NuGetReadme.md" Pack="true" PackagePath="\" />
+    <None Include=".\Branding\**\*" Pack="true" PackagePath="Branding\" />
+    <None Include=".\Documentation\**\*.md" Pack="true" PackagePath="Documentation\" />
+    <None Include=".\Documentation\**\Visuals\*.png" Pack="true" PackagePath="Documentation\Visuals\" />
+    <None Remove=".\Documentation\User Guide\Tutorials\**\*" />
   </ItemGroup>
-
 </Project>
