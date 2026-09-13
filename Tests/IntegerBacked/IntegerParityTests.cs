@@ -1,5 +1,9 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API.IntegerBacked;
+using IntegerFsm = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
+using IntegerFsmState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFsmHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt;
+using IntegerFsmTimers = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMTimersInt;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
@@ -17,10 +21,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void AnyStateTransition_TakesPriorityOverStateSpecificTransition()
         {
-            var definition = new FSM(23001);
-            definition.AddState(new FSMState(0, null, null, null));
-            definition.AddState(new FSMState(1, null, null, null));
-            definition.AddState(new FSMState(2, null, null, null));
+            var definition = new IntegerFsm(23001);
+            definition.AddState(new IntegerFsmState(0, null, null, null));
+            definition.AddState(new IntegerFsmState(1, null, null, null));
+            definition.AddState(new IntegerFsmState(2, null, null, null));
             definition.AddTransition(0, 1, _ => true);
             definition.AddAnyStateTransition(2, _ => true);
 
@@ -34,11 +38,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var entered = 0;
             var exited = 0;
-            var definition = new FSM(23002);
-            definition.AddState(new FSMState(0, _ => entered++, null, _ => exited++));
-            definition.AddState(new FSMState(1, _ => entered++, null, _ => exited++));
+            var definition = new IntegerFsm(23002);
+            definition.AddState(new IntegerFsmState(0, _ => entered++, null, _ => exited++));
+            definition.AddState(new IntegerFsmState(1, _ => entered++, null, _ => exited++));
 
-            var handle = new FSMHandleInt(definition, new Context());
+            var handle = new IntegerFsmHandle(definition, new Context());
             handle.Initialize();
             Assert.That(entered, Is.EqualTo(1));
 
@@ -56,9 +60,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void SparseIntegerStateIDs_AreSupportedByDirectIndexedStorage()
         {
-            var definition = new FSM(23003);
-            definition.AddState(new FSMState(3, null, null, null));
-            definition.AddState(new FSMState(17, null, null, null));
+            var definition = new IntegerFsm(23003);
+            definition.AddState(new IntegerFsmState(3, null, null, null));
+            definition.AddState(new IntegerFsmState(17, null, null, null));
 
             Assert.That(definition.HasState(3), Is.True);
             Assert.That(definition.HasState(17), Is.True);
@@ -72,27 +76,27 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             const int floatTimerID = 23004;
             const int intTimerID = 23005;
 
-            FSMTimersInt.RemoveFloatTimer(floatTimerID);
-            FSMTimersInt.RemoveIntTimer(intTimerID);
+            IntegerFsmTimers.RemoveFloatTimer(floatTimerID);
+            IntegerFsmTimers.RemoveIntTimer(intTimerID);
 
             try
             {
-                FSMTimersInt.AddOrSetFloatTimer(floatTimerID, 2.5f);
-                FSMTimersInt.AddOrSetIntTimer(intTimerID, 5);
-                FSMTimersInt.UpdateTimers(0.5f, 2);
+                IntegerFsmTimers.AddOrSetFloatTimer(floatTimerID, 2.5f);
+                IntegerFsmTimers.AddOrSetIntTimer(intTimerID, 5);
+                IntegerFsmTimers.UpdateTimers(0.5f, 2);
 
-                Assert.That(FSMTimersInt.FloatTimers[floatTimerID], Is.EqualTo(2.0f).Within(0.0001f));
-                Assert.That(FSMTimersInt.IntTimers[intTimerID], Is.EqualTo(3));
+                Assert.That(IntegerFsmTimers.FloatTimers[floatTimerID], Is.EqualTo(2.0f).Within(0.0001f));
+                Assert.That(IntegerFsmTimers.IntTimers[intTimerID], Is.EqualTo(3));
 
-                FSMTimersInt.ResetFloatTimer(floatTimerID, 9f);
-                FSMTimersInt.ResetIntTimer(intTimerID, 11);
-                Assert.That(FSMTimersInt.FloatTimers[floatTimerID], Is.EqualTo(9f));
-                Assert.That(FSMTimersInt.IntTimers[intTimerID], Is.EqualTo(11));
+                IntegerFsmTimers.ResetFloatTimer(floatTimerID, 9f);
+                IntegerFsmTimers.ResetIntTimer(intTimerID, 11);
+                Assert.That(IntegerFsmTimers.FloatTimers[floatTimerID], Is.EqualTo(9f));
+                Assert.That(IntegerFsmTimers.IntTimers[intTimerID], Is.EqualTo(11));
             }
             finally
             {
-                FSMTimersInt.RemoveFloatTimer(floatTimerID);
-                FSMTimersInt.RemoveIntTimer(intTimerID);
+                IntegerFsmTimers.RemoveFloatTimer(floatTimerID);
+                IntegerFsmTimers.RemoveIntTimer(intTimerID);
             }
         }
     }

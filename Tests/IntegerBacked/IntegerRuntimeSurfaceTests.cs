@@ -1,5 +1,8 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API.IntegerBacked;
+using IntegerFsm = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
+using IntegerFsmState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFsmApi = TheSingularityWorkshop.FSM_API.IntegerBacked.FsmApi;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
@@ -25,28 +28,28 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             try
             {
-                var definition = FsmApi.Create.CreateFiniteStateMachine(fsmID, -1, processingGroupID)
+                var definition = IntegerFsmApi.Create.CreateFiniteStateMachine(fsmID, -1, processingGroupID)
                     .State(0, _ => entered++, _ => updated++, _ => exited++)
                     .State(1)
                     .Transition(0, 1, _ => true)
                     .BuildDefinition();
 
-                FsmApi.Create.RegisterDefinition(definition);
-                var handle = FsmApi.Create.CreateInstance(fsmID, new Context());
+                IntegerFsmApi.Create.RegisterDefinition(definition);
+                var handle = IntegerFsmApi.Create.CreateInstance(fsmID, new Context());
 
                 Assert.That(handle.CurrentStateID, Is.EqualTo(0));
                 Assert.That(entered, Is.EqualTo(1));
 
-                FsmApi.Interaction.Update(processingGroupID);
+                IntegerFsmApi.Interaction.Update(processingGroupID);
 
                 Assert.That(updated, Is.EqualTo(1));
                 Assert.That(exited, Is.EqualTo(1));
                 Assert.That(handle.CurrentStateID, Is.EqualTo(1));
-                Assert.That(FsmApi.Interaction.Contains(fsmID), Is.True);
+                Assert.That(IntegerFsmApi.Interaction.Contains(fsmID), Is.True);
             }
             finally
             {
-                FsmApi.Interaction.Unregister(fsmID);
+                IntegerFsmApi.Interaction.Unregister(fsmID);
             }
         }
 
@@ -59,25 +62,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             try
             {
-                var definition = FsmApi.Create.CreateFiniteStateMachine(fsmID, 3, processingGroupID)
+                var definition = IntegerFsmApi.Create.CreateFiniteStateMachine(fsmID, 3, processingGroupID)
                     .State(0, onUpdate: _ => updates++)
                     .BuildDefinition();
 
-                FsmApi.Create.RegisterDefinition(definition);
-                FsmApi.Create.CreateInstance(fsmID, new Context());
+                IntegerFsmApi.Create.RegisterDefinition(definition);
+                IntegerFsmApi.Create.CreateInstance(fsmID, new Context());
 
-                FsmApi.Interaction.Update(processingGroupID);
+                IntegerFsmApi.Interaction.Update(processingGroupID);
                 Assert.That(updates, Is.EqualTo(0));
 
-                FsmApi.Interaction.Update(processingGroupID);
+                IntegerFsmApi.Interaction.Update(processingGroupID);
                 Assert.That(updates, Is.EqualTo(0));
 
-                FsmApi.Interaction.Update(processingGroupID);
+                IntegerFsmApi.Interaction.Update(processingGroupID);
                 Assert.That(updates, Is.EqualTo(1));
             }
             finally
             {
-                FsmApi.Interaction.Unregister(fsmID);
+                IntegerFsmApi.Interaction.Unregister(fsmID);
             }
         }
 
@@ -87,7 +90,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             const int fsmID = 21002;
             const int stateID = 42;
 
-            var definition = FsmApi.Create.CreateFiniteStateMachine(fsmID)
+            var definition = IntegerFsmApi.Create.CreateFiniteStateMachine(fsmID)
                 .State(stateID)
                 .WithInitialState(stateID)
                 .BuildDefinition();
