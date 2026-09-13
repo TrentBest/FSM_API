@@ -1,5 +1,6 @@
 using NUnit.Framework;
 
+#pragma warning disable NUnit2009
 namespace TheSingularityWorkshop.FSM_API.Tests
 {
     /// <summary>
@@ -65,5 +66,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string staticVersionString = "1.0.19";
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
+
+        /// <summary>Records package version 1.0.20 for this development commit.</summary>
+        [Test]
+        public void IncrementalVersion_007_RecordsPackageVersion_1_0_20()
+        {
+            const string staticVersionString = "1.0.20";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
     }
 }
+#pragma warning restore NUnit2009

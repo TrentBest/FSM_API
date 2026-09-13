@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(definition.HasState(10), Is.True);
             Assert.That(definition.HasState(20), Is.True);
             Assert.That(definition.HasTransition(10, 20), Is.True);
-            Assert.That(definition.HasTransition(FSM.AnyStateIdentifier, 10), Is.True);
+            Assert.That(definition.HasTransition(TheSingularityWorkshop.FSM_API.IntegerBacked.FSM.AnyStateIdentifier, 10), Is.True);
         }
 
         [Test]
