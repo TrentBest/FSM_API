@@ -32,7 +32,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             /// <summary>Registers an already-built integer-backed FSM definition.</summary>
             public static FSM RegisterDefinition(FSM definition)
             {
-                Runtime.Register(definition);
+                if (definition == null)
+                {
+                    throw new ArgumentNullException(nameof(definition));
+                }
+
+                Runtime.Register(definition, definition.ProcessingGroupID);
                 return definition;
             }
 

@@ -9,7 +9,7 @@
     <IsPackable>true</IsPackable>
     <PackageId>TheSingularityWorkshop.FSM_API</PackageId>
 	<RootNamespace>TheSingularityWorkshop.FSM_API</RootNamespace>
-    <Version>1.0.24</Version>
+    <Version>1.0.25</Version>
     <Authors>Trent Best</Authors>
     <Company>The Singularity Workshop</Company>
     <Description>A blueprint-based, runtime-modifiable Finite State Machine system for .NET. Features thread-safe deferred execution, zero-dependency architecture, and decoupled POCO contexts.</Description>
