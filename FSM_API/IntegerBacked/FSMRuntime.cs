@@ -35,7 +35,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             definition.ProcessingGroupID = processingGroupID;
             EnsureDefinitionCapacity(definition.FSM_ID + 1);
 
-            // A replacement definition supersedes the previous definition and its live instances.
             if (_definitions[definition.FSM_ID] != null)
             {
                 for (var i = _handles.Count - 1; i >= 0; i--)
@@ -64,11 +63,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         }
 
         /// <summary>Creates and initializes a live integer handle for a registered FSM definition.</summary>
-        /// <remarks>
-        /// Runtime creation owns the instance lifecycle boundary: construction creates the explicitly
-        /// integer-backed handle, then initialization enters the initial state exactly once before the
-        /// handle is returned.
-        /// </remarks>
         public FSMHandleInt CreateInstance(int fsmID, IStateContext context)
         {
             if (!TryGetDefinition(fsmID, out var definition))
@@ -92,6 +86,28 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             return _handles.Remove(handle);
+        }
+
+        /// <summary>
+        /// Returns the live handles belonging to an integer-backed FSM definition.
+        /// </summary>
+        /// <remarks>
+        /// This is an inspection/modification path, not the runtime update hot path. The returned
+        /// collection is a snapshot so callers can safely modify instances without invalidating the
+        /// runtime's internal handle list.
+        /// </remarks>
+        public IReadOnlyCollection<FSMHandleInt> GetInstances(int fsmID)
+        {
+            var instances = new List<FSMHandleInt>();
+            for (var i = 0; i < _handles.Count; i++)
+            {
+                if (_handles[i].FSM_ID == fsmID)
+                {
+                    instances.Add(_handles[i]);
+                }
+            }
+
+            return instances.AsReadOnly();
         }
 
         /// <summary>

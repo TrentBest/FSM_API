@@ -10,16 +10,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
     /// Each development commit made by the AI development workflow records the package version
     /// associated with that commit as a new test. Historical entries are intentionally never
     /// rewritten or removed.
-    ///
-    /// This ledger is a provenance mechanism, not a behavioral test. The assertion is deliberately
-    /// trivial so that the version record remains independent of the implementation under test.
-    /// The package version in FSM_API.csproj and the version recorded by the newest ledger test
-    /// must match for the same development commit.
     /// </remarks>
     [TestFixture]
     public sealed class IncrementalVersionTests
     {
-        /// <summary>Records package version 1.0.14 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_001_RecordsPackageVersion_1_0_14()
         {
@@ -27,7 +21,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.15 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_002_RecordsPackageVersion_1_0_15()
         {
@@ -35,7 +28,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.16 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_003_RecordsPackageVersion_1_0_16()
         {
@@ -43,7 +35,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.17 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_004_RecordsPackageVersion_1_0_17()
         {
@@ -51,7 +42,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.18 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_005_RecordsPackageVersion_1_0_18()
         {
@@ -59,7 +49,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.19 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_006_RecordsPackageVersion_1_0_19()
         {
@@ -67,7 +56,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.20 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_007_RecordsPackageVersion_1_0_20()
         {
@@ -75,11 +63,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
 
-        /// <summary>Records package version 1.0.21 for this development commit.</summary>
         [Test]
         public void IncrementalVersion_008_RecordsPackageVersion_1_0_21()
         {
             const string staticVersionString = "1.0.21";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
+
+        [Test]
+        public void IncrementalVersion_009_RecordsPackageVersion_1_0_22()
+        {
+            const string staticVersionString = "1.0.22";
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
     }

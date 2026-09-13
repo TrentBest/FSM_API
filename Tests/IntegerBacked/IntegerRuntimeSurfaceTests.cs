@@ -51,6 +51,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void RuntimeProcessRate_UsesIntegerProcessingIdentityWithoutStringLookup()
+        {
+            const int fsmID = 21003;
+            const int processingGroupID = 9;
+            var updates = 0;
+
+            try
+            {
+                var definition = FsmApi.Create.CreateFiniteStateMachine(fsmID, 3, processingGroupID)
+                    .State(0, onUpdate: _ => updates++)
+                    .BuildDefinition();
+
+                FsmApi.Create.RegisterDefinition(definition);
+                FsmApi.Create.CreateInstance(fsmID, new Context());
+
+                FsmApi.Interaction.Update(processingGroupID);
+                Assert.That(updates, Is.EqualTo(0));
+
+                FsmApi.Interaction.Update(processingGroupID);
+                Assert.That(updates, Is.EqualTo(0));
+
+                FsmApi.Interaction.Update(processingGroupID);
+                Assert.That(updates, Is.EqualTo(1));
+            }
+            finally
+            {
+                FsmApi.Interaction.Unregister(fsmID);
+            }
+        }
+
+        [Test]
         public void PublicFacade_SeparatesIntegerIdentityFromStringBackedApi()
         {
             const int fsmID = 21002;
