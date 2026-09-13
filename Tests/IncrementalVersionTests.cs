@@ -33,5 +33,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string staticVersionString = "1.0.15";
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
+
+        /// <summary>Records package version 1.0.16 for this development commit.</summary>
+        [Test]
+        public void IncrementalVersion_003_RecordsPackageVersion_1_0_16()
+        {
+            const string staticVersionString = "1.0.16";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
     }
 }
