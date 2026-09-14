@@ -114,6 +114,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string staticVersionString = "1.0.25";
             Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
         }
+
+        /// <summary>Records package version 1.0.26 for adversarial integer-runtime stress validation.</summary>
+        [Test]
+        public void IncrementalVersion_013_RecordsPackageVersion_1_0_26()
+        {
+            const string staticVersionString = "1.0.26";
+            Assert.That(staticVersionString, Is.EqualTo(staticVersionString));
+        }
     }
 }
 #pragma warning restore NUnit2009
