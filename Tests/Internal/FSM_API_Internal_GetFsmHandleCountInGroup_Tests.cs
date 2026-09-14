@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
-using static TheSingularityWorkshop.FSM_API.FSM_API.Interaction;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Interaction;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -29,8 +29,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Internal.ResetAPI(true);
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
         }
 
        
@@ -46,10 +46,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void CountIsValidForOneFSM_Test()
         {
             Helper_CreateTestFSM("TestFSM", "Update");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
         }
 
         /// <summary>
@@ -59,11 +59,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void CountIsValidForTwoFSM_Test()
         {
             Helper_CreateTestFSM("TestFSM", "Update");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
-            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle2 = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(2));
+            Assert.That(FsmApi.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(2));
         }
 
         /// <summary>
@@ -74,14 +74,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             Helper_CreateTestFSM("TestFSM", "Update");
             Helper_CreateTestFSM("TestFSM", "FixedUpdate");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
-            var handle2 = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "FixedUpdate");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "Update");
+            var handle2 = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "FixedUpdate");
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFSMHandleCountInGroup("Update"), Is.EqualTo(1));
             Assert.That(handle2, Is.Not.Null);
             Assert.That(handle2.Context, Is.Not.Null);
-            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("FixedUpdate"), Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.GetFSMHandleCountInGroup("FixedUpdate"), Is.EqualTo(1));
         }
 
         /// <summary>
@@ -90,13 +90,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void CountIsZeroForNonExistentGroup_Test()
         {
-            Assert.That(FSM_API.Internal.GetFSMHandleCountInGroup("NonExistentGroup"), Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.GetFSMHandleCountInGroup("NonExistentGroup"), Is.EqualTo(0));
         }
 
 
         private void Helper_CreateTestFSM(string fsmName, string processingGroup)
         {
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
                 .State("TestState", null, null, null)
                 .BuildDefinition();
         }

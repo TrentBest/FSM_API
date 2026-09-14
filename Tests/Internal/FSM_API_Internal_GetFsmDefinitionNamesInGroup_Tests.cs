@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -28,7 +28,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionNamesInGroup_ReturnsEmptyListWhenNoDefinitionsExist()
         {
             // Act
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
 
             // Assert
             Assert.That(names, Is.Empty);
@@ -51,11 +51,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionNamesInGroup_ReturnsCorrectNamesForSingleGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2", processingGroup: ProcessGroup).BuildDefinition();
 
             // Act
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup(ProcessGroup);
 
             // Assert
             Assert.That(names.Count(), Is.EqualTo(2));
@@ -69,10 +69,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFsmDefinitionNamesInGroup_ReturnsEmptyListForNonExistentGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: ProcessGroup).BuildDefinition();
 
             // Act
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup("NonExistentGroup");
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup("NonExistentGroup");
 
             // Assert
             Assert.That(names, Is.Empty);
@@ -84,7 +84,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void GetFsmDefinitionNamesInGroup_Empty_Test()
         {
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup("Update");
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup("Update");
             Assert.That(names, Is.Not.Null, "GetFsmDefinitionNamesInGroup should not return null.");
             Assert.That(names, Is.Empty, "GetFsmDefinitionNamesInGroup should return an empty list when no FSMs are defined in the group.");
         }
@@ -97,8 +97,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(groupName).ToArray();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup(groupName).ToArray();
             Assert.That(names, Is.Not.Null, "GetFsmDefinitionNamesInGroup should not return null.");
             Assert.That(names.Count, Is.EqualTo(1), "GetFsmDefinitionNamesInGroup should return a list with one FSM name.");
             Assert.That(names[0], Is.EqualTo(fsmName), "GetFsmDefinitionNamesInGroup should return the correct FSM name.");
@@ -113,9 +113,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             string fsmName1 = "TestFSM1";
             string fsmName2 = "TestFSM2";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup(groupName).ToArray();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup(groupName).ToArray();
             Assert.That(names, Is.Not.Null, "GetFsmDefinitionNamesInGroup should not return null.");
             Assert.That(names.Count, Is.EqualTo(2), "GetFsmDefinitionNamesInGroup should return a list with two FSM names.");
             Assert.That(names.Contains(fsmName1), Is.True, "GetFsmDefinitionNamesInGroup should contain the first FSM name.");
@@ -128,7 +128,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void GetFsmDefinitionNamesInGroup_InvalidGroup_Test()
         {
-            var names = FSM_API.Internal.GetFsmDefinitionNamesInGroup("InvalidGroup");
+            var names = FsmApi.Internal.GetFsmDefinitionNamesInGroup("InvalidGroup");
             Assert.That(names, Is.Not.Null, "GetFsmDefinitionNamesInGroup should not return null for an invalid group.");
             Assert.That(names, Is.Empty, "GetFsmDefinitionNamesInGroup should return an empty list when the group is invalid.");
         }

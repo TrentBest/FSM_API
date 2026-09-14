@@ -23,7 +23,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Setup()
         {
             // Reset the API for each test to ensure a clean slate
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
 
         }
         /// <summary>
@@ -34,7 +34,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
           Helper_CreateFSM("TestFSM", "TestGroup");
             // Act
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert
             Assert.That(handle, Is.Not.Null);
             Assert.That(handle.Name, Is.EqualTo("TestFSM"));
@@ -46,8 +46,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMHandlesNotEqual()
         {
             Helper_CreateFSM("TestFSM", "TestGroup");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
-            var anotherHandle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var anotherHandle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert that two different instances of FSMHandle are not equal
             Assert.That(handle, Is.Not.EqualTo(anotherHandle));
         }
@@ -59,8 +59,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMHandle_EqualityOperator()
         {
             Helper_CreateFSM("TestFSM", "TestGroup");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
-            var anotherHandle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var anotherHandle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert that the equality operator works as expected
             Assert.That(handle == anotherHandle, Is.False);
             Assert.That(handle != anotherHandle, Is.True);
@@ -73,7 +73,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMHandle_EqualityOperator_WithSameInstance()
         {
             Helper_CreateFSM("TestFSM", "TestGroup");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert that the equality operator works as expected for the same instance
             Assert.That(handle , Is.EqualTo(handle));
         }
@@ -86,7 +86,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void FSMHandle_EqualityOperator_WithNull()
         {
             Helper_CreateFSM("TestFSM", "TestGroup");
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
             // Assert that the equality operator works as expected with null
             Assert.That(handle == null, Is.False);
             Assert.That(handle != null, Is.True);
@@ -182,7 +182,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
         private void Helper_CreateFSM(string fsmName, string processingGroup)
         {
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, processingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, processingGroup)
                 .State("TestState", null, null, null)
                 .BuildDefinition();
         }

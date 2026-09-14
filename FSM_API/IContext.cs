@@ -30,5 +30,12 @@
         /// <value>A string representing the descriptive name of the context instance.</value>
 
         string Name { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        int Context_ID { get; }
     }
 }

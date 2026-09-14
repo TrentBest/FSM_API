@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
            
         
-            var groups = FSM_API.Internal.GetProcessingGroups();
+            var groups = FsmApi.Internal.GetProcessingGroups();
         
             Assert.That(groups,Is.Not.Null, "GetProcessingGroups should not return null.");
             Assert.That(groups, Is.Empty, "GetProcessingGroups should return an empty list when no groups are defined.");
@@ -52,9 +52,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             string groupName = "ProcessingGroup";
             for (int i = 0; i < 100; i++)
             {
-                FSM_API.Create.CreateProcessingGroup($"{groupName}_{i}");
+                FsmApi.Create.CreateProcessingGroup($"{groupName}_{i}");
             }
-            var groups = FSM_API.Internal.GetProcessingGroups();
+            var groups = FsmApi.Internal.GetProcessingGroups();
 
             Assert.That(groups, Is.Not.Null, "GetProcessingGroups should not return null.");
             Assert.That(groups.Count, Is.EqualTo(100), "GetProcessingGroups should return an empty list when the group name is invalid.");
