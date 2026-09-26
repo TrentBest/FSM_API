@@ -5,6 +5,13 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the packed package to NuGet.org"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build_test_and_package:
@@ -96,8 +103,10 @@ jobs:
   publish_nuget:
     needs: build_test_and_package
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && false
-
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
     - name: Download NuGet Package Artifact
@@ -106,5 +115,11 @@ jobs:
         name: nuget-package
         path: ./nuget-packages
 
+    - name: Authenticate with NuGet Trusted Publishing
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: TheSingularityWorkshop
+
     - name: Publish to NuGet.org
-      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json"
+      run: dotnet nuget push "nuget-packages/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
