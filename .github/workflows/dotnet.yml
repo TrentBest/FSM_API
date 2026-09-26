@@ -15,17 +15,17 @@ on:
 
 jobs:
   build_test_and_package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.0.x'
         
     - name: Cache NuGet packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/FSM_API.csproj') }}
@@ -49,7 +49,7 @@ jobs:
           /p:Version=$(grep "<Version>" FSM_API/FSM_API.csproj | sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p')
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./TestResults/**/coverage.cobertura.xml
@@ -65,26 +65,26 @@ jobs:
         cp FSM_API/bin/Release/netstandard2.1/FSM_API.dll publish/FSM_API_netstandard2.1.dll
 
     - name: Upload DLLs as Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: fsm-api-dlls
         path: publish/*
           
     - name: Upload NuGet Package as Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: nuget-package
         path: nuget-packages/*.nupkg
   
   build_documentation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build_test_and_package
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
           
@@ -95,14 +95,14 @@ jobs:
         run: docfx build
         
       - name: Upload documentation as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fsm-api-documentation
           path: _site
   
   publish_nuget:
     needs: build_test_and_package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name == 'workflow_dispatch' && inputs.publish == true
     permissions:
       contents: read
@@ -110,7 +110,7 @@ jobs:
 
     steps:
     - name: Download NuGet Package Artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: nuget-package
         path: ./nuget-packages
