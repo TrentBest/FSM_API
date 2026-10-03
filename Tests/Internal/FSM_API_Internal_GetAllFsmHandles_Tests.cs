@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetAllFsmHandles_InitiallyEmpty_Test()
         {
             // ACT
-            var handles = FSM_API.Internal.GetAllFsmHandles();
+            var handles = FsmApi.Internal.GetAllFsmHandles();
             // ASSERT
             Assert.That(handles, Is.Not.Null, "GetAllFsmHandles should never return null.");
             Assert.That(handles, Is.Empty, "Handles should be empty after a hard reset.");
@@ -51,10 +51,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // ARRANGE
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
             // ACT
-            var handles = FSM_API.Internal.GetAllFsmHandles().ToArray();
+            var handles = FsmApi.Internal.GetAllFsmHandles().ToArray();
             // ASSERT
             Assert.That(handles, Is.Not.Null, "GetAllFsmHandles should not return null.");
             Assert.That(handles.Count, Is.EqualTo(1), "GetAllFsmHandles should return a list with one FSM handle.");
@@ -71,12 +71,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             string fsmName1 = "TestFSM1";
             string fsmName2 = "TestFSM2";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
-            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupName);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupName);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName1, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName2, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateInstance(fsmName1, new FSMTestContext(), groupName);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupName);
             // ACT
-            var handles = FSM_API.Internal.GetAllFsmHandles().ToArray();
+            var handles = FsmApi.Internal.GetAllFsmHandles().ToArray();
             // ASSERT
             Assert.That(handles, Is.Not.Null, "GetAllFsmHandles should not return null.");
             Assert.That(handles.Count, Is.EqualTo(2), "GetAllFsmHandles should return a list with two FSM handles.");
@@ -91,7 +91,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetAllFsmHandles_ReturnsEmptyListWhenNoneExist()
         {
             // Act
-            var handles = FSM_API.Internal.GetAllFsmHandles();
+            var handles = FsmApi.Internal.GetAllFsmHandles();
 
             // Assert
             Assert.That(handles, Is.Empty, "The list of handles should be empty.");
@@ -105,11 +105,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // Arrange
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            var handle = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
             // Act
-            var handles = FSM_API.Internal.GetAllFsmHandles();
+            var handles = FsmApi.Internal.GetAllFsmHandles();
 
             // Assert
             Assert.That(handles.Count(), Is.EqualTo(1), "Expected one handle to be returned.");
@@ -124,13 +124,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // Arrange
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
             // Act
-            var handles = FSM_API.Internal.GetAllFsmHandles();
+            var handles = FsmApi.Internal.GetAllFsmHandles();
 
             // Assert
             Assert.That(handles.Count(), Is.EqualTo(3), "Expected three handles to be returned.");
@@ -148,17 +148,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             string groupA = "GroupA";
             string groupB = "GroupB";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName1, processingGroup: groupA).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine(fsmName2, processingGroup: groupB).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName1, processingGroup: groupA).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName2, processingGroup: groupB).BuildDefinition();
 
-            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
-            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FsmApi.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
 
             // Act
-            var handles = FSM_API.Internal.GetAllFsmHandles();
+            var handles = FsmApi.Internal.GetAllFsmHandles();
 
             // Assert
             Assert.That(handles.Count(), Is.EqualTo(5), "Expected five handles from both groups to be returned.");

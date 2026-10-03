@@ -56,7 +56,7 @@ namespace TheSingularityWorkshop.FSM_API
     ///        D->>H: Return CurrentStateName
     ///    end
     /// </div>
-    /// !(https://raw.githubusercontent.com/trentbest/fsm_api/FSM_API-72aeabda0e28b301ddd2e675e1f49da584cf105c/Documentation/User%20Guide/Visuals/State_Lifecycle.png)
+    /// !(https://raw.githubusercontent.com/trentbest/fsm_api/FsmApi-72aeabda0e28b301ddd2e675e1f49da584cf105c/Documentation/User%20Guide/Visuals/State_Lifecycle.png)
     /// </summary>
     /// <remarks>
     /// This handle is how you, as a game designer or system integrator, will typically interact with an FSM
@@ -93,6 +93,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// Handle's Id
         /// </summary>
         public int Id { get; internal set; } = -1;
+
         /// <summary>
         /// This is the original **blueprint (definition)** of the FSM that this handle is controlling.
         /// </summary>
@@ -101,8 +102,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// the house's design (its states and transitions), but you can't change the house by
         /// drawing on these plans here. This is set when the FSM instance is first created.
         /// </remarks>
-
         public readonly FSM Definition;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public readonly int FSM_ID;
 
         /// <summary>
         /// This is the **data bag** 🎒 (context) specific to *this particular* FSM instance.
@@ -131,6 +139,14 @@ namespace TheSingularityWorkshop.FSM_API
         public string CurrentState { get; internal set; } = "UnknownState";
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int CurrentStateID { get; internal set; }
+
+        /// <summary>
         /// This is the **name of the FSM blueprint** that this handle is using.
         /// </summary>
         /// <remarks>
@@ -138,6 +154,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public string Name => Definition.Name;
 
+       
         /// <summary>
         /// Tells you if this FSM handle is currently **active and ready to be used**.
         /// </summary>
@@ -194,7 +211,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// and its <see cref="CurrentState"/> will be updated.
         /// <para>
         /// **IMPORTANT: Usually, you won't call this directly!** This method is typically called
-        /// automatically by the FSM_API's internal system on a regular schedule (like every frame in a game).
+        /// automatically by the FsmApi's internal system on a regular schedule (like every frame in a game).
         /// Only call this manually if you're building a very specific or custom update system for your FSMs.
         /// Calling it incorrectly can lead to unexpected behavior.
         /// </para>
@@ -214,8 +231,8 @@ namespace TheSingularityWorkshop.FSM_API
             catch (Exception ex)
             {
                 // If an exception occurs during the FSM's internal step, report it as a "fubar".
-                // This allows the FSM_API to track and potentially remove problematic instances.
-                FSM_API.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
+                // This allows the FsmApi to track and potentially remove problematic instances.
+                FsmApi.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
             }
         }
 
@@ -256,7 +273,7 @@ namespace TheSingularityWorkshop.FSM_API
             catch (Exception ex)
             {
                 // Report any issues during a forced transition as a "fubar".
-                FSM_API.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
+                FsmApi.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
         }
@@ -288,8 +305,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// This is extremely important for cleaning up and freeing up computer resources,
         /// especially if you have many FSMs running or if your application runs for a long time.
         /// After you call `DestroyHandle()`, this FSM handle will no longer be active or managed
-        /// by the FSM_API, and you should not try to use it anymore.
-        /// It tells the <see cref="FSM_API.Interaction.DestroyInstance(FSMHandle)"/> system to do the actual cleanup.
+        /// by the FsmApi, and you should not try to use it anymore.
+        /// It tells the <see cref="FsmApi.Interaction.DestroyInstance(FSMHandle)"/> system to do the actual cleanup.
         /// </remarks>
         internal void DestroyHandle()
         {

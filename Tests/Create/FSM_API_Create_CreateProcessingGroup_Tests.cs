@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
         /// <summary>
         /// 
@@ -30,10 +30,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             var groupName = "MySuccessfulGroup";
 
             // ACT
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
 
             // ASSERT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             Assert.That(buckets, Contains.Key(groupName), "Processing group should be created.");
             Assert.That(buckets[groupName], Is.Not.Null, "Created processing group dictionary should not be null.");
             Assert.That(buckets[groupName], Is.Empty, "Newly created processing group should be empty.");
@@ -48,9 +48,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // ARRANGE
             var maxLengthName = new string('A', 255); // Assuming 255 is the max length allowed
             // ACT
-            FSM_API.Create.CreateProcessingGroup(maxLengthName);
+            FsmApi.Create.CreateProcessingGroup(maxLengthName);
             // ASSERT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             Assert.That(buckets, Contains.Key(maxLengthName), "Processing group with maximum length name should be created.");
         }
 
@@ -71,19 +71,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             for (int i = 0; i < largeVolume; i++)
             {
                 // Using a simple index as the name ensures uniqueness
-                FSM_API.Create.CreateProcessingGroup($"Group_{i}");
+                FsmApi.Create.CreateProcessingGroup($"Group_{i}");
             }
 
             sw.Stop();
             Console.WriteLine($"Created {largeVolume} groups in {sw.ElapsedMilliseconds}ms");
 
             // ASSERT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
 
             Assert.That(buckets.Count, Is.EqualTo(largeVolume),
                 $"Should have successfully created {largeVolume} distinct processing groups.");
 
-            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(largeVolume),
+            Assert.That(FsmApi.Internal.ProcessingGroupCount, Is.EqualTo(largeVolume),
                 "Internal property ProcessingGroupCount should match the dictionary count.");
         }
 
@@ -98,7 +98,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // ACT
             // The CreateProcessingGroup method should internally validate its input.
             // We'll assert that it throws the expected exception.
-            var ex = Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup(invalidGroupName));
+            var ex = Assert.Throws<ArgumentException>(() => FsmApi.Create.CreateProcessingGroup(invalidGroupName));
 
             // ASSERT
             Assert.That(ex.Message, Does.Contain("Processing group cannot be null or empty."), "Exception message should indicate invalid group name.");
@@ -114,10 +114,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             var longGroupName = new string('a', 255);
 
             // ACT
-            FSM_API.Create.CreateProcessingGroup(longGroupName);
+            FsmApi.Create.CreateProcessingGroup(longGroupName);
 
             // ASSERT
-            var buckets = FSM_API.Internal.GetBuckets();
+            var buckets = FsmApi.Internal.GetBuckets();
             Assert.That(buckets, Contains.Key(longGroupName), "Long processing group name should be created.");
         }
         /// <summary>
@@ -128,18 +128,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // ARRANGE
             var groupName = "ExistingGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName); // Create it once
+            FsmApi.Create.CreateProcessingGroup(groupName); // Create it once
 
             // Add a dummy FSM to ensure the bucket isn't empty on subsequent check
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", processingGroup: groupName).State("TestState",null!, null!,null!).BuildDefinition();
-            var initialBucketState = FSM_API.Internal.GetBuckets()[groupName];
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", processingGroup: groupName).State("TestState",null!, null!,null!).BuildDefinition();
+            var initialBucketState = FsmApi.Internal.GetBuckets()[groupName];
             var initialFSMCount = initialBucketState.Count;
 
             // ACT
-            FSM_API.Create.CreateProcessingGroup(groupName); // Call again with the same name
+            FsmApi.Create.CreateProcessingGroup(groupName); // Call again with the same name
 
             // ASSERT
-            var bucketsAfterSecondCall = FSM_API.Internal.GetBuckets();
+            var bucketsAfterSecondCall = FsmApi.Internal.GetBuckets();
             Assert.That(bucketsAfterSecondCall, Contains.Key(groupName), "Processing group should still exist.");
 
             // Verify it's the same bucket (not recreated) by checking its contents or reference
@@ -157,9 +157,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void CreateProcessingGroup_InvalidName_ThrowsArgumentException()
         {
             // Arrange, Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup(null), "Expected ArgumentException for null group name.");
-            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup(""), "Expected ArgumentException for empty group name.");
-            Assert.Throws<ArgumentException>(() => FSM_API.Create.CreateProcessingGroup("   "), "Expected ArgumentException for whitespace group name.");
+            Assert.Throws<ArgumentException>(() => FsmApi.Create.CreateProcessingGroup(null), "Expected ArgumentException for null group name.");
+            Assert.Throws<ArgumentException>(() => FsmApi.Create.CreateProcessingGroup(""), "Expected ArgumentException for empty group name.");
+            Assert.Throws<ArgumentException>(() => FsmApi.Create.CreateProcessingGroup("   "), "Expected ArgumentException for whitespace group name.");
         }
 
         /// <summary>
@@ -170,14 +170,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Arrange
             string groupName = "ExistingGroup";
-            FSM_API.Create.CreateProcessingGroup(groupName);
-            var initialCount = FSM_API.Internal.ProcessingGroupCount;
+            FsmApi.Create.CreateProcessingGroup(groupName);
+            var initialCount = FsmApi.Internal.ProcessingGroupCount;
 
             // Act
-            FSM_API.Create.CreateProcessingGroup(groupName);
+            FsmApi.Create.CreateProcessingGroup(groupName);
 
             // Assert
-            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(initialCount), "No new group should be created when one with the same name already exists.");
+            Assert.That(FsmApi.Internal.ProcessingGroupCount, Is.EqualTo(initialCount), "No new group should be created when one with the same name already exists.");
         }
 
 

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -28,8 +28,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Internal.ResetAPI(true);
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBucket_SucceedsWithExistingFSM()
         {
             // Act
-            var bucket = FSM_API.Internal.GetBucket(FsmName, ProcessGroup);
+            var bucket = FsmApi.Internal.GetBucket(FsmName, ProcessGroup);
 
             // Assert
             Assert.That(bucket, Is.Not.Null, "The bucket should not be null.");
@@ -53,7 +53,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBucket_ReturnsNullForNonExistentFsm()
         {
             // Act
-            var bucket = FSM_API.Internal.GetBucket("NonExistentFSM", ProcessGroup);
+            var bucket = FsmApi.Internal.GetBucket("NonExistentFSM", ProcessGroup);
 
             // Assert
             Assert.That(bucket, Is.Null, "The bucket should be null for a non-existent FSM.");
@@ -66,7 +66,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetBucket_ReturnsNullForNonExistentProcessingGroup()
         {
             // Act
-            var bucket = FSM_API.Internal.GetBucket(FsmName, "NonExistentGroup");
+            var bucket = FsmApi.Internal.GetBucket(FsmName, "NonExistentGroup");
 
             // Assert
             Assert.That(bucket, Is.Null, "The bucket should be null for a non-existent processing group.");

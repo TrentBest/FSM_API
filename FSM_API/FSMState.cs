@@ -39,6 +39,13 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// Refactored to hash V1.0.14
+        /// </remarks>
+        public int StateID { get; private set; }
         private Action<IStateContext> _onEnter;
 
         /// <summary>
@@ -129,14 +136,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// Runs the 'OnUpdate' action for this state.
         /// </summary>
         /// <remarks>
-        /// The FSM system typically calls this method regularly while an FSM instance
-        /// is staying in this state, often as part of a game's update loop.
+        /// This action is called by the FSM system while the FSM remains in this state.
         /// </remarks>
         /// <param name="c">The context object specific to this FSM instance, providing data access.</param>
         public void Update(IStateContext c)
         {
             _onUpdate.Invoke(c);
-
         }
 
         /// <summary>

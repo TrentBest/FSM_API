@@ -216,14 +216,14 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// This sets how frequently the FSM instances associated with this definition
-        /// will be updated when their processing group is ticked by the <c>FSM_API</c>'s
-        /// internal management system (e.g., <c>FSM_API.Interaction.TickAll</c>).
+        /// will be updated when their processing group is ticked by the <c>FsmApi</c>'s
+        /// internal management system (e.g., <c>FsmApi.Interaction.TickAll</c>).
         /// <list type="bullet">
         /// <item><c>0</c>: **Event-Driven / Manual Processing.** FSM instances will NOT be automatically
-        /// updated by <c>FSM_API.Interaction.TickAll</c>. Instead, their <see cref="FSMHandle.Update"/>
+        /// updated by <c>FsmApi.Interaction.TickAll</c>. Instead, their <see cref="FSMHandle.Update"/>
         /// or <see cref="FSMHandle.EvaluateConditions"/> methods must be explicitly called by the user's application.</item>
         /// <item><c>-1</c>: **Process Every Tick.** FSM instances will be processed on every invocation
-        /// of <c>FSM_API.Interaction.TickAll</c> for their processing group.</item>
+        /// of <c>FsmApi.Interaction.TickAll</c> for their processing group.</item>
         /// <item><c>&gt; 0</c>: **Process Every N Ticks (Skipping N-1).** FSM instances will be processed
         /// every <c>N</c> ticks. For example, if <c>processRate</c> is <c>2</c>, instances will be processed
         /// every second tick (skipping 1 tick in between). If <c>processRate</c> is <c>3</c>, they will be processed
@@ -268,14 +268,14 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void ModifyDefinition()
         {
-            var bucket = FSM_API.Internal.GetBucket(fsm.Name, _existingProcessGroup);
+            var bucket = FsmApi.Internal.GetBucket(fsm.Name, _existingProcessGroup);
             if (bucket == null || bucket.Definition == null)
             {
                 return;
             }
             if (_modifiedProcessGroup != _existingProcessGroup)
             {
-                FSM_API.Internal.SetProcessGroup(_modifiedProcessGroup, bucket);
+                FsmApi.Internal.SetProcessGroup(_modifiedProcessGroup, bucket);
             }
             if (_modifiedProcessRate != _existingProcessRate)
             {

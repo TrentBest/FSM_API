@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,10 +38,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string fsmName = "MyDefaultFSM";
             // Create the FSM definition in the default "Update" group
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
 
             // Act
-            bool exists = FSM_API.Interaction.Exists(fsmName);
+            bool exists = FsmApi.Interaction.Exists(fsmName);
 
             // Assert
             Assert.That(exists, Is.True, $"Expected FSM '{fsmName}' to exist in the default 'Update' group.");
@@ -57,10 +57,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string fsmName = "CustomGroupFSM";
             string customProcessingGroup = "RenderLoop";
             // Create the FSM definition in a custom processing group
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
 
             // Act
-            bool exists = FSM_API.Interaction.Exists(fsmName, customProcessingGroup);
+            bool exists = FsmApi.Interaction.Exists(fsmName, customProcessingGroup);
 
             // Assert
             Assert.That(exists, Is.True, $"Expected FSM '{fsmName}' to exist in the '{customProcessingGroup}' group.");
@@ -76,10 +76,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string existingFsmName = "ExistingFSM";
             string nonExistentFsmName = "NonExistentFSM";
             // Create one FSM to ensure the system isn't completely empty, but the target FSM doesn't exist.
-            FSM_API.Create.CreateFiniteStateMachine(existingFsmName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(existingFsmName).BuildDefinition();
 
             // Act
-            bool exists = FSM_API.Interaction.Exists(nonExistentFsmName);
+            bool exists = FsmApi.Interaction.Exists(nonExistentFsmName);
 
             // Assert
             Assert.That(exists, Is.False, $"Expected FSM '{nonExistentFsmName}' to not exist.");
@@ -95,11 +95,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string fsmName = "SharedNameFSM";
             string group1 = "GroupA";
             string group2 = "GroupB";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: group1).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processingGroup: group1).BuildDefinition();
 
             // Act
             // Check for the FSM with the same name, but in a different group where it doesn't exist
-            bool exists = FSM_API.Interaction.Exists(fsmName, group2);
+            bool exists = FsmApi.Interaction.Exists(fsmName, group2);
 
             // Assert
             Assert.That(exists, Is.False, $"Expected FSM '{fsmName}' to not exist in '{group2}' when it's only in '{group1}'.");
@@ -117,7 +117,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // No FSMs are created in "ImaginaryGroup"
 
         //    // Act
-        //    bool exists = FSM_API.Interaction.Exists(fsmName, nonExistentProcessingGroup);
+        //    bool exists = FsmApi.Interaction.Exists(fsmName, nonExistentProcessingGroup);
 
         //    // Assert
         //    Assert.That(exists, Is.False, $"Expected FSM '{fsmName}' to not exist in a non-existent processing group '{nonExistentProcessingGroup}'.");
@@ -134,7 +134,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    string processingGroup = "AnyGroup";
 
         //    // Act
-        //    bool exists = FSM_API.Interaction.Exists(fsmName, processingGroup);
+        //    bool exists = FsmApi.Interaction.Exists(fsmName, processingGroup);
 
         //    // Assert
         //    Assert.That(exists, Is.True, "Expected no FSM to exist when the system is empty.");
@@ -151,7 +151,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(nullFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(nullFsmName, validProcessingGroup),
                 "Expected ArgumentException for null FSM name.");
         }
 
@@ -166,7 +166,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(emptyFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(emptyFsmName, validProcessingGroup),
                 "Expected ArgumentException for empty FSM name.");
         }
 
@@ -181,7 +181,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(whitespaceFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(whitespaceFsmName, validProcessingGroup),
                 "Expected ArgumentException for whitespace FSM name.");
         }
 
@@ -196,7 +196,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string nullProcessingGroup = string.Empty;
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(validFsmName, nullProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(validFsmName, nullProcessingGroup),
                 "Expected ArgumentException for null processing group.");
         }
 
@@ -211,7 +211,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string emptyProcessingGroup = "";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(validFsmName, emptyProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(validFsmName, emptyProcessingGroup),
                 "Expected ArgumentException for empty processing group.");
         }
 
@@ -226,7 +226,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string whitespaceProcessingGroup = "   ";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.Exists(validFsmName, whitespaceProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.Exists(validFsmName, whitespaceProcessingGroup),
                 "Expected ArgumentException for whitespace processing group.");
         }
     }

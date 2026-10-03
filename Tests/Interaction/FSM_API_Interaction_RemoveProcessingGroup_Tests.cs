@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -27,8 +27,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
-            FSM_API.Create.CreateProcessingGroup(GroupName);
+            FsmApi.Internal.ResetAPI(true);
+            FsmApi.Create.CreateProcessingGroup(GroupName);
         }
 
         /// <summary>
@@ -38,14 +38,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public void RemoveProcessingGroup_Succeeds()
         {
             // Arrange
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames().Contains(GroupName), Is.True);
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames().Contains(GroupName), Is.True);
 
             // Act
-            FSM_API.Interaction.RemoveProcessingGroup(GroupName);
+            FsmApi.Interaction.RemoveProcessingGroup(GroupName);
 
             // Assert
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
-            Assert.That(FSM_API.Internal.ProcessingGroupCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
+            Assert.That(FsmApi.Internal.ProcessingGroupCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string nonExistentGroup = "NonExistentGroup";
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames().Contains(nonExistentGroup), Is.False);
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames().Contains(nonExistentGroup), Is.False);
 
             // Act & Assert
-            Assert.DoesNotThrow(() => FSM_API.Interaction.RemoveProcessingGroup(nonExistentGroup));
+            Assert.DoesNotThrow(() => FsmApi.Interaction.RemoveProcessingGroup(nonExistentGroup));
         }
 
         /// <summary>
@@ -69,15 +69,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public void RemoveProcessingGroup_WithDefinitions_DestroysDefinitionsAndSucceeds()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", processingGroup: GroupName).BuildDefinition();
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup(GroupName), Is.EqualTo(1));
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", processingGroup: GroupName).BuildDefinition();
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup(GroupName), Is.EqualTo(1));
 
             // Act
-            FSM_API.Interaction.RemoveProcessingGroup(GroupName);
+            FsmApi.Interaction.RemoveProcessingGroup(GroupName);
 
             // Assert
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
-            Assert.That(FSM_API.Internal.TotalFsmDefinitionCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
+            Assert.That(FsmApi.Internal.TotalFsmDefinitionCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -88,16 +88,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: GroupName).BuildDefinition();
-            FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext(), GroupName);
-            Assert.That(FSM_API.Internal.GetFsmDefinitionCountInGroup(GroupName), Is.EqualTo(1));
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processingGroup: GroupName).BuildDefinition();
+            FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext(), GroupName);
+            Assert.That(FsmApi.Internal.GetFsmDefinitionCountInGroup(GroupName), Is.EqualTo(1));
 
             // Act
-            FSM_API.Interaction.RemoveProcessingGroup(GroupName);
+            FsmApi.Interaction.RemoveProcessingGroup(GroupName);
 
             // Assert
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames().Contains(GroupName), Is.False);
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0));
         }
     }
 }
