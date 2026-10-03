@@ -103,7 +103,7 @@ jobs:
   publish_nuget:
     needs: build_test_and_package
     runs-on: ubuntu-24.04
-    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true && false }}
     permissions:
       contents: read
       id-token: write
