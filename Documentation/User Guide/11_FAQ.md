@@ -39,7 +39,7 @@
 
 ### **Q2: Is FSM\_API only for games or Unity?**
 
-**A2:** No\! While FSM\_API is incredibly powerful for game development (especially with Unity), it's built in pure C\# and can be used in **any C\# application**. This includes console applications, backend services, desktop apps, simulations, and more. It helps manage any state-dependent logic, regardless of the application type. See [03. Getting Started with C\# (Non-Unity)](https://www.google.com/search?q=03_Getting_Started_CSharp.md) for more details.
+**A2:** No\! While FSM\_API is incredibly powerful for game development (including real-time applications), it's built in pure C\# and can be used in **any C\# application**. This includes console applications, backend services, desktop apps, simulations, and more. It helps manage any state-dependent logic, regardless of the application type. See [03. Getting Started with C\# (Non-Unity)](https://www.google.com/search?q=03_Getting_Started_CSharp.md) for more details.
 
 -----
 
