@@ -83,7 +83,7 @@ var fsmBuilder = FSM_API.CreateFiniteStateMachine(
       * `processRate = N` (where N \> 1): Updates **every N ticks** of its processing group. (e.g., `processRate = 2` means it updates every other tick).
       * Default: `1`
   * `processingGroup` (string, optional): Assigns a **default processing group** name for instances created from this definition. Processing groups (e.g., "Update", "FixedUpdate", "AI\_Logic") allow you to organize and update multiple FSMs together from a single `FSM_API.Update("GroupName")` call.
-      * Default: "Update" (a common group driven from Unity's `Update()` or a main C\# loop).
+      * Default: "Update" (a common group driven from host-specific's `Update()` or a main C\# loop).
 
 -----
 
@@ -110,7 +110,7 @@ builder.State("Patrol",
 
 ### Context Parameter (`ctx` or `context`)
 
-Notice the `ctx` (or `context`) parameter in the state actions. This is your **`IStateContext`** object (your MonoBehaviour in Unity, or your plain C\# class). You'll typically cast it to your specific context type to access its unique properties and methods.
+Notice the `ctx` (or `context`) parameter in the state actions. This is your **`IStateContext`** object (your MonoBehaviour in host-specific, or your plain C\# class). You'll typically cast it to your specific context type to access its unique properties and methods.
 
 **C\# Example:**
 
@@ -254,9 +254,9 @@ builder.WithProcessingGroup("GameLogic"); // Instances will default to the "Game
 
   * `groupName` (string): The name of the processing group (e.g., "Gameplay", "UIA", "Physics").
 
-### How it integrates with `FSM_UnityIntegration` (for Unity users):
+### How it integrates with `FSM_host-specificIntegration` (for host-specific users):
 
-The `FSM_UnityIntegration` script (discussed in **[02. Getting Started with Unity](02_Getting_Started_Unity.md)**) will automatically create and update the "Update", "FixedUpdate", "LateUpdate", etc., processing groups. By using `WithProcessingGroup("Update")` or `WithProcessingGroup("FixedUpdate")` in your builder, you're instructing FSM_API to include instances of this definition in those Unity-driven update cycles by default.
+The `FSM_host-specificIntegration` script (discussed in **[02. Getting Started with host-specific](02_Getting_Started_host-specific.md)**) will automatically create and update the "Update", "FixedUpdate", "LateUpdate", etc., processing groups. By using `WithProcessingGroup("Update")` or `WithProcessingGroup("FixedUpdate")` in your builder, you're instructing FSM_API to include instances of this definition in those host-specific-driven update cycles by default.
 
 -----
 
