@@ -6,7 +6,7 @@
 
 [01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[03. Getting Started with C# ](03_Getting_Started_CSharp.md)
 
 [04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
 
@@ -40,7 +40,7 @@ FSM_API is a powerful, performance-driven library designed to help you easily ma
 
 ## 🎮 What is the UnityIntegration?
 
-> **Note:** This FSM_API project is a pure C# library and is completely engine-agnostic. It does not include any Unity-specific code or dependencies.
+> **Note:** This FSM_API project is a pure C# library and is completely engine-agnostic. It does not include any engine-specific code or dependencies.
 
 Unity integration is available as a separate package, which provides the necessary bridge for using FSM_API within Unity projects. If you are looking to use FSM_API in Unity, please see:
 
