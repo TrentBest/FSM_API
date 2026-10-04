@@ -41,7 +41,7 @@ The `IStateContext` provides this crucial bridge:
 
   * **Access to Data:** It allows state actions (`onEnter`, `onUpdate`, `onExit`) and transition conditions to read and modify the specific properties of your object (e.g., `currentHealth`, `IsDoorOpen`).
   * **Execution of Logic:** It provides the methods that states will call to perform actual work (e.g., `PlayAnimation()`, `ApplyDamage()`).
-  * **Lifecycle Management:** For engines like Unity, `IStateContext`'s `IsValid` property allows FSM\_API to track if the underlying object is still active and relevant, preventing errors if an object is destroyed.
+  * **Lifecycle Management:** For engines like host-specific, `IStateContext`'s `IsValid` property allows FSM\_API to track if the underlying object is still active and relevant, preventing errors if an object is destroyed.
 
 -----
 
@@ -104,7 +104,7 @@ The `IsValid` property is crucial for robust FSM management, especially in dynam
 
 ## 🛠 Implementing `IStateContext`
 
-Let's look at how you would implement `IStateContext` in both a pure C\# class and a Unity MonoBehaviour.
+Let's look at how you would implement `IStateContext` in both a pure C\# class and a host-specific MonoBehaviour.
 
 ### Example 1: Pure C\# Class
 
@@ -170,12 +170,12 @@ public class MyCharacterData : IStateContext
 
 In this pure C\# example, `IsValid` directly reflects the `IsAlive` state of the character. When `IsAlive` becomes `false` (e.g., after `TakeDamage` reduces health to zero), `IsValid` will also become `false`, prompting FSM\_API to clean up the associated FSM instance.
 
-### Example 2: Unity MonoBehaviour
+### Example 2: host-specific MonoBehaviour
 
-In Unity, your FSM contexts will typically be `MonoBehaviour` scripts attached to `GameObject`s. The `IsValid` check for Unity usually involves checking the `gameObject.activeInHierarchy` property or if the MonoBehaviour itself is `null` (which indicates the GameObject or component has been destroyed).
+In host-specific, your FSM contexts will typically be `MonoBehaviour` scripts attached to `GameObject`s. The `IsValid` check for host-specific usually involves checking the `gameObject.activeInHierarchy` property or if the MonoBehaviour itself is `null` (which indicates the GameObject or component has been destroyed).
 
 ```csharp
-using UnityEngine;
+using host-specificEngine;
 using TheSingularityWorkshop.FSM.API; // Your FSM_API namespace
 
 public class EnemyAI : MonoBehaviour, IStateContext
@@ -191,7 +191,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
     public string Name { get; set; }
 
     // The 'IsValid' property, required by IStateContext.
-    // For Unity, we check if the GameObject is still active in the hierarchy.
+    // For host-specific, we check if the GameObject is still active in the hierarchy.
     // 'this != null' is crucial if the MonoBehaviour script itself might be nullified.
     public bool IsValid => this != null && gameObject.activeInHierarchy;
 
@@ -236,7 +236,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
 
     void OnDestroy()
     {
-        // Crucial for Unity: Unregister the FSM instance when the GameObject is destroyed.
+        // Crucial for host-specific: Unregister the FSM instance when the GameObject is destroyed.
         // This prevents the FSM from trying to access a null GameObject/MonoBehaviour.
         // FSM_API's IsValid check will also catch this, but explicit unregistration is good practice.
         if (myFSM != null)
@@ -266,9 +266,9 @@ public class EnemyAI : MonoBehaviour, IStateContext
 ## ✅ Best Practices for `IStateContext` Implementation
 
   * **Keep Contexts Lean (but functional):** While your context holds data and methods, avoid putting complex, high-level FSM logic directly into it. That's what the FSM definition is for. The context should be focused on providing the raw data and atomic operations that states need.
-  * **Clear Naming:** Ensure your `Name` property provides useful debugging information. For Unity, `gameObject.name` is often sufficient.
+  * **Clear Naming:** Ensure your `Name` property provides useful debugging information. For host-specific, `gameObject.name` is often sufficient.
   * **Accurate `IsValid`:** Implement `IsValid` carefully. It's the primary way FSM\_API knows if an instance is still relevant. Incorrect `IsValid` logic can lead to memory leaks or NullReferenceExceptions.
-  * **Explicit Unregistration (Unity):** For MonoBehaviours, always unregister your `FSMHandle` in `OnDestroy()`. While `IsValid` will eventually lead to cleanup, explicit unregistration is safer and faster in Unity's lifecycle.
+  * **Explicit Unregistration (host-specific):** For MonoBehaviours, always unregister your `FSMHandle` in `OnDestroy()`. While `IsValid` will eventually lead to cleanup, explicit unregistration is safer and faster in host-specific's lifecycle.
   * **Casting in State Actions:** Remember that the `context` parameter in state actions (`onEnter`, `onUpdate`, `onExit`) and transition conditions is of type `IStateContext`. You'll almost always need to cast it to your specific context type (e.g., `((MyCharacterData)ctx)`) to access your custom properties and methods.
 
 By adhering to the `IStateContext` interface, your FSMs become incredibly flexible and reusable, able to control diverse objects across various C\# environments.
