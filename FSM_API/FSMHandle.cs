@@ -121,6 +121,12 @@ namespace TheSingularityWorkshop.FSM_API
         public IStateContext Context { get; set; } = null;
 
         /// <summary>
+        /// The processing group currently responsible for scheduling this FSM instance.
+        /// This instance-owned scheduling metadata may change when the instance moves between compatible cohorts.
+        /// </summary>
+        public string ProcessingGroup { get; internal set; } = "Update";
+
+        /// <summary>
         /// This tells you the **current state name** of this FSM instance.
         /// </summary>
         /// <remarks>
@@ -173,11 +179,16 @@ namespace TheSingularityWorkshop.FSM_API
         /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
         /// or without a data bag (`context` is `null`).
         /// </exception>
-        public FSMHandle(FSM definition = null, IStateContext context = null, int id = -1)
+        public FSMHandle(FSM definition = null, IStateContext context = null, int id = -1, string processingGroup = "Update")
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition), "FSM definition cannot be null for FSMHandle.");
             Context = context ?? throw new ArgumentNullException(nameof(context), "Context cannot be null for FSMHandle.");
+            if (string.IsNullOrWhiteSpace(processingGroup))
+            {
+                throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+            }
             Id = id;
+            ProcessingGroup = processingGroup;
             CurrentState = Definition.InitialState;
         }
 
