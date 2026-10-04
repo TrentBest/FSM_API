@@ -78,9 +78,9 @@ FSM_API.CreateFiniteStateMachine("AmbientBirdFSM", processRate: 10)
 
 ### 1\. **Leverage Processing Groups**
 
-As seen in **[02. Getting Started with Unity](/User Guide/02_Getting_Started_Unity.md)** and **[03. Getting Started with C\# ](03_Getting_Started_CSharp.md)**, processing groups allow you to organize FSMs and update them at different rates or from different sources.
+As seen in **[03. Getting Started with C\#](03_Getting_Started_CSharp.md)**, processing groups allow you to organize FSMs and update them at different rates or from different sources.
 
-  * **Unity:** Use `FSM_UnityIntegration.cs` to drive groups like "Update," "FixedUpdate," and "LateUpdate."
+  * **Host loop:** Drive groups such as "Update," "FixedUpdate," and "LateUpdate" from the application's scheduler.
       * **"Update"**: For most game logic, input, and visual updates.
       * **"FixedUpdate"**: For physics-related FSMs where precise, fixed-time-step updates are critical.
       * **"LateUpdate"**: For camera logic or actions that depend on all other updates being complete.
