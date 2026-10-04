@@ -36,7 +36,6 @@
         /// <para>
         /// **For Developers:**
         /// Your implementation of <c>IsValid</c> should reflect the active status of the underlying object.
-        /// For Unity, this might involve checking if the GameObject or MonoBehaviour is still active and not destroyed.
         /// For plain C# objects, this might involve checking if it has been explicitly "disposed",
         /// marked as invalid, or if its dependencies are no longer available.
         /// The FSM system relies on this property to prevent processing FSM instances tied to defunct contexts,
