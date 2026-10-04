@@ -6,7 +6,7 @@
 
 [01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[03. Getting Started with C# ](03_Getting_Started_CSharp.md)
 
 [04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
 
