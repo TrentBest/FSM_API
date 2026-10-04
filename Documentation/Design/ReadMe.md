@@ -15,8 +15,8 @@ graph TD
         FSM_API[FSM_API: Foundational Behavior Logic]
     end
 
-    subgraph Unity Ecosystem
-        UnityEcosystem[Unity Ecosystem: Packages & AnyApp]
+    subgraph Host-neutral ecosystem
+        UnityEcosystem[Host-neutral ecosystem: Packages & AnyApp]
     end
 
     subgraph Cloud Infrastructure
@@ -35,9 +35,9 @@ graph TD
 
 The **FSM\_API** is the bedrock of the entire MyVR system. It's a foundational technology that uses the mathematical principles of Finite State Machines to normalize and encapsulate software behavior. The core mission of this API is to completely decouple software logic from the platform it runs on, ensuring that a single set of behaviors can be deployed anywhere, from local devices to the cloud.
 
-### The Unity Ecosystem: Packages & AnyApp
+### The Host-neutral ecosystem: Packages & AnyApp
 
-This layer is the bridge between the core FSM logic and practical, deployable applications. The **Unity Ecosystem** consists of a library of **Unity Asset Packages**, each providing a reusable, FSM-based implementation of a common software pattern or game mechanic. These packages are consumed by **AnyApp**, a minimal, self-loading application and editor that acts as the local host for any MyVR experience. This layer ensures that behaviors can be efficiently distributed and managed using Unity's **Addressables system**.
+This layer is the bridge between the core FSM logic and practical, deployable applications. The **Host-neutral ecosystem** consists of a library of **Unity Asset Packages**, each providing a reusable, FSM-based implementation of a common software pattern or game mechanic. These packages are consumed by **AnyApp**, a minimal, self-loading application and editor that acts as the local host for any MyVR experience. This layer ensures that behaviors can be efficiently distributed and managed using Unity's **Addressables system**.
 
 ### The Cloud Infrastructure: MyVR
 
