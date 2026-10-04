@@ -94,7 +94,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public int Id { get; internal set; } = -1;
         /// <summary>
-        /// This is the original **blueprint (definition)** of the FSM that this handle is controlling.
+        /// This is the currently assigned **blueprint (definition)** of the FSM that this handle is controlling.
         /// </summary>
         /// <remarks>
         /// It's like having the architectural plans for a house. You can look at them to understand
@@ -102,7 +102,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// drawing on these plans here. This is set when the FSM instance is first created.
         /// </remarks>
 
-        public readonly FSM Definition;
+        public FSM Definition { get; internal set; }
 
         /// <summary>
         /// This is the **data bag** 🎒 (context) specific to *this particular* FSM instance.
