@@ -38,22 +38,6 @@ FSM_API is a powerful, performance-driven library designed to help you easily ma
 
 ---
 
-## 🎮 What is the UnityIntegration?
-
-> **Note:** This FSM_API project is a pure C# library and is completely engine-agnostic. It does not include any engine-specific code or dependencies.
-
-Unity integration is available as a separate package, which provides the necessary bridge for using FSM_API within Unity projects. If you are looking to use FSM_API in Unity, please see:
-
-**[FSM_API_Unity GitHub Repository](https://github.com/TrentBest/FSM_API_Unity)**
-
-All Unity-specific documentation and examples are maintained in that repository. This documentation focuses on the core, engine-agnostic FSM_API.
-
-<a href="Visuals/API_vs_Integrations.png" target="_blank">
-    <img src="Visuals/API_vs_Integrations.png" alt="Diagram of the FSM_API Ecosystem" height="200" style="display: block;">
-</a>
-*A diagram showing the Core API connecting to various integrations.*
-
----
 
 ## 🎯 Why and Where Can You Use FSM_API?
 
