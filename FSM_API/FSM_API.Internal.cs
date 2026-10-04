@@ -330,6 +330,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 targetBucket.Instances.Add(handle);
+                handle.Definition = targetBucket.Definition;
                 handle.ProcessingGroup = processingGroup;
             }
 
