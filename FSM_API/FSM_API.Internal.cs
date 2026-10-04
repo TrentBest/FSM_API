@@ -250,7 +250,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 try
                 {
-                    var bucket = Internal.GetBuckets()[handle.Definition.ProcessingGroup][handle.Definition.Name];
+                    var bucket = Internal.GetBuckets()[handle.ProcessingGroup][handle.Definition.Name];
                     if (bucket.Instances.Remove(handle))
                     {
                         handle.DestroyHandle();
@@ -277,7 +277,64 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
 
-            /// <summary>
+                       /// <summary>
+            /// Moves one live FSM instance between compatible processing-group buckets.
+            /// The instance keeps its context, current state, and lifecycle state.
+            /// </summary>
+            /// <param name="handle">The live FSM instance to move.</param>
+            /// <param name="processingGroup">The target processing group.</param>
+            /// <exception cref="ArgumentNullException">Thrown when <paramref name="handle"/> is null.</exception>
+            /// <exception cref="ArgumentException">Thrown when <paramref name="processingGroup"/> is empty.</exception>
+            /// <exception cref="KeyNotFoundException">Thrown when the source or target FSM bucket cannot be found.</exception>
+            /// <exception cref="InvalidOperationException">Thrown when the target definition cannot represent the instance's current state.</exception>
+            internal static void MoveInstance(FSMHandle handle, string processingGroup)
+            {
+                if (handle == null)
+                {
+                    throw new ArgumentNullException(nameof(handle));
+                }
+
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+
+                string sourceGroup = handle.ProcessingGroup;
+                if (string.Equals(sourceGroup, processingGroup, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                if (!_buckets.TryGetValue(sourceGroup, out var sourceDefinitions) ||
+                    !sourceDefinitions.TryGetValue(handle.Definition.Name, out var sourceBucket) ||
+                    !sourceBucket.Instances.Remove(handle))
+                {
+                    throw new KeyNotFoundException(
+                        $"FSM instance '{handle.Name}' was not found in processing group '{sourceGroup}'.");
+                }
+
+                if (!_buckets.TryGetValue(processingGroup, out var targetDefinitions) ||
+                    !targetDefinitions.TryGetValue(handle.Definition.Name, out var targetBucket) ||
+                    targetBucket.Definition == null)
+                {
+                    sourceBucket.Instances.Add(handle);
+                    throw new KeyNotFoundException(
+                        $"Compatible FSM definition '{handle.Definition.Name}' was not found in processing group '{processingGroup}'.");
+                }
+
+                if (targetBucket.Definition.GetState(handle.CurrentState) == null)
+                {
+                    sourceBucket.Instances.Add(handle);
+                    throw new InvalidOperationException(
+                        $"FSM definition '{handle.Definition.Name}' in processing group '{processingGroup}' does not contain current state '{handle.CurrentState}'.");
+                }
+
+                targetBucket.Instances.Add(handle);
+                handle.ProcessingGroup = processingGroup;
+            }
+
+
+ /// <summary>
             /// Checks if a specific FSM definition exists within a given processing group.
             /// </summary>
             /// <param name="processingGroupName">The name of the processing group to check.</param>
@@ -495,6 +552,21 @@ namespace TheSingularityWorkshop.FSM_API
             /// have completed their processing.
             /// Errors during deferred actions are reported via <see cref="Error.OnInternalApiError"/>.
             /// </remarks>
+            /// <summary>
+            /// Queues a structural FSM API modification for execution at the next safe update boundary.
+            /// </summary>
+            /// <param name="action">The structural modification to execute.</param>
+            internal static void QueueDeferredModification(Action action)
+            {
+                if (action == null)
+                {
+                    throw new ArgumentNullException(nameof(action));
+                }
+
+                _deferredModifications.Enqueue(action);
+            }
+
+
             public static void ProcessDeferredModifications()
             {
                 //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
