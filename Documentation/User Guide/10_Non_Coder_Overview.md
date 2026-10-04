@@ -111,7 +111,7 @@ When a developer uses FSM\_API, they link the FSM to an actual "thing" in your g
   * **QA Testers:** Clearly define and test expected behaviors in various scenarios.
   * **Technical Writers:** Document system behaviors accurately and concisely.
 
-FSM\_API provides a common language and structure that helps bridge the gap between design and implementation, leading to more robust, understandable, and maintainable applications. We are actively working on integrating this into **AnyApp**, and also preparing it for submission to the **Unity Asset Store** so developers everywhere can benefit\!
+FSM\_API provides a common language and structure that helps bridge the gap between design and implementation, leading to more robust, understandable, and maintainable applications. We are actively working on integrating this into **AnyApp**, and making it available as a general-purpose C# capability for developers everywhere!
 
 -----
 
