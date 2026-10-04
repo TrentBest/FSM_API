@@ -12,7 +12,7 @@ The **FSM_API** is the core component of the MyVR architecture, providing the fo
 
 - **State Management**: The FSM_API provides robust state management capabilities, allowing developers to define and control the various states an application can be in.
 - **Event Handling**: The API includes a powerful event handling system, enabling responsive and dynamic interactions based on user input and other triggers.
-- **Integration**: The FSM_API is designed to integrate seamlessly with other components of the MyVR architecture, including the Unity Ecosystem and Cloud Infrastructure.
+- **Integration**: The FSM_API is designed to integrate seamlessly with other components of the MyVR architecture, including the host-specific engines Ecosystem and Cloud Infrastructure.
 #### Example Diagram
 
 ```mermaid
