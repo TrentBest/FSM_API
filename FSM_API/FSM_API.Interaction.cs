@@ -42,6 +42,35 @@ namespace TheSingularityWorkshop.FSM_API
         {
 
             /// <summary>
+            /// Moves one live FSM instance to a compatible processing group.
+            /// The move is deferred until the current update cycle reaches a safe structural-modification boundary.
+            /// </summary>
+            /// <param name="instance">The live FSM instance to move.</param>
+            /// <param name="processingGroup">The target processing group containing a compatible FSM definition.</param>
+            /// <exception cref="ArgumentNullException">Thrown when <paramref name="instance"/> is null.</exception>
+            /// <exception cref="ArgumentException">Thrown when <paramref name="processingGroup"/> is empty.</exception>
+            public static void MoveInstance(FSMHandle instance, string processingGroup)
+            {
+                if (instance == null)
+                {
+                    throw new ArgumentNullException(nameof(instance));
+                }
+
+                if (string.IsNullOrWhiteSpace(processingGroup))
+                {
+                    throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
+                }
+
+                if (string.Equals(instance.ProcessingGroup, processingGroup, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                Internal.QueueDeferredModification(() => Internal.MoveInstance(instance, processingGroup));
+            }
+
+
+            /// <summary>
             /// Dynamically adds a new state definition to an existing Finite State Machine blueprint
             /// at runtime.
             /// </summary>
