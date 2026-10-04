@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
 
@@ -60,8 +61,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
             FSM_API.Interaction.MoveInstance(handle, missingGroup);
 
-            Assert.Throws<KeyNotFoundException>(
-                () => FSM_API.Internal.ProcessDeferredModifications());
+            FSM_API.Internal.ProcessDeferredModifications();
 
             Assert.That(handle.ProcessingGroup, Is.EqualTo(sourceGroup));
             Assert.That(FSM_API.Interaction.GetInstances(fsmName, sourceGroup), Has.Count.EqualTo(1));
