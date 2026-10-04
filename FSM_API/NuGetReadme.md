@@ -164,7 +164,7 @@ FSM_API.Interaction.Update("MainLoop");
 | ✅ **Easy to Unit Test** | The inherent **decoupling of FSM logic from context data** ensures your state machines are **highly testable in isolation**, leading to more robust and reliable code with simplified unit testing.                                                                                                                                        |
 | 💯 **Mathematically Provable** | With clearly defined states and transitions, the FSM architecture lends itself to **formal verification and rigorous analysis**, providing a strong foundation for high-assurance systems where correctness is paramount.                                                                                                                       |
 | 🤝 **Collaborative Design** | FSMs provide a **visual and structured way to define complex behaviors**, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.   |
-|  🎮 Unity Integration Available | Now preparing for submission to the Unity Asset Store.  |
+|  🧩 Host Neutral | Pure C# runtime with no engine-specific dependency. |
 
 
 ---
