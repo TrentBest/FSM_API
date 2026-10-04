@@ -30,17 +30,17 @@ The user guide and key information are broken down into several files to keep th
 
     01. Core Concepts: Your Guide to FSM_API: Start here to understand the fundamental building blocks of the FSM_API. This document explains the purpose of FSM definitions, instances, states, and contexts.
 
-    03. Getting Started with C# (Non-Unity): This is your hands-on guide to integrating the FSM_API into any pure C# application. It provides step-by-step instructions and code examples to get you up and running quickly.
+    03. Getting Started with C# (Non-host-specific engines): This is your hands-on guide to integrating the FSM_API into any pure C# application. It provides step-by-step instructions and code examples to get you up and running quickly.
 
     11. Frequently Asked Questions (FAQ): A collection of answers to common questions about the API, design patterns, and best practices.
 
-🎮 Unity Integration
+🎮 host-specific engines Integration
 
-The core API is pure C# and designed to be portable and independent of any game engine. A dedicated package for Unity is available separately.
+The core API is pure C# and designed to be portable and independent of any game engine. A dedicated package for host-specific engines is available separately.
 
-For developers working with Unity, please consult the official Unity integration repository:
+For developers working with host-specific engines, please consult the official host-specific engines integration repository:
 
-    Unity Integration Guide: The official Unity repository for integrating FSM_API into your Unity project.
+    host-specific engines Integration Guide: The official host-specific engines repository for integrating FSM_API into your host-specific engines project.
 
 This revised ReadMe.md is more effective because it's concise, provides clear signposts to other documents, and accurately describes the content of those files. It serves its intended purpose without cluttering the user's view with redundant information or API-specific diagrams that belong elsewhere.
 
