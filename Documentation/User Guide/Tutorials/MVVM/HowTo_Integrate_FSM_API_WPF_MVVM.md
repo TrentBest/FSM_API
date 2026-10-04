@@ -288,7 +288,7 @@ For applications with multiple, nested processes, a **Hierarchical State Machine
 
 ### 7.2. Dependency Injection
 
-As the application grows, managing the creation and dependencies of various objects—like the ViewModel and the API client—can become complex. A dependency injection (DI) container, such as Unity or MEF, can simplify this process. By registering the dependencies with the container, the application can automatically provide the required objects, further decoupling components and making the system easier to test and extend.
+As the application grows, managing the creation and dependencies of various objects—like the ViewModel and the API client—can become complex. A dependency injection (DI) container, such as MEF or another DI container, can simplify this process. By registering the dependencies with the container, the application can automatically provide the required objects, further decoupling components and making the system easier to test and extend.
 
 
 ---
@@ -317,7 +317,7 @@ This architectural approach transforms your vision of an "FSM driven application
 - The Super State Design Pattern, accessed September 10, 2025, https://medium.com/nerd-for-tech/the-super-state-design-pattern-166127ce7c9a
 - State in C# / Design Patterns - Refactoring.Guru, accessed September 10, 2025, https://refactoring.guru/design-patterns/state/csharp/example
 - MVVM - WPF Commanding with the State Machine Pattern ..., accessed September 10, 2025, https://learn.microsoft.com/en-us/archive/msdn-magazine/2014/november/mvvm-wpf-commanding-with-the-state-machine-pattern
-- MVVM In C# .NET - DEV Community, accessed September 10, 2025, https://dev.to/mossi4476/mvvm-in-c-net-24a6
+- MVVM In C# .NET - DEV Commthe container, accessed September 10, 2025, https://dev.to/mossi4476/mvvm-in-c-net-24a6
 - INotifyPropertyChanged Interface (System.ComponentModel) | Microsoft Learn, accessed September 10, 2025, https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-9.0
 - 4 Ways to Implement INotifyPropertyChanged - PostSharp Blog, accessed September 10, 2025, https://blog.postsharp.net/inotifypropertychanged
 - Master INotifyPropertyChanged for Maintainable WPF Code - MoldStud, accessed September 10, 2025, https://moldstud.com/articles/p-building-maintainable-wpf-applications-mastering-inotifypropertychanged-for-better-code
