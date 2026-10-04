@@ -97,8 +97,8 @@ The `IsValid` property is crucial for robust FSM management, especially in dynam
   * **Automatic Cleanup:** If `IsValid` returns `false`, FSM\_API will automatically **unregister and clean up** the associated `FSMHandle` instance. This prevents memory leaks and errors that can occur if an FSM tries to interact with a non-existent or invalid object.
   * **Performance:** Invalid FSMs are removed from processing queues, reducing overhead.
   * **Example Scenarios:**
-      * In Unity, if a `GameObject` with an `IStateContext` component is destroyed, `IsValid` should return `false`.
-      * In a non-Unity application, if a data model is no longer relevant (e.g., a network connection closes, a background task completes and is disposed), `IsValid` should be set to `false`.
+      * If an application-owned context becomes invalid, `IsValid` should return `false`.
+      * In another application, if a data model is no longer relevant (e.g., a network connection closes, a background task completes and is disposed), `IsValid` should be set to `false`.
 
 -----
 
