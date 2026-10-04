@@ -53,7 +53,7 @@ When FSMs fall short, or for different types of problems, other architectural pa
 
 ### 3. **Component-Based Architecture (ECS/Data-Oriented Design)** 🧱
 * **What it is:** Systems are built by composing entities from various independent components (data) and processing them with systems (logic).
-* **When to use:** Very common in game development (e.g., Unity's approach, or pure ECS frameworks like DOTS). Excellent for highly flexible, data-driven systems where behaviors are added/removed dynamically at runtime.
+* **When to use:** Very common in game development (e.g., common ECS/data-oriented frameworks). Excellent for highly flexible, data-driven systems where behaviors are added/removed dynamically at runtime.
 * **FSM vs. Components:** Components define *what an entity is capable of*. FSMs define *how that capability changes over time* based on context. They are often complementary: an FSM can control which components are active or how they interact.
 
 ### 4. **Rules Engines / Expert Systems** 📜
