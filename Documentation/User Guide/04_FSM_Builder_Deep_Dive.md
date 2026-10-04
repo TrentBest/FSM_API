@@ -242,7 +242,7 @@ FSM_API.CreateFiniteStateMachine()
 
 ## ⚙️ Assigning a Processing Group: `.WithProcessingGroup()`
 
-This method assigns the **default processing group** for all `FSMHandle` instances created from this FSM definition. Processing groups are critical for organizing and updating your FSMs efficiently, especially in environments with distinct update loops (like Unity's `Update`, `FixedUpdate`).
+This method assigns the **default processing group** for all `FSMHandle` instances created from this FSM definition. Processing groups are critical for organizing and updating your FSMs efficiently, especially in environments with distinct update loops (like application-defined update loops).
 
 **C\# Example:**
 
