@@ -12,7 +12,7 @@ This section explores common scenarios where FSM\_API excels, providing conceptu
 
 [01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[03. Getting Started with C# ](03_Getting_Started_CSharp.md)
 
 [04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
 
@@ -226,7 +226,7 @@ Interpreting sequences of inputs or commands.
   * **Prioritize `AnyTransition`:** Use `AnyTransition` for critical, interrupt-driven states (e.g., `Dead`, `Paused`).
   * **Utilize `processRate`:** Tune the `processRate` for each FSM definition to match its required update frequency, optimizing performance.
 
-By applying FSM\_API thoughtfully, you can bring structure, clarity, and maintainability to the most complex behavioral challenges in your projects. This approach contributes significantly to having a solid asset for submission to the Unity Asset Store, as it demonstrates best practices in code organization and performance.
+By applying FSM\_API thoughtfully, you can bring structure, clarity, and maintainability to the most complex behavioral challenges in your projects. This approach contributes significantly to having a solid asset for submission to the general C# distribution, as it demonstrates best practices in code organization and performance.
 
 -----
 
