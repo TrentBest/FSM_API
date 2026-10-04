@@ -43,7 +43,7 @@ The `onUpdate` delegates for states are executed every time the FSM "ticks" (bas
   * **Prefer:** Simple checks, state variable updates, or calling optimized methods on your context.
   * **Delegate Heavy Work:** If a complex operation is needed, consider:
       * **Batching:** Collect data over several frames and process it less frequently.
-      * **Asynchronous Operations:** Use coroutines (Unity) or `async/await` (C\#) for non-blocking operations.
+      * **Asynchronous Operations:** Use coroutines (host-specific) or `async/await` (C\#) for non-blocking operations.
       * **Dedicated Systems:** Offload to manager classes or specialized systems.
 
 ### 2\. **Optimize Transition Conditions**
@@ -103,7 +103,7 @@ if (Time.elapsed % 0.5f == 0) // Example: update every 0.5 seconds
 
 ### 2\. **Avoid Redundant FSM Updates**
 
-Ensure you only call `FSM_API.Update("GroupName")` once per tick for each group. Multiple calls will result in redundant processing and wasted CPU cycles. The `FSM_UnityIntegration` script is designed to handle this correctly for Unity.
+Ensure you only call `FSM_API.Update("GroupName")` once per tick for each group. Multiple calls will result in redundant processing and wasted CPU cycles. The `FSM_host-specificIntegration` script is designed to handle this correctly for host-specific.
 
 ### 3\. **Batch Updates for Large Numbers of FSMs**
 
@@ -120,10 +120,10 @@ If you have thousands of FSMs, consider structuring your system so that not all 
 Recall that your `IStateContext` object is where your FSM reads and writes data. How you design this object and its interaction methods can impact performance.
 
   * **Minimize Allocations:** Avoid creating new objects (e.g., `new Vector3()`, `new List<T>()`) within your `onUpdate` or transition conditions unless absolutely necessary. Reuse existing objects or use object pools.
-  * **Cache References:** If your context needs to access other components or systems frequently, cache those references rather than looking them up repeatedly (e.g., `GetComponent<T>()` in Unity's `Awake()` or `Start()`).
+  * **Cache References:** If your context needs to access other components or systems frequently, cache those references rather than looking them up repeatedly (e.g., `GetComponent<T>()` in host-specific's `Awake()` or `Start()`).
   * **Simple Data Access:** Direct property access (`myContext.Health`) is faster than method calls or complex logic to retrieve data.
   * **Accurate `IsValid`:** A correctly implemented `IsValid` property is vital for performance and stability. When `IsValid` returns `false`, FSM\_API automatically unregisters and cleans up the FSM instance. This prevents the system from wasting cycles trying to update invalid or destroyed objects.
-      * **Unity Example:**
+      * **host-specific Example:**
         ```csharp
         public bool IsValid => this != null && gameObject.activeInHierarchy;
         ```
@@ -140,7 +140,7 @@ Recall that your `IStateContext` object is where your FSM reads and writes data.
   * **Unnecessary FSMs:** Not every single behavior needs an FSM. Simple, one-off logic might be better handled directly in code. FSMs shine for complex, multi-state behaviors.
   * **Large Delegates/Lambdas:** While convenient, very large and complex lambda expressions for state actions or conditions can sometimes be less readable and harder to optimize. Consider moving complex logic into private methods on your `IStateContext` class and calling those methods from the lambda.
 
-By thoughtfully applying these performance tips and best practices, you can ensure that your FSM\_API implementation runs efficiently, contributing to a smooth and responsive user experience in your games and applications. The goal is to make FSM\_API an unobtrusive yet powerful tool in your toolkit, allowing you to focus on the exciting aspects of development without performance headaches, especially as you prepare for the Unity Asset Store package submission and integration into AnyApp.
+By thoughtfully applying these performance tips and best practices, you can ensure that your FSM\_API implementation runs efficiently, contributing to a smooth and responsive user experience in your games and applications. The goal is to make FSM\_API an unobtrusive yet powerful tool in your toolkit, allowing you to focus on the exciting aspects of development without performance headaches, especially as you prepare for the general package package submission and integration into AnyApp.
 
 -----
 
