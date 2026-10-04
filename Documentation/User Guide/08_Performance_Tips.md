@@ -12,7 +12,7 @@ FSM\_API's core design prioritizes speed and minimal overhead. By following thes
 
 [01. Core Concepts: Your Guide to FSM_API](01_Core_Concepts.md)
 
-[03. Getting Started with C# (Non-Unity)](03_Getting_Started_CSharp.md)
+[03. Getting Started with C# ](03_Getting_Started_CSharp.md)
 
 [04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
 
@@ -78,7 +78,7 @@ FSM_API.CreateFiniteStateMachine("AmbientBirdFSM", processRate: 10)
 
 ### 1\. **Leverage Processing Groups**
 
-As seen in **[02. Getting Started with Unity](/User Guide/02_Getting_Started_Unity.md)** and **[03. Getting Started with C\# (Non-Unity)](03_Getting_Started_CSharp.md)**, processing groups allow you to organize FSMs and update them at different rates or from different sources.
+As seen in **[02. Getting Started with Unity](/User Guide/02_Getting_Started_Unity.md)** and **[03. Getting Started with C\# ](03_Getting_Started_CSharp.md)**, processing groups allow you to organize FSMs and update them at different rates or from different sources.
 
   * **Unity:** Use `FSM_UnityIntegration.cs` to drive groups like "Update," "FixedUpdate," and "LateUpdate."
       * **"Update"**: For most game logic, input, and visual updates.
