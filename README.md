@@ -202,6 +202,60 @@ FSM_API.Interaction.Update("MainLoop");
 
 ---
 
+## Performance and Benchmarks
+
+FSM_API performance claims are backed by a companion executable benchmark project:
+
+**[FSM_API_Benchmark](https://github.com/TrentBest/FSM_API_Benchmark)**
+
+The benchmark asks a practical question: **what does a real FSM update cost, and how does that cost change as processing groups increase?**
+
+### Recorded baseline
+
+The September 2026 benchmark run measured the multi-group update workload:
+
+| Active process groups | Mean | Allocated |
+|---:|---:|---:|
+| 1 | **305.1 ns** | **360 B** |
+| 10 | **3,115.7 ns** | **3,600 B** |
+| 50 | **15,736.6 ns** | **18,000 B** |
+
+For this particular workload, the measured cost grows approximately linearly across the tested range.
+
+That is a **baseline observation**, not a universal complexity guarantee. It describes the implementation, workload, runtime, and environment represented by the benchmark.
+
+### What is actually being measured?
+
+Two benchmark classes make the experiment easy to inspect:
+
+- `FSM_StringPerformanceBaseline` — one real FSM update tick.
+- `FSM_StringGroupIterationBenchmark` — updates 1, 10, and 50 named processing groups.
+
+Look for BenchmarkDotNet's `[Benchmark]` attributes to find the operations that are actually timed, and `[Params]` to find the workload dimension being varied.
+
+The benchmark is deliberately not a synthetic claim that "strings are slow." It measures the current string-backed implementation so that future lookup changes can be compared against observed behavior.
+
+### Why record allocation too?
+
+Time and allocation measure different costs.
+
+The recorded 50-group operation uses **15,736.6 ns** and **18,000 B** in the benchmark workload. The allocation number is evidence about that measured operation; it is not a promise that an application updating 50 groups will allocate exactly 18 KB per frame.
+
+### Follow the evidence
+
+If you want to verify the number rather than simply trust the README:
+
+1. Open the [benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark).
+2. Find the benchmark class.
+3. Find the `[Benchmark]` method.
+4. Inspect its `[Params]` and `[GlobalSetup]`.
+5. Run it in Release configuration.
+6. Compare the BenchmarkDotNet output with the recorded baseline.
+
+The package claim should always have a path back to the experiment.
+
+For the full methodology and interpretation, see **[Documentation/Benchmarking.md](Documentation/Benchmarking.md)**.
+
 ## 🔬 Internal Architecture (Advanced)
 
 For academic interest or advanced debugging, the `FSM_API.Internal` namespace exposes the engine's core machinery. 
