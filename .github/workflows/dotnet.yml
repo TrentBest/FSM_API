@@ -83,7 +83,7 @@ jobs:
   push_dll_to_fsm_api_unity: # Renamed for clarity, this is your original job
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && false
 
     steps:
       - name: Checkout FSM_API_Unity Repository
@@ -121,7 +121,7 @@ jobs:
   push_dll_to_rawwar: # NEW JOB: Pushes DLL to your raWWar repo
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' # Trigger on push to master in FSM_API repo
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && false # Trigger on push to master in FSM_API repo
 
     steps:
       - name: Checkout raWWar Repository
