@@ -130,6 +130,14 @@ FSM_API is a foundational behavior package. It does not depend on FSM_COS, Micro
 - Multiple FSM instances sharing a definition while keeping their own contexts.
 - Behavior that can be tested without a specific presentation framework.
 
+## Version and 2.0.0 direction
+
+The currently published 1.0.13 package remains sufficient for existing string-backed use. **The next planned release is 2.0.0; another 1.x release is not planned.** The 2.0.0 direction is string and/or integer backing, but integer-backed operation is still under development and is not represented here as completed or released.
+
+Downstream Workshop work—including FSM_COS integration, documentation, and validation—can proceed using the current package wherever it meets the contract. Integer backing must be completed and verified before the 2.0.0 release, but it does not need to block useful ecosystem work.
+
+See [FSM_API 2.0.0 Readiness](Documentation/FSM_API_2.0.0_READINESS.md) for the release gates. No publication is authorized by this roadmap.
+
 ## What This Does Not Do
 
 - It does not provide a GUI, web server, game engine, or application host.
