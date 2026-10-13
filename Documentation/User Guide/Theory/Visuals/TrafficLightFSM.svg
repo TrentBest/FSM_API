@@ -14,11 +14,11 @@
       .redlamp{animation:lamp 6s step-end infinite;animation-delay:0s}
       .greenlamp{animation:lamp 6s step-end infinite;animation-delay:2s}
       .yellowlamp{animation:lamp 6s step-end infinite;animation-delay:4s}
-      .dash{fill:none;stroke:#2563eb;stroke-width:5;stroke-dasharray:9 13;animation:travel 3s linear infinite}
+      .dash{fill:none;stroke:#2563eb;stroke-width:6;stroke-dasharray:9 13;stroke-linecap:round;opacity:.16;animation:travel 6s linear infinite,route 6s step-end infinite}\n      .edge1{animation-delay:0s,0s}.edge2{animation-delay:0s,2s}.edge3{animation-delay:0s,4s}
       @keyframes active{0%,30%{stroke:#2563eb;filter:drop-shadow(0 0 7px #93c5fd)}33%,100%{stroke:#c6cfdd;filter:none}}
       @keyframes lamp{0%,29%{opacity:1}30%,100%{opacity:.25}}
-      @keyframes travel{to{stroke-dashoffset:-88}}
-      @media(prefers-reduced-motion:reduce){.active,.redlamp,.greenlamp,.yellowlamp,.dash{animation:none}.redlamp{opacity:1}.greenlamp,.yellowlamp{opacity:.25}}
+      @keyframes travel{to{stroke-dashoffset:-176}}\n      @keyframes route{0%,32%{opacity:1;filter:drop-shadow(0 0 6px #60a5fa)}33%,65%{opacity:.16;filter:none}66%,100%{opacity:.16;filter:none}}
+      @media(prefers-reduced-motion:reduce){.active,.redlamp,.greenlamp,.yellowlamp,.dash{animation:none}.redlamp{opacity:1}.greenlamp,.yellowlamp{opacity:.25}.dash{opacity:.55}}
     </style>
     <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
   </defs>
@@ -29,7 +29,7 @@
   <path d="M282 240H365" class="arrow" marker-end="url(#arrowhead)"/>
   <path d="M635 240H718" class="arrow" marker-end="url(#arrowhead)"/>
   <path d="M850 322V402H150V322" class="arrow" marker-end="url(#arrowhead)"/>
-  <path d="M282 240H365" class="dash"/>
+  <path d="M282 240H365" class="dash edge1"/>\n  <path d="M635 240H718" class="dash edge2"/>\n  <path d="M850 322V402H150V322" class="dash edge3"/>
   <text x="323" y="208" class="guard" text-anchor="middle">timer expires</text>
   <text x="677" y="208" class="guard" text-anchor="middle">timer expires</text>
   <text x="500" y="432" class="guard" text-anchor="middle">timer expires · repeat cycle</text>
