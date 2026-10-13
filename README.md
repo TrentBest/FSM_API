@@ -219,6 +219,12 @@ For academic interest or advanced debugging, the `FSM_API.Internal` namespace ex
 ### Tick Cycle Logic
 A single tick performs at most one "Enter", one "Update", and one "Exit" operation to ensure deterministic execution time.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/User%20Guide/Visuals/State_Lifecycle.svg" alt="Animated FSM_API state lifecycle explaining enter, update, condition evaluation, exit, target selection, and next-tick entry" width="900">
+</p>
+
+[Open the lifecycle SVG source](Documentation/User%20Guide/Visuals/State_Lifecycle.svg)
+
 1. **Enter (If Needed)**: If the instance is new to its current state, `OnEnter` is executed and the `HasEntered` flag is set.
 2. **Update**: The `OnUpdate` action of the `CurrentState` is executed.
 3. **Evaluate & Transition**: Transitions attached to the `CurrentState` are evaluated.
