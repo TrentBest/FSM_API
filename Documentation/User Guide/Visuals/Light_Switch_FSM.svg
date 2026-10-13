@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">FSM_API living LightSwitch FSM</title>
+  <desc id="desc">An animated explainer for a two-state light switch. Off transitions to On when the context reports the switch should turn on. On transitions to Off when the context reports it should turn off. Each application tick evaluates the active state's behavior and eligible transition. This is an illustrative animation, not a live connection to a running FSM.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#101827"/><stop offset="1" stop-color="#172b3c"/></linearGradient>
+    <linearGradient id="offFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#263748"/><stop offset="1" stop-color="#1b2837"/></linearGradient>
+    <linearGradient id="onFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#174d4b"/><stop offset="1" stop-color="#153a46"/></linearGradient>
+    <filter id="glowOff" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="glowOn" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="12" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#91a8ba"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf4fa}
+      .muted{fill:#a9bdcc}.small{font-size:17px}.label{font-size:19px;font-weight:600}.state{font-size:35px;font-weight:750;letter-spacing:.5px}.title{font-size:31px;font-weight:750}.mono{font-family:Consolas,Monaco,monospace;font-size:17px}
+      .edge{fill:none;stroke:#91a8ba;stroke-width:3;marker-end:url(#arrow)}
+      .offHalo,.onHalo{opacity:.1}
+      .offHalo{animation:offPulse 6s ease-in-out infinite}
+      .onHalo{animation:onPulse 6s ease-in-out infinite}
+      .offNode{animation:offNode 6s ease-in-out infinite}
+      .onNode{animation:onNode 6s ease-in-out infinite}
+      .offEdge{stroke-dasharray:9 13;animation:offDash 6s linear infinite}
+      .onEdge{stroke-dasharray:9 13;animation:onDash 6s linear infinite}
+      .offStep{animation:offStep 6s steps(1,end) infinite}
+      .onStep{animation:onStep 6s steps(1,end) infinite}
+      @keyframes offPulse{0%,43%,100%{opacity:.65}48%,94%{opacity:.08}}
+      @keyframes onPulse{0%,43%,100%{opacity:.08}48%,94%{opacity:.65}}
+      @keyframes offNode{0%,43%,100%{stroke:#66d9ef;stroke-width:5;filter:url(#glowOff)}48%,94%{stroke:#536b7e;stroke-width:2;filter:none}}
+      @keyframes onNode{0%,43%,100%{stroke:#536b7e;stroke-width:2;filter:none}48%,94%{stroke:#67f0bd;stroke-width:5;filter:url(#glowOn)}}
+      @keyframes offDash{0%,43%,100%{stroke:#66d9ef;stroke-dashoffset:0}48%,94%{stroke:#536b7e;stroke-dashoffset:-40}}
+      @keyframes onDash{0%,43%,100%{stroke:#536b7e;stroke-dashoffset:0}48%,94%{stroke:#67f0bd;stroke-dashoffset:-40}}
+      @keyframes offStep{0%,43%,100%{opacity:1}48%,94%{opacity:.35}}
+      @keyframes onStep{0%,43%,100%{opacity:.35}48%,94%{opacity:1}}
+      @media(prefers-reduced-motion:reduce){.offHalo,.onHalo,.offNode,.onNode,.offEdge,.onEdge,.offStep,.onStep{animation:none}.offHalo{opacity:.65}.onHalo{opacity:.1}.offNode{stroke:#66d9ef;stroke-width:5}.onNode{stroke:#536b7e;stroke-width:2}.offEdge{stroke:#66d9ef}.onEdge{stroke:#536b7e}.offStep{opacity:1}.onStep{opacity:.35}}
+    </style>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <path d="M36 92 H1164" stroke="#3a5366" stroke-width="1.5"/>
+  <text x="58" y="52" class="title">FSM_API · A living state machine</text>
+  <text x="60" y="78" class="small muted">LightSwitchFSM · two states · condition-driven transitions</text>
+  <rect x="927" y="31" width="216" height="36" rx="18" fill="#243a4a" stroke="#587185"/>
+  <circle cx="949" cy="49" r="5" fill="#67f0bd"/><text x="964" y="55" class="small">Illustrative cycle</text>
+
+  <path class="edge offEdge" d="M445 274 C520 212 680 212 755 274"/>
+  <path class="edge onEdge" d="M755 365 C680 430 520 430 445 365"/>
+  <rect x="492" y="204" width="216" height="56" rx="14" fill="#172b3c" stroke="#466174"/>
+  <text x="600" y="227" text-anchor="middle" class="label">Condition is true?</text>
+  <text x="600" y="247" text-anchor="middle" class="small muted">Off → On</text>
+  <rect x="492" y="390" width="216" height="56" rx="14" fill="#172b3c" stroke="#466174"/>
+  <text x="600" y="413" text-anchor="middle" class="label">Condition is true?</text>
+  <text x="600" y="433" text-anchor="middle" class="small muted">On → Off</text>
+
+  <circle class="offHalo" cx="310" cy="320" r="132" fill="#66d9ef" filter="url(#glowOff)"/>
+  <circle class="onHalo" cx="890" cy="320" r="132" fill="#67f0bd" filter="url(#glowOn)"/>
+  <rect class="offNode" x="170" y="246" width="280" height="148" rx="24" fill="url(#offFill)" stroke="#536b7e" stroke-width="2"/>
+  <rect class="onNode" x="750" y="246" width="280" height="148" rx="24" fill="url(#onFill)" stroke="#536b7e" stroke-width="2"/>
+  <g transform="translate(310 287)" stroke="#a9bdcc" stroke-width="4" fill="none" stroke-linecap="round">
+    <circle cx="0" cy="0" r="17"/><path d="M-11 12 L-20 21 M11 12 L20 21"/>
+  </g>
+  <g transform="translate(890 287)" stroke="#67f0bd" stroke-width="4" fill="none" stroke-linecap="round">
+    <circle cx="0" cy="0" r="17"/><path d="M0 -28 V-37 M-24 -17 L-31 -24 M24 -17 L31 -24 M-32 2 H-41 M32 2 H41"/>
+  </g>
+  <text x="310" y="337" text-anchor="middle" class="state">OFF</text>
+  <text x="310" y="365" text-anchor="middle" class="small muted">Current state</text>
+  <text x="890" y="337" text-anchor="middle" class="state">ON</text>
+  <text x="890" y="365" text-anchor="middle" class="small muted">Current state</text>
+
+  <g class="offStep">
+    <rect x="70" y="478" width="328" height="80" rx="16" fill="#182e3e" stroke="#3b7182"/>
+    <circle cx="96" cy="503" r="12" fill="#66d9ef"/><text x="96" y="509" text-anchor="middle" font-size="16" font-weight="700" fill="#101827">1</text>
+    <text x="118" y="505" class="label">Off is active</text>
+    <text x="92" y="534" class="small muted">The instance begins here.</text>
+  </g>
+  <g class="onStep">
+    <rect x="802" y="478" width="328" height="80" rx="16" fill="#182e3e" stroke="#3c8a76"/>
+    <circle cx="828" cy="503" r="12" fill="#67f0bd"/><text x="828" y="509" text-anchor="middle" font-size="16" font-weight="700" fill="#101827">2</text>
+    <text x="850" y="505" class="label">On is active</text>
+    <text x="824" y="534" class="small muted">The target enters on a later tick.</text>
+  </g>
+  <rect x="428" y="478" width="344" height="80" rx="16" fill="#1b2938" stroke="#4a5c6b"/>
+  <text x="600" y="505" text-anchor="middle" class="label">Application input</text>
+  <text x="600" y="532" text-anchor="middle" class="small muted">Updates the context condition</text>
+  <path d="M398 518 H425" stroke="#91a8ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M775 518 H799" stroke="#91a8ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="60" y="588" width="1080" height="82" rx="18" fill="#101d2a" stroke="#3b5264"/>
+  <text x="86" y="617" class="label">One application tick</text>
+  <text x="86" y="645" class="small muted">Interaction.Update("MainLoop")</text>
+  <path d="M370 629 H414" stroke="#91a8ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="435" y="617" class="label">Enter (if needed)</text>
+  <text x="435" y="645" class="small muted">→ Update → Evaluate transition</text>
+  <path d="M748 629 H792" stroke="#91a8ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="812" y="617" class="label">If true</text>
+  <text x="812" y="645" class="small muted">Exit old state → set target</text>
+  <text x="600" y="697" text-anchor="middle" font-size="14" class="muted">Conceptual animation for learning — not telemetry from a running FSM_API instance. Reduced-motion settings are respected.</text>
+</svg>
