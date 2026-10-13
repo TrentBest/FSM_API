@@ -36,6 +36,16 @@ FSM_API is a powerful, performance-driven library designed to help you easily ma
 </a>
 <em>This is an illustrative animation of the state cycle, not a live process monitor. The current state changes only when a transition condition is satisfied; the next state's enter action runs on the subsequent tick. Prefer a static image? The original [LightSwitch diagram](Visuals/Light_Switch_FSM.png) remains available.</em>
 
+### See the same idea in a small, real C# demo
+
+<p align="center">
+  <a href="https://github.com/TrentBest/SimpleDemos">
+    <img src="https://raw.githubusercontent.com/TrentBest/SimpleDemos/master/docs/assets/fox-dog-number-line.svg" alt="Animated fox approaches a sleeping dog, detects an obstacle, jumps, and continues along a number line" width="900" />
+  </a>
+</p>
+
+The fox-and-dog visual is paired with actual FSM_API C# examples in [SimpleDemos](https://github.com/TrentBest/SimpleDemos): [fox states and transition predicates](https://github.com/TrentBest/SimpleDemos/blob/master/QuickBrownFox/QuickBrownFox.cs), [dog states and cross-FSM transition request](https://github.com/TrentBest/SimpleDemos/blob/master/QuickBrownFox/LazySleepingDog.cs), and the [application update loop](https://github.com/TrentBest/SimpleDemos/blob/master/QuickBrownFox/Program.cs). The SVG is a conceptual animation; the C# code remains the authority for executable behavior.
+
 ---
 
 
