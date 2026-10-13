@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" role="img" aria-labelledby="title desc">
+  <title id="title">Traffic light finite state machine</title>
+  <desc id="desc">A teaching animation cycles through Red, Green, and Yellow traffic-light states. Each arrow is guarded by a timer-expired condition. The sequence repeats.</desc>
+  <defs>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172033}
+      .heading{font-size:29px;font-weight:750}.sub{font-size:16px;fill:#4b5568}
+      .node{fill:#fff;stroke:#c6cfdd;stroke-width:2}.label{font-size:22px;font-weight:750}.guard{font-size:15px;fill:#344054}
+      .arrow{fill:none;stroke:#64748b;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .active{stroke-width:4;animation:active 6s ease-in-out infinite}
+      .red{animation-delay:0s}.green{animation-delay:2s}.yellow{animation-delay:4s}
+      .light{stroke:#b8c1ce;stroke-width:2}
+      .redlamp{animation:lamp 6s step-end infinite;animation-delay:0s}
+      .greenlamp{animation:lamp 6s step-end infinite;animation-delay:2s}
+      .yellowlamp{animation:lamp 6s step-end infinite;animation-delay:4s}
+      .dash{fill:none;stroke:#2563eb;stroke-width:5;stroke-dasharray:9 13;animation:travel 3s linear infinite}
+      @keyframes active{0%,30%{stroke:#2563eb;filter:drop-shadow(0 0 7px #93c5fd)}33%,100%{stroke:#c6cfdd;filter:none}}
+      @keyframes lamp{0%,29%{opacity:1}30%,100%{opacity:.25}}
+      @keyframes travel{to{stroke-dashoffset:-88}}
+      @media(prefers-reduced-motion:reduce){.active,.redlamp,.greenlamp,.yellowlamp,.dash{animation:none}.redlamp{opacity:1}.greenlamp,.yellowlamp{opacity:.25}}
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+  </defs>
+  <rect width="1000" height="520" rx="22" fill="#f7f9fc"/>
+  <text x="40" y="52" class="heading">One machine. Three possible states.</text>
+  <text x="40" y="80" class="sub">A timer-expired condition permits each transition; the current state is exclusive.</text>
+
+  <path d="M282 240H365" class="arrow" marker-end="url(#arrowhead)"/>
+  <path d="M635 240H718" class="arrow" marker-end="url(#arrowhead)"/>
+  <path d="M850 322V402H150V322" class="arrow" marker-end="url(#arrowhead)"/>
+  <path d="M282 240H365" class="dash"/>
+  <text x="323" y="208" class="guard" text-anchor="middle">timer expires</text>
+  <text x="677" y="208" class="guard" text-anchor="middle">timer expires</text>
+  <text x="500" y="432" class="guard" text-anchor="middle">timer expires · repeat cycle</text>
+
+  <g class="active red">
+    <rect x="40" y="148" width="242" height="174" rx="18" class="node"/>
+    <text x="161" y="181" class="label" text-anchor="middle">RED</text>
+    <rect x="133" y="193" width="56" height="96" rx="15" fill="#273244"/>
+    <circle cx="161" cy="215" r="12" fill="#ef4444" class="light redlamp"/>
+    <circle cx="161" cy="241" r="12" fill="#fbbf24" class="light"/>
+    <circle cx="161" cy="267" r="12" fill="#22c55e" class="light"/>
+  </g>
+  <g class="active green">
+    <rect x="365" y="148" width="270" height="174" rx="18" class="node"/>
+    <text x="500" y="181" class="label" text-anchor="middle">GREEN</text>
+    <rect x="472" y="193" width="56" height="96" rx="15" fill="#273244"/>
+    <circle cx="500" cy="215" r="12" fill="#ef4444" class="light"/>
+    <circle cx="500" cy="241" r="12" fill="#fbbf24" class="light"/>
+    <circle cx="500" cy="267" r="12" fill="#22c55e" class="light greenlamp"/>
+  </g>
+  <g class="active yellow">
+    <rect x="718" y="148" width="242" height="174" rx="18" class="node"/>
+    <text x="839" y="181" class="label" text-anchor="middle">YELLOW</text>
+    <rect x="811" y="193" width="56" height="96" rx="15" fill="#273244"/>
+    <circle cx="839" cy="215" r="12" fill="#ef4444" class="light"/>
+    <circle cx="839" cy="241" r="12" fill="#fbbf24" class="light yellowlamp"/>
+    <circle cx="839" cy="267" r="12" fill="#22c55e" class="light"/>
+  </g>
+  <rect x="40" y="456" width="920" height="38" rx="10" fill="#edf2f9"/>
+  <text x="500" y="480" class="sub" text-anchor="middle">Concept animation · illustrates states and guarded transitions · not live runtime telemetry</text>
+</svg>
