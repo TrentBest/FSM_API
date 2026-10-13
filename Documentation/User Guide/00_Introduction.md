@@ -31,10 +31,10 @@
 
 FSM_API is a powerful, performance-driven library designed to help you easily manage complex behaviors in your applications and games using **Finite State Machines (FSMs)**. It provides a robust and flexible framework for defining, managing, and executing state-based logic.
 
-<a href="Visuals/Light_Switch_FSM.png" target="_blank">
-    <img src="Visuals/Light_Switch_FSM.png" alt="Diagram of a simple light switch FSM" height="200" style="display: block;">
+<a href="Visuals/Light_Switch_FSM.svg" target="_blank">
+    <img src="Visuals/Light_Switch_FSM.svg" alt="Animated LightSwitch FSM showing Off and On states, condition-driven transitions, and how application ticks advance the state machine" width="900" style="display: block; max-width: 100%; height: auto;">
 </a>
-<em>At its core, an FSM is a simple concept we see every day. A light switch has two states, 'On' and 'Off', and a clear action, 'flipping the switch', causes a transition between them.</em>
+<em>This is an illustrative animation of the state cycle, not a live process monitor. The current state changes only when a transition condition is satisfied; the next state's enter action runs on the subsequent tick. Prefer a static image? The original [LightSwitch diagram](Visuals/Light_Switch_FSM.png) remains available.</em>
 
 ---
 
