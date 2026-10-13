@@ -58,12 +58,15 @@ coding patterns. FSM_API liberates your state management:
 
 A simple FSM is often best understood visually. For example, our `LightSwitchFSM` has two states, `Off` and `On`, and can only transition between them.
 
-Here is what the FSM looks like:
-```mermaid
-graph TD
-    Off(Off) -- "shouldTurnOn" --> On(On)
-    On -- "shouldTurnOff" --> Off
-```
+Here is the same two-state machine as a **living visual**. The animation highlights the illustrative active state and transition path; it is a teaching aid, not a live connection to a running process.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg" alt="Animated LightSwitch FSM showing Off and On states, transition conditions, and the application tick cycle" width="900">
+</p>
+
+[Open the SVG source](Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg) · [Read the FSM_API getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md)
+
+The diagram follows the same `Off`/`On` states and context-driven transition conditions used in the C# example below.
 
 Here is how the FSM interacts with your application:
 
