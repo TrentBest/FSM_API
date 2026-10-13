@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">FSM_API state lifecycle and transition timing</title>
+  <desc id="desc">A living diagram of an FSM_API update tick. If the current state has not entered, OnEnter runs once. OnUpdate runs, then transition conditions are evaluated. If no condition is true, the machine remains in its current state for another tick. If a condition is true, OnExit runs, the current state changes to the target, and the target state's OnEnter waits until the next tick. This is a conceptual animation, not live telemetry.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101827"/><stop offset="1" stop-color="#172b3c"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#91a8ba"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf4fa}.muted{fill:#a9bdcc}.title{font-size:30px;font-weight:750}.label{font-size:19px;font-weight:700}.small{font-size:16px}.mono{font-family:Consolas,Monaco,monospace;font-size:17px}
+      .card{fill:#1b2b3b;stroke:#4c6478;stroke-width:2}.line{fill:none;stroke:#91a8ba;stroke-width:3;marker-end:url(#arrow)}.step{opacity:.5;animation:stepGlow 12s linear infinite}
+      #enter{animation-delay:0s}#update{animation-delay:2s}#evaluate{animation-delay:4s}#exit{animation-delay:6s}#target{animation-delay:8s}#next{animation-delay:10s}
+      @keyframes stepGlow{0%,13%{opacity:1;filter:drop-shadow(0 0 9px #66d9ef)}16%,100%{opacity:.5;filter:none}}
+      .loop{stroke-dasharray:8 12;animation:dash 2.2s linear infinite}
+      @keyframes dash{to{stroke-dashoffset:-40}}
+      @media(prefers-reduced-motion:reduce){.step,.loop{animation:none}.step{opacity:1;filter:none}}
+    </style>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="url(#bg)"/>
+  <text x="56" y="55" class="title">Inside one FSM_API state lifecycle</text>
+  <text x="58" y="83" class="small muted">The order matters: the target state enters on the next tick, not during the transition tick.</text>
+  <path d="M40 106H1160" stroke="#3a5366"/>
+  <g id="enter" class="step">
+    <rect class="card" x="52" y="150" width="320" height="100" rx="18"/>
+    <circle cx="82" cy="180" r="16" fill="#66d9ef"/><text x="82" y="186" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">1</text>
+    <text x="110" y="184" class="label">OnEnter (if needed)</text>
+    <text x="76" y="216" class="small muted">Runs once per state entry.</text>
+    <text x="76" y="238" class="small muted">Skipped on later ticks in same state.</text>
+  </g>
+  <path class="line" d="M372 200H414"/>
+  <g id="update" class="step">
+    <rect class="card" x="420" y="150" width="320" height="100" rx="18"/>
+    <circle cx="450" cy="180" r="16" fill="#66d9ef"/><text x="450" y="186" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">2</text>
+    <text x="478" y="184" class="label">OnUpdate</text>
+    <text x="444" y="216" class="small muted">Runs on each eligible tick</text>
+    <text x="444" y="238" class="small muted">while this state is current.</text>
+  </g>
+  <path class="line" d="M740 200H782"/>
+  <g id="evaluate" class="step">
+    <rect class="card" x="788" y="150" width="360" height="100" rx="18"/>
+    <circle cx="818" cy="180" r="16" fill="#f7c66b"/><text x="818" y="186" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">3</text>
+    <text x="846" y="184" class="label">Evaluate transition rules</text>
+    <text x="812" y="216" class="small muted">Inspect conditions for the current state.</text>
+    <text x="812" y="238" class="small muted">A true condition selects a target.</text>
+  </g>
+  <path class="line" d="M968 250V300H775"/>
+  <rect x="823" y="277" width="108" height="34" rx="17" fill="#263d4e" stroke="#617a8c"/>
+  <text x="877" y="299" text-anchor="middle" class="small">True?</text>
+
+  <path class="line loop" d="M788 204H770V348H704V273"/>
+  <rect x="442" y="310" width="318" height="64" rx="15" fill="#172d3a" stroke="#3b7182"/>
+  <text x="601" y="336" text-anchor="middle" class="label">No condition met</text>
+  <text x="601" y="358" text-anchor="middle" class="small muted">Remain in current state; next tick repeats.</text>
+  <path class="line" d="M877 311V405H970V428"/>
+
+  <g id="exit" class="step">
+    <rect class="card" x="52" y="428" width="320" height="92" rx="18"/>
+    <circle cx="82" cy="458" r="16" fill="#f7c66b"/><text x="82" y="464" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">4</text>
+    <text x="110" y="462" class="label">OnExit</text>
+    <text x="76" y="494" class="small muted">Runs for the state being left.</text>
+  </g>
+  <path class="line" d="M372 474H414"/>
+  <g id="target" class="step">
+    <rect class="card" x="420" y="428" width="320" height="92" rx="18"/>
+    <circle cx="450" cy="458" r="16" fill="#f7c66b"/><text x="450" y="464" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">5</text>
+    <text x="478" y="462" class="label">Set target state</text>
+    <text x="444" y="494" class="small muted">CurrentState changes; entry is reset.</text>
+  </g>
+  <path class="line" d="M740 474H782"/>
+  <g id="next" class="step">
+    <rect x="788" y="428" width="360" height="92" rx="18" fill="#153b3b" stroke="#67f0bd" stroke-width="2"/>
+    <circle cx="818" cy="458" r="16" fill="#67f0bd"/><text x="818" y="464" text-anchor="middle" font-size="17" font-weight="800" fill="#101827">6</text>
+    <text x="846" y="462" class="label">Next tick: target OnEnter</text>
+    <text x="812" y="494" class="small muted">The next state's entry action happens later.</text>
+  </g>
+  <rect x="52" y="548" width="1096" height="42" rx="12" fill="#101d2a" stroke="#3b5264"/>
+  <text x="600" y="575" text-anchor="middle" class="mono">Interaction.Update("MainLoop") → Enter? → Update → Evaluate → Exit? → Target state</text>
+  <text x="600" y="608" text-anchor="middle" font-size="13" class="muted">Conceptual animation based on the documented tick cycle; not a live process monitor. Reduced-motion settings are respected.</text>
+</svg>
