@@ -33,7 +33,7 @@ An `FSMBuilder` used to describe the definition's states, transition conditions,
 
 ## Example
 
-The exact state-builder API is demonstrated in the [Getting Started with C# guide](../../../User%20Guide/03_Getting_Started_CSharp.md). At a high level, the flow is:
+The exact state-builder API is demonstrated in the [Getting Started with C# guide](../../../../User%20Guide/03_Getting_Started_CSharp.md). At a high level, the flow is:
 
 ```csharp
 const string group = "PlayerSession";
@@ -65,4 +65,4 @@ If the requested name already exists in the selected group, the current implemen
 
 - [Create workflow overview](../../Create.md)
 - [CreateInstance](../CreateInstance/CreateInstance.md)
-- [What Are FSMs? — theory](../../../User%20Guide/Theory/01_What_Are_FSMs.md)
+- [What Are FSMs? — theory](../../../../User%20Guide/Theory/01_What_Are_FSMs.md)
