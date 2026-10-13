@@ -72,9 +72,11 @@ If an FSM Definition is the blueprint, an **FSM Instance** is the actual, live "
 
 ### 🟢 State: The "What's Happening Now"
 
-<a href="Visuals/State_Lifecycle.png" target="_blank">
-    <img src="Visuals/State_Lifecycle.png" alt="A timeline showing the state lifecycle: onEnter fires once, onUpdate loops, and onExit fires once." height="200" style="display: block;">
+<a href="Visuals/State_Lifecycle.svg" target="_blank">
+    <img src="Visuals/State_Lifecycle.svg" alt="Animated FSM_API state lifecycle showing OnEnter, OnUpdate, transition evaluation, OnExit, target selection, and next-tick entry" width="900" style="display: block; max-width: 100%; height: auto;">
 </a>
+
+<em>The animation shows one possible successful transition path. If no condition is met, the FSM remains in its current state and the next tick repeats the update/evaluation cycle. The target state's `onEnter` runs on the next tick. The original [static lifecycle diagram](Visuals/State_Lifecycle.png) remains available.
 
 A **State** is simply a named stage or phase that your FSM can be in. It's the "what's happening right now" for the thing your FSM is controlling.
 
