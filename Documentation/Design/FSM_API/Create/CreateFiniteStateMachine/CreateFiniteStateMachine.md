@@ -1,73 +1,68 @@
-### CreateFiniteStateMachine Method Documentation
+# CreateFiniteStateMachine: describe reusable behavior
 
-The `CreateFiniteStateMachine` method is a key part of the `FSM_API`'s `Create` module. Its purpose is to create a new **Finite State Machine (FSM) blueprint**—a conceptual definition of an FSM's states and transitions, not a live instance. It acts as a controlled entry point to the **FSMBuilder**, which is then used to define the FSM's behavior.
+`CreateFiniteStateMachine` is the starting point for a definition. It returns an `FSMBuilder`; it does not, by itself, create a context-bound runtime instance.
 
------
+<p align="center">
+  <a href="../../Visuals/Create_Journey.svg">
+    <img src="../../Visuals/Create_Journey.svg" alt="Animated workflow from FSM builder to registered definition and context-bound runtime instance" width="1000" />
+  </a>
+</p>
 
-### Method Signature
-
-```csharp
-public static FSMBuilder CreateFiniteStateMachine(string fsmName, int processRate, string processGroup)
-```
-
-**Parameters:**
-
-  * **`fsmName`**: A unique string identifier for the new FSM blueprint.
-  * **`processRate`**: An integer that defines how frequently the FSM instances associated with this blueprint should be updated. The values have specific meanings:
-      * **-1**: The FSM instance will update every time its processing group is "ticked" or updated. This provides the highest frequency of updates.
-      * **0**: The FSM is purely event-driven. It will **never** be updated by the system's tick loop and will only process transitions in response to a direct event being sent to it.
-      * **\> 0**: The FSM will skip that many processing group "ticks" before it is updated. For example, a value of 1 would mean it updates every other tick. This allows for performance optimization by reducing the update frequency for less critical FSMs.
-  * **`processGroup`**: The name of the `ProcessingGroup` this FSM will belong to.
-
-**Returns:**
-
-  * **`FSMBuilder`**: A fluent builder object used to define the states, transitions, and initial state of the FSM.
-
------
-
-### Purpose and Philosophy
-
-This method simplifies the creation of new FSMs by providing a consistent, API-managed pathway. While it is technically possible to manually instantiate an `FSMBuilder` directly, using `CreateFiniteStateMachine` is the recommended and standard approach. This ensures that all FSMs are correctly registered with the `FSM_API`'s internal systems, guaranteeing proper management and avoiding potential inconsistencies or errors in a distributed system. It's a best practice for API consumption.
-
-#### Conceptual Flow: A Flowchart
-
-The flowchart below illustrates the conceptual path a developer should follow when creating an FSM blueprint. It highlights the role of `CreateFiniteStateMachine` as the official starting point.
-
-```mermaid
-graph TD
-    A[Start] --> B(Call FSM_API.Create.CreateFiniteStateMachine);
-    B --> C(Returns FSMBuilder Object);
-    C --> D[Use Builder to Define States & Transitions];
-    D --> E[Build the FSM Blueprint];
-    E --> F[API Registers New Blueprint];
-    F --> G[End];
-```
-
-This diagram makes it clear that the `FSMBuilder` is part of a larger, API-driven process, reinforcing the idea of using the provided method as the official entry point.
-
------
-
-### Usage Example: A Code Snippet
+## Signature
 
 ```csharp
-// Step 1: Create a Processing Group (if not already done)
-FSM_API.Create.CreateProcessingGroup("PlayerSession");
-
-// Step 2: Use the API to get an FSMBuilder object
-FSMBuilder myGameFSM = FSM_API.Create.CreateFiniteStateMachine(
-    "GameStateManager",
-    10, // Process 10 times per second
-    "PlayerSession"
-);
-
-// Step 3: Use the builder to define the FSM's behavior
-myGameFSM
-    .AddState("MainMenu")
-    .AddState("InGame")
-    .AddTransition("MainMenu", "InGame", "StartGameEvent")
-    .SetInitialState("MainMenu");
-
-// The FSM blueprint is now ready to have instances created from it
+public static FSMBuilder CreateFiniteStateMachine(
+    string fsmName = "UnNamedFSM",
+    int processRate = 0,
+    string processingGroup = "Update")
 ```
 
-The code snippet demonstrates a complete, end-to-end example, showing how the `CreateFiniteStateMachine` method fits into the overall FSM creation workflow.
+### Parameters
+
+- **`fsmName`** — the name used to identify this definition when building it and creating instances. Must not be null, empty, or whitespace.
+- **`processRate`** — the default processing mode/rate for instances of the definition:
+  - `0`: event-driven; it is not processed by the ordinary tick loop.
+  - A positive value: tick/scheduled processing according to FSM_API's processing-rate rules.
+  - `-1`: manual processing; invoke processing explicitly.
+  - A value below `-1` is reported through the API error path and coerced to `0`.
+- **`processingGroup`** — the case-sensitive group name associated with the definition. Defaults to `"Update"`. The group is created when needed.
+
+### Returns
+
+An `FSMBuilder` used to describe the definition's states, transition conditions, state actions, and initial state. Finish the definition with `BuildDefinition()` before asking `CreateInstance` to create a runtime instance.
+
+## Example
+
+The exact state-builder API is demonstrated in the [Getting Started with C# guide](../../../User%20Guide/03_Getting_Started_CSharp.md). At a high level, the flow is:
+
+```csharp
+const string group = "PlayerSession";
+const string name = "GameStateManager";
+
+var builder = FSM_API.Create.CreateFiniteStateMachine(
+    name,
+    processRate: 1,
+    processingGroup: group);
+
+// Describe the states, transitions, actions, and initial state here.
+// Use the fluent methods shown in the getting-started guide.
+
+builder.BuildDefinition();
+
+// A runtime instance is a separate operation:
+var handle = FSM_API.Create.CreateInstance(name, playerContext, group);
+```
+
+The middle section is intentionally a placeholder: a useful definition must have its state structure and initial state configured before it is built.
+
+## Design principle: definition first, instance second
+
+The definition is the reusable behavior plan. Each call to `CreateInstance` binds that plan to a particular `IStateContext` and produces an `FSMHandle`. This separation lets many objects share one behavior definition while maintaining independent runtime state.
+
+If the requested name already exists in the selected group, the current implementation returns a builder initialized from the existing definition path; treat this API as both a creation entry point and a route for definition modification. Review the implementation and tests when changing an existing definition at runtime.
+
+## Related reading
+
+- [Create workflow overview](../../Create.md)
+- [CreateInstance](../CreateInstance/CreateInstance.md)
+- [What Are FSMs? — theory](../../../User%20Guide/Theory/01_What_Are_FSMs.md)
