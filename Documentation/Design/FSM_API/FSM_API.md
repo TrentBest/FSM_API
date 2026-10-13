@@ -1,45 +1,29 @@
-### FSM_API: Foundational Behavior Logic
+# FSM_API: Foundational Behavior Logic
 
-The **FSM_API** is the core component of the MyVR architecture, providing the foundational behavior logic for all digital experiences. It is built upon the principles of Finite State Machines (FSMs), allowing for a clear and structured approach to managing complex interactions and states within applications.
+FSM_API provides host-neutral state-machine behavior for C# applications. It separates reusable behavior definitions from the application-owned context objects those definitions operate on.
 
-#### Key Features
+## Create: from design to execution
 
-- **Decoupled Logic**: The FSM_API separates behavior logic from the underlying platform, enabling seamless deployment across various environments.
-- **Reusable Patterns**: By encapsulating common behaviors within FSMs, the API promotes reuse and consistency across different applications.
-- **Scalability**: The architecture is designed to scale effortlessly, accommodating a wide range of use cases from simple interactions to complex, multi-layered experiences.
+<p align="center">
+  <a href="Visuals/Create_Journey.svg">
+    <img src="Visuals/Create_Journey.svg" alt="Animated FSM_API Create workflow from processing group and builder through a registered definition to context-bound instance and update cycle" width="1000" />
+  </a>
+</p>
 
-#### Technical Details
+Start with the [Create workflow](Create.md) to understand how the API moves from an FSM definition to runtime instances. The diagram is a teaching animation, not live runtime telemetry.
 
-- **State Management**: The FSM_API provides robust state management capabilities, allowing developers to define and control the various states an application can be in.
-- **Event Handling**: The API includes a powerful event handling system, enabling responsive and dynamic interactions based on user input and other triggers.
-- **Integration**: The FSM_API is designed to integrate seamlessly with other components of the MyVR architecture, including the host-specific engines Ecosystem and Cloud Infrastructure.
-#### Example Diagram
+## Core areas
 
-```mermaid
-classDiagram
-    class FSM_API {
-        <<static>>
-    }
-    class Create {
-        <<static>>
-    }
-    class Error {
-<<static>>
-    }
-    class Internal {
-        <<static>>
-    }
-    class Interaction {
+- **[Create](Create.md)** — create processing groups, describe and register definitions, and instantiate them.
+- **[FSM](FSM/FSM.md)** — the state-machine definition and its behavior.
+- **Interaction** — interact with instances and drive processing from the host application's update loop.
+- **Error** and **Internal** — diagnostics and internal management concerns.
 
-    }
+## Architectural idea
 
-    FSM_API "1" *-- "1" Create
-    FSM_API "1" *-- "1" Error
-    FSM_API "1" *-- "1" Internal
-    FSM_API "1" *-- "1" Interaction
+- **Definition:** reusable behavior—states, transition conditions, and actions.
+- **Instance:** one execution of that definition, represented by an `FSMHandle`.
+- **Context:** application-owned data implementing `IStateContext`.
+- **Processing group:** a named organization for update processing.
 
-    click Create href "Create" "Creation Module"
-    click Error href "Error" "Error Handling Module"
-    click Internal href "Internal" "Internal Operations Module"
-    click Interaction href "Interaction" "Interaction Module"
-    ```
+Keeping these concepts distinct supports reuse and testability without tying the core library to a particular UI, game engine, or domain model.
