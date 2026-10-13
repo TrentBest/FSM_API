@@ -66,6 +66,67 @@ In this diagram:
 
 ---
 
+## From the diagram to executable C#
+
+The diagram is a model of the behavior. FSM_API lets us express that model as C#; the application still owns the real-world input and timing. In this small example, the host updates `TimerExpired` when its timer completes, then asks the processing group to update. The FSM definition describes which state may follow which.
+
+```csharp
+using TheSingularityWorkshop.FSM_API;
+
+const string group = "TrafficLight";
+const string definition = "TrafficLightFSM";
+
+FSM_API.Create.CreateProcessingGroup(group);
+
+FSM_API.Create
+    .CreateFiniteStateMachine(definition, processRate: 1, processingGroup: group)
+    .State("Red")
+    .State("Green")
+    .State("Yellow")
+    .WithInitialState("Red")
+    .Transition("Red", "Green", ctx => ((TrafficLightContext)ctx).TimerExpired)
+    .Transition("Green", "Yellow", ctx => ((TrafficLightContext)ctx).TimerExpired)
+    .Transition("Yellow", "Red", ctx => ((TrafficLightContext)ctx).TimerExpired)
+    .BuildDefinition();
+
+var trafficLight = new TrafficLightContext();
+FSMHandle handle = FSM_API.Create.CreateInstance(definition, trafficLight, group);
+
+// The host owns the timer and decides when this becomes true.
+trafficLight.TimerExpired = true;
+FSM_API.Interaction.Update(group);
+
+public sealed class TrafficLightContext : IStateContext
+{
+    public bool IsValid => true;
+    public string Name { get; set; } = "Intersection A";
+    public bool TimerExpired { get; set; }
+}
+```
+
+This is the **state graph**, not a complete traffic controller: production code must own timer scheduling, reset the timer after a transition, and apply safety requirements. The example deliberately makes that boundary visible instead of hiding timing inside the diagram.
+
+## Could this be shown through TheSingularityWorkshop.GUI?
+
+**Yes, architecturally—by composing your existing technologies, not by making FSM_API depend on a renderer.** Your [GUI repository](https://github.com/TrentBest/TheSingularityWorkshop.GUI) separates a platform-neutral semantic `GuiNode` tree from its Blazor and WPF manifestations. That gives us a sensible path:
+
+1. **FSM_API** owns state definitions, transition evaluation, runtime state, and processing.
+2. **An observation/diagnostic boundary** exposes selected, read-only runtime facts such as active state, transition history, and update events.
+3. **GUI.Core** builds a semantic view of those facts; it does not need to know whether the screen is a browser or desktop.
+4. **GUI.Blazor / GUI.WPF** render that view on their respective platforms.
+
+The animated SVG on this page is currently a **teaching animation** with a pre-authored sequence. It is not connected to a running FSM. A true live highlight would require a supported observation contract and a consumer that updates the semantic GUI when runtime events arrive. We should not pretend that such a feed exists until it is implemented and tested.
+
+### Where the limits are
+
+- **Possible now:** C# examples and definitions; static and pre-authored animated diagrams; documentation linking the model to real API calls.
+- **Possible with integration work:** a live inspector that highlights the actual current state and traversed transition, driven by real FSM_API observations and rendered through GUI.Core + platform adapters.
+- **Not automatic:** a diagram cannot infer arbitrary application-owned inputs, timers, external effects, or domain meaning unless the application exposes them.
+- **Important boundary:** FSM_API should remain independent of GUI.Core, Blazor, WPF, browser DOM, and styling. A diagnostic adapter or optional integration package can connect them without reversing the dependency direction.
+- **Current GUI project limits:** the GUI repository documents some future contracts—such as stable semantic interaction, capability negotiation, and shared adapter conformance—as not yet implemented. We should build on the contracts that exist rather than assume the roadmap is already runtime capability.
+
+This is the larger opportunity: one behavior definition can be explained in theory, expressed in C#, and eventually observed through your own GUI system—while each layer keeps a clear responsibility.
+
 ## 💾 Why FSMs are Powerful
 
 The beauty of FSMs lies in their simplicity and power:
