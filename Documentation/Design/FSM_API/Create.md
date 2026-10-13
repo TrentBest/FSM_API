@@ -27,13 +27,6 @@ This complete example defines a two-state door. The application changes `OpenReq
 ```csharp
 using TheSingularityWorkshop.FSM_API;
 
-public sealed class DoorContext : IStateContext
-{
-    public bool IsValid => true;
-    public string Name { get; set; } = "FrontDoor";
-    public bool OpenRequested { get; set; }
-}
-
 const string group = "Doors";
 const string definitionName = "DoorFSM";
 
@@ -57,6 +50,14 @@ FSMHandle handle = FSM_API.Create.CreateInstance(definitionName, door, group);
 // Your application controls the input and update cadence.
 door.OpenRequested = true;
 FSM_API.Interaction.Update(group);
+
+// Context type can be declared after top-level statements.
+public sealed class DoorContext : IStateContext
+{
+    public bool IsValid => true;
+    public string Name { get; set; } = "FrontDoor";
+    public bool OpenRequested { get; set; }
+}
 ```
 
 The builder creates the **definition**; `CreateInstance` creates the **context-bound instance**. The sample demonstrates the API shape; use the host application's actual input and update loop in production.
