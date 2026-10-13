@@ -8,7 +8,7 @@
       .heading{font-size:30px;font-weight:750}.sub{font-size:16px;fill:#4b5568}
       .stage{fill:#fff;stroke:#b8c4d8;stroke-width:2}.num{font-size:15px;font-weight:800;fill:#fff}
       .label{font-size:20px;font-weight:700}.body{font-size:15px;fill:#344054}.code{font:14px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#24324b}
-      .line{fill:none;stroke:#64748b;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .line{fill:none;stroke:#64748b;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}\n      .route{fill:none;stroke:#2563eb;stroke-width:6;stroke-linecap:round;stroke-dasharray:8 13;opacity:.12;animation:routeGlow 6s step-end infinite,travel 2.4s linear infinite}\n      .r1{animation-delay:0s,0s}.r2{animation-delay:1.2s,0s}.r3{animation-delay:2.4s,0s}.r4{animation-delay:3.6s,0s}.r5{animation-delay:4.8s,0s}
       .group{stroke:#7c3aed}.blueprint{stroke:#2563eb}.instance{stroke:#0f766e}.tick{stroke:#c2410c}
       .pill{fill:#f3f6fb;stroke:#d6deea;stroke-width:1}
       .pulse{fill:none;stroke:#2563eb;stroke-width:5;stroke-linecap:round;stroke-dasharray:10 15;animation:travel 3.8s linear infinite}
@@ -16,10 +16,10 @@
       .glow2{animation:glow 4.8s ease-in-out infinite 1.2s}
       .glow3{animation:glow 4.8s ease-in-out infinite 2.4s}
       .tickpulse{animation:tick 2.8s ease-in-out infinite}
-      @keyframes travel{to{stroke-dashoffset:-100}}
+      @keyframes travel{to{stroke-dashoffset:-100}}\n      @keyframes routeGlow{0%,19%{opacity:1;filter:drop-shadow(0 0 6px #60a5fa)}20%,100%{opacity:.12;filter:none}}
       @keyframes glow{0%,12%,100%{filter:none}4%,8%{filter:drop-shadow(0 0 7px #60a5fa)}}
       @keyframes tick{0%,100%{opacity:.4}50%{opacity:1}}
-      @media(prefers-reduced-motion:reduce){.pulse,.glow,.glow2,.glow3,.tickpulse{animation:none}}
+      @media(prefers-reduced-motion:reduce){.pulse,.glow,.glow2,.glow3,.tickpulse,.route{animation:none}.route{opacity:.45}}
     </style>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
     <marker id="blueArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
@@ -36,7 +36,7 @@
     <text x="22" y="121" class="code">CreateProcessingGroup()</text>
     <text x="22" y="145" class="body">Organizes update work</text>
   </g>
-  <path d="M292 225H324" class="line" marker-end="url(#arrow)"/>
+  <path d="M292 225H324" class="line" marker-end="url(#arrow)"/>\n  <path d="M292 225H324" class="route r1"/>
   <g transform="translate(334 142)" class="glow">
     <rect class="stage blueprint" width="236" height="166" rx="18"/>
     <circle cx="28" cy="28" r="17" fill="#2563eb"/><text x="28" y="33" text-anchor="middle" class="num">2</text>
@@ -45,7 +45,7 @@
     <text x="22" y="117" class="body">transitions and start state</text>
     <text x="22" y="145" class="code">CreateFiniteStateMachine()</text>
   </g>
-  <path d="M574 225H606" class="line" marker-end="url(#arrow)"/>
+  <path d="M574 225H606" class="line" marker-end="url(#arrow)"/>\n  <path d="M574 225H606" class="route r2"/>
   <g transform="translate(616 142)" class="glow2">
     <rect class="stage blueprint" width="236" height="166" rx="18"/>
     <circle cx="28" cy="28" r="17" fill="#2563eb"/><text x="28" y="33" text-anchor="middle" class="num">3</text>
@@ -54,7 +54,7 @@
     <text x="22" y="121" class="body">Registers the blueprint</text>
     <text x="22" y="145" class="body">No context-bound handle yet</text>
   </g>
-  <path d="M856 225H888" class="line" marker-end="url(#arrow)"/>
+  <path d="M856 225H888" class="line" marker-end="url(#arrow)"/>\n  <path d="M856 225H888" class="route r3"/>
   <g transform="translate(898 142)" class="glow3">
     <rect class="stage instance" width="250" height="166" rx="18"/>
     <circle cx="28" cy="28" r="17" fill="#0f766e"/><text x="28" y="33" text-anchor="middle" class="num">4</text>
@@ -64,7 +64,7 @@
     <text x="22" y="145" class="body">to one IStateContext</text>
   </g>
 
-  <path d="M1023 312V363H724" class="line" marker-end="url(#arrow)"/>
+  <path d="M1023 312V363H724" class="line" marker-end="url(#arrow)"/>\n  <path d="M1023 312V363H724" class="route r4"/>
   <g transform="translate(334 374)">
     <rect x="0" y="0" width="390" height="156" rx="18" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
     <circle cx="30" cy="30" r="17" fill="#c2410c"/><text x="30" y="35" text-anchor="middle" class="num">5</text>
@@ -73,7 +73,7 @@
     <text x="24" y="126" class="body">The host decides when to tick.</text>
     <path d="M30 142H360" class="pulse"/>
   </g>
-  <path d="M334 452H272V226H284" class="line tickpulse" stroke-dasharray="6 7" marker-end="url(#arrow)"/>
+  <path d="M334 452H272V226H284" class="line tickpulse" stroke-dasharray="6 7" marker-end="url(#arrow)"/>\n  <path d="M334 452H272V226H284" class="route r5"/>
   <text x="54" y="394" class="label">The important distinction</text>
   <text x="54" y="424" class="body">Definition = reusable recipe</text>
   <text x="54" y="450" class="body">Instance = one running machine</text>
