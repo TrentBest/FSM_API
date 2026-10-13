@@ -22,7 +22,7 @@ The `FSM_API.Create` methods form the entry point from an intended behavior to a
 
 ## A minimal C# example
 
-This example focuses on the creation boundary. The builder calls used to define states and transitions are shown in the getting-started guide.
+This complete example defines a two-state door. The application changes `OpenRequested`; the FSM evaluates that context value during updates and changes state when a transition condition becomes true.
 
 ```csharp
 using TheSingularityWorkshop.FSM_API;
@@ -31,30 +31,35 @@ public sealed class DoorContext : IStateContext
 {
     public bool IsValid => true;
     public string Name { get; set; } = "FrontDoor";
-    public bool IsOpen { get; set; }
+    public bool OpenRequested { get; set; }
 }
 
 const string group = "Doors";
 const string definitionName = "DoorFSM";
 
-// Optional: groups are also created automatically when needed.
+// Optional: FSM_API creates the group automatically when needed.
 FSM_API.Create.CreateProcessingGroup(group);
 
-// Define the reusable behavior and register it.
+// Define reusable behavior, then register it.
 FSM_API.Create
     .CreateFiniteStateMachine(definitionName, processRate: 1, processingGroup: group)
-    // Add states, transitions, actions, and an initial state here.
+    .State("Closed")
+    .State("Open")
+    .WithInitialState("Closed")
+    .Transition("Closed", "Open", ctx => ((DoorContext)ctx).OpenRequested)
+    .Transition("Open", "Closed", ctx => !((DoorContext)ctx).OpenRequested)
     .BuildDefinition();
 
-// Create an independent runtime instance for this context.
+// Create an instance bound to this door's application data.
 var door = new DoorContext();
 FSMHandle handle = FSM_API.Create.CreateInstance(definitionName, door, group);
 
-// Call from the application's own update loop when appropriate.
+// Your application controls the input and update cadence.
+door.OpenRequested = true;
 FSM_API.Interaction.Update(group);
 ```
 
-> **Important:** The snippet's builder body is intentionally a placeholder; a definition must include its required states and initial state before it can represent useful behavior. For a complete compiling example, continue to [Getting Started with C#](../../User%20Guide/03_Getting_Started_CSharp.md).
+The builder creates the **definition**; `CreateInstance` creates the **context-bound instance**. The sample demonstrates the API shape; use the host application's actual input and update loop in production.
 
 ## Four concepts to keep separate
 
