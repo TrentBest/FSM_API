@@ -54,7 +54,10 @@ Let's illustrate with the classic example: a traffic light.
     * From `Green`: When a timer expires, transition to `Yellow`.
     * From `Yellow`: When a timer expires, transition to `Red`.
 
-<img src="Visuals/TrafficLightFSM.png" alt="Traffic Light FSM Diagram" height="200" style="display: block;">
+<a href="Visuals/TrafficLightFSM.svg" target="_blank">
+    <img src="Visuals/TrafficLightFSM.svg" alt="Animated traffic-light FSM cycling through Red, Green, and Yellow states with timer-expired transitions" width="900" style="display: block; max-width: 100%; height: auto;">
+</a>
+<em>The animation illustrates the repeating state sequence. It is a teaching aid, not a live traffic controller or FSM_API process monitor. The original [static diagram](Visuals/TrafficLightFSM.png) remains available.</em>
 
 In this diagram:
 * Circles represent **States**.
