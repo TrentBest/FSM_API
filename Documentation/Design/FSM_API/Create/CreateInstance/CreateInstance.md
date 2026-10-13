@@ -50,6 +50,6 @@ The example assumes `DoorFSM` has already been defined and built in the `Doors` 
 
 ## Theory connection
 
-This is the practical boundary between a **state-machine specification** and an **execution of that specification**. Keeping the definition reusable and the context separate makes behavior easier to test, reuse, and reason about. See [What Are FSMs?](../../../User%20Guide/Theory/01_What_Are_FSMs.md) and the [Create workflow overview](../../Create.md).
+This is the practical boundary between a **state-machine specification** and an **execution of that specification**. Keeping the definition reusable and the context separate makes behavior easier to test, reuse, and reason about. See [What Are FSMs?](../../../../User%20Guide/Theory/01_What_Are_FSMs.md) and the [Create workflow overview](../../Create.md).
 
 *The diagram is an illustrative teaching animation, not a live process monitor.*
