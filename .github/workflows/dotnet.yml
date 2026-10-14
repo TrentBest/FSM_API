@@ -2,14 +2,14 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "development" ]
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
     inputs:
       publish:
         description: "Publish the packed package to NuGet.org"
-        required: false
+        required: true
         default: false
         type: boolean
 
