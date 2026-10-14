@@ -192,6 +192,9 @@ FSM_API.Interaction.Update("MainLoop");
     deferred and processed safely on the main thread post-update, eliminating common concurrency
      issues.
 
+
+This README follows the Workshop's shared [Documentation Standard](https://github.com/TrentBest/TheSingularityWorkshop.FSM_COS/blob/master/DOCUMENTATION_STANDARD.md), while keeping this repository's own purpose and implementation authoritative.
+
 ## 📦 Features at a Glance
 
 | Capability                       | Description                                                                                                                                                                                                                                                                                                                                                                                                       |
