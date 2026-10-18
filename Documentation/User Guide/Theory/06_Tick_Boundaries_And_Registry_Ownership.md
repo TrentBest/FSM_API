@@ -41,7 +41,7 @@ A stack trace is evidence of where a failure surfaced, not by itself proof of wh
 - `FSM_API.Interaction.Update` and `Internal.TickAll`
 - `Internal.ProcessDeferredModifications` and `Internal.QueueDeferredModification`
 - `Create.CreateInstance`, `Interaction.MoveInstance`, and `Interaction.DestroyInstance`
-- [Handle validity and lifecycle](../Design/FSM_API/FSM_API/FSMHandle/FSMHandle.md)
+- [Handle validity and lifecycle](../../Design/FSM_API/FSM_API/FSMHandle/FSMHandle.md)
 - [Renderer integration investigation](../../../RendererLLM.md)
 
 The implementation and regression tests are authoritative. Revisit this document whenever the registry ownership or deferred-mutation contract changes.
