@@ -98,6 +98,16 @@ namespace TheSingularityWorkshop.FSM_API
         private readonly List<FSMTransition> _anyTransitions = new List<FSMTransition>();
 
         /// <summary>
+        /// Creates an unnamed builder using the default FSM name and processing group.
+        /// </summary>
+        /// <remarks>
+        /// Building it without adding states or transitions registers a valid, inert definition.
+        /// </remarks>
+        public FSMBuilder() : this("UnNamedFSM")
+        {
+        }
+
+        /// <summary>
         /// Starts a new <see cref="FSMBuilder"/> to help you create a brand-new FSM blueprint.
         /// </summary>
         /// <remarks>
@@ -340,6 +350,18 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <returns>The completed <see cref="FSM"/> blueprint.</returns>
         /// <exception cref="InvalidOperationException">Thrown if the FSM has no name, no states, or the initial state doesn't exist.</exception>
+        /// <summary>
+        /// Builds and registers this FSM definition.
+        /// </summary>
+        /// <remarks>
+        /// This is a concise alias for <see cref="BuildDefinition"/>. A builder with no states or
+        /// transitions still registers a valid, inert FSM definition.
+        /// </remarks>
+        public void Build()
+        {
+            BuildDefinition();
+        }
+
         public void BuildDefinition()
         {
             string finalInitialState = string.Empty;
