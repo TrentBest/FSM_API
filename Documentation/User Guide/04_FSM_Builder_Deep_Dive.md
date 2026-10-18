@@ -266,23 +266,30 @@ FSM_API core does not create engine-specific `Update`, `FixedUpdate`, or `LateUp
 
 -----
 
-## 🚀 Finalizing the Blueprint: `.BuildDefinition()`
+## 🚀 Finalizing the Blueprint: `BuildDefinition()` and `Build()`
 
-This is the **essential final step** in the `FSMBuilder` chain. Calling `BuildDefinition()` processes all the states, transitions, and configurations you've defined, then **registers this complete FSM blueprint** with the FSM\_API system.
-
-**C\# Example:**
+Calling `BuildDefinition()` registers the FSM definition with FSM_API. It does not return a definition object, and it does not make the definition immutable: the registered definition can be changed later through the runtime modification API.
 
 ```csharp
-var playerFSMDefinition = FSM_API.CreateFiniteStateMachine("PlayerFSM")
-    // ... all your State(), Transition(), etc. calls ...
-    .BuildDefinition(); // Must be called to finalize
+FSM_API.Create.CreateFiniteStateMachine("PlayerFSM")
+    .State("Idle", onEnter: null, onUpdate: null, onExit: null)
+    .BuildDefinition();
 ```
 
-### What `BuildDefinition()` does:
+`Build()` is a concise alias for `BuildDefinition()`. A parameterless `FSMBuilder` uses the default name `UnNamedFSM`:
 
-  * **Validates:** It performs internal checks to ensure your FSM is valid (e.g., initial state exists, no duplicate state names).
-  * **Registers:** It makes your FSM definition available by its name (`"PlayerFSM"` in the example) for future instantiation using `FSM_API.CreateInstance()`.
-  * **Returns:** It returns the `IFSMDefinition` object, representing your immutable blueprint. You usually don't need to store this, as you'll retrieve FSMs by name for instance creation.
+```csharp
+new FSMBuilder().Build();
+```
+
+An empty builder is allowed. That example registers an unnamed definition with zero states and zero transitions. It is inert—not a failure. Similarly, `FSM_API.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition();` registers an empty definition with manual processing rate `-1`. An FSM with no states has no state behavior to execute; when a populated FSM needs recovery, design its initial state deliberately.
+
+### What the build call does
+
+- **Registers:** makes the definition available by name for later instance creation.
+- **Uses an initial state:** if states exist and no initial state was specified, the first added state becomes the initial state.
+- **Allows empty definitions:** with no states or transitions, the registered definition remains inert.
+- **Supports later modification:** the registered blueprint can be modified at runtime; do not treat it as immutable.
 
 -----
 
