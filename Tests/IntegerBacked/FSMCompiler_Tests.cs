@@ -75,6 +75,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Compile_RejectsTransitionsToUndefinedStates()
+        {
+            var source = new StringFsm { Name = "InvalidTransitionFixture" };
+            source.AddState(new StringFsmState("Present", null, null, null));
+            source.AddTransition("Present", "Missing", _ => true);
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 46));
+        }
+
+        [Test]
         public void Compile_RejectsUndefinedInitialState()
         {
             var source = new StringFsm { Name = "InvalidFixture", InitialState = "Missing" };
