@@ -4,7 +4,7 @@
 
 **Purpose:** one source-controlled checklist for taking FSM_API from the published 1.x line to the first 2.0 package with integer-backed execution. This is a release gate, not a promise that every item is already implemented.
 
-> **Current status (2026-10-18):** integer-backed runtime code and a broad test suite exist on the isolated `feature/fsm-api-2.0` branch. The feature branch's latest recorded validation passed 400/400 tests, but the integer runtime is not integrated into `development`, full string/integer parity is not proven, the authoring-to-runtime ID bridge and benchmark evidence remain open, and no 2.0 package has been released.
+> **Current status (2026-10-18, active integration):** the integer-backed runtime and its test suite have now been ported into `development`; a deterministic string-to-integer compiler and focused compiler tests have also been added. These new changes are **not yet validated by a recorded CI run**. Full string/integer parity, benchmark evidence, branch cleanup, package validation, and release remain open. The historical 400/400 result applies only to the original feature-branch commit, not this integration.
 
 ## Release rule
 
@@ -64,7 +64,7 @@
 ### P0
 
 - [ ] Review the implementation in `feature/fsm-api-2.0/FSM_API/IntegerBacked` and its associated tests against current `development`, not only against the older feature-branch base.
-- [ ] Port/rebase the integer runtime and tests in small, reviewable changes. Do not replace or weaken the established string-backed implementation just to make the new code compile.
+- [x] Port the integer runtime and its existing test suite into `development` without replacing the established string-backed implementation. Integration validation is still pending.
 - [ ] Resolve namespace/type naming, project inclusion, public API surface, and package-target compatibility.
 - [ ] Preserve the already added regression coverage for self-removal during ticking and for newly created handles not running until the next tick.
 - [ ] Review collection mutation, handle registration, disposal, reset, state/definition destruction, and deferred-operation ordering in both implementations.
@@ -75,9 +75,9 @@
 
 ### P0
 
-- [ ] Implement a deterministic authoring/compiler bridge from names to runtime IDs; currently the feature progress audit reports no dedicated complete bridge.
+- [x] Implement a deterministic compiler bridge in `FSM_API/IntegerBacked/FSMCompiler.cs`. It assigns dense IDs by ordinal state-name order, preserves actions/conditions, and returns reverse diagnostic mappings. Validate this implementation and close any parity gaps before marking the bridge gate complete.
 - [ ] Ensure string-authored definitions can be compiled into integer-backed definitions without semantic loss.
-- [ ] Provide reverse mappings for readable diagnostics and state inspection.
+- [x] Provide immutable forward and reverse state-name mappings in `FSMCompilationResult`; add runtime/diagnostic examples and verify reconstruction/versioning separately.
 - [ ] Test duplicate names, unknown source/destination states, missing initial states, any-state transitions, invalid definitions, and mapping reconstruction.
 - [ ] Specify serialization/versioning behavior for IDs. Never assume an implementation-generated ID is a durable save-game or wire-protocol identity unless the contract guarantees it.
 - [ ] Verify the integer execution path can run without name lookup in the tick/transition hot path.
