@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 590" role="img" aria-labelledby="title desc">
+<title id="title">FSMModifier stages edits, then applies them</title>
+<desc id="desc">Fluent FSMModifier calls collect requested edits. Nothing in those calls applies the definition changes by itself. ModifyDefinition locates the registered definition and applies process group and rate changes, removes states while redirecting affected handles, adds states, modifies existing states, removes transitions, adds transitions, then modifies existing transitions. The operation is ordered but is not documented as an atomic transaction; callers should not assume rollback if an operation fails.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101827"/><stop offset="1" stop-color="#1b3040"/></linearGradient>
+ <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#9ab4c7"/></marker>
+ <style>
+ text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5fb}.ey{font-size:12px;font-weight:800;letter-spacing:1.7px;fill:#9eb4c7}.hd{font-size:23px;font-weight:750}.cp{font-size:14px;fill:#c2d1dd}.small{font-size:12px;fill:#b5c6d3}.panel{fill:#172a3a;stroke:#3d586d;stroke-width:1.5}.stage{fill:#26334a;stroke:#9fafff;stroke-width:1.5}.apply{fill:#173d31;stroke:#6fdaa6;stroke-width:1.5}.warn{fill:#44331f;stroke:#f3c56e;stroke-width:1.5}.line{fill:none;stroke:#9ab4c7;stroke-width:2;marker-end:url(#arrow)}
+ </style>
+</defs>
+<rect width="1000" height="590" rx="20" fill="url(#bg)"/>
+<text x="32" y="38" class="ey">RUNTIME MODIFICATION · STAGE THEN APPLY</text>
+<text x="32" y="74" class="hd">A fluent chain describes edits; it doesn't apply them yet.</text>
+<rect x="32" y="102" width="936" height="100" rx="14" class="stage"/>
+<text x="54" y="132" font-size="17" font-weight="750">1 · Stage requested changes</text>
+<text x="54" y="158" class="cp">WithoutState · WithState · WithModifiedState · transition edits · process group/rate</text>
+<text x="54" y="181" class="small">These calls collect the requested operations on the modifier.</text>
+<path d="M500 202V232" class="line"/>
+<rect x="32" y="240" width="936" height="60" rx="12" class="apply"/>
+<text x="500" y="266" text-anchor="middle" font-size="18" font-weight="750">2 · Call ModifyDefinition()</text>
+<text x="500" y="286" text-anchor="middle" class="small">Resolve registered definition; then apply staged edits in source-defined order</text>
+<path d="M500 300V321" class="line"/>
+<g>
+ <rect x="32" y="329" width="296" height="49" rx="10" class="panel"/><text x="48" y="359" font-size="14" font-weight="650">1. Process group and rate</text>
+ <rect x="352" y="329" width="296" height="49" rx="10" class="panel"/><text x="368" y="359" font-size="14" font-weight="650">2. Remove states / redirect handles</text>
+ <rect x="672" y="329" width="296" height="49" rx="10" class="panel"/><text x="688" y="359" font-size="14" font-weight="650">3. Add states</text>
+ <rect x="32" y="390" width="296" height="49" rx="10" class="panel"/><text x="48" y="420" font-size="14" font-weight="650">4. Modify existing states</text>
+ <rect x="352" y="390" width="296" height="49" rx="10" class="panel"/><text x="368" y="420" font-size="14" font-weight="650">5. Remove transitions</text>
+ <rect x="672" y="390" width="296" height="49" rx="10" class="panel"/><text x="688" y="420" font-size="14" font-weight="650">6. Add transitions</text>
+ <rect x="352" y="451" width="296" height="49" rx="10" class="panel"/><text x="368" y="481" font-size="14" font-weight="650">7. Modify existing transitions</text>
+</g>
+<rect x="32" y="520" width="936" height="43" rx="10" class="warn"/>
+<text x="50" y="546" font-size="13" font-weight="700">Important:</text><text x="126" y="546" font-size="13">ordered application is not a promise of atomicity or rollback if an operation fails.</text>
+<text x="32" y="581" class="small">Source-grounded guide to FSMModifier.ModifyDefinition(); not live telemetry.</text>
+</svg>
