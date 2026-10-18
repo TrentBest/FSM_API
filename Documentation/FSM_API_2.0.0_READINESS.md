@@ -78,7 +78,7 @@
 - [x] Implement a deterministic compiler bridge in `FSM_API/IntegerBacked/FSMCompiler.cs`. It assigns dense IDs by ordinal state-name order, preserves actions/conditions, and returns reverse diagnostic mappings. Validate this implementation and close any parity gaps before marking the bridge gate complete.
 - [ ] Ensure string-authored definitions can be compiled into integer-backed definitions without semantic loss.
 - [x] Provide immutable forward and reverse state-name mappings in `FSMCompilationResult`; add runtime/diagnostic examples and verify reconstruction/versioning separately.
-- [ ] Test duplicate names, unknown source/destination states, missing initial states, any-state transitions, invalid definitions, and mapping reconstruction.
+- [ ] Complete compiler edge-case coverage: duplicate/replaced authored names, unknown source and destination states, missing initial states, any-state transitions, invalid definitions, and mapping reconstruction. Focused tests now cover unknown source/destination states, missing initial state, any-state conversion, deterministic dense IDs, and read-only forward/reverse mappings; they still require execution on current `development`.
 - [ ] Specify serialization/versioning behavior for IDs. Never assume an implementation-generated ID is a durable save-game or wire-protocol identity unless the contract guarantees it.
 - [ ] Verify the integer execution path can run without name lookup in the tick/transition hot path.
 - [ ] Add examples demonstrating authoring once, compiling, inspecting, and executing.
@@ -89,7 +89,7 @@
 
 - [ ] Create a traceable parity matrix mapping each supported string-backed behavior to an integer-backed test.
 - [ ] Cover initial state selection and entry semantics, including empty definitions and invalid/missing initial states.
-- [ ] Cover update ordering, state entry/update/exit callbacks, transition guard ordering, regular and any-state transitions, and transition selection when several guards are true.
+- [ ] Cover update ordering, state entry/update/exit callbacks, transition guard ordering, regular and any-state transitions, and transition selection when several guards are true. **Known parity risk from source review:** both implementations run the current state's update before evaluating Any-State guards, but the string implementation continues through its regular-transition loop after an Any-State transition changes the handle, while the integer implementation takes the first Any-State transition and returns. Add a trace-based comparison and either align behavior or document an intentional difference.
 - [ ] Cover timers, process rates, processing groups, manual/event-driven ticking, and tick counters.
 - [ ] Cover handle identity, context association, current state, entered-state flags, reset, pause/resume where supported, destruction, unregistration, and definition removal.
 - [ ] Cover invalid-context suspension/resumption and explicit permanent removal consistently with the agreed contract.
