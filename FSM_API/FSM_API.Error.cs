@@ -32,11 +32,10 @@ namespace TheSingularityWorkshop.FSM_API
             private static readonly Dictionary<string, int> _fsmDefinitionErrorCounts = new Dictionary<string, int>();
 
             /// <summary>
-            /// The maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down.
+            /// The number of reported instance errors required to enqueue shutdown. Counts are cumulative until explicitly reset or removed during teardown; successful updates do not automatically reset the count.
             /// </summary>
             /// <remarks>
-            /// Once an FSM instance reaches this error count, it will be automatically unregistered from the system
-            /// to prevent it from causing further issues.
+            /// Once an FSM instance reaches this count, shutdown is enqueued for deferred processing. The count is not limited to consecutive failed updates.
             /// </remarks>
             public static int InstanceErrorThreshold { get; set; } = 5;
 
