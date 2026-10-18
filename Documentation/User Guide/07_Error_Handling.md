@@ -1,8 +1,8 @@
 # 07\. Robust Error Handling: Cascading Degradation System
 
-The FSM_API is designed with a Robust Error Handling system, also known as the Cascading Degradation System, to ensure your application remains stable and resilient. This system intelligently handles exceptions and prevents them from crashing your entire application.
+FSM_API provides error reporting and configurable degradation thresholds to help applications contain and diagnose failures in scheduled FSM execution. These mechanisms improve resilience, but they are not a blanket guarantee that every exception is caught or that application state remains unaffected.
 
-In complex state machine logic, an unhandled exception in one FSM could crash the entire application, corrupt the game state, or create hidden bugs. The Cascading Degradation System mitigates these risks by isolating failures and maintaining overall system stability.
+An exception may indicate a failure in user-provided state logic or transition evaluation. FSM_API reports scheduled instance-update failures and can shut down repeatedly failing instances; callers must still handle exceptions from direct API calls and consider the effects of partially completed application logic.
 
 -----
 
@@ -37,7 +37,7 @@ In complex state machine logic, an unhandled exception in one FSM could crash th
 
 The system operates on multiple levels to contain and report errors:
 
-1. Catching All Exceptions
+1. Scheduled Update Exception Handling
 
 During the scheduled instance update, `FSMHandle.Update` catches exceptions thrown by `Definition.Step` (including state actions and transition evaluation) and reports them through the instance-error system. This does not mean every public API operation swallows exceptions: for example, `FSMHandle.TransitionTo` reports a transition failure and then rethrows it to the caller. Handle direct API calls according to their documented exception behavior.
 
@@ -90,9 +90,9 @@ The API provides methods to manually reset error counts for specific instances o
 
 Even if you're not a coder, this system provides powerful benefits for your projects:
 
-    Application Stability: It prevents bugs in one part of the system from crashing your entire application, ensuring a reliable user experience.
+    Failure Containment: Scheduled instance-update failures are reported and repeatedly failing instances can be shut down, reducing the chance that one faulty FSM continues disrupting the system. This does not guarantee that the wider application cannot fail.
 
-    Automatic Cleanup: The system automatically cleans up problematic FSMs, preventing them from consuming resources or creating memory leaks.
+    Automatic Degradation: When configured error thresholds are reached, failing instances or definitions can be scheduled for shutdown/removal. This is lifecycle management, not a guarantee against every resource leak.
 
     Clear Diagnostics: FSM_API generates clear, structured error reports that your developers can use to quickly identify and fix issues. You can think of it as an automatic logbook for FSM failures.
     
