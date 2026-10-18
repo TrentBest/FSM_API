@@ -21,14 +21,14 @@
         ]
       },
       {
-        "src": ".",
+        "src": "Documentation",
         "files": [
-          "Documentation/**/*.md",
-          "Documentation/**/*.svg",
-          "Documentation/**/*.png",
-          "Documentation/**/*.jpg",
-          "Documentation/**/*.jpeg",
-          "Documentation/**/*.gif"
+          "**/*.md",
+          "**/*.svg",
+          "**/*.png",
+          "**/*.jpg",
+          "**/*.jpeg",
+          "**/*.gif"
         ]
       },
       {
