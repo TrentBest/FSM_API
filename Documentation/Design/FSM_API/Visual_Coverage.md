@@ -23,6 +23,7 @@ This page is the working inventory for making the documentation explain behavior
 | Handle validity | [Handle validity](../../User%20Guide/Visuals/FSMHandle_Validity.svg) | Invalid context suspends updates without itself unregistering the handle. | Must agree with the lifecycle docs and tests. |
 | Handle lifecycle | [Handle lifecycle](../../User%20Guide/Visuals/FSMHandle_Lifecycle.svg) | Instance/handle lifecycle at a conceptual level. | Keep explicit destruction distinct from temporary invalidity. |
 | State removal fallback | [State removal fallback](../../User%20Guide/Visuals/State_Removal_Fallback.svg) | Uses a valid requested fallback, otherwise returns affected handles to the initial state. | Regression tests cover valid and missing fallback names; the default state must be designed as a recovery path. |
+| Modifier staging and application | [Modifier staging and application](../../User%20Guide/Visuals/Modifier_Staging_And_Application.svg) | Shows when fluent modifier edits take effect and the source-defined application order. | Ordered operations are not an atomic transaction; don't imply rollback guarantees. |
 | Integer-backed implementation progress | [Integer backing roadmap](Visuals/Integer_Backing_Roadmap.svg) · [Progress and acceptance criteria](Integer_Backing_Progress.md) | What exists on the isolated feature branch and which integration gates remain. | Roadmap is not a percentage or a claim that the feature is released. |
 | API versus integrations | [API vs. integrations](../../User%20Guide/Visuals/API_vs_Integrations.png) | Core responsibilities versus host-specific adapters. | Keep engine-specific types out of core. |
 | State context and application data | [Context relationship](../../User%20Guide/Visuals/FSM_Context_Relationship.png) | The machine uses application-owned context rather than owning domain data. | Context validity affects whether an instance is eligible to update. |
@@ -33,7 +34,7 @@ This page is the working inventory for making the documentation explain behavior
 
 These are candidates, not promises to create graphics for every row. A visual is worth adding only if it explains something better than prose or executable examples.
 
-1. **Deferred runtime modification:** distinguish staging changes from applying them, and map any tick-boundary effects only after the relevant API paths and tests are verified.
+1. **Deferred runtime modification timing:** the staging/apply boundary and operation order are now visualized. Consider a separate tick-boundary visual only if a distinct, source-verified behavior remains unclear.
 2. **Disposal and ownership:** show what explicit destruction/unregistration does versus invalid-context suspension.
 3. **Performance and integer backing:** show current string-backed lookup versus the isolated integer runtime only where measurements and implementation details support the comparison.
 4. **A source-backed, runnable walkthrough:** prefer an executable example or test-backed view over another diagram when it can prove the same concept more directly.
