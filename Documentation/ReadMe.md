@@ -49,6 +49,7 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 - [Runtime modification](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
 - [Error handling](User%20Guide/07_Error_Handling.md)
 - [Performance tips](User%20Guide/08_Performance_Tips.md)
+- [Tick boundaries and registry ownership](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
 - [Use cases](User%20Guide/09_Common_Use_Cases.md)
 - [FAQ](User%20Guide/11_FAQ.md)
 - [Generated API reference](../_site/TheSingularityWorkshop.FSM_API.html)
