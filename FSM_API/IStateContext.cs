@@ -30,8 +30,8 @@
         /// <para>
         /// **For Non-Coders/Domain Experts:**
         /// This property tells the FSM if the "thing" it's controlling is still relevant or active.
-        /// If <c>IsValid</c> becomes <c>false</c>, the FSM will stop processing this particular instance.
-        /// For example, if your "Light Switch" is physically removed, <c>IsValid</c> might become <c>false</c>.
+        /// If <c>IsValid</c> becomes <c>false</c>, the FSM instance is suspended: automatic processing skips it, but the registered handle and its state are retained.
+        /// Set it back to <c>true</c> when the same context is reusable. Use explicit instance destruction when the handle should be removed.
         /// </para>
         /// <para>
         /// **For Developers:**
