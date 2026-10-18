@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="Visuals/Integer_Backing_Roadmap.svg">
-    <img src="Visuals/Integer_Backing_Roadmap.svg" alt="Integer-backed FSM roadmap: core integer representation and runtime surface are implemented on an isolated feature branch; mutation tests, full parity, string-to-integer compilation, benchmarking, and integration remain as explicit gates." width="100%" />
+    <img src="Visuals/Integer_Backing_Roadmap.svg" alt="Integer-backed runtime and tests are now ported to development; deterministic name-to-ID compilation is implemented, while current-branch CI, full parity, benchmark evidence, storage validation, branch cleanup, and release remain explicit gates." width="100%" />
   </a>
 </p>
 
@@ -68,10 +68,9 @@ Do not describe the whole system as O(1) merely because an indexed lookup is O(1
 
 Use reproducible, equivalent workloads for string-backed and integer-backed implementations. Record runtime/framework, number of states/transitions/instances, tick rate, warm-up, elapsed time, allocations, and correctness. Include both small workloads and larger workloads; report measured results rather than promising a speedup in advance.
 
-### 6. Integrate deliberately — **not started**
+### 6. Integrate deliberately — **port completed; validation and review in progress**
 
-After gates 1–5:
-- rebase or port the validated feature work onto current `development`;
+The integer runtime, its existing integer test suite, and the initial compiler bridge have been ported into `development`. The next gate is a recorded green build/test run on the current branch, followed by review and fixes for any failures. Then:
 - run the full repository build, tests, package build, and documentation build;
 - document which API surface is string-backed versus integer-backed;
 - update examples and API docs; preserve the existing string API;
@@ -86,11 +85,11 @@ The string API remains useful for readable authoring and rapid prototyping. The 
 ## Resume checklist
 
 - [x] Fix the two mutation test failures and verify the full 400-test suite passes on the feature branch.
-- [ ] Add and test the deterministic name-to-ID compiler/bridge.
+- [ ] Validate the new deterministic `FSMCompiler` and its focused tests on `development`; expand the bridge tests and close all failures before checking this gate.
 - [ ] Complete the string/integer behavior parity matrix.
 - [ ] Specify compact-ID and sparse-ID behavior; test memory and resizing.
 - [ ] Publish reproducible benchmark results.
-- [ ] Integrate into `development` only after the gates pass.
+- [x] Port the integer runtime and existing integer tests into `development`; current-branch validation is still an open gate.
 - [ ] Run full CI and review package/versioning before release.
 
 Update this page whenever a gate changes status. Link the exact commit and successful workflow run; do not mark a gate complete from code presence alone.
