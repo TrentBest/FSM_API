@@ -50,12 +50,14 @@ The flowchart below demonstrates how the `IsValid` property governs the lifecycl
 ```mermaid
 graph TD
     A[FSM Instance Exists] --> B{Is IStateContext.IsValid?};
-    B -- Yes --> C[Continue Processing FSM Instance];
-    B -- No --> D[No Operation];
+    B -- Yes --> C[Process FSM Instance];
+    B -- No --> D[Suspend Processing; Keep Handle Registered];
+    D -- Context Becomes Valid --> C;
     C -- FSM Ticks --> B;
+    D -- Explicit Destroy or Unregister --> E[Remove Handle];
 ```
 
-This diagram makes it clear that the `IsValid` check is a continuous loop that ensures the FSM only runs as long as its associated data is active.
+This diagram distinguishes suspension from removal: an invalid context is skipped during ticking, but its handle stays registered and can resume if the context becomes valid again. Explicit destruction or unregistration removes the handle.
 
 -----
 
@@ -89,9 +91,11 @@ LightSwitchContext switchContext = new LightSwitchContext("KitchenLightSwitch");
 // An FSM would be created and bound to this context.
 // The FSM system will continuously check `switchContext.IsValid`.
 
-// At some point, the light switch is physically removed or disposed of:
+// If the context is temporarily unavailable, setting IsValid to false
+// suspends FSM processing but does not remove the registered handle:
 // switchContext.IsValid = false;
 
-// The FSM system will now automatically unregister the FSM instance tied to this context,
-// preventing it from being processed further.
+// The handle remains registered while processing is suspended. If the context
+// becomes valid again, processing can resume. If the light switch is permanently
+// removed, explicitly unregister or destroy its FSM instance.
 ```
