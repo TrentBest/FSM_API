@@ -54,9 +54,9 @@ FSMs are inherently visual. They can be easily represented using **state diagram
 
 Despite their strengths, FSMs also have limitations, especially in very complex scenarios.
 
-### 1\. **State Explosion (The "N-Squared Problem")** 💥
+### 1\. **State-space and transition growth** 💥
 
-For every new state added, the number of potential transitions from and to that state increases. If a system has `N` states, there could theoretically be `N * (N-1)` transitions. For simple FSMs, this isn't an issue, but for very complex systems with many interconnected states, the number of transitions can become unmanageable. This is often referred to as the "state explosion" problem.
+A flat FSM can become hard to maintain as states and transitions multiply. With `N` states, a fully connected directed graph can contain up to `N × (N − 1)` transitions between distinct states (or more if self-transitions are allowed). A related problem appears when independent behavior dimensions are combined into one flat machine: if movement has `M` options and combat has `C` options, representing every combination may require `M × C` states; adding more independent dimensions can multiply the combinations further. This growth is not inevitable in every FSM, but it is a warning sign to consider decomposition, hierarchical modeling, or another approach.
 
 ### 2\. **Difficulty with Concurrent Behaviors** 🖇️
 
@@ -84,7 +84,7 @@ By understanding these trade-offs, you can effectively decide `When to Use Finit
 
 -----
 
-[➡️ Continue to: 04. When to Use Finite State Machines](https://www.google.com/search?q=04_When_To_Use_FSMs.md)
+[➡️ Continue to: 04. When to Use Finite State Machines](04_When_To_Use_FSMs.md)
 
 
 <a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
