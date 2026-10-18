@@ -257,6 +257,19 @@ Open PR audit:
 - [ ] Continue PR and branch-history reconciliation. This successful run validates the recorded development commit only and does not authorize merge, branch deletion, or release.
 
 
+### PR #18 initial code-review findings (2026-10-18)
+
+The first pass over [PR #18](https://github.com/TrentBest/FSM_API/pull/18) found changes that must be resolved before considering it merge-ready:
+
+- The PR changes the package version from `1.0.13` to `1.0.26` while presenting itself as the integer-backed 2.0 work. This is not a 2.0.0 release candidate and needs an intentional versioning decision.
+- It renames the public static facade from `FSM_API` to `FsmApi` across many files, which appears to be a broad source-compatibility break unrelated to the narrow integer-runtime boundary. Confirm the migration intent and compatibility policy before accepting it.
+- It adds `Context_ID` to public `IContext`, and the integer path relies on integer IDs. This changes the public interface contract and needs a documented migration story; do not treat it as an implementation-only detail.
+- The PR modifies the publish workflow with an explicit `&& false` and changes CI triggers. Keep publishing disabled unless release authorization is given, but reconcile its workflow changes against the deliberate master-only/manual-boolean policy already recorded here.
+- The PR's 90-file footprint includes many legacy API/test edits alongside the new `IntegerBacked` implementation. Review must establish which edits are required for integer backing and which are unrelated refactoring before merge.
+
+These are review blockers/questions, not a claim that every change is necessarily incorrect. PR #18 remains open and draft; no merge, retarget, or closure was performed. The successful current-development run #504 does not validate this PR's head commit.
+
+
 ### Publication and branch comparison refresh (2026-10-18)
 
 - [x] Refreshed the live `master...development` comparison: `development` is **217 commits ahead and 5 behind** `master`; merge base remains `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`. This supersedes the prior 214-ahead snapshot above.
