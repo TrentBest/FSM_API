@@ -53,21 +53,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// When <see cref="ModifyDefinition"/> is called, active FSM instances currently in
-        /// the state being removed are transitioned to the FSM's <see cref="FSM.InitialState"/>.
-        /// <para>
-        /// **Implementation limitation:** Although <paramref name="fallbackStateName"/> is accepted
-        /// and staged, the current application path does not use that value; a custom fallback is
-        /// not honored. Do not rely on this parameter to select a non-initial fallback until this
-        /// behavior is corrected and covered by tests.
-        /// </para>
+        /// the state being removed are transitioned to <paramref name="fallbackStateName"/> when
+        /// that state exists and is not the state being removed. Otherwise, they are transitioned
+        /// to the FSM's <see cref="FSM.InitialState"/>.
         /// If the <paramref name="stateName"/> to remove does not exist in the FSM, this staging
         /// operation has no effect.
         /// </remarks>
         /// <param name="stateName">The name of the state to remove.</param>
         /// <param name="fallbackStateName">
-        /// Intended fallback state for instances currently in the removed state. The current
-        /// implementation does not honor a custom value and transitions affected instances to
-        /// <see cref="FSM.InitialState"/>; see the method remarks.
+        /// Preferred fallback state for instances currently in the removed state. If it is null,
+        /// empty, whitespace, missing from the definition, or is the state being removed, the
+        /// FSM's <see cref="FSM.InitialState"/> is used instead.
         /// </param>
         /// <returns>The current <see cref="FSMModifier"/> instance for fluent chaining.</returns>
 
@@ -285,10 +281,17 @@ namespace TheSingularityWorkshop.FSM_API
             foreach (var state in _statesToRemove)
             {
 
+                var requestedFallback = state.Item2;
+                var fallbackState = !string.IsNullOrWhiteSpace(requestedFallback)
+                    && requestedFallback != state.Item1
+                    && bucket.Definition.HasState(requestedFallback)
+                        ? requestedFallback
+                        : bucket.Definition.InitialState;
+
                 var handlesInState = bucket.Instances.Where(s => s.CurrentState == state.Item1).ToList();
                 foreach (var handle in handlesInState)
                 {
-                    handle.TransitionTo(bucket.Definition.InitialState);
+                    handle.TransitionTo(fallbackState);
                 }
                 bucket.Definition.RemoveState(state.Item1);
             }
