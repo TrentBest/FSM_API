@@ -109,7 +109,7 @@ C# Example:
 FSM_API.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
 ```
 
-**Current implementation limitation:** when the removed state is the current state of an active handle, `ModifyDefinition()` transitions that handle to the FSM's `InitialState` and invokes the normal transition behavior. Although `WithoutState(stateName, fallbackStateName)` accepts and stages a fallback name, the current application code does not use that value. A custom fallback is therefore **not honored**; do not rely on it until the implementation is corrected and covered by tests.
+When the removed state is the current state of an active handle, `ModifyDefinition()` first attempts the supplied fallback state. If that state exists in the definition and is not the state being removed, the handle transitions there using the normal transition behavior. If the fallback is blank, missing, or names the state being removed, the handle instead transitions to the FSM's `InitialState`. This is a safety net, not a substitute for designing a valid default state and its entry behavior.
 
 ## WithTransition(): Creating a New Path
 
@@ -167,7 +167,7 @@ While FSMModifier changes the FSM blueprint, the FSMHandle provides methods to d
 
   Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
 
-  State Removal: The current implementation transitions handles in the removed state to the FSM's initial state. The `fallbackStateName` argument is not honored yet, so do not assume a custom fallback will be selected. This path does not guarantee that all application-level effects or cleanup will succeed.
+  State Removal: Handles in a removed state use a valid supplied fallback when possible, otherwise the FSM's initial state. This path does not guarantee that all application-level effects or cleanup will succeed.
 
 -----
 
