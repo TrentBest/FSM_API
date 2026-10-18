@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 690" role="img" aria-labelledby="title desc">
   <title id="title">Integer-backed FSM implementation progress roadmap</title>
-  <desc id="desc">A six-stage roadmap. Integer data representation and the runtime API are implemented on an isolated feature branch. Mutation tests are failing in the latest recorded run. Full parity, the authoring bridge, benchmark evidence, and integration remain open.</desc>
+  <desc id="desc">A six-stage roadmap. Integer data representation and the runtime API are implemented on an isolated feature branch. The latest feature-branch CI passes all 400 tests. Full parity, the authoring bridge, benchmark evidence, and integration remain open.</desc>
   <defs>
     <style>
       text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#20242b}
@@ -16,10 +16,10 @@
   <rect x="0" y="0" width="1120" height="690" rx="18" fill="#ffffff"/>
   <text x="40" y="52" class="h1">Integer backing: where we are, what remains</text>
   <text x="40" y="80" class="sub">Evidence-based roadmap · no guessed completion percentage · feature branch ≠ development</text>
-  <rect x="40" y="105" width="1040" height="76" rx="12" class="warn"/>
-  <text x="62" y="133" class="state warnText">CURRENT BLOCKER</text>
-  <text x="62" y="157" class="step">Latest recorded CI: 398 / 400 tests passed</text>
-  <text x="620" y="157" class="body">Two runtime-mutation stress tests need resolution.</text>
+  <rect x="40" y="105" width="1040" height="76" rx="12" class="done"/>
+  <text x="62" y="133" class="state doneText">LATEST VALIDATION</text>
+  <text x="62" y="157" class="step">Feature-branch CI: 400 / 400 tests passed</text>
+  <text x="620" y="157" class="body">Mutation regressions fixed; bridge/compiler is next.</text>
   <path class="line" d="M560 181 V205 H185 V225 M560 205 H560 V225 M560 205 H935 V225"/>
   <path class="line" d="M185 350 V380 H185 V402 M560 350 V380 H560 V402 M935 350 V380 H935 V402"/>
   <g>
@@ -39,12 +39,12 @@
     <text x="435" y="339" class="body">Parity still unproven</text>
   </g>
   <g>
-    <rect x="790" y="225" width="290" height="125" rx="12" class="warn"/>
-    <text x="810" y="250" class="state warnText">03 · BLOCKED</text>
+    <rect x="790" y="225" width="290" height="125" rx="12" class="done"/>
+    <text x="810" y="250" class="state doneText">03 · PASSING</text>
     <text x="810" y="278" class="step">Runtime invariants</text>
-    <text x="810" y="302" class="body">Self-removal during update</text>
-    <text x="810" y="321" class="body">New handles wait until next tick</text>
-    <text x="810" y="339" class="body">Fix + rerun full suite</text>
+    <text x="810" y="302" class="body">Snapshot + registration check</text>
+    <text x="810" y="321" class="body">400/400 regression suite passes</text>
+    <text x="810" y="339" class="body">Validated on isolated branch</text>
   </g>
   <g>
     <rect x="40" y="402" width="290" height="125" rx="12" class="todo"/>
