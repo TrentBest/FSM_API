@@ -113,8 +113,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void Compile_RejectsUndefinedInitialState()
         {
-            var source = new StringFsm { Name = "InvalidFixture", InitialState = "Missing" };
+            var source = new StringFsm { Name = "InvalidFixture" };
             source.AddState(new StringFsmState("Present", null, null, null));
+            source.InitialState = "Missing";
 
             Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 45));
         }
