@@ -109,7 +109,7 @@ C# Example:
 FSM_API.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
 ```
 
-Important: When a state is removed, any active FSMHandle instances currently in that state will be immediately transitioned to a specified fallbackStateName. If you pass null or an empty string for the fallback, instances will automatically transition to the FSM's InitialState. The OnExit action of the removed state will be executed for these instances.
+**Current implementation limitation:** when the removed state is the current state of an active handle, `ModifyDefinition()` transitions that handle to the FSM's `InitialState` and invokes the normal transition behavior. Although `WithoutState(stateName, fallbackStateName)` accepts and stages a fallback name, the current application code does not use that value. A custom fallback is therefore **not honored**; do not rely on it until the implementation is corrected and covered by tests.
 
 ## WithTransition(): Creating a New Path
 
