@@ -44,7 +44,7 @@ In a **Mealy Machine**, the **output is associated with the transitions between 
     * Can often have fewer states than a Moore machine for the same functionality because outputs are more granular.
     * More flexible in expressing complex behaviors where an action is directly dependent on the *event* that causes a state change.
 * **Analogy:** Imagine a simple doorbell. The "ringing" sound (output) happens *during* the transition from "Button Not Pressed" to "Button Pressed," not while the button is just "Pressed."
-* **FSM_API Relevance:** While FSM_API primarily emphasizes Moore-like state actions, you can simulate Mealy-like behavior by putting output logic directly within the `condition` lambda of a transition or by having `onExit` actions that depend on the *next* state being transitioned to (though this requires more manual checking).
+* **FSM_API relevance and boundary:** FSM_API exposes transition conditions as predicates and state actions such as `OnEnter`, `OnUpdate`, and `OnExit`; this API surface does not provide a dedicated transition-output callback. Keep transition conditions focused on answering whether a transition is allowed—do not use them for output side effects, because the predicate may be evaluated as part of transition selection. Mealy-style outputs therefore need to be modeled explicitly in context/state logic or represented by a state structure that makes the output unambiguous. That is a modeling choice, not a native Mealy-machine mode.
 
 
 
