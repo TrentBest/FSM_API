@@ -52,22 +52,22 @@ namespace TheSingularityWorkshop.FSM_API
         /// Stages a state for removal from the FSM definition.
         /// </summary>
         /// <remarks>
-        /// When <see cref="ModifyDefinition"/> is called, if any active FSM instances
-        /// are currently in the state being removed, they will be transitioned to the
-        /// specified <paramref name="fallbackStateName"/>.
+        /// When <see cref="ModifyDefinition"/> is called, active FSM instances currently in
+        /// the state being removed are transitioned to the FSM's <see cref="FSM.InitialState"/>.
         /// <para>
-        /// **Important:** If <paramref name="fallbackStateName"/> is null, empty, or consists only of whitespace,
-        /// instances will instead transition to the FSM's <see cref="FSM.InitialState"/>.
-        /// It is recommended to provide a valid, existing fallback state to ensure predictable behavior.
+        /// **Implementation limitation:** Although <paramref name="fallbackStateName"/> is accepted
+        /// and staged, the current application path does not use that value; a custom fallback is
+        /// not honored. Do not rely on this parameter to select a non-initial fallback until this
+        /// behavior is corrected and covered by tests.
         /// </para>
         /// If the <paramref name="stateName"/> to remove does not exist in the FSM, this staging
         /// operation has no effect.
         /// </remarks>
         /// <param name="stateName">The name of the state to remove.</param>
         /// <param name="fallbackStateName">
-        /// The name of the state to transition existing FSM instances to if they are
-        /// currently in the state being removed. If not provided (null or empty), instances
-        /// will default to transitioning to the FSM's <see cref="FSM.InitialState"/>.
+        /// Intended fallback state for instances currently in the removed state. The current
+        /// implementation does not honor a custom value and transitions affected instances to
+        /// <see cref="FSM.InitialState"/>; see the method remarks.
         /// </param>
         /// <returns>The current <see cref="FSMModifier"/> instance for fluent chaining.</returns>
 
