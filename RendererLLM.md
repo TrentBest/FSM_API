@@ -24,3 +24,17 @@ Further source inspection shows that `Internal.DestroyInstance` immediately exec
 The exception occurring inside `List<T>.Remove` at `List<T>.RemoveAt` is consistent with the list being concurrently mutated between index lookup and removal; it is not, by itself, proof of the exact competing operation or proof that the caller violated the contract. Please inspect every path that writes to `FsmBucket.Instances` (creation, tick/error cleanup, destroy-definition, move, and explicit destroy), inspect the deferred queue implementation and tick boundary, and establish the actual concurrency guarantees. The README contract and implementation must agree.
 
 Do not assume this can be fixed by adding a lock only to `DestroyInstance`: all readers and writers of the shared registry/list must follow one coherent synchronization or deferred-mutation policy. Add a deterministic regression test for the demonstrated cause and run the FSM_API suite plus Renderer source integration before marking verified.
+
+
+### Tick boundary and deferred-queue findings (2026-10-18)
+
+Further source inspection on `development` adds important constraints to the investigation:
+
+- `Interaction.Update(processingGroup)` runs `Internal.TickAll(processingGroup)` and then `Internal.ProcessDeferredModifications()`. That is a per-call boundary, not evidence of global synchronization against calls arriving from other threads or other processing-group ticks.
+- `Internal.QueueDeferredModification` enqueues into a plain `Queue<Action>`; `ProcessDeferredModifications` checks `Count`, dequeues, and invokes actions without visible synchronization. Other code paths enqueue directly through `Internal.GetDeferred()`.
+- `Create.CreateInstance` inserts immediately into `bucket.Instances`; public `Interaction.DestroyInstance` immediately calls `Internal.DestroyInstance`. Public `Interaction.MoveInstance` queues its mutation.
+- `Interaction.DestroyFiniteStateMachine` and `RemoveProcessingGroup` iterate instance lists, call `DestroyHandle`, clear lists, and remove definitions/groups immediately. `DestroyFiniteStateMachine` snapshots its instance list first, but that does not synchronize against concurrent writers.
+- `GetInstances` returns a list snapshot, but obtains the bucket through the live dictionaries before copying. `GetAllFsmHandles` and `GetProcessingGroupNames` expose deferred enumerations over live collections. Counts and other registry reads also traverse the live dictionaries/lists.
+- The API's comments describe deferred structural mutation as a safe update boundary, but the observed implementation has immediate structural paths and a non-thread-safe deferred queue. This is a contract/implementation discrepancy worth resolving before calling the API thread-safe.
+
+These observations do not yet prove the precise race that produced Renderer run `39086967875`'s `List<T>.RemoveAt` failure. Do not apply a narrow lock or assert concurrent API calls are supported until the intended threading contract is established. Next inspect `TickAll`, handle self-unregistration, and the Renderer disposal call graph; then create a deterministic regression test for the confirmed interleaving.
