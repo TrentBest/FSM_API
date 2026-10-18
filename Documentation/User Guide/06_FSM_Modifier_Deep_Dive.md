@@ -62,6 +62,14 @@ The FSMModifier uses a fluent API pattern where you first stage the changes you 
 
 ## 🛠 FSMModifier Methods: Altering the Blueprint
 
+A modifier's fluent calls stage requested edits. They take effect when you call `ModifyDefinition()`; that method locates the registered definition and applies the staged changes in a defined order.
+
+![FSMModifier staging and application order](Visuals/Modifier_Staging_And_Application.svg)
+
+The current application order is: process group/rate changes, remove states (redirecting handles in those states), add states, modify existing states, remove transitions, add transitions, then modify existing transitions. This is an ordered sequence, **not a documented atomic transaction**. Do not assume all-or-nothing rollback if an operation throws; validate requested edits and handle failures at the application boundary.
+
+
+
 All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FSM_API.Interaction.
 
 Staging Changes with With... and Without...
