@@ -59,7 +59,7 @@ If a fundamental flaw exists in an FSM Definition (the blueprint), it can cause 
 
     Definition Error Threshold: The FSM_API.Error.DefinitionErrorThreshold property sets the number of times an FSM definition can cause an instance to be shut down due to errors before the entire definition is scheduled for destruction. The default value is 3.
 
-The IsValid property within your IStateContext is another crucial part of error handling. If context.IsValid returns false, the FSM_API knows the underlying object is no longer viable and automatically unregisters the FSMHandle.
+The `IsValid` property within `IStateContext` is an execution gate. If `context.IsValid` returns false, the scheduler skips that handle while it remains registered; restoring validity allows processing to resume. Explicitly unregister or destroy the instance when it should be removed.
 
 ⚙️ Configuration and Control
 
