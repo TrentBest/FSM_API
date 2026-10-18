@@ -113,33 +113,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
         /// 
         /// </summary>
         [Test]
-        public void Engine_AutoShutdown_On_Invalid_Context()
+        public void Engine_Invalid_Context_Suspends_And_Can_Resume_Same_Handle()
         {
-            // Verify the API's safety net: automatic removal of instances with invalid contexts.
-
-            // ARRANGE
+            // Invalidating pauses execution; it does not destroy or unregister the instance.
             var context = new MockContext();
-            string fsmName = "SafetyNetFSM";
+            string fsmName = "ReusableFSM";
+            int updateCount = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).WithProcessRate(-1).BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: -1, "Update")
+                .State("Active", null, onUpdate: _ => updateCount++, null)
+                .BuildDefinition();
             var handle = FSM_API.Create.CreateInstance(fsmName, context);
 
-            // Run once to prove it's alive
             FSM_API.Interaction.Update();
+            Assert.That(updateCount, Is.EqualTo(1));
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
 
-            // ACT
-            // Corrupt the context
             context.IsValid = false;
-
-            // Run update loop - this should detect the invalid context and trigger error/cleanup
             FSM_API.Interaction.Update();
-            FSM_API.Interaction.Update(); // Needs 2 ticks? 1 for error detection, 1 for deferred cleanup?
+            FSM_API.Interaction.Update();
 
-            // ASSERT
-            // We expect the handle to be removed because it became invalid
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0),
-                "Engine should have automatically destroyed the instance with invalid context.");
+            Assert.That(updateCount, Is.EqualTo(1), "An invalid context must be skipped.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1),
+                "Invalidating must preserve the registered handle for reuse.");
+            Assert.That(handle.IsValid, Is.False);
+
+            context.IsValid = true;
+            FSM_API.Interaction.Update();
+
+            Assert.That(updateCount, Is.EqualTo(2), "Revalidating should resume the same handle.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            Assert.That(FSM_API.Interaction.GetInstance(fsmName, context, "Update"), Is.SameAs(handle));
         }
 
         /// <summary>
