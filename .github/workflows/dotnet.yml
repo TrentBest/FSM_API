@@ -87,6 +87,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           
+      - name: Validate local documentation links
+        run: python3 scripts/validate_doc_links.py
+
       - name: Install DocFx
         run: dotnet tool install --global docfx
       
