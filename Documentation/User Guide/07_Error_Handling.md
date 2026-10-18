@@ -49,9 +49,9 @@ You can subscribe to this event to get real-time diagnostic notifications about 
 
 3. Instance Degradation (FUBAR'd Instances)
 
-If an FSMHandle instance repeatedly throws exceptions, the system marks it as unstable. The API tracks these errors in an internal dictionary. If an FSM instance reaches a configurable limit of consecutive errors, it will be automatically unregistered from the system to prevent further issues.
+If an FSMHandle instance reports errors, the API increments a per-handle count in an internal dictionary. The implementation does not reset this count after a successful update; it remains until explicitly reset or the handle's count entry is removed during teardown. Therefore, the threshold is a cumulative count since the last reset—not necessarily a run of consecutive failures. When the threshold is reached, shutdown is enqueued for deferred processing.
 
-    Instance Error Threshold: The FSM_API.Error.InstanceErrorThreshold property sets the maximum number of consecutive errors an FSM instance can encounter before it is automatically shut down. The default value is 5.
+    Instance Error Threshold: The FSM_API.Error.InstanceErrorThreshold property sets the number of reported instance errors required to enqueue shutdown. The count is cumulative until reset or cleanup. The default value is 5.
 
 4. Definition Degradation (FUBAR'd Definitions)
 
@@ -70,7 +70,7 @@ Adjusting Thresholds
 You can modify the default thresholds to match the needs of your application. For example, in a critical system, you might set the InstanceErrorThreshold to 1 to immediately shut down a failing instance.
 ```csharp
 // To change the InstanceErrorThreshold
-FSM_API.Error.InstanceErrorThreshold = 2; // Shut down after just 2 consecutive errors
+FSM_API.Error.InstanceErrorThreshold = 2; // Enqueue shutdown when 2 errors have been counted
 
 // To change the DefinitionErrorThreshold
 FSM_API.Error.DefinitionErrorThreshold = 1; // Destroy the definition after just one instance fails
@@ -80,7 +80,7 @@ Manual Reset
 
 The API provides methods to manually reset error counts for specific instances or definitions. This is useful for debugging and testing.
 
-    FSM_API.Error.ResetInstanceErrorCount(FSMHandle handle): Resets the error count for a specific FSM instance.
+    FSM_API.Error.ResetInstanceErrorCount(FSMHandle handle): Removes the accumulated error count for a specific FSM instance; use this explicitly if your policy requires a fresh count after recovery.
 
     FSM_API.Error.ResetDefinitionErrorCount(string fsmDefinitionName): Resets the error count for a specific FSM definition.
 
