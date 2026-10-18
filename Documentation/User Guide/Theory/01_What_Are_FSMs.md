@@ -1,8 +1,22 @@
-﻿# 01. What Are Finite State Machines (FSMs)? - A Deeper Dive
+﻿# 01. What Are Finite State Machines (FSMs)? — A Deeper Dive
 
-A **Finite State Machine (FSM)** is a mathematical model of computation. It is an abstract machine that can be in exactly one of a finite number of **states** at any given time. The FSM can change from one state to another in response to some inputs; the change from one state to another is called a **transition**. An FSM is defined by a list of its states, its initial state, and the conditions for each transition.
+Before learning the term *finite-state machine*, notice how often you already reason about states.
 
-While our "Non-Coder Overview" (10. FSM_API for Non-Coders) introduced the concept simply, this document delves into the more formal and detailed understanding of what FSMs are, laying the groundwork for why they are so widely used in software development.
+- A **door** may be closed, opening, open, or closing. The same button press can mean something different depending on the door's current condition.
+- An **online order** may be drafted, submitted, paid, shipped, delivered, or cancelled. Not every next step is legal from every stage.
+- A **phone connection** may be disconnected, connecting, connected, or reconnecting. A failed connection changes what should happen next.
+- A **person** may be waiting, boarding, travelling, or disembarking. Each phase permits different actions.
+- A **traffic light** cycles through defined phases. Its current phase determines which transition is appropriate when its timer expires.
+
+You do not need to be a programmer to understand the pattern. You are already asking four useful questions: **What situation is it in now? What can happen next? What condition allows that change? What should the system do in this situation?**
+
+## From intuition to a formal model
+
+A **Finite State Machine (FSM)** is a mathematical model of behavior with a finite set of states and defined rules for changing between them. A conventional FSM occupies one of its defined states at a time. A change from one state to another is called a **transition**. A basic model identifies its states, initial state, and transition rules; particular FSM formalisms may add outputs, accepting states, or other structure.
+
+The FSM is a *model of the thing*, not the thing itself. The model of a door does not move the door's motor; the application supplies sensors, timing, safety interlocks, and physical actions. FSM_API executes the behavior you define, while your application owns its domain data and external effects.
+
+This document builds from everyday intuition into the formal vocabulary and then connects that theory to FSM_API. For a gentler first pass, start with the [non-coder overview](../10_Non_Coder_Overview.md).
 
 ---
 
