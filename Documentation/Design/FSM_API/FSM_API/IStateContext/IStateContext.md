@@ -41,7 +41,7 @@ classDiagram
 
 ### The `IsValid` Property: Lifecycle Management
 
-The `IsValid` property is a powerful mechanism for automatic lifecycle management. The FSM system continuously checks this property on every tick. If it evaluates to `false`, the FSM instance is automatically unregistered and disposed of, preventing errors and conserving system resources.
+The `IsValid` property is a processing gate, not an automatic destruction request. During a tick, FSM_API skips a handle whose context is null or whose `IsValid` property is `false`; the handle remains registered and can resume processing if the same context becomes valid again. Explicitly destroy or unregister an instance when it should be removed permanently. This distinction is grounded in `FSM_API.Internal.TickAll` and `FSM_API.Internal.DestroyInstance` on the current development branch.
 
 #### Lifecycle Flow: A Flowchart
 
