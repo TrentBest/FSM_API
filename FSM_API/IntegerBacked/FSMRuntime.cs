@@ -72,6 +72,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             var handle = new FSMHandleInt(definition, context, _nextHandleID++);
             handle.Initialize();
+            handle.IsRegistered = true;
             _handles.Add(handle);
             return handle;
         }
@@ -85,7 +86,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return false;
             }
 
-            return _handles.Remove(handle);
+            if (!_handles.Remove(handle))
+            {
+                return false;
+            }
+
+            handle.IsRegistered = false;
+            return true;
         }
 
         /// <summary>
@@ -128,6 +135,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 if (_handles[i].FSM_ID == fsmID)
                 {
+                    _handles[i].IsRegistered = false;
                     _handles.RemoveAt(i);
                 }
             }
@@ -138,7 +146,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Updates eligible live instances in the specified processing group.</summary>
         public void Update(int processingGroupID)
         {
-            for (var i = 0; i < _definitions.Length; i++)
+            // Snapshot the handles at the start of the tick. Handles created by callbacks are
+            // registered immediately but are not eligible to update until the next tick.
+            var handlesAtTickStart = _handles.ToArray();
+            var definitionCountAtTickStart = _definitions.Length;
+
+            for (var i = 0; i < definitionCountAtTickStart; i++)
             {
                 var definition = _definitions[i];
                 if (definition == null || definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
@@ -146,19 +159,22 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     continue;
                 }
 
-                UpdateDefinitionInstances(definition.FSM_ID);
+                UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
             }
         }
 
         /// <summary>Updates eligible live instances regardless of processing group.</summary>
         public void UpdateAll()
         {
-            for (var i = 0; i < _definitions.Length; i++)
+            var handlesAtTickStart = _handles.ToArray();
+            var definitionCountAtTickStart = _definitions.Length;
+
+            for (var i = 0; i < definitionCountAtTickStart; i++)
             {
                 var definition = _definitions[i];
                 if (definition != null && ShouldProcess(definition))
                 {
-                    UpdateDefinitionInstances(definition.FSM_ID);
+                    UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
                 }
             }
         }
@@ -201,12 +217,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return true;
         }
 
-        private void UpdateDefinitionInstances(int fsmID)
+        private static void UpdateDefinitionInstances(int fsmID, FSMHandleInt[] handlesAtTickStart)
         {
-            for (var i = 0; i < _handles.Count; i++)
+            for (var i = 0; i < handlesAtTickStart.Length; i++)
             {
-                var handle = _handles[i];
-                if (handle.FSM_ID == fsmID && handle.IsValid)
+                var handle = handlesAtTickStart[i];
+                if (handle.IsRegistered && handle.FSM_ID == fsmID && handle.IsValid)
                 {
                     handle.Update();
                 }
