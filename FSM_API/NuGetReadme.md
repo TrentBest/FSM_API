@@ -1,205 +1,102 @@
-# FSM_API
+# FSM_API — finite-state behavior you can see
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
-[![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+A state machine is easier to understand when its states, transitions, and lifecycle can be seen. FSM_API is a pure C# library for describing reusable finite-state behavior and running independent instances in any host application.
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
-[![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
+[![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
 
-[![GitHub stars](https://img.shields.io/github/stars/TrentBest/FSM_API?style=social)](https://github.com/TrentBest/FSM_API/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
-[![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
+## 🟦 01 What
 
-[![CoderLegion](https://coderlegion.com/cl_badge_logo1.png) Join the CoderLegion Community](https://coderlegion.com/user/The+Singularity+Workshop)
+FSM_API separates a behavior's reusable definition from each live instance and from the application data that instance operates on.
 
+- **Definition:** named states, transition conditions, and state actions.
+- **Instance / handle:** one independent execution of a definition.
+- **IStateContext:** your application-owned data and operations.
+- **Processing group:** a named set of FSM instances advanced together by the host.
 
-[**💖 Support Us**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+<p align="center">
+  <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg">
+    <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg" alt="Animated FSM_API architecture: a reusable definition feeds a live instance that evaluates guarded transitions and works through application-owned context data" width="960" />
+  </a>
+</p>
 
----
+*This is a conceptual animation, not a live process monitor. It uses declarative SVG animation; the implementation and tests define actual runtime behavior.*
 
-Blazing-fast, software-agnostic Finite State Machine system for any C# application.
+## 🟣 02 Why
 
----
+Scattered conditionals make complex behavior difficult to reason about and test. An FSM makes possible states and transition rules explicit. Reusing a definition avoids duplicating behavior, while separate instances retain independent state and context.
 
-## 🔍 Overview
+FSM_API is designed to remain host-agnostic: the core is pure C#, does not require a game engine, and does not own your application's main loop.
 
-FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (FSM) 
-system designed to plug directly into any C# application from enterprise software to 
-games, simulations, robotics, or reactive systems. It provides a powerful and decoupled
-approach to managing complex state-driven logic, ensuring clarity, consistency, and 
-control across diverse domains.
+## 🔺 03 How
 
-✅ Thread-safe operations (main thread only, deferred mutation handling)  
-🧠 Decoupled state logic from data (POCO-friendly)  
-🏗️ Define once, instantiate many  
-🛠️ Error-tolerant FSM lifecycle management  
-🧪 Dynamic update ticking with frame/process throttling  
-
-No external dependencies. No frameworks required. No boilerplate setup. Pure C# power.
-
----
-
-## 💡 Why FSM_API?
-
-Traditional FSM systems often suffer from tight coupling to specific environments or force rigid coding patterns. FSM_API liberates your state management:
-
-| Feature                          | FSM_API ✅ | Traditional FSM ❌ |
-|----------------------------------|------------|--------------------|
-| Framework agnostic               | ✅         | ❌                 |
-| Runtime-modifiable definitions   | ✅         | ❌                 |
-| Deferred mutation safety         | ✅         | ❌                 |
-| Named FSMs & Processing Groups   | ✅         | ❌                 |
-| Built-in diagnostics & thresholds| ✅         | ❌                 |
-| Pure C# with no external deps    | ✅         | ❌                 |
-
----
-
-High-Performance Stress Testing & Benchmarks The FSM API is built for scale. Our initial baseline stress tests demonstrate the capacity to handle over 240,000 active agents at playable framerates (>30 FPS) using standard time-slicing techniques.
-
-We are currently optimizing our backend lookup architecture, moving from string-based identifiers to a hash-based system. This change is anticipated to significantly reduce memory allocation overhead and CPU cycles per logic operation.
-
-View the full Benchmark Report & Optimization Roadmap here
-
-: [Benchmark Report & Roadmap](InitialBenchmark.md)
-
----
-
-## 🚀 Quickstart
-
-1. Define a simple context (your data model):
+Install [TheSingularityWorkshop.FSM_API from NuGet](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API), then define your context, build a finite-state machine, create an instance, and tick its processing group.
 
 ```csharp
-public class LightSwitch : IStateContext
+using TheSingularityWorkshop.FSM_API;
+
+public sealed class LightSwitch : IStateContext
 {
-    public bool IsOn = false;
-    public bool IsValid => true; // Essential for FSM validation
     public string Name { get; set; } = "KitchenLight";
+    public bool IsValid => true;
+    public bool IsOn { get; set; }
 }
-```
 
-2. Define and build your FSM:
-
-```csharp
 FSM_API.CreateProcessingGroup("MainLoop");
 
-// Define the condition for the transition from "Off" to "On".
-Func<IStateContext, bool> shouldTurnOn = ctx =>
-{
-    if (ctx is LightSwitch l)
-    {
-        return l.IsOn;
-    }
-    return false;
-};
+Func<IStateContext, bool> shouldTurnOn =
+    context => context is LightSwitch light && light.IsOn;
 
-// Define the condition for the transition from "On" to "Off".
-Func<IStateContext, bool> shouldTurnOff = ctx =>
-{
-    if (ctx is LightSwitch l)
-    {
-        return !l.IsOn;
-    }
-    return false;
-};
+Func<IStateContext, bool> shouldTurnOff =
+    context => context is LightSwitch light && !light.IsOn;
 
-// Use the fluent API to create and define the FSM.
-// The .BuildDefinition() call finalizes the blueprint.
-FSM_API.Create.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
-    // Define the "Off" state and its OnEnter action.
-    .State("Off", 
-        onEnter: ctx => { if (ctx is LightSwitch l) l.IsOn = false; },
-        onUpdate: null, 
-        onExit: null)
-    // Define the "On" state and its OnEnter action.
-    .State("On", 
-        onEnter: ctx => { if (ctx is LightSwitch l) l.IsOn = true; },
-        onUpdate: null,
-        onExit: null)
-    .WithInitialState("Off") // Set the starting state.
-    // Define the transitions using the condition functions.
+FSM_API.Create.CreateFiniteStateMachine(
+        "LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
+    .State("Off", onEnter: context =>
+    {
+        if (context is LightSwitch light) light.IsOn = false;
+    })
+    .State("On", onEnter: context =>
+    {
+        if (context is LightSwitch light) light.IsOn = true;
+    })
+    .WithInitialState("Off")
     .Transition("Off", "On", shouldTurnOn)
     .Transition("On", "Off", shouldTurnOff)
     .BuildDefinition();
-```
 
-3. Create an instance:
-
-```csharp
 var kitchenLight = new LightSwitch();
-var handle = FSM_API.Create.CreateInstance("LightSwitchFSM", kitchenLight, "MainLoop");
-```
+var handle = FSM_API.Create.CreateInstance(
+    "LightSwitchFSM", kitchenLight, "MainLoop");
 
-4. Tick the FSM:
-
-```csharp
 FSM_API.Interaction.Update("MainLoop");
 ```
 
----
+The host decides when to call Update. Transition conditions determine whether an instance changes state; the application context remains yours to own and evolve.
 
-## 🔧 Core Concepts
+## 🟢 04 See it in a minute
 
-* **FSMBuilder** → fluently define states, transitions, and actions
-* **FSMHandle** → runtime instance control (pause, reset, query state)
-* **IStateContext** → implement for your domain objects (POCOs)
-* **Processing Groups** → organize FSM ticking (UI, AI, physics, etc.)
-* **Error Handling** → thresholds & diagnostics built-in
-* **Thread Safety** → deferred mutation model keeps concurrency safe
+- Start with the [C# getting-started guide](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/03_Getting_Started_CSharp.md).
+- Explore [core concepts](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/01_Core_Concepts.md).
+- Read the [theory guides](https://github.com/TrentBest/FSM_API/tree/master/Documentation/User%20Guide/Theory).
+- Inspect the [animated architecture SVG](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg).
 
----
+## 🟪 05 Documentation and theory
 
-## 📦 Features at a Glance
-
-| Capability                      | Description                                                                                                                                                                                                                                                                                                                                    |
-| :------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🔄 **Deterministic State Logic** | Effortlessly define **predictable state changes** based on **dynamic conditions** or **explicit triggers**, ensuring your application's behavior is consistent and, where applicable, **mathematically provable**. Ideal for complex workflows and reliable automation.                                                                                   |
-| 🎭 **Context-Driven Behavior** | Your FSM logic directly operates on **any custom C# object (POCO)** that implements `IStateContext`. This enables **clean separation of concerns** (logic vs. data) and allows domain experts (e.g., BIM specifiers) to define behavior patterns that developers then implement.                                                                 |
-| 🧪 **Flexible Update Control** | Choose how FSMs are processed: **event-driven**, **tick-based** (every N frames), or **manual**. This adaptability means it's perfect for **real-time systems, background processes, or even complex user interactions** within any application loop.                                                                                             |
-| 🧯 **Robust Error Escalation** | Benefit from **per-instance and per-definition error tracking**, providing immediate insights to prevent runaway logic or invalid states **without crashing your application**. Critical for long-running services and mission-critical software.                                                                                              |
-| 🔁 **Runtime Redefinition** | Adapt your application on the fly! FSM definitions can be **redefined while actively running**, enabling **dynamic updates, live patching, and extreme behavioral variation** without recompilation or downtime. Perfect for highly configurable systems.                                                                                      |
-| 🎯 **Lightweight & Performant** | Engineered for **minimal memory allocations** and **optimized performance**, ensuring your FSMs are efficient even in demanding enterprise or simulation scenarios. No overhead, just pure C# power.                                                                                                                                        |
-| ✅ **Easy to Unit Test** | The inherent **decoupling of FSM logic from context data** ensures your state machines are **highly testable in isolation**, leading to more robust and reliable code with simplified unit testing.                                                                                                                                        |
-| 💯 **Mathematically Provable** | With clearly defined states and transitions, the FSM architecture lends itself to **formal verification and rigorous analysis**, providing a strong foundation for high-assurance systems where correctness is paramount.                                                                                                                       |
-| 🤝 **Collaborative Design** | FSMs provide a **visual and structured way to define complex behaviors**, fostering better communication between developers, designers, and domain experts, and enabling less code-savvy individuals to contribute to core logic definitions.   |
-|  🧩 Host Neutral | Pure C# runtime with no engine-specific dependency. |
-
+- [Full documentation index](https://github.com/TrentBest/FSM_API/blob/master/Documentation/ReadMe.md)
+- [FSMBuilder deep dive](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/04_FSM_Builder_Deep_Dive.md)
+- [Context implementation](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/05_Context_Implementation.md)
+- [Runtime modification](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/06_FSM_Modifier_Deep_Dive.md)
+- [Error handling](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/07_Error_Handling.md)
+- [Performance tips](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/08_Performance_Tips.md)
+- [GUI.SVG adapter documentation](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
+- [Source repository and issues](https://github.com/TrentBest/FSM_API)
 
 ---
 
-## 📘 What’s Next?
-
-* 📖 Full Documentation & Wiki (TBD)
-* 🧪 Unit Tests & Benchmarks (in development)
-* 🔌 Plugins & Extension Framework (e.g., editors, debugging)
-
----
-
-## 🤝 Contributing
-
-PRs, issues, and extensions welcome! Let’s build smarter state logic together.
-
----
-
-## 📄 License
-
-MIT License – use it, hack it, build amazing things with it.
-
----
-
-## 🧠 Brought to you by
-
-**The Singularity Workshop – Tools for the curious, the bold, and the systemically inclined.**
-
-<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
-</a>
-
-Because state shouldn’t be a mess.
-
-**Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
-
-```
-
+<p align="center">
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
