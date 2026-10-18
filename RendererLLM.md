@@ -38,3 +38,13 @@ Further source inspection on `development` adds important constraints to the inv
 - The API's comments describe deferred structural mutation as a safe update boundary, but the observed implementation has immediate structural paths and a non-thread-safe deferred queue. This is a contract/implementation discrepancy worth resolving before calling the API thread-safe.
 
 These observations do not yet prove the precise race that produced Renderer run `39086967875`'s `List<T>.RemoveAt` failure. Do not apply a narrow lock or assert concurrent API calls are supported until the intended threading contract is established. Next inspect `TickAll`, handle self-unregistration, and the Renderer disposal call graph; then create a deterministic regression test for the confirmed interleaving.
+
+
+### Tick snapshot and lifecycle observations (2026-10-18)
+
+The focused `TickAll` read adds two specific caveats:
+
+- `TickAll` snapshots the processing group's bucket values and then calls `bucket.Instances.ToList()` before iterating handles. Those copies avoid iterator invalidation from mutations that occur after a successful copy, but the copy operation itself is not synchronized against a concurrent list writer. A copied handle can also remain in the tick snapshot after another caller destroys it; there is no visible destroyed/liveness check before state callbacks run.
+- `ResetAPI` and `DestroyFiniteStateMachine` directly walk the live registry/list structures, invoke `DestroyHandle`, and clear/remove entries. They are not routed through the same deferred queue as `MoveInstance`.
+
+This narrows the places to instrument, but still does not prove whether the Renderer exception comes from overlapping threads, overlapping update/disposal, re-entrant lifecycle callbacks, or a violated caller-side lifetime contract. Establish the intended owner/thread and whether dispose can overlap update before changing semantics. Regression coverage should test the confirmed interleaving and assert that no callback runs after teardown.
