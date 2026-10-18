@@ -41,6 +41,10 @@ namespace TheSingularityWorkshop.FSM_API
 
         private Action<IStateContext> _onEnter;
 
+        // Internal access lets the integer compiler preserve authored behavior without exposing
+        // delegates as part of the public authoring API.
+        internal Action<IStateContext> OnEnterAction => _onEnter;
+
         /// <summary>
         /// Sets the action that will run **when the FSM first moves into this state.**
         /// </summary>
@@ -54,6 +58,8 @@ namespace TheSingularityWorkshop.FSM_API
 
         private Action<IStateContext> _onUpdate;
 
+        internal Action<IStateContext> OnUpdateAction => _onUpdate;
+
         /// <summary>
         /// Sets the action that will run **repeatedly while the FSM is currently in this state.**
         /// </summary>
@@ -66,6 +72,8 @@ namespace TheSingularityWorkshop.FSM_API
         public void SetOnUpdate(Action<IStateContext> update) { _onUpdate = update != null ? update : defaultOnUpdate; }
 
         private Action<IStateContext> _onExit;
+
+        internal Action<IStateContext> OnExitAction => _onExit;
 
         /// <summary>
         /// Sets the action that will run **just before the FSM leaves this state.**
