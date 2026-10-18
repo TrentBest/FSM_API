@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living moniker">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living moniker — a digital vortex converging on its central eye" width="128" />
+  </a>
+</p>
+
 # FSM_API — finite-state behavior you can see
 
 A state machine is easier to understand when you can watch its structure and timing. FSM_API turns named states, guarded transitions, and state actions into reusable behavior—without tying the core library to a game engine, UI framework, or application domain.
@@ -56,9 +62,14 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 - [Source repository](https://github.com/TrentBest/FSM_API)
 - [GUI.SVG adapter and gallery](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
 
+
 ---
 
 <p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
   <strong>The Singularity Workshop</strong><br />
-  <em>If a picture is worth a thousand words, what is a living picture worth?</em>
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
 </p>
