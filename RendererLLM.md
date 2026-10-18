@@ -77,3 +77,18 @@ The direct creation path confirms that the shared list has multiple unsynchroniz
 Next discriminating test: run the Renderer source-integration suite with test parallelization disabled, then enabled, and compare. Also add a focused FSM_API stress/regression test that concurrently creates and destroys handles in one shared bucket, if concurrent calls are intended to be supported. If the documented contract is main-thread-only, instead locate which test/runtime path violates that contract and align docs with the actual guarantee. Do not infer that IsValid deactivation is the cause; it does not mutate the instance list.
 
 No runtime fix is made from this inspection alone. The correct fix depends on establishing whether concurrent registry access is supported and reproducing the interleaving; a lock around only DestroyInstance would leave the other list writers unsynchronized.
+
+
+### Original failure vs successful rerun: lifecycle change identified (2026-10-18)
+
+The exact source commits are now known from the Renderer Actions logs:
+
+- Original failing source-integration job `117555449357` checked out FSM_API `da2e05ba41ff33aeb1429433b70593e271b1fd3b`.
+- Successful rerun job `117593029298` checked out FSM_API `f5a89641eaca216f5466af59b2dc4a983fe9511c`.
+- The successful source commit is 38 commits ahead of the failed source commit.
+
+A relevant runtime change is present in `FSM_API.Internal.cs` within `ResetAPI`. At the failed commit, the non-hard-reset path automatically called `DestroyInstance(handle)` for invalid contexts. At the successful commit, that branch explicitly treats `IsValid == false` as deactivation: it continues without unregistering or destroying the handle. The successful version also adds a regression test for invalidating and then resuming the same handle. This is a materially relevant lifecycle change, not merely documentation drift.
+
+This makes the user's hypothesis—that ongoing FSM_API work fixed the Renderer failure—a credible explanation. It is not yet a proven single-variable cause: the two tested commits differ by 38 commits and other changes are present, and the test did not provide a controlled before/after run isolating this change. The current `DestroyInstance` implementation remains a list removal with no visible registry-wide lock. Do not call the race hypothesis disproven, but update the investigation priority: first test the lifecycle change against the failure before assuming the fix must be a concurrency lock.
+
+Evidence: [Renderer workflow and reruns](https://github.com/TrentBest/TheSingularityWorkshop.Renderer/actions/runs/39086967875). No runtime change was made during this comparison.
