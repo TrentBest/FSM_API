@@ -32,7 +32,7 @@ This page is the working inventory for making the documentation explain behavior
 
 These are candidates, not promises to create graphics for every row. A visual is worth adding only if it explains something better than prose or executable examples.
 
-1. **Runtime modification and deferred work:** the registry diagram covers the broad tick boundary. Before illustrating state removal, resolve a source/API discrepancy: `WithoutState(stateName, fallbackStateName)` stores the fallback name, but `ModifyDefinition()` currently sends affected handles to `InitialState` instead. The source and guide now disclose this limitation; a visual should not imply custom fallback works.
+1. **Runtime modification and deferred work:** the registry diagram covers the broad tick boundary. Before illustrating state removal, resolve a Runtime modification: `WithoutState(stateName, fallbackStateName)` attempts the requested fallback when it exists and is not the removed state; otherwise it uses `InitialState`. Regression tests cover valid and missing fallback names. A future visual should show both paths and emphasize the default state's role as a recovery path.
 2. **Disposal and ownership:** show what explicit destruction/unregistration does versus invalid-context suspension.
 3. **Performance and integer backing:** show current string-backed lookup versus the isolated integer runtime only where measurements and implementation details support the comparison.
 4. **A source-backed, runnable walkthrough:** prefer an executable example or test-backed view over another diagram when it can prove the same concept more directly.
