@@ -79,7 +79,6 @@ jobs:
   build_documentation:
     runs-on: ubuntu-24.04
     needs: build_test_and_package
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/development')
 
     steps:
       - uses: actions/checkout@v7
