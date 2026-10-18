@@ -111,6 +111,10 @@ FSM_API.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
 
 When the removed state is the current state of an active handle, `ModifyDefinition()` first attempts the supplied fallback state. If that state exists in the definition and is not the state being removed, the handle transitions there using the normal transition behavior. If the fallback is blank, missing, or names the state being removed, the handle instead transitions to the FSM's `InitialState`. This is a safety net, not a substitute for designing a valid default state and its entry behavior.
 
+![State removal fallback flow: use a valid requested fallback, otherwise the FSM's InitialState.](Visuals/State_Removal_Fallback.svg)
+
+The default state is a recovery path, not magic. Give it a deliberate, safe behavior. Conversely, an empty FSM definition can still be structurally valid and inert: with no states or transitions, there is simply no state behavior to execute.
+
 ## WithTransition(): Creating a New Path
 
 This method adds a new transition rule between two states. If the transition already exists, the operation is ignored. Use WithModifiedTransition() to change an existing one.
