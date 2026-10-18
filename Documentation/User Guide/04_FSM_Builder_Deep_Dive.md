@@ -83,7 +83,7 @@ var fsmBuilder = FSM_API.CreateFiniteStateMachine(
       * `processRate = N` (where N \> 1): Updates **every N ticks** of its processing group. (e.g., `processRate = 2` means it updates every other tick).
       * Default: `1`
   * `processingGroup` (string, optional): Assigns a **default processing group** name for instances created from this definition. Processing groups (e.g., "Update", "FixedUpdate", "AI\_Logic") allow you to organize and update multiple FSMs together from a single `FSM_API.Update("GroupName")` call.
-      * Default: "Update" (a common group driven from host-specific's `Update()` or a main C\# loop).
+      * Default: `Update`. The host application decides when to tick this group, for example from its own update loop or an explicit C# loop.
 
 -----
 
@@ -110,7 +110,7 @@ builder.State("Patrol",
 
 ### Context Parameter (`ctx` or `context`)
 
-Notice the `ctx` (or `context`) parameter in the state actions. This is your **`IStateContext`** object (your MonoBehaviour in host-specific, or your plain C\# class). You'll typically cast it to your specific context type to access its unique properties and methods.
+Notice the `ctx` (or `context`) parameter in state actions. This is your **`IStateContext`** implementation, usually a plain C# object that exposes the application-owned data and operations the state needs. FSM_API core does not require a Unity `MonoBehaviour` or another engine-specific base class.
 
 **C\# Example:**
 
@@ -254,9 +254,9 @@ builder.WithProcessingGroup("GameLogic"); // Instances will default to the "Game
 
   * `groupName` (string): The name of the processing group (e.g., "Gameplay", "UIA", "Physics").
 
-### How it integrates with `FSM_host-specificIntegration` (for host-specific users):
+### How the host drives processing groups
 
-The `FSM_host-specificIntegration` script (discussed in **[02. Getting Started with host-specific](02_Getting_Started_host-specific.md)**) will automatically create and update the "Update", "FixedUpdate", "LateUpdate", etc., processing groups. By using `WithProcessingGroup("Update")` or `WithProcessingGroup("FixedUpdate")` in your builder, you're instructing FSM_API to include instances of this definition in those host-specific-driven update cycles by default.
+FSM_API core does not create engine-specific `Update`, `FixedUpdate`, or `LateUpdate` loops. The host chooses when to call `FSM_API.Interaction.Update(processingGroup)` and which named group to tick. Names such as `Gameplay`, `UI`, or `Physics` are conventions chosen by the application; a name like `FixedUpdate` has no special engine timing semantics inside the core library. See [Getting Started with FSM_API in pure C#](03_Getting_Started_CSharp.md) for a host-neutral example.
 
 -----
 
