@@ -34,22 +34,24 @@ FSM_API is designed to remain host-agnostic: the core is pure C#, does not requi
 Install [TheSingularityWorkshop.FSM_API from NuGet](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API), then define your context, build a finite-state machine, create an instance, and tick its processing group.
 
 ```csharp
+using System;
 using TheSingularityWorkshop.FSM_API;
 
 public sealed class LightSwitch : IStateContext
 {
     public string Name { get; set; } = "KitchenLight";
     public bool IsValid => true;
-    public bool IsOn { get; set; }
+    public bool RequestedOn { get; set; } // Set by application input.
+    public bool IsOn { get; set; }        // Set by FSM state actions.
 }
 
 FSM_API.CreateProcessingGroup("MainLoop");
 
 Func<IStateContext, bool> shouldTurnOn =
-    context => context is LightSwitch light && light.IsOn;
+    context => context is LightSwitch light && light.RequestedOn;
 
 Func<IStateContext, bool> shouldTurnOff =
-    context => context is LightSwitch light && !light.IsOn;
+    context => context is LightSwitch light && !light.RequestedOn;
 
 FSM_API.Create.CreateFiniteStateMachine(
         "LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
