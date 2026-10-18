@@ -4,7 +4,7 @@
 
 **Purpose:** make the remaining work visible so the integer-backed design can be resumed without reconstructing the whole vision from scattered commits.
 
-> **Status in one sentence:** a substantial integer-backed runtime exists on `feature/fsm-api-2.0`, but it is not merged into `development`; the latest recorded validation is red, and the string-to-integer authoring bridge and performance proof remain open.
+> **Status in one sentence:** a substantial integer-backed runtime exists on `feature/fsm-api-2.0`, but it is not merged into `development`; the update-loop mutation regressions are now fixed and the latest feature-branch CI passed 400/400 tests. The string-to-integer authoring bridge, complete parity proof, benchmarks, and integration remain open.
 
 <p align="center">
   <a href="Visuals/Integer_Backing_Roadmap.svg">
@@ -17,8 +17,9 @@
 - **Working branch:** [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
 - **Target branch:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
 - **Separation confirmed:** the integer-backed source tree exists on the feature branch under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0/FSM_API/IntegerBacked); that directory and its integer tests are absent from `development`.
-- **Last recorded green feature-branch run:** [run 34809362671](https://github.com/TrentBest/FSM_API/actions/runs/34809362671), commit [`0ad7a0f`](https://github.com/TrentBest/FSM_API/commit/0ad7a0fa7b60b8dbe7ef13c1820ebfc1710791f4), 2026-09-14.
-- **Latest recorded feature-branch run checked:** [run 34809515652](https://github.com/TrentBest/FSM_API/actions/runs/34809515652), commit [`00f7aa3`](https://github.com/TrentBest/FSM_API/commit/00f7aa3baec4292ff96fe685b0c595e463041675), 2026-09-14. Build succeeded far enough to execute tests, but **398 passed and 2 failed out of 400**. The failing tests are listed below.
+- **Latest feature-branch validation:** [run 39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), commit [`dd96646`](https://github.com/TrentBest/FSM_API/commit/dd96646a3718923bb87a48af695a0c5b6819db8e), 2026-10-18. **400 passed, 0 failed**. The NuGet publish job was skipped; no package was published.
+- **Historical regression:** [run 34809515652](https://github.com/TrentBest/FSM_API/actions/runs/34809515652) on 2026-09-14 had 398 passed and 2 failed out of 400. Those two update-loop tests now pass after the feature-branch fix described below.
+- **Documentation CI:** [run 39102540029](https://github.com/TrentBest/FSM_API/actions/runs/39102540029) passed the local-link validator, DocFX generation, and documentation artifact upload on `development`. NuGet publishing was skipped.
 - **No percentage is reported.** The gates have different weights, and “files exist” is not equivalent to “behavior is equivalent, faster, and safe to integrate.”
 
 ## Work already present on the feature branch
@@ -29,18 +30,15 @@
 | Integer FSM IDs and definition storage | [`FSMRuntime.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FSMRuntime.cs) | Implemented |
 | Runtime-facing API | [`FsmApi.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FsmApi.cs), [`FSMHandleInt.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FSMHandleInt.cs) | Implemented |
 | Fluent builder, timers, transitions | [`FSMBuilderInt.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FSMBuilderInt.cs), [`FSMTimersInt.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FSMTimersInt.cs), [`FSMTransition.cs`](https://github.com/TrentBest/FSM_API/blob/feature/fsm-api-2.0/FSM_API/IntegerBacked/FSMTransition.cs) | Implemented; parity still to prove |
-| Contract, lifecycle, edge, stress, and selected parity tests | [integer test suite](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0/Tests/IntegerBacked) | Broad coverage exists; not all gates pass |
+| Contract, lifecycle, edge, stress, and selected parity tests | [integer test suite](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0/Tests/IntegerBacked) | Broad coverage exists; full feature-branch suite passes; complete parity remains open |
 
 ## Remaining gates — in dependency order
 
-### 1. Fix the known runtime mutation failures — **blocking**
+### 1. Runtime mutation invariants — **resolved on the feature branch; regression tests pass**
 
-The latest recorded run reports:
+The runtime now snapshots the handles present at tick start and checks each handle's registration state before updating it. Removing the currently executing handle no longer shifts the next handle out of the iteration, and handles created by callbacks are not part of the current tick's snapshot.
 
-- `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipTheNextHandle`
-- `FSMRuntime_Stress_Tests.Update_NewHandlesMustNotRunUntilTheNextTick`
-
-Inspect the update-loop and mutation semantics before changing the tests. The intended contract must be explicit: removing a currently executing handle must not skip another live handle, and handles created during an update must not execute until the next tick if that is the chosen runtime contract. Add regression coverage, then rerun the full suite.
+The regression tests are `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipTheNextHandle` and `FSMRuntime_Stress_Tests.Update_NewHandlesMustNotRunUntilTheNextTick`. Both pass in [the 400/400 feature-branch run](https://github.com/TrentBest/FSM_API/actions/runs/39102742225). Keep this behavior protected by those tests.
 
 ### 2. Complete string-backed ↔ integer-backed translation — **not found in the feature tree**
 
@@ -84,7 +82,7 @@ The string API remains useful for readable authoring and rapid prototyping. The 
 
 ## Resume checklist
 
-- [ ] Reproduce and fix the two mutation test failures.
+- [x] Fix the two mutation test failures and verify the full 400-test suite passes on the feature branch.
 - [ ] Add and test the deterministic name-to-ID compiler/bridge.
 - [ ] Complete the string/integer behavior parity matrix.
 - [ ] Specify compact-ID and sparse-ID behavior; test memory and resizing.
