@@ -60,7 +60,7 @@ A flat FSM can become hard to maintain as states and transitions multiply. With 
 
 ### 2\. **Difficulty with Concurrent Behaviors** 🖇️
 
-Standard (non-concurrent) FSMs assume only one state is active at a time. If an object needs to manage multiple independent behaviors simultaneously (e.g., a character that can `Walk` AND `Reload` at the same time), a single flat FSM can become overly complex. While FSM\_API supports **concurrent FSMs** (multiple FSMs for one context), this is a common challenge for basic FSM implementations.
+A single flat FSM usually models one current state at a time. If an object needs to manage independent behaviors simultaneously (for example, a character that can walk and reload), one combined state machine can become overly complex. FSM_API lets an application create multiple handles, but those handles are not automatically scheduled on parallel threads or synchronized with one another. The application must coordinate their update order, shared context, and interactions. See the [behavior-separation visual](Visuals/Behavioral_Separation.svg) for the modeling trade-off.
 
 ### 3\. **Lack of Flexibility for Dynamic Logic** 🤸
 
