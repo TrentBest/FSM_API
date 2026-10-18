@@ -36,7 +36,7 @@
 
 ### 1. Runtime mutation invariants — **resolved on the feature branch; regression tests pass**
 
-The runtime now snapshots the handles present at tick start and checks each handle's registration state before updating it. Removing the currently executing handle no longer shifts the next handle out of the iteration, and handles created by callbacks are not part of the current tick's snapshot.
+The fix is isolated on `feature/fsm-api-2.0`: [`FSMHandleInt.IsRegistered`](https://github.com/TrentBest/FSM_API/commit/4aa64deb10420b924b578fdc8134aa53bbd2d42a) tracks runtime membership, and [`FSMRuntime` tick snapshots](https://github.com/TrentBest/FSM_API/commit/0ff4b93d65f889c9fcbb32b4d5b19d3997573f85) prevent list mutation from skipping live handles or running newly created handles in the same tick. Removing the currently executing handle no longer shifts the next handle out of the iteration, and handles created by callbacks are not part of the current tick's snapshot.
 
 The regression tests are `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipTheNextHandle` and `FSMRuntime_Stress_Tests.Update_NewHandlesMustNotRunUntilTheNextTick`. Both pass in [the 400/400 feature-branch run](https://github.com/TrentBest/FSM_API/actions/runs/39102742225). Keep this behavior protected by those tests.
 
