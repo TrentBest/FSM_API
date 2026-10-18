@@ -15,7 +15,7 @@ Start with the [Create workflow](Create.md) to understand how the API moves from
 ## Core areas
 
 - **[Create](Create.md)** — create processing groups, describe and register definitions, and instantiate them.
-- **[FSM](FSM/FSM.md)** — the state-machine definition and its behavior.
+- **[FSM](FSM_API/FSM/FSM.md)** — the state-machine definition and its behavior.
 - **Interaction** — interact with instances and drive processing from the host application's update loop.
 - **Error** and **Internal** — diagnostics and internal management concerns.
 
