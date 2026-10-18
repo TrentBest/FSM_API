@@ -51,7 +51,7 @@ For systems where it's beneficial to communicate behavior clearly to both techni
 ### 7. **Managing Concurrent or Hierarchical Behaviors (with advanced FSMs)** 👯‍♀️🌲
 When a single entity has multiple independent behaviors running in parallel, or when states naturally nest within each other.
 * **Examples:** A game character can be simultaneously `Walking` (movement FSM) and `Reloading` (combat FSM). Or, a character's `Combat` superstate contains `Attacking`, `Defending`, and `Dodging` substates.
-* **Why FSMs Shine:** While basic FSMs struggle here, **Hierarchical** and **Concurrent FSMs** (which FSM_API supports) offer elegant solutions to manage this complexity, promoting modularity and reusability.
+* **Why FSMs can help:** Multiple independent FSM_API handles can separate concerns such as movement, combat, and animation, while separate definitions can be coordinated as a hierarchy by application code. These are composition patterns built with handles, contexts, state actions, and processing groups—not automatic hierarchical-state semantics or a guarantee of parallel-thread execution. They improve modularity when the behaviors and their coordination rules are explicit.
 
 ---
 
