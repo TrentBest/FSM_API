@@ -209,3 +209,32 @@
   <strong>The Singularity Workshop</strong><br />
   <em>If a picture is worth a thousand words, what is a living picture worth?</em>
 </p>
+
+
+### Live branch and PR audit update (2026-10-18, latest connector inspection)
+
+The current live comparison supersedes the earlier count above: `development` is **214 commits ahead and 5 behind `master`** (merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`). The histories remain divergent; no merge or deletion is justified from counts alone.
+
+Remote branch inventory returned 16 branches:
+- Protected intended branches: `master`, `development`.
+- Historical/feature branches to preserve and audit before any deletion: `AddingUnitTests`, `HireMeFSMDemo`, `RefactoringToHashBacking`, `Splitting-FSM_API-class-into-multiple-partial-classes`, `TargetingStarcraft2DotNet`, `TickCountingSystem`, `WindowsFormsEditor`, `docs/benchmarking`, `docs/readme-standard`, `feature/fsm-api-2.0-next`, `feature/fsm-api-2.0-registry`, `feature/fsm-api-2.0-work`, `feature/fsm-api-2.0`, `feature/integer-backed-runtime`.
+
+Initial comparison against `development` reports these unique commit/file deltas (counts are comparison evidence, not proof that every change is or is not preserved):
+- `AddingUnitTests`: 2 commits / 5 changed files.
+- `HireMeFSMDemo`: 1 / 1.
+- `RefactoringToHashBacking`: 2 / 7.
+- `Splitting-FSM_API-class-into-multiple-partial-classes`: 0 / 0 (524 commits behind).
+- `TargetingStarcraft2DotNet`: 0 / 0 (491 behind).
+- `TickCountingSystem`: 0 / 0 (360 behind).
+- `WindowsFormsEditor`: 2 / 16; contains a standalone Windows Forms editor project and is not assumed to belong in the core 2.0 package.
+- `docs/benchmarking`: 3 / 3, including `Documentation/Benchmarking.md` and README changes.
+- `docs/readme-standard`: 4 / 3, including the readiness checklist and README changes.
+- `feature/fsm-api-2.0-next`, `feature/fsm-api-2.0-registry`, and `feature/fsm-api-2.0-work`: each 24 / 64.
+- `feature/fsm-api-2.0`: 93 / 90; this is the source of the original integer runtime and draft PR #18.
+- `feature/integer-backed-runtime`: 1 / 2.
+
+Open PR audit:
+- [#18 — FSM_API 2.0 integer-backed runtime](https://github.com/TrentBest/FSM_API/pull/18) remains **open and draft**, with base `development`, head `feature/fsm-api-2.0`, head commit `dd96646a3718923bb87a48af695a0c5b6819db8e`, 93 commits and 90 changed files. Its feature-branch 400/400 run is not current-`development` integration proof.
+- [#20 — benchmark documentation](https://github.com/TrentBest/FSM_API/pull/20) and [#22 — README alignment](https://github.com/TrentBest/FSM_API/pull/22) also appear in the open-PR search and need their bases/heads reviewed before any closure or retargeting.
+
+**Still open:** this is a first-pass inventory, not a completed Operation Sith gate. Exact current head SHAs for every branch, open-PR linkage for each unique branch, unique file content comparison against `development`, and preservation of any still-useful material must be completed before branch deletion. No branch has been deleted, no PR has been merged/closed/retargeted, and `master` has not been changed.
