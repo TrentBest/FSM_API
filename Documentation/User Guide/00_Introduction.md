@@ -94,7 +94,7 @@ To best navigate this documentation, please consider your current understanding:
 
 * **New to Finite State Machines (FSMs)?**
     If terms like "states," "transitions," "event-driven," or "stepped" are new to you, begin with our **Theory folder** for comprehensive explanations and definitions:
-    * **[Theory/01_What_Are_FSMs.md](Theory/01_What_is_an_FSM.md)**
+    * **[Theory/01_What_Are_FSMs.md](Theory/01_What_Are_FSMs.md)**
     * **[Theory/02_Types_Of_FSMs.md](Theory/02_Types_Of_FSMs.md)**
     * **[Theory/03_Advantages_And_Disadvantages.md](Theory/03_Advantages_And_Disadvantages.md)**
     * **[Theory/04_When_To_Use_FSMs.md](Theory/04_When_To_Use_FSMs.md)**
