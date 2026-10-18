@@ -189,6 +189,12 @@
 - [Current development branch](https://github.com/TrentBest/FSM_API/tree/development)
 - [Release branch](https://github.com/TrentBest/FSM_API/tree/master)
 
+### Checklist maintenance checkpoint (2026-10-18)
+
+- Re-read the authoritative checklist and the integer-backing progress map on `development` before continuing implementation.
+- No release gate was promoted based on source-file presence alone. Current-branch build/test evidence is still absent from the recorded evidence, so compiler validation, parity, storage, benchmarks, branch reconciliation, package validation, and release remain open.
+- Keep the checklist as the source of truth; update both documents whenever implementation or validation evidence changes, and record the exact commit plus workflow URL before closing a validation gate.
+
 ### Initial audit findings (2026-10-18)
 
 - [x] Located an existing integer-backed implementation and broad tests on `feature/fsm-api-2.0`; latest recorded feature-branch CI reported 400/400 passing.
