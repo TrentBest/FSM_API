@@ -48,3 +48,17 @@ The focused `TickAll` read adds two specific caveats:
 - `ResetAPI` and `DestroyFiniteStateMachine` directly walk the live registry/list structures, invoke `DestroyHandle`, and clear/remove entries. They are not routed through the same deferred queue as `MoveInstance`.
 
 This narrows the places to instrument, but still does not prove whether the Renderer exception comes from overlapping threads, overlapping update/disposal, re-entrant lifecycle callbacks, or a violated caller-side lifetime contract. Establish the intended owner/thread and whether dispose can overlap update before changing semantics. Regression coverage should test the confirmed interleaving and assert that no callback runs after teardown.
+
+
+### IsValid deactivation semantics cross-check (2026-10-18)
+
+The current `development` source reflects the recent semantic change and this distinction must be preserved during the Renderer investigation:
+
+- `FSMHandle.IsValid` is a computed view of `Context?.IsValid ?? false`; it is an execution-eligibility gate, not a registry-membership flag.
+- `Internal.TickAll` checks `handle.Context.IsValid`. An invalid context is skipped and the handle remains in its bucket; restoring validity can resume that same registered handle.
+- Explicit `Interaction.DestroyInstance` / `Internal.DestroyInstance` is the destructive path. `Internal.DestroyInstance` removes the handle from `bucket.Instances` and then calls `handle.DestroyHandle()`; teardown runs the current state's Exit and sets `Context.IsValid = false`.
+- Therefore, deactivation via `IsValid = false` must not be interpreted by consumers as disposal, unregistration, or permission to discard the handle/context. Conversely, explicit destruction is not a reusable pause.
+
+This changes the framing of the Renderer failure: the IsValid change itself should not remove an instance from the registry. The reported exception occurs on the explicit destruction path at `bucket.Instances.Remove(handle)`. Investigation should now prioritize Renderer disposal ownership/order, repeated or re-entrant destroy calls, and any concurrent registry writer. Do not revert deactivation semantics or use `IsValid` as a substitute for explicit destruction.
+
+One contract caveat remains visible in source: `DestroyHandle()` is teardown and always writes `Context.IsValid = false`, while `FSMHandle.IsValid` has no independent destroyed flag. Registry membership is the actual distinction between registered and unregistered; callers should not infer membership from `IsValid` alone.
