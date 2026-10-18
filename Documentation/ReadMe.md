@@ -44,7 +44,7 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 1. Read [00 — Introduction](User%20Guide/00_Introduction.md) for the big picture.
 2. Follow [03 — Getting Started with C#](User%20Guide/03_Getting_Started_CSharp.md) to build a real FSM.
 3. Explore [01 — Core Concepts](User%20Guide/01_Core_Concepts.md) for definitions, instances, states, and contexts.
-4. Browse the [theory documents](User%20Guide/Theory/) to understand the wider FSM domain.
+4. Browse the [FSM theory: What Are FSMs?](User%20Guide/Theory/01_What_Are_FSMs.md) to understand the wider FSM domain.
 
 ## 🟪 05 Documentation and theory
 
@@ -55,6 +55,11 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 - [Runtime modification](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
 - [Error handling](User%20Guide/07_Error_Handling.md)
 - [Performance tips](User%20Guide/08_Performance_Tips.md)
+- [FSM theory: What Are FSMs?](User%20Guide/Theory/01_What_Are_FSMs.md)
+- [Types of FSMs](User%20Guide/Theory/02_Types_Of_FSMs.md)
+- [Advantages and disadvantages](User%20Guide/Theory/03_Advantages_And_Disadvantages.md)
+- [When to use FSMs](User%20Guide/Theory/04_When_To_Use_FSMs.md)
+- [Limitations and alternatives](User%20Guide/Theory/05_FSM_Limitations_And_Alternatives.md)
 - [Tick boundaries and registry ownership](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
 - [Use cases](User%20Guide/09_Common_Use_Cases.md)
 - [FAQ](User%20Guide/11_FAQ.md)
