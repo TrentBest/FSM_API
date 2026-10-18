@@ -158,6 +158,10 @@ The `.Transition()` method establishes a **directional rule** for moving from a 
 builder.Transition("Idle", "Walking", ctx => ((PlayerContext)ctx).HasMovementInput);
 ```
 
+<a href="Visuals/Guard_vs_Action.svg" target="_blank"><img src="Visuals/Guard_vs_Action.svg" alt="Diagram separating context data, pure transition guard evaluation, transition selection, and state actions, including false-condition and timing paths" width="100%" style="max-width: 100%; height: auto;"></a>
+
+Keep the condition focused on returning a decision. Put effects such as changing application data, starting an animation, or sending a notification in the appropriate state action or explicit application logic—not inside the guard.
+
 ### Parameters:
 
   * `fromStateName` (string): The name of the state from which the transition originates (the "source").
