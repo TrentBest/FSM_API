@@ -293,7 +293,7 @@ namespace TheSingularityWorkshop.FSM_API
 
 
         /// <summary>
-        /// Shuts down this FSM instance, removing it from the API's internal system. 🚫
+        /// Performs instance teardown after the API removes this handle from its registered collection. 🚫
         /// </summary>
         /// <remarks>
         /// This is extremely important for cleaning up and freeing up computer resources,
