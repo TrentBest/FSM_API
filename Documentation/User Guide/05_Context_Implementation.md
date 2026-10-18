@@ -85,7 +85,7 @@ namespace TheSingularityWorkshop.FSM.API
     {
         /// <summary>
         /// A flag indicating whether the context (and thus the FSM instance bound to it) is still valid and active.
-        /// When false, the FSM instance will be automatically cleaned up and removed from processing.
+        /// When false, execution for the registered handle is suspended while it remains registered. Restoring true allows the same handle to resume; use explicit instance destruction or unregistration to remove it.
         /// </summary>
         bool IsValid { get; }
     }
@@ -94,8 +94,8 @@ namespace TheSingularityWorkshop.FSM.API
 
 The `IsValid` property is crucial for robust FSM management, especially in dynamic environments like game engines:
 
-  * **Automatic Cleanup:** If `IsValid` returns `false`, FSM\_API will automatically **unregister and clean up** the associated `FSMHandle` instance. This prevents memory leaks and errors that can occur if an FSM tries to interact with a non-existent or invalid object.
-  * **Performance:** Invalid FSMs are removed from processing queues, reducing overhead.
+  * **Execution Gate:** If `IsValid` returns `false`, the scheduler skips that handle's update. This does not unregister or destroy the handle; if the context becomes valid again, the registered handle can resume. Explicitly destroy or unregister instances when they should be removed.
+  * **Performance:** Invalid contexts are skipped during processing, but remain registered until explicitly removed.
   * **Example Scenarios:**
       * If an application-owned context becomes invalid, `IsValid` should return `false`.
       * In another application, if a data model is no longer relevant (e.g., a network connection closes, a background task completes and is disposed), `IsValid` should be set to `false`.
@@ -168,7 +168,7 @@ public class MyCharacterData : IStateContext
 }
 ```
 
-In this pure C\# example, `IsValid` directly reflects the `IsAlive` state of the character. When `IsAlive` becomes `false` (e.g., after `TakeDamage` reduces health to zero), `IsValid` will also become `false`, prompting FSM\_API to clean up the associated FSM instance.
+In this pure C\# example, `IsValid` reflects the character's `IsAlive` state. When health reaches zero, updates are suspended but the handle remains registered. If this character should be permanently removed from the FSM, explicitly unregister or destroy its instance; setting `IsValid` back to true instead permits the same registered handle to resume.
 
 ### Example 2: host-specific MonoBehaviour
 
@@ -238,7 +238,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
     {
         // Crucial for host-specific: Unregister the FSM instance when the GameObject is destroyed.
         // This prevents the FSM from trying to access a null GameObject/MonoBehaviour.
-        // FSM_API's IsValid check will also catch this, but explicit unregistration is good practice.
+        // IsValid gates updates; explicitly unregister to remove the instance.
         if (myFSM != null)
         {
             FSM_API.Unregister(myFSM);
@@ -268,7 +268,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
   * **Keep Contexts Lean (but functional):** While your context holds data and methods, avoid putting complex, high-level FSM logic directly into it. That's what the FSM definition is for. The context should be focused on providing the raw data and atomic operations that states need.
   * **Clear Naming:** Ensure your `Name` property provides useful debugging information. For host-specific, `gameObject.name` is often sufficient.
   * **Accurate `IsValid`:** Implement `IsValid` carefully. It's the primary way FSM\_API knows if an instance is still relevant. Incorrect `IsValid` logic can lead to memory leaks or NullReferenceExceptions.
-  * **Explicit Unregistration (host-specific):** For MonoBehaviours, always unregister your `FSMHandle` in `OnDestroy()`. While `IsValid` will eventually lead to cleanup, explicit unregistration is safer and faster in host-specific's lifecycle.
+  * **Explicit Unregistration (host-specific):** For MonoBehaviours, unregister your `FSMHandle` in `OnDestroy()` so the instance is removed from the registry. `IsValid` only gates updates; it does not perform this removal.
   * **Casting in State Actions:** Remember that the `context` parameter in state actions (`onEnter`, `onUpdate`, `onExit`) and transition conditions is of type `IStateContext`. You'll almost always need to cast it to your specific context type (e.g., `((MyCharacterData)ctx)`) to access your custom properties and methods.
 
 By adhering to the `IStateContext` interface, your FSMs become incredibly flexible and reusable, able to control diverse objects across various C\# environments.
