@@ -25,7 +25,7 @@ games, simulations, robotics, or reactive systems. It provides a powerful and de
 approach to managing complex state-driven logic, ensuring clarity, consistency, and 
 control across diverse domains.
 
-    ✅ Thread-safe operations (main thread only, deferred mutation handling)
+    ✅ Deferred mutation handling (registry mutations are processed on the main thread)
 
     🧠 Decoupled state logic from data (POCO-friendly)
 
