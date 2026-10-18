@@ -378,10 +378,41 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.Throws<ArgumentNullException>(() => builder.AnyTransition("StateB", null), "Expected ArgumentNullException for null condition.");
         }
         /// <summary>
+        /// The parameterless builder can build and register an unnamed, empty FSM.
+        /// </summary>
+        [Test]
+        public void FSMBuilder_Build_WithNoStates_CreatesUnnamedEmptyDefinition()
+        {
+            var builder = new FSMBuilder();
+
+            Assert.DoesNotThrow(() => builder.Build());
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("UnNamedFSM", "Update");
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0));
+            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// The documented factory example safely registers an empty manual FSM.
+        /// </summary>
+        [Test]
+        public void CreateFiniteStateMachine_WithManualRateAndNoStates_BuildsEmptyDefinition()
+        {
+            Assert.DoesNotThrow(() =>
+                FSM_API.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition());
+
+            var fsm = FSM_API.Internal.GetFsmDefinition("Works", "Update");
+            Assert.That(fsm, Is.Not.Null);
+            Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0));
+            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0));
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         [Test]
-        public void FSMBuilder_BuildDefinition_FailsWhenNoStatesAdded()
+        public void FSMBuilder_BuildDefinition_WithNoStates_ReturnsValidEmptyDefinition()
         {
             // Arrange
             var builder = new FSMBuilder("TestFSM");
@@ -391,7 +422,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Therefore, we no longer expect an exception, but can assert on the resulting FSM properties.
             Assert.DoesNotThrow(() => builder.BuildDefinition(), "BuildDefinition should not throw an exception when no states are added.");
             var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            Assert.That(fsm, Is.Not.Null, "An empty definition should still be registered.");
             Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0), "FSM should have no states.");
+            Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "FSM should have no transitions.");
         }
 
         /// <summary>
