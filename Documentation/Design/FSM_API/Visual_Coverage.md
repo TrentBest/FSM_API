@@ -14,6 +14,7 @@ This page is the working inventory for making the documentation explain behavior
 | Reusable definition, live instance, application context | [FSM_API architecture](../../User%20Guide/Visuals/FSM_API_Architecture.svg) | One blueprint can be instantiated repeatedly; each instance has its own current state and interacts with application-owned context. | Conceptual animation; see the core concepts and executable examples. |
 | State lifecycle and transition timing | [State lifecycle](../../User%20Guide/Visuals/State_Lifecycle.svg) | Entry, update, condition evaluation, exit, and next-tick entry. | Must remain aligned with the lifecycle implementation and tests. |
 | Guard versus action | [Guard and action](../../User%20Guide/Visuals/Guard_vs_Action.svg) | A transition condition returns a decision; state actions perform effects. | Conditions should not be used for side effects. |
+| Processing groups and process rates | [Processing groups and rates](../../User%20Guide/Visuals/Processing_Groups_And_Rates.svg) | Host-driven group ticks, per-definition cadence, and the meaning of rate 0, 1, and N. | The host owns the clock; names such as `FixedUpdate` have no special timing in core. |
 | Moore versus Mealy output models | [Moore and Mealy](../../User%20Guide/Theory/Visuals/Mealy_vs_Moore.svg) | State-associated versus transition-associated output. | Theory comparison; FSM_API has no dedicated transition-output callback. |
 | Combining behavior dimensions | [Behavior separation](../../User%20Guide/Theory/Visuals/Behavioral_Separation.svg) | A flat machine can multiply combinations; independent machines can separate concerns. | Separate handles do not imply parallel threads or automatic coordination. |
 | Choosing an approach | [Behavior-model decision guide](../../User%20Guide/Theory/Visuals/Choosing_A_Behavior_Model.svg) | When to consider an FSM, composed FSMs, controllers, behavior trees, or planners. | Heuristic, not a strict taxonomy; approaches can be combined. |
@@ -30,12 +31,11 @@ This page is the working inventory for making the documentation explain behavior
 
 These are candidates, not promises to create graphics for every row. A visual is worth adding only if it explains something better than prose or executable examples.
 
-1. **Processing groups and process rates:** show host-driven ticks, named group selection, per-definition rates, and manual stepping without suggesting that the library owns a host loop.
-2. **Runtime modification and deferred work:** distinguish immediate operations from queued registry changes and show the relevant tick boundary.
-3. **Error handling and thresholds:** visualize cumulative instance-error counts, threshold callbacks, destruction, and the limits of cleanup guarantees.
-4. **Disposal and ownership:** show what explicit destruction/unregistration does versus invalid-context suspension.
-5. **Performance and integer backing:** show current string-backed lookup versus the isolated integer runtime only where measurements and implementation details support the comparison.
-6. **A source-backed, runnable walkthrough:** prefer an executable example or test-backed view over another diagram when it can prove the same concept more directly.
+1. **Runtime modification and deferred work:** distinguish immediate operations from queued registry changes and show the relevant tick boundary.
+2. **Error handling and thresholds:** visualize cumulative instance-error counts, threshold callbacks, destruction, and the limits of cleanup guarantees.
+3. **Disposal and ownership:** show what explicit destruction/unregistration does versus invalid-context suspension.
+4. **Performance and integer backing:** show current string-backed lookup versus the isolated integer runtime only where measurements and implementation details support the comparison.
+5. **A source-backed, runnable walkthrough:** prefer an executable example or test-backed view over another diagram when it can prove the same concept more directly.
 
 ## Visual acceptance checklist
 
