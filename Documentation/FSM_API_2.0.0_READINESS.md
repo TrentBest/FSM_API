@@ -199,7 +199,7 @@
 
 - [x] Located and read this authoritative readiness document and the linked integer-backing progress map on `development`.
 - [x] Corrected the workflow's NuGet publish condition on `development` so the explicit boolean publish gate can only publish from `master`, the designated release branch. Change: [`592cead`](https://github.com/TrentBest/FSM_API/commit/592ceada0b51ad9615e68e2c5d707c2949d1b729). This is a safety correction, **not** evidence that the workflow has passed CI; validate it in the next development workflow run.
-- [ ] Run and record current-`development` CI for the integer runtime/compiler integration; do not reuse the historical feature-branch 400/400 result as current-branch evidence.
+- [x] Current-`development` CI for the integer runtime/compiler integration passed on commit [`e6c2638`](https://github.com/TrentBest/FSM_API/commit/e6c2638935f2e478ab9807dcc9cfca12ca733f8a): [workflow run #504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802) completed successfully on 2026-10-18. The build/test/package job passed 401 tests (0 failed, 0 skipped); the documentation job passed; the NuGet publish job was skipped. This validates that commit only, not 2.0 release readiness.
 - [ ] Resolve the documented Any-State versus regular-transition ordering discrepancy with trace-based parity tests before declaring behavior parity.
 - [ ] Reconcile the current branch history carefully. Latest comparison snapshot reports `development` 217 commits ahead and 5 behind `master`; preserve unique commits before any history-changing action or branch deletion.
 ### Initial audit findings (2026-10-18)
@@ -247,10 +247,20 @@ Open PR audit:
 **Still open:** this is a first-pass inventory, not a completed Operation Sith gate. Exact current head SHAs for every branch, open-PR linkage for each unique branch, unique file content comparison against `development`, and preservation of any still-useful material must be completed before branch deletion. No branch has been deleted, no PR has been merged/closed/retargeted, and `master` has not been changed.
 
 
+### Current development CI verification (2026-10-18)
+
+- [x] Confirmed [workflow run #504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802) for commit [`e6c2638`](https://github.com/TrentBest/FSM_API/commit/e6c2638935f2e478ab9807dcc9cfca12ca733f8a) completed with overall conclusion **success**.
+- [x] `build_test_and_package`: success; 401 tests passed, 0 failed, 0 skipped. The test-fixture correction assigns `InitialState = "Missing"` after `AddState`, because adding the first state establishes the default initial state.
+- [x] `build_documentation`: success.
+- [x] `publish_nuget`: skipped; no package was published.
+- [ ] Add trace-based parity coverage for string-backed and integer-backed transition/lifecycle ordering. In particular, decide and test the intended contract when Any-State and state-specific transitions both match; existing runtimes differ here.
+- [ ] Continue PR and branch-history reconciliation. This successful run validates the recorded development commit only and does not authorize merge, branch deletion, or release.
+
+
 ### Publication and branch comparison refresh (2026-10-18)
 
 - [x] Refreshed the live `master...development` comparison: `development` is **217 commits ahead and 5 behind** `master`; merge base remains `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`. This supersedes the prior 214-ahead snapshot above.
 - [x] Re-read the workflow files on both branches. On `development`, NuGet publishing requires a manual dispatch, explicit `inputs.publish == true`, and `github.ref == 'refs/heads/master'`. On `master`, the publish job remains explicitly disabled by an additional `&& false`; this is a safety state, not a release-ready publishing configuration. No package was published.
 - [ ] Before any release, reconcile the workflow policy deliberately: preserve the explicit boolean confirmation and master-only release boundary, then validate the resulting workflow in a real run. Do not remove the master-side disabled gate without explicit release authorization.
 - [ ] PR #18 (integer-backed runtime), PR #20 (benchmark documentation), and PR #22 (README alignment) are still open in the latest search; #18 and #20 are drafts. Review each PR's exact base/head and changed-file overlap before merge, retarget, or closure. No PR was merged or closed during this audit.
-- [ ] Current-branch CI and integer/string trace parity remain unverified; source presence and the historical feature-branch result do not close those gates.
+- [x] Current-`development` CI verified for commit `e6c2638935f2e478ab9807dcc9cfca12ca733f8a`: [run #504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802) completed successfully; build/test/package and documentation jobs passed, with 401 tests passing and publish skipped. This does not certify a release commit.
