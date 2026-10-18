@@ -338,18 +338,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// After calling this, your FSM blueprint is complete and saved. You can then start
         /// creating live instances of it using <see cref="FSM_API.Create.CreateInstance(string, IStateContext, string)"/>.
         /// <para>
-        /// This method checks for common mistakes like:
-        /// <list type="bullet">
-        ///     <item>If the FSM `Name` is empty.</item>
-        ///     <item>If no states have been added.</item>
-        ///     <item>If the `InitialState` you set actually exists.</item>
-        /// </list>
-        /// If an FSM blueprint with the same name already exists in the system when `BuildDefinition` is called,
-        /// it will be **overwritten** with this new definition.
+        /// An empty builder is allowed: if no states are added, the registered definition has zero
+        /// states and zero transitions and is inert. When states exist and no initial state was
+        /// specified, the first added state becomes the initial state. If an FSM blueprint with the
+        /// same name already exists in the system, it is overwritten by this definition.
         /// </para>
         /// </remarks>
-        /// <returns>The completed <see cref="FSM"/> blueprint.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the FSM has no name, no states, or the initial state doesn't exist.</exception>
         /// <summary>
         /// Builds and registers this FSM definition.
         /// </summary>
