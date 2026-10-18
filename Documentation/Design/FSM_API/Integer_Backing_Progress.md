@@ -2,6 +2,9 @@
 
 # Integer-backed FSM implementation — progress map
 
+**Release checklist:** [FSM_API 2.0.0 Readiness — comprehensive remaining work](../../FSM_API_2.0.0_READINESS.md). This is the authoritative release-gate checklist, including Operation Sith branch cleanup, parity, benchmark, CI, documentation, and publication gates.
+
+
 **Purpose:** make the remaining work visible so the integer-backed design can be resumed without reconstructing the whole vision from scattered commits.
 
 > **Status in one sentence:** a substantial integer-backed runtime exists on `feature/fsm-api-2.0`, but it is not merged into `development`; the update-loop mutation regressions are now fixed and the latest feature-branch CI passed 400/400 tests. The string-to-integer authoring bridge, complete parity proof, benchmarks, and integration remain open.
