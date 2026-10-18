@@ -49,7 +49,7 @@ coding patterns. FSM_API liberates your state management:
 |----------------------------------|------------|--------------------|
 | Framework agnostic                | ✅         | ❌                 |
 | Runtime-modifiable definitions    | ✅         | ❌                 |
-| Deferred mutation safety          | ✅         | ❌                 |
+| Deferred mutation queue            | ✅         | ❌                 |
 | Named FSMs & Processing Groups    | ✅         | ❌                 |
 | Built-in diagnostics & thresholds| ✅         | ❌                 |
 | Pure C# with no external deps     | ✅         | ❌                 |
@@ -212,9 +212,9 @@ For academic interest or advanced debugging, the `FSM_API.Internal` namespace ex
 > **Warning:** These methods are intended for internal use. Direct modification may bypass safety checks.
 
 ### Core Components
-* **FsmBucket**: The atomic container holding an FSM Definition (`FSM`) and its active Instances (`List<FSMHandle>`).
+* **FsmBucket**: The registry container holding an FSM Definition (`FSM`) and its active instances (`List<FSMHandle>`).
 * **TickAll(group)**: The heart of the system. It iterates `FsmBucket`s, respects `ProcessRate`, and executes the logic cycle.
-* **Deferred Modifications**: To ensure thread safety on the main loop, structural changes (like destroying an FSM) are queued and executed only *after* the tick cycle completes.
+* **Deferred Modifications**: Operations that explicitly enqueue work are processed after `TickAll` returns. This is a per-update boundary, not a global lock: creation and explicit instance destruction currently mutate registry lists immediately. Do not allow those immediate mutations to race with ticking or other registry writers.
 
 ### Tick Cycle Logic
 A single tick performs at most one "Enter", one "Update", and one "Exit" operation to ensure deterministic execution time.
