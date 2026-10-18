@@ -84,6 +84,32 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 46));
         }
 
+
+        [Test]
+        public void Compile_RejectsTransitionsFromUndefinedStates()
+        {
+            var source = new StringFsm { Name = "InvalidTransitionSourceFixture" };
+            source.AddState(new StringFsmState("Present", null, null, null));
+            source.AddTransition("Missing", "Present", _ => true);
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 47));
+        }
+
+        [Test]
+        public void Compile_ReturnsReadOnlyStateMappings()
+        {
+            var source = new StringFsm { Name = "ReadOnlyMappingFixture" };
+            source.AddState(new StringFsmState("Only", null, null, null));
+            var compiled = FSMCompiler.Compile(source, 48);
+
+            Assert.That(compiled.StateNameToID, Is.InstanceOf<System.Collections.ObjectModel.ReadOnlyDictionary<string, int>>());
+            Assert.That(compiled.StateIDToName, Is.InstanceOf<System.Collections.ObjectModel.ReadOnlyDictionary<int, string>>());
+            Assert.Throws<NotSupportedException>(() =>
+                ((System.Collections.Generic.IDictionary<string, int>)compiled.StateNameToID).Add("Injected", 1));
+            Assert.Throws<NotSupportedException>(() =>
+                ((System.Collections.Generic.IDictionary<int, string>)compiled.StateIDToName).Add(1, "Injected"));
+        }
+
         [Test]
         public void Compile_RejectsUndefinedInitialState()
         {
