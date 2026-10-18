@@ -582,9 +582,9 @@ namespace TheSingularityWorkshop.FSM_API
             /// The name of the state to remove.
             /// </param>
             /// <param name="fallbackStateName">
-            /// Optional: The name of the state to transition existing FSM instances to if they are
-            /// currently in the state being removed. If not provided (null or empty), instances
-            /// will default to transitioning to the FSM's <see cref="FSM.InitialState"/>.
+            /// Preferred state for instances currently in the state being removed. If this name is
+            /// missing from the FSM, null/empty/whitespace, or names the state being removed, instances
+            /// fall back to the FSM's <see cref="FSM.InitialState"/>.
             /// </param>
             /// <param name="processingGroup">
             /// The name of the processing group where the FSM definition is registered. Defaults to <c>"Update"</c>.
@@ -618,20 +618,10 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                // Determine the actual fallback state.
-                // If fallbackStateName is not provided or invalid, use the FSM's InitialState.
-                // We need to ensure that the determined fallback state actually exists in the FSM
-                // before trying to apply the modification, or the FSMModifier might throw.
-                string actualFallbackState = string.IsNullOrWhiteSpace(fallbackStateName) ? fsm.InitialState : fallbackStateName;
-
-                // TODO: (Self-correction/Assumption) FSMModifier.WithoutState should ideally validate
-                // if actualFallbackState exists, or FSM.InitialState is always guaranteed to exist.
-                // Assuming FSMModifier or underlying FSM handles invalid fallbackStateName gracefully
-                // by either throwing an informative exception or defaulting internally.
-                // For now, we pass the chosen actualFallbackState to WithoutState.
-
+                // FSMModifier validates the requested fallback against the definition at application
+                // time and falls back to InitialState when the requested name is absent or being removed.
                 new FSMModifier(fsm)
-                    .WithoutState(stateName, actualFallbackState) // Pass the determined fallback state
+                    .WithoutState(stateName, fallbackStateName)
                     .ModifyDefinition();
             }
 
