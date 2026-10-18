@@ -332,19 +332,6 @@ namespace TheSingularityWorkshop.FSM_API
 
 
         /// <summary>
-        /// Finalizes your FSM blueprint and **registers it** with the FSM system. ✅
-        /// </summary>
-        /// <remarks>
-        /// After calling this, your FSM blueprint is complete and saved. You can then start
-        /// creating live instances of it using <see cref="FSM_API.Create.CreateInstance(string, IStateContext, string)"/>.
-        /// <para>
-        /// An empty builder is allowed: if no states are added, the registered definition has zero
-        /// states and zero transitions and is inert. When states exist and no initial state was
-        /// specified, the first added state becomes the initial state. If an FSM blueprint with the
-        /// same name already exists in the system, it is overwritten by this definition.
-        /// </para>
-        /// </remarks>
-        /// <summary>
         /// Builds and registers this FSM definition.
         /// </summary>
         /// <remarks>
@@ -356,6 +343,19 @@ namespace TheSingularityWorkshop.FSM_API
             BuildDefinition();
         }
 
+        /// <summary>
+        /// Finalizes your FSM blueprint and registers it with the FSM system.
+        /// </summary>
+        /// <remarks>
+        /// After calling this, your FSM blueprint is complete and saved. You can then start
+        /// creating live instances of it using <see cref="FSM_API.Create.CreateInstance(string, IStateContext, string)"/>.
+        /// <para>
+        /// An empty builder is allowed: if no states are added, the registered definition has zero
+        /// states and zero transitions and is inert. When states exist and no initial state was
+        /// specified, the first added state becomes the initial state. If an FSM blueprint with the
+        /// same name already exists in the system, it is overwritten by this definition.
+        /// </para>
+        /// </remarks>
         public void BuildDefinition()
         {
             string finalInitialState = string.Empty;
