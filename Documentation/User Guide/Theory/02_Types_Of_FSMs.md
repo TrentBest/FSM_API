@@ -82,7 +82,11 @@ Concurrent FSMs allow a system to be in **multiple states simultaneously**, with
     * **Modularity:** Clearly separates different behavioral concerns.
     * **Flexibility:** Allows for more complex combinations of behaviors than a single, monolithic FSM.
     * **Scalability:** Easier to add or remove independent behaviors without affecting others.
-* **FSM_API Relevance:** FSM_API natively supports this by allowing you to create multiple `FSMHandle` instances for a single `IStateContext` object. Each handle would correspond to a different FSM definition (e.g., `FSM_API.CreateInstance("PlayerMovement", this); FSM_API.CreateInstance("PlayerCombat", this);`). You can then update these concurrently via different processing groups or manual `Step()` calls.
+* **FSM_API relevance and boundary:** You can create multiple FSM handles and have them operate on the same context object when appropriate. Each handle represents a separate machine, not a built-in parallel-thread system. Processing-group names determine which instances are selected when the host calls the corresponding update; the host still controls tick order and cadence, and the application must define how behaviors coordinate and share data.
+
+<a href="Visuals/Behavioral_Separation.svg" target="_blank"><img src="Visuals/Behavioral_Separation.svg" alt="Conceptual comparison of one combined movement-and-combat state machine with two separate behavior machines, including state-combination growth and coordination limits" width="100%" style="max-width: 100%; height: auto;"></a>
+
+*Visual model:* a flat combined machine can multiply state combinations; separate machines can reduce duplication when concerns are genuinely independent. This is a modeling comparison, not a guarantee that separate FSMs can always be composed safely.
 
 
 
