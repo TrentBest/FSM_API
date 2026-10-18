@@ -33,6 +33,7 @@ This document builds from everyday intuition into the formal vocabulary and then
 * [03. Advantages and Disadvantages of Using FSMs](03_Advantages_And_Disadvantages.md)
 * [04. When to Use Finite State Machines](04_When_To_Use_FSMs.md)
 * [05. FSM Limitations and Alternatives](05_FSM_Limitations_And_Alternatives.md)
+* [06. Tick boundaries, deferred work, and registry ownership](06_Tick_Boundaries_And_Registry_Ownership.md)
 
 ---
 
