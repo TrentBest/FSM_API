@@ -31,7 +31,7 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/FSM_API.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-
+    
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
 
@@ -82,8 +82,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
           
@@ -105,7 +104,7 @@ jobs:
   publish_nuget:
     needs: build_test_and_package
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/development' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/master' }}
     permissions:
       contents: read
       id-token: write
