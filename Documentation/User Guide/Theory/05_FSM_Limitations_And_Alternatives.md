@@ -16,12 +16,16 @@ This document explores the scenarios where FSMs might not be the optimal choice 
 
 ---
 
+## 🧭 A companion visual
+
+<a href="Visuals/Choosing_A_Behavior_Model.svg" target="_blank"><img src="Visuals/Choosing_A_Behavior_Model.svg" alt="Decision guide showing when an FSM, separate FSMs, a continuous controller, a behavior tree, or a planner may fit better" width="100%" style="max-width: 100%; height: auto;"></a>
+
 ## ⛔ Limitations of FSMs
 
 Even with advanced FSM types (like Hierarchical and Concurrent), there are inherent challenges:
 
 ### 1. **State Explosion Problem (Complexity)** 💥
-This is the most frequently cited limitation. As the number of states and transitions grows, the FSM diagram and the underlying code can become incredibly complex and difficult to manage. For `N` states, the number of potential transitions can grow exponentially. This often indicates a need for a different pattern or a more abstract design.
+This is a common limitation. As states and transitions grow, the diagram and code can become difficult to understand and maintain. With `N` states, a fully connected directed graph can have up to `N × (N − 1)` transitions between distinct states (or more if self-transitions are allowed); that bound is quadratic, not exponential. Exponential growth can arise when a flat model explicitly represents combinations across several independent behavior dimensions. This may be a signal to decompose the model, introduce hierarchy at the application level, or choose a complementary pattern.
 
 ### 2. **Difficulty with Concurrent/Parallel Behavior (Basic FSMs)** 🖇️
 A fundamental characteristic of a basic FSM is being in **exactly one state at a time**. If a system needs to perform multiple, independent actions simultaneously (e.g., a character walking *and* reloading, or talking *and* animating), a single, monolithic FSM can become bloated and hard to reason about. While FSM_API can host multiple independent handles for the same context, this is behavioral separation rather than a promise that the machines execute simultaneously on separate threads. The host schedules processing-group ticks, and the application remains responsible for coordinating interactions between those behaviors.
