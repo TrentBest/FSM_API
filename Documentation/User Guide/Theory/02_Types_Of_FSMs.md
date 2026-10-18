@@ -47,6 +47,8 @@ In a **Mealy Machine**, the **output is associated with the transitions between 
 * **Analogy:** Imagine a simple doorbell. The "ringing" sound (output) happens *during* the transition from "Button Not Pressed" to "Button Pressed," not while the button is just "Pressed."
 * **FSM_API relevance and boundary:** FSM_API exposes transition conditions as predicates and state actions such as `OnEnter`, `OnUpdate`, and `OnExit`; this API surface does not provide a dedicated transition-output callback. Keep transition conditions focused on answering whether a transition is allowed—do not use them for output side effects, because the predicate may be evaluated as part of transition selection. Mealy-style outputs therefore need to be modeled explicitly in context/state logic or represented by a state structure that makes the output unambiguous. That is a modeling choice, not a native Mealy-machine mode.
 
+<a href="Visuals/Mealy_vs_Moore.svg" target="_blank"><img src="Visuals/Mealy_vs_Moore.svg" alt="Conceptual diagram comparing Moore outputs attached to states with Mealy outputs attached to transitions, including FSM_API's callback boundary" width="100%" style="max-width: 100%; height: auto;"></a>
+
 
 
 ---
