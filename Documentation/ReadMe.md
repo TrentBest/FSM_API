@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living moniker">
-    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living moniker — a digital vortex converging on its central eye" width="128" />
-  </a>
-</p>
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
 # FSM_API — finite-state behavior you can see
 
