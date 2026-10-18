@@ -10,6 +10,12 @@ Before learning the term *finite-state machine*, notice how often you already re
 
 You do not need to be a programmer to understand the pattern. You are already asking four useful questions: **What situation is it in now? What can happen next? What condition allows that change? What should the system do in this situation?**
 
+<a href="Visuals/Everyday_State_Model.svg" target="_blank">
+  <img src="Visuals/Everyday_State_Model.svg" alt="Animated conceptual diagram of a powered door moving between Closed, Opening, Open, and Closing states through labeled transitions" width="1000" style="display:block;max-width:100%;height:auto;">
+</a>
+
+*This is a teaching model, not a complete door controller. A real installation must also define obstruction detection, interlocks, sensor failure behavior, emergency stops, and safe motor control.*
+
 ## From intuition to a formal model
 
 A **Finite State Machine (FSM)** is a mathematical model of behavior with a finite set of states and defined rules for changing between them. A conventional FSM occupies one of its defined states at a time. A change from one state to another is called a **transition**. A basic model identifies its states, initial state, and transition rules; particular FSM formalisms may add outputs, accepting states, or other structure.
