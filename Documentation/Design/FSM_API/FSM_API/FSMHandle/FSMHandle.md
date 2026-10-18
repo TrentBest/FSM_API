@@ -30,7 +30,7 @@ The animation illustrates source-defined behavior; it is not connected to a live
 
   * `public string CurrentState { get; internal set; }`: This is a fundamental property for designers and developers. It provides a simple way to check the FSM's current state without needing to understand its internal workings. For example, `if (playerHandle.CurrentState == "Idle")`.
   * `public IStateContext Context { get; set; }`: This property provides access to the FSM's data. While you can directly manipulate this data, the documentation correctly advises against this practice. It's generally safer to let the FSM's state actions (`OnEnter`, `OnUpdate`, `OnExit`) modify the context.
-  * `public bool IsValid { get; }`: A crucial property for managing the FSM's lifecycle. The `FSM_API`'s internal systems will automatically stop processing a handle if this property becomes `false`.
+  * `public bool IsValid { get; }`: Reflects `Context.IsValid`. When false, automatic processing skips the handle while keeping it registered with its current state intact. Set the context's `IsValid` back to true to resume the same handle when safe.
 
 #### Public Methods
 
@@ -43,4 +43,4 @@ The animation illustrates source-defined behavior; it is not connected to a live
 
 ### Lifecycle Management
 
-The `FSMHandle` is also responsible for managing its own lifecycle. The `DestroyHandle()` method ensures that the `OnExit` action of the current state is called and that the handle's `IStateContext` is marked as invalid. This is an essential step to ensure that the FSM is properly cleaned up and that resources are freed.
+There are two different lifecycle operations:\n\n- **Suspend / reuse:** set `handle.Context.IsValid = false`. The scheduler skips the handle but retains it in the registered instance collection, preserving its current state. Set it back to `true` to resume that same handle when the context is safe to use.\n- **Destroy:** call `FSM_API.Interaction.DestroyInstance(handle)`. The API removes the handle from its registered collection and runs teardown; the internal `DestroyHandle()` path exits the current state and marks the context invalid. A destroyed handle is not a pooled inactive instance and should not be reused.
