@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" role="img" aria-labelledby="title desc">
+  <title id="title">From FSM blueprint to a running state machine</title>
+  <desc id="desc">An FSM blueprint defines states and transitions. The API creates a live handle with its own current state and context. Each scheduled tick evaluates the current state and transition rules, then advances the handle when a transition is selected. The moving marker illustrates the conceptual flow; it is not connected to a live runtime.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#101c31"/><stop offset="1" stop-color="#172b43"/></linearGradient>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8aa7c7"/></marker>
+    <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#eef5ff}.sub{fill:#b8c9df;font-size:15px}.heading{font-size:21px;font-weight:700}.body{font-size:16px}.panel{fill:#1c304a;stroke:#48627f;stroke-width:1.5}.state{fill:#173d50;stroke:#54c8dc;stroke-width:2}.rule{fill:#3b2f55;stroke:#b39bff;stroke-width:2}.line{fill:none;stroke:#8aa7c7;stroke-width:2.5;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="1000" height="430" rx="22" fill="url(#bg)"/>
+  <text x="32" y="42" font-size="13" font-weight="700" letter-spacing="2.4" fill="#75d6ff">FSM_API • BLUEPRINT → EXECUTION</text>
+  <text x="32" y="75" font-size="27" font-weight="750">One definition. Many independent instances.</text>
+  <text x="32" y="101" class="sub">The blueprint describes behavior; each handle carries its own state and context.</text>
+  <rect class="panel" x="32" y="132" width="274" height="174" rx="15"/>
+  <text class="heading" x="52" y="164">1 · FSM blueprint</text><text class="sub" x="52" y="188">Reusable definition</text>
+  <rect class="state" x="52" y="208" width="92" height="42" rx="9"/><text class="body" x="98" y="234" text-anchor="middle">Idle</text>
+  <path class="line" d="M148 229 H183"/><rect class="state" x="190" y="208" width="94" height="42" rx="9"/><text class="body" x="237" y="234" text-anchor="middle">Active</text>
+  <text class="sub" x="52" y="282">States + guarded transitions</text>
+  <path class="line" d="M306 218 H354"/><text class="sub" x="330" y="203" text-anchor="middle">create</text>
+  <rect class="panel" x="360" y="132" width="274" height="174" rx="15"/>
+  <text class="heading" x="380" y="164">2 · Live FSMHandle</text><text class="sub" x="380" y="188">One running instance</text>
+  <rect class="state" x="380" y="208" width="110" height="42" rx="9"/><text class="body" x="435" y="234" text-anchor="middle">CurrentState</text>
+  <rect class="rule" x="500" y="208" width="114" height="42" rx="9"/><text class="body" x="557" y="234" text-anchor="middle">Context</text>
+  <text class="sub" x="380" y="282">Own state + application data</text>
+  <path class="line" d="M634 218 H682"/><text class="sub" x="658" y="203" text-anchor="middle">tick</text>
+  <rect class="panel" x="688" y="132" width="280" height="174" rx="15"/>
+  <text class="heading" x="708" y="164">3 · Evaluate &amp; advance</text><text class="sub" x="708" y="188">A scheduled step</text>
+  <rect class="rule" x="708" y="208" width="238" height="42" rx="9"/><text class="body" x="827" y="234" text-anchor="middle">State logic + conditions</text>
+  <text class="sub" x="708" y="282">Select next state when eligible</text>
+  <path d="M827 306 V337 H435 V306" fill="none" stroke="#8aa7c7" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+  <text class="sub" x="630" y="330" text-anchor="middle">next tick continues from the handle’s updated state</text>
+  <circle r="6" fill="#fff" stroke="#42b8ff" stroke-width="3"><animateMotion dur="5s" repeatCount="indefinite" path="M306 218 H354 M634 218 H682 M827 306 V337 H435 V306"/></circle>
+  <text x="32" y="390" class="sub">Conceptual illustration · The animated marker explains the flow; it does not visualize a live process.</text>
+  <text x="32" y="413" class="sub">Timing is controlled by the API’s processing-group scheduler and each FSM’s ProcessRate.</text>
+</svg>
