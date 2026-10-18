@@ -167,7 +167,7 @@ While FSMModifier changes the FSM blueprint, the FSMHandle provides methods to d
 
   Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
 
-  State Removal is Handled Gracefully: The API will automatically handle instances in a removed state by transitioning them to a fallback state, ensuring your application doesn't crash or get stuck in an invalid state.
+  State Removal: The current implementation transitions handles in the removed state to the FSM's initial state. The `fallbackStateName` argument is not honored yet, so do not assume a custom fallback will be selected. This path does not guarantee that all application-level effects or cleanup will succeed.
 
 -----
 
