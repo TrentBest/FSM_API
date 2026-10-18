@@ -8,19 +8,19 @@ The `FSMHandle` is your direct link to a live, running Finite State Machine inst
 
 The `FSMHandle` is designed to be the single point of interaction for external systems. Rather than directly manipulating the FSM's internal state machine or data model, you use the handle to send commands, query the FSM's status, and access its context. This design is crucial for promoting the **decoupling** philosophy of the FSM\_API. It ensures that your application logic doesn't become tightly coupled to the FSM's implementation details.
 
-#### The `FSMHandle`'s Role: A Flowchart
+#### Living picture: one handle through its lifecycle
 
-This flowchart illustrates the handle's role in the FSM's execution, showing how it receives a command from the outside world and uses its internal references to update the FSM's state and data.
+![Animated lifecycle diagram for FSMHandle, from construction and first update through normal stepping, explicit override, and teardown.](../../../../User%20Guide/Visuals/FSMHandle_Lifecycle.svg)
 
-```mermaid
-graph TD
-    A[External System/Developer] --> B(Call FSMHandle.TransitionTo);
-    B --> C(FSMHandle calls Definition.ForceTransition);
-    C --> D[Definition finds From/To states];
-    D --> E(Definition runs From.OnExit);
-    E --> F(Definition runs To.OnEnter);
-    F --> G[FSMHandle updates its CurrentState];
-```
+The lifecycle is worth distinguishing because construction and state entry are not the same event:
+
+- **Construction** links an FSM definition to an instance-specific `IStateContext` and initializes `CurrentState` to the definition's `InitialState`.
+- **First update** performs the first step; the initial state's entry action is deferred until the handle is stepped.
+- **Normal update** delegates to `Definition.Step` and stores the returned state name.
+- **Forced transition** through `TransitionTo` bypasses normal transition conditions and immediately asks the definition to perform the transition.
+- **Teardown** through the API's instance-destruction path exits the current state and invalidates the context.
+
+The animation illustrates source-defined behavior; it is not connected to a live FSM instance.
 
 -----
 
