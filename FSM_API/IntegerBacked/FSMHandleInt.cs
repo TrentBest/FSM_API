@@ -16,6 +16,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </remarks>
     public sealed class FSMHandleInt : FSMHandle
     {
+        /// <summary>True while this handle is registered with its owning integer runtime.</summary>
+        internal bool IsRegistered { get; set; }
+
         /// <summary>Creates an explicitly typed integer-backed FSM handle.</summary>
         /// <param name="definition">Integer-backed FSM definition.</param>
         /// <param name="context">Context for this FSM instance.</param>
