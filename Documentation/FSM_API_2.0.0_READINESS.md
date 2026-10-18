@@ -195,6 +195,13 @@
 - No release gate was promoted based on source-file presence alone. Current-branch build/test evidence is still absent from the recorded evidence, so compiler validation, parity, storage, benchmarks, branch reconciliation, package validation, and release remain open.
 - Keep the checklist as the source of truth; update both documents whenever implementation or validation evidence changes, and record the exact commit plus workflow URL before closing a validation gate.
 
+### Follow-up audit (2026-10-18, after locating this checklist)
+
+- [x] Located and read this authoritative readiness document and the linked integer-backing progress map on `development`.
+- [x] Corrected the workflow's NuGet publish condition on `development` so the explicit boolean publish gate can only publish from `master`, the designated release branch. Change: [`592cead`](https://github.com/TrentBest/FSM_API/commit/592ceada0b51ad9615e68e2c5d707c2949d1b729). This is a safety correction, **not** evidence that the workflow has passed CI; validate it in the next development workflow run.
+- [ ] Run and record current-`development` CI for the integer runtime/compiler integration; do not reuse the historical feature-branch 400/400 result as current-branch evidence.
+- [ ] Resolve the documented Any-State versus regular-transition ordering discrepancy with trace-based parity tests before declaring behavior parity.
+- [ ] Reconcile the current branch history carefully. Latest comparison snapshot reports `development` 214 commits ahead and 5 behind `master`; preserve unique commits before any history-changing action or branch deletion.
 ### Initial audit findings (2026-10-18)
 
 - [x] Located an existing integer-backed implementation and broad tests on `feature/fsm-api-2.0`; latest recorded feature-branch CI reported 400/400 passing.
