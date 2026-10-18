@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">FSM_API: blueprint to living behavior</title>
+  <desc id="desc">An animated signal moves from a reusable finite-state-machine definition to an independent instance, which evaluates a transition and interacts with its application-owned context. The current state changes only when its transition guard succeeds.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101a2b"/>
+      <stop offset="1" stop-color="#172d3c"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#65b8ff"/>
+      <stop offset="1" stop-color="#9bdbff"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#64e2b1"/>
+      <stop offset="1" stop-color="#b1f7d8"/>
+    </linearGradient>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#83cfff"/>
+    </marker>
+    <style>
+      text { font-family: Inter, ui-sans-serif, system-ui, sans-serif; fill: #eaf3fb; }
+      .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: #91abc0; }
+      .heading { font-size: 20px; font-weight: 750; }
+      .copy { font-size: 13px; fill: #b9cad8; }
+      .panel { fill: #182a3a; stroke: #35516a; stroke-width: 1.5; }
+      .node { fill: #1c3445; stroke: #6ab9f0; stroke-width: 1.5; }
+      .line { fill: none; stroke: #83cfff; stroke-width: 2; marker-end: url(#arrow); }
+      .pulse { fill: #d4fff0; filter: url(#glow); }
+    </style>
+  </defs>
+  <rect width="960" height="420" rx="20" fill="url(#bg)"/>
+  <path d="M24 64 H936" stroke="#294458"/>
+  <text x="32" y="34" class="eyebrow">A LIVING MODEL · FSM_API</text>
+  <text x="32" y="54" font-size="13" fill="#c1d4e2">One definition. Many independent instances. Application-owned data.</text>
+
+  <rect x="32" y="88" width="260" height="254" rx="14" class="panel"/>
+  <text x="52" y="117" class="eyebrow">01 / DEFINE</text>
+  <text x="52" y="146" class="heading">Reusable blueprint</text>
+  <rect x="52" y="167" width="94" height="46" rx="9" class="node"/>
+  <text x="99" y="195" text-anchor="middle" font-size="14" font-weight="700">Idle</text>
+  <rect x="178" y="167" width="94" height="46" rx="9" class="node"/>
+  <text x="225" y="195" text-anchor="middle" font-size="14" font-weight="700">Active</text>
+  <path d="M146 190 H174" class="line"/>
+  <path d="M225 216 C225 245 99 245 99 216" class="line"/>
+  <text x="162" y="264" text-anchor="middle" class="copy">States + guards + actions</text>
+  <text x="52" y="301" class="copy">Describe possible behavior once.</text>
+  <text x="52" y="321" class="copy">The blueprint is not the live actor.</text>
+
+  <path d="M294 207 H328" class="line"/>
+  <circle r="5" class="pulse">
+    <animateMotion dur="2.8s" repeatCount="indefinite" path="M294 207 H328"/>
+  </circle>
+
+  <rect x="332" y="88" width="286" height="254" rx="14" class="panel"/>
+  <text x="352" y="117" class="eyebrow">02 / EXECUTE</text>
+  <text x="352" y="146" class="heading">Live FSM instance</text>
+  <rect x="352" y="167" width="112" height="46" rx="9" class="node">
+    <animate attributeName="stroke" values="#6ab9f0;#64e2b1;#6ab9f0" dur="3.4s" repeatCount="indefinite"/>
+  </rect>
+  <text x="408" y="195" text-anchor="middle" font-size="14" font-weight="700">Current state</text>
+  <rect x="486" y="167" width="112" height="46" rx="9" fill="#173d37" stroke="#64e2b1" stroke-width="1.5"/>
+  <text x="542" y="195" text-anchor="middle" font-size="14" font-weight="700">Next state</text>
+  <path d="M464 190 H482" class="line"/>
+  <text x="475" y="236" text-anchor="middle" class="copy">Tick → update → test guard</text>
+  <text x="352" y="276" class="copy">Each instance owns its current state</text>
+  <text x="352" y="296" class="copy">and progresses independently.</text>
+  <text x="352" y="321" font-size="12" fill="#86e8c4">Transition only when its condition succeeds.</text>
+
+  <path d="M620 207 H654" class="line"/>
+  <circle r="5" class="pulse">
+    <animateMotion dur="2.8s" begin="0.8s" repeatCount="indefinite" path="M620 207 H654"/>
+  </circle>
+
+  <rect x="658" y="88" width="270" height="254" rx="14" class="panel"/>
+  <text x="678" y="117" class="eyebrow">03 / CONNECT</text>
+  <text x="678" y="146" class="heading">Application context</text>
+  <rect x="678" y="167" width="230" height="66" rx="9" fill="#2a293b" stroke="#b79bff" stroke-width="1.5"/>
+  <text x="793" y="192" text-anchor="middle" font-size="15" font-weight="700">Your data + operations</text>
+  <text x="793" y="213" text-anchor="middle" class="copy">POCO · service · simulation · UI</text>
+  <path d="M793 236 V258" fill="none" stroke="#b79bff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="793" y="281" text-anchor="middle" class="copy">State actions read or change</text>
+  <text x="793" y="301" text-anchor="middle" class="copy">domain data through context.</text>
+  <text x="793" y="321" text-anchor="middle" font-size="12" fill="#c8b7ff">FSM_API stays host-agnostic.</text>
+
+  <text x="32" y="382" font-size="13" fill="#c5d5e2">The diagram is illustrative, not a runtime debugger. The code and tests define actual execution semantics.</text>
+  <text x="928" y="402" text-anchor="end" font-size="10" fill="#7993a8">DECLARATIVE SVG ANIMATION · NO JAVASCRIPT</text>
+</svg>
