@@ -1,54 +1,63 @@
-# FSM_API: The Singularity Workshop's Finite State Machine API
+# FSM_API — finite-state behavior you can see
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
-[![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+A state machine is easier to understand when you can watch its structure and timing. FSM_API turns named states, guarded transitions, and state actions into reusable behavior—without tying the core library to a game engine, UI framework, or application domain.
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
-[![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
+[![NuGet](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
 
-[![GitHub stars](https://img.shields.io/github/stars/TrentBest/FSM_API?style=social)](https://github.com/TrentBest/FSM_API/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
-[![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
+## 🟦 01 What
 
-[**💖 Support Us**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+FSM_API is a pure C# finite-state-machine library. Define a behavior once, create independent instances, and let each instance progress through its states using its own context data.
 
+- **Definition:** the reusable blueprint—states, transitions, and actions.
+- **Instance / handle:** one live execution of that blueprint.
+- **State context:** your application-owned data and operations.
+- **Processing group:** a named set of instances that the host can tick together.
 
-Welcome to the FSM_API Documentation! 📚
+## 🟣 02 Why
 
-This guide will help you navigate the FSM_API documentation.
+Complex behavior often collapses into scattered conditionals and implicit lifecycle rules. An FSM makes the legal phases and the conditions for moving between them explicit. Separating the definition, live instance, and context keeps behavior reusable and application data in your hands.
 
-The core FSM_API is a high-performance, modular, and engine-agnostic C#/.NET library for building and managing Finite State Machines (FSMs). It empowers developers to model complex behavior with clarity and efficiency—whether you're handling AI, player states, UI flow, or reactive systems.
+## 🔺 03 How
 
-The documentation is organized to help you get started quickly and find the information you need.
+Describe the states and transition conditions with the builder API, create an instance with an IStateContext, then advance the chosen processing group through FSM_API.Interaction.Update(...). The host owns its main loop; FSM_API owns the state-machine execution semantics.
 
-📖 Documentation Layout
+The animation below is a **conceptual model**, not a live debugger. It illustrates the relationship between the reusable definition, a running instance, and its context. The executable code and tests remain authoritative.
 
-The user guide and key information are broken down into several files to keep the content focused and easy to digest. Below is a brief description of each document and what you can expect to find inside.
+<p align="center">
+  <a href="User%20Guide/Visuals/FSM_API_Architecture.svg">
+    <img src="User%20Guide/Visuals/FSM_API_Architecture.svg" alt="Animated architecture diagram: a reusable FSM definition feeds a live instance, which evaluates guarded transitions and interacts with application-owned context data" width="960" />
+  </a>
+</p>
 
-    01. Core Concepts: Your Guide to FSM_API: Start here to understand the fundamental building blocks of the FSM_API. This document explains the purpose of FSM definitions, instances, states, and contexts.
+The SVG is deliberately self-contained and declarative. It uses SVG shapes and animation—not JavaScript—and can be inspected as source. For the richer SVG manifestation vocabulary, animation model, accessibility rules, and security boundary, see [GUI.SVG's adapter documentation](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md).
 
-    03. Getting Started with C# (Non-host-specific engines): This is your hands-on guide to integrating the FSM_API into any pure C# application. It provides step-by-step instructions and code examples to get you up and running quickly.
+## 🟢 04 See it in a minute
 
-    11. Frequently Asked Questions (FAQ): A collection of answers to common questions about the API, design patterns, and best practices.
+1. Read [00 — Introduction](User%20Guide/00_Introduction.md) for the big picture.
+2. Follow [03 — Getting Started with C#](User%20Guide/03_Getting_Started_CSharp.md) to build a real FSM.
+3. Explore [01 — Core Concepts](User%20Guide/01_Core_Concepts.md) for definitions, instances, states, and contexts.
+4. Browse the [theory documents](User%20Guide/Theory/) to understand the wider FSM domain.
 
-🎮 host-specific engines Integration
+## 🟪 05 Documentation and theory
 
-The core API is pure C# and designed to be portable and independent of any game engine. A dedicated package for host-specific engines is available separately.
+- [Getting started](User%20Guide/03_Getting_Started_CSharp.md)
+- [Core concepts](User%20Guide/01_Core_Concepts.md)
+- [FSMBuilder deep dive](User%20Guide/04_FSM_Builder_Deep_Dive.md)
+- [Context implementation](User%20Guide/05_Context_Implementation.md)
+- [Runtime modification](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
+- [Error handling](User%20Guide/07_Error_Handling.md)
+- [Performance tips](User%20Guide/08_Performance_Tips.md)
+- [Use cases](User%20Guide/09_Common_Use_Cases.md)
+- [FAQ](User%20Guide/11_FAQ.md)
+- [Generated API reference](../_site/TheSingularityWorkshop.FSM_API.html)
+- [Source repository](https://github.com/TrentBest/FSM_API)
+- [GUI.SVG adapter and gallery](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
 
-For developers working with host-specific engines, please consult the official host-specific engines integration repository:
+---
 
-    host-specific engines Integration Guide: The official host-specific engines repository for integrating FSM_API into your host-specific engines project.
-
-This revised ReadMe.md is more effective because it's concise, provides clear signposts to other documents, and accurately describes the content of those files. It serves its intended purpose without cluttering the user's view with redundant information or API-specific diagrams that belong elsewhere.
-
-
-
-<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
-</a>
-
-
-**Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+<p align="center">
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em>
+</p>
