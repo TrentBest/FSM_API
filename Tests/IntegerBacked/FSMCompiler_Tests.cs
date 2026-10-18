@@ -1,0 +1,86 @@
+using System;
+using NUnit.Framework;
+using TheSingularityWorkshop.FSM_API;
+using TheSingularityWorkshop.FSM_API.IntegerBacked;
+using StringFsm = TheSingularityWorkshop.FSM_API.FSM;
+using StringFsmState = TheSingularityWorkshop.FSM_API.FSMState;
+
+namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
+{
+    [TestFixture]
+    public sealed class FSMCompiler_Tests
+    {
+        private sealed class Context : IStateContext
+        {
+            public string Name { get; set; } = "FSMCompiler_Tests";
+            public bool IsValid { get; set; } = true;
+        }
+
+        [Test]
+        public void Compile_AssignsDenseDeterministicIDs_AndPreservesInitialState()
+        {
+            var source = new StringFsm { Name = "CompilerFixture", ProcessRate = 3 };
+            source.AddState(new StringFsmState("Zulu", null, null, null));
+            source.AddState(new StringFsmState("Alpha", null, null, null));
+
+            var first = FSMCompiler.Compile(source, 42, 7);
+            var second = FSMCompiler.Compile(source, 42, 7);
+
+            Assert.That(first.StateNameToID["Alpha"], Is.EqualTo(0));
+            Assert.That(first.StateNameToID["Zulu"], Is.EqualTo(1));
+            Assert.That(first.StateNameToID["Alpha"], Is.EqualTo(second.StateNameToID["Alpha"]));
+            Assert.That(first.StateIDToName[1], Is.EqualTo("Zulu"));
+            Assert.That(first.Definition.InitialStateID, Is.EqualTo(1));
+            Assert.That(first.Definition.ProcessRate, Is.EqualTo(3));
+            Assert.That(first.Definition.ProcessingGroupID, Is.EqualTo(7));
+        }
+
+        [Test]
+        public void Compile_PreservesStateActionsAndTransitionConditions()
+        {
+            var entered = 0;
+            var updated = 0;
+            var exited = 0;
+            var source = new StringFsm { Name = "ActionFixture" };
+            source.AddState(new StringFsmState("Start", _ => entered++, _ => updated++, _ => exited++));
+            source.AddState(new StringFsmState("End", null, null, null));
+            source.AddTransition("Start", "End", _ => true);
+
+            var compiled = FSMCompiler.Compile(source, 43);
+            var handle = new FSMHandleInt(compiled.Definition, new Context());
+            handle.Initialize();
+
+            Assert.That(entered, Is.EqualTo(1));
+            handle.Update();
+
+            Assert.That(updated, Is.EqualTo(1));
+            Assert.That(exited, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(compiled.StateNameToID["End"]));
+        }
+
+        [Test]
+        public void Compile_PreservesAnyStateTransitions()
+        {
+            var source = new StringFsm { Name = "AnyStateFixture" };
+            source.AddState(new StringFsmState("Start", null, null, null));
+            source.AddState(new StringFsmState("Finish", null, null, null));
+            source.AddAnyStateTransition("Finish", _ => true);
+
+            var compiled = FSMCompiler.Compile(source, 44);
+            var next = compiled.Definition.Step(
+                compiled.StateNameToID["Start"],
+                new Context());
+
+            Assert.That(next, Is.EqualTo(compiled.StateNameToID["Finish"]));
+        }
+
+        [Test]
+        public void Compile_RejectsUndefinedInitialState()
+        {
+            var source = new StringFsm { Name = "InvalidFixture", InitialState = "Missing" };
+            source.AddState(new StringFsmState("Present", null, null, null));
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 45));
+        }
+    }
+}
