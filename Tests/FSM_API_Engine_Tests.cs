@@ -120,7 +120,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             string fsmName = "ReusableFSM";
             int updateCount = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: -1, "Update")
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: -1, processingGroup: "Update")
                 .State("Active", null, onUpdate: _ => updateCount++, null)
                 .BuildDefinition();
             var handle = FSM_API.Create.CreateInstance(fsmName, context);
