@@ -145,16 +145,22 @@ namespace TheSingularityWorkshop.FSM_API
         public string Name => Definition.Name;
 
         /// <summary>
-        /// Tells you if this FSM handle is currently **active and ready to be used**.
+        /// Reports whether the assigned context currently permits this handle to be processed.
         /// </summary>
         /// <remarks>
-        /// It's considered `true` if its <see cref="Context"/> (data bag) is not empty
-        /// and that context itself reports that it's valid.
+        /// This property mirrors <see cref="IStateContext.IsValid"/>; it is not an independent
+        /// lifecycle flag. When false, the scheduler skips this handle but leaves it registered.
+        /// Restoring a reusable context's validity allows the same handle to resume. Use
+        /// <see cref="FSM_API.Interaction.DestroyInstance(FSMHandle)"/> when the instance should
+        /// be removed and torn down instead.
         /// </remarks>
         public bool IsValid => Context?.IsValid ?? false;
 
         /// <summary>
-        /// indicates whether this FSM instance has **already entered its current state**.  ToDo:  IsValid should be enough?
+        /// Tracks whether the current state's entry action has run for this handle.
+        /// This is distinct from <see cref="IsValid"/>: validity controls scheduler eligibility,
+        /// while this flag prevents a resumed or repeatedly updated handle from being mistaken
+        /// for an instance that has never entered its current state.
         /// </summary>
         public bool HasEnteredCurrentState { get; internal set; } = false;
 
