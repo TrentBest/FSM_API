@@ -19,7 +19,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void Compile_AssignsDenseDeterministicIDs_AndPreservesInitialState()
         {
-            var source = new StringFsm { Name = "CompilerFixture", ProcessRate = 3 };
+            var source = new StringFsm { Name = "CompilerFixture" };
             source.AddState(new StringFsmState("Zulu", null, null, null));
             source.AddState(new StringFsmState("Alpha", null, null, null));
 
@@ -31,7 +31,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(first.StateNameToID["Alpha"], Is.EqualTo(second.StateNameToID["Alpha"]));
             Assert.That(first.StateIDToName[1], Is.EqualTo("Zulu"));
             Assert.That(first.Definition.InitialStateID, Is.EqualTo(1));
-            Assert.That(first.Definition.ProcessRate, Is.EqualTo(3));
+            Assert.That(first.Definition.ProcessRate, Is.EqualTo(0));
             Assert.That(first.Definition.ProcessingGroupID, Is.EqualTo(7));
         }
 
