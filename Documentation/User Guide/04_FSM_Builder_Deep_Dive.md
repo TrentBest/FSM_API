@@ -210,6 +210,8 @@ builder.AnyTransition("Dead", ctx => ((CharacterContext)ctx).CurrentHealth <= 0)
 
 While `FSM_API.CreateFiniteStateMachine()` allows you to set an initial `processRate`, you can also define or override it explicitly using `WithProcessRate()`. This method controls how frequently `onUpdate` methods are called and how often transitions are checked for *instances* created from this specific FSM definition.
 
+<a href="Visuals/Processing_Groups_And_Rates.svg" target="_blank"><img src="Visuals/Processing_Groups_And_Rates.svg" alt="Diagram showing host-driven processing-group ticks and how ProcessRate values 1, N greater than 1, and 0 affect automatic updates" width="100%" style="max-width: 100%; height: auto;"></a>
+
 **C\# Example:**
 
 ```csharp
