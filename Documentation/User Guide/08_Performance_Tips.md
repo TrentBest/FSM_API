@@ -122,7 +122,7 @@ Recall that your `IStateContext` object is where your FSM reads and writes data.
   * **Minimize Allocations:** Avoid creating new objects (e.g., `new Vector3()`, `new List<T>()`) within your `onUpdate` or transition conditions unless absolutely necessary. Reuse existing objects or use object pools.
   * **Cache References:** If your context needs to access other components or systems frequently, cache those references rather than looking them up repeatedly (e.g., `GetComponent<T>()` in host-specific's `Awake()` or `Start()`).
   * **Simple Data Access:** Direct property access (`myContext.Health`) is faster than method calls or complex logic to retrieve data.
-  * **Accurate `IsValid`:** A correctly implemented `IsValid` property is vital for performance and stability. When `IsValid` returns `false`, FSM\_API automatically unregisters and cleans up the FSM instance. This prevents the system from wasting cycles trying to update invalid or destroyed objects.
+  * **Accurate `IsValid`:** A correctly implemented `IsValid` property is vital for performance and stability. When `IsValid` returns `false`, FSM_API skips the handle's update but leaves it registered. If the context becomes valid again, the same handle can resume. Explicitly unregister or destroy instances that should be removed permanently.
       * **host-specific Example:**
         ```csharp
         public bool IsValid => this != null && gameObject.activeInHierarchy;
