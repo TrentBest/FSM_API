@@ -184,9 +184,9 @@ FSM_API.Interaction.Update("MainLoop");
     Error Handling: Built-in thresholds and diagnostics prevent runaway logic or invalid state
      contexts, ensuring application stability without crashing.
 
-    Thread-Safe by Design: All modifications to FSM definitions and instances are meticulously
-    deferred and processed safely on the main thread post-update, eliminating common concurrency
-     issues.
+    Deferred Mutation Boundary: Operations explicitly queued by the API are processed after the
+    tick. This is not a global lock: immediate registry operations must not race with ticking or
+    other registry mutations.
 
 ## 📦 Features at a Glance
 
