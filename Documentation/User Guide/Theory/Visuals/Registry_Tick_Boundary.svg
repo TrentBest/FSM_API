@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+  <title id="title">FSM_API tick boundary and registry ownership</title>
+  <desc id="desc">An Update call ticks a processing group, then processes explicitly queued mutations. A separate immediate path shows creation and explicit destruction changing registry lists immediately. The queue is not a global lock, so immediate mutation must not race with ticking or other registry writes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101a2b"/>
+      <stop offset="1" stop-color="#1b3040"/>
+    </linearGradient>
+    <style>
+      text { font-family: Inter, ui-sans-serif, system-ui, sans-serif; fill: #edf5fb; }
+      .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.8px; fill: #a7bfd1; }
+      .heading { font-size: 18px; font-weight: 750; }
+      .copy { font-size: 13px; fill: #c5d4df; }
+      .small { font-size: 11px; fill: #c5d4df; }
+      .panel { fill: #182a3a; stroke: #426078; stroke-width: 1.5; }
+      .queued { fill: #173a37; stroke: #5ed6ad; stroke-width: 1.5; }
+      .immediate { fill: #402c26; stroke: #f2ae76; stroke-width: 1.5; }
+      .line { fill: none; stroke: #8dcfff; stroke-width: 2; }
+      .qline { fill: none; stroke: #5ed6ad; stroke-width: 2; }
+      .iline { fill: none; stroke: #f2ae76; stroke-width: 2; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#8dcfff"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#5ed6ad"/>
+    </marker>
+    <marker id="orangeArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#f2ae76"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="560" rx="20" fill="url(#bg)"/>
+  <text x="32" y="34" class="eyebrow">FSM_API · EXECUTION CONTRACT</text>
+  <text x="32" y="62" font-size="25" font-weight="800">A tick boundary is not a global lock</text>
+  <text x="32" y="85" class="copy">Two mutation paths can have different timing and ownership requirements.</text>
+
+  <text x="36" y="126" class="eyebrow">01 / UPDATE PATH</text>
+  <rect x="32" y="143" width="270" height="94" rx="12" class="panel"/>
+  <text x="52" y="174" class="heading">TickAll(group)</text>
+  <text x="52" y="199" class="copy">Advance eligible handles</text>
+  <text x="52" y="218" class="small">One processing group at a time</text>
+
+  <path d="M304 190 H350" class="line" marker-end="url(#arrow)"/>
+  <rect x="356" y="143" width="280" height="94" rx="12" class="queued"/>
+  <text x="376" y="174" class="heading">Process deferred queue</text>
+  <text x="376" y="199" class="copy">Apply operations that were queued</text>
+  <text x="376" y="218" class="small">After this TickAll call returns</text>
+
+  <path d="M638 190 H684" class="line" marker-end="url(#arrow)"/>
+  <rect x="690" y="143" width="278" height="94" rx="12" class="panel"/>
+  <text x="710" y="174" class="heading">Update returns</text>
+  <text x="710" y="199" class="copy">This is a boundary, not a mutex</text>
+  <text x="710" y="218" class="small">No global cross-thread exclusion implied</text>
+
+  <path d="M32 270 H968" stroke="#385367" stroke-width="1"/>
+  <text x="36" y="301" class="eyebrow">02 / IMMEDIATE REGISTRY PATH</text>
+  <rect x="32" y="320" width="270" height="90" rx="12" class="immediate"/>
+  <text x="52" y="351" class="heading">Create / Destroy</text>
+  <text x="52" y="376" class="copy">Some public operations mutate</text>
+  <text x="52" y="395" class="copy">the registry immediately</text>
+  <path d="M304 365 H350" class="iline" marker-end="url(#orangeArrow)"/>
+  <rect x="356" y="320" width="280" height="90" rx="12" class="immediate"/>
+  <text x="376" y="351" class="heading">Instance registry</text>
+  <text x="376" y="376" class="copy">Mutable lists and dictionaries</text>
+  <text x="376" y="395" class="small">Not protected by the queue alone</text>
+  <path d="M638 365 H684" class="iline" marker-end="url(#orangeArrow)"/>
+  <rect x="690" y="320" width="278" height="90" rx="12" class="panel"/>
+  <text x="710" y="351" class="heading">Ownership rule</text>
+  <text x="710" y="376" class="copy">Do not race with a tick or</text>
+  <text x="710" y="395" class="copy">another registry writer</text>
+
+  <rect x="32" y="438" width="936" height="76" rx="12" fill="#202c38" stroke="#70889a" stroke-width="1.2"/>
+  <text x="52" y="465" class="eyebrow">KEEP THE AXES SEPARATE</text>
+  <text x="52" y="489" class="copy">IsValid = scheduler eligibility · DestroyInstance = unregister and tear down · neither is a synchronization primitive.</text>
+
+  <text x="32" y="540" class="small">Source-grounded conceptual diagram · standalone SVG authored for FSM_API · not live telemetry · not generated by GUI.SVG</text>
+
+  <circle r="4" fill="#d9fff2">
+    <animateMotion dur="4s" repeatCount="indefinite" path="M32 190 H302 M356 190 H636 M690 190 H968"/>
+  </circle>
+</svg>
