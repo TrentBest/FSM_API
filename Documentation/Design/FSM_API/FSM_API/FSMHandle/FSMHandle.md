@@ -22,6 +22,12 @@ The lifecycle is worth distinguishing because construction and state entry are n
 
 The animation illustrates source-defined behavior; it is not connected to a live FSM instance.
 
+#### Living picture: suspend, resume, or destroy
+
+![Animated lifecycle comparison: invalidation suspends a registered FSM handle, restoring validity resumes the same handle, while explicit destruction removes and tears down the instance.](../../../../User%20Guide/Visuals/FSMHandle_Validity.svg)
+
+This distinction follows the implementation: `FSMHandle.IsValid` mirrors `Context.IsValid`; it is not a separate switch. An invalid context is skipped by the scheduler, not removed. Explicit destruction is the operation that unregisters and tears down the instance. This diagram is a source-grounded teaching aid, not live runtime telemetry, and was authored as standalone SVG rather than generated through GUI.SVG.
+
 -----
 
 ### Key Members
