@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+<title id="title">Safe fallback when removing an FSM state</title>
+<desc id="desc">When an FSM_API state is removed, active handles in that state first try the requested fallback. The fallback is used only if it exists and is not the state being removed. Otherwise the handle transitions to the FSM definition's InitialState. The default state is a recovery path that application authors should design deliberately.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101827"/><stop offset="1" stop-color="#1b3040"/></linearGradient>
+  <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#9ab4c7"/></marker>
+  <style>
+    text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5fb}.ey{font-size:12px;font-weight:800;letter-spacing:1.7px;fill:#9eb4c7}.hd{font-size:22px;font-weight:750}.cp{font-size:14px;fill:#c2d1dd}.small{font-size:12px;fill:#b5c6d3}.panel{fill:#172a3a;stroke:#3d586d;stroke-width:1.5}.start{fill:#352e1f;stroke:#f3c56e;stroke-width:1.5}.valid{fill:#163d30;stroke:#6fdaa6;stroke-width:1.5}.fallback{fill:#183e4b;stroke:#69d6f2;stroke-width:1.5}.line{fill:none;stroke:#9ab4c7;stroke-width:2.2;marker-end:url(#arrow)}
+  </style>
+</defs>
+<rect width="1000" height="560" rx="20" fill="url(#bg)"/>
+<text x="32" y="38" class="ey">RUNTIME MODIFICATION · SAFE DEFAULTS</text>
+<text x="32" y="73" class="hd">Remove a state without losing the recovery path.</text>
+<text x="32" y="99" class="cp">Only handles currently in the removed state need a forced transition.</text>
+<path d="M32 118H968" stroke="#344d60"/>
+<rect x="35" y="155" width="210" height="88" rx="13" class="start"/>
+<text x="140" y="183" text-anchor="middle" font-size="16" font-weight="750">State being removed</text>
+<text x="140" y="206" text-anchor="middle" class="cp">Handle is here</text>
+<text x="140" y="227" text-anchor="middle" class="small">Before definition removal</text>
+<path d="M245 199H288" class="line"/>
+<rect x="294" y="155" width="235" height="88" rx="13" class="panel"/>
+<text x="411" y="183" text-anchor="middle" font-size="16" font-weight="750">Requested fallback</text>
+<text x="411" y="206" text-anchor="middle" class="cp">Does it exist?</text>
+<text x="411" y="227" text-anchor="middle" class="small">And is it a different state?</text>
+<path d="M529 180H596V166H636" class="line"/>
+<text x="563" y="165" class="small">Yes</text>
+<rect x="642" y="132" width="320" height="78" rx="13" class="valid"/>
+<text x="802" y="160" text-anchor="middle" font-size="16" font-weight="750">Use requested fallback</text>
+<text x="802" y="184" text-anchor="middle" class="cp">TransitionTo(valid state)</text>
+<path d="M411 243V291H636" class="line"/>
+<text x="449" y="278" class="small">No · blank, missing, or being removed</text>
+<rect x="642" y="257" width="320" height="78" rx="13" class="fallback"/>
+<text x="802" y="285" text-anchor="middle" font-size="16" font-weight="750">Use InitialState</text>
+<text x="802" y="309" text-anchor="middle" class="cp">The safe default path</text>
+<rect x="35" y="372" width="927" height="142" rx="14" class="panel"/>
+<text x="58" y="404" class="ey">DESIGN THE DEFAULT ON PURPOSE</text>
+<text x="58" y="433" class="cp">• Give the FSM a meaningful initial state for recovery.</text>
+<text x="58" y="458" class="cp">• Make its entry behavior safe when reached by forced transition.</text>
+<text x="58" y="483" class="cp">• An empty FSM definition can still be valid and inert; it simply has no state behavior to run.</text>
+<text x="35" y="540" class="small">Conceptual guide to the documented contract; not live runtime telemetry.</text>
+</svg>
