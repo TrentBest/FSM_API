@@ -4,6 +4,20 @@ The `FSM` class is the central **blueprint** for a Finite State Machine. It's no
 
 -----
 
+### Living picture: from blueprint to a running FSM
+
+![Animated conceptual diagram showing an FSM blueprint becoming an independent handle, then advancing through a scheduled tick.](../../../../User%20Guide/Visuals/FSM_Blueprint_Execution.svg)
+
+The diagram distinguishes three things that are easy to conflate:
+
+- **Blueprint (FSM)** — the reusable definition of states and transition rules.
+- **Instance (FSMHandle)** — the live object that holds a current state and its instance-specific context.
+- **Tick** — the step that evaluates behavior and determines the next state. The processing-group scheduler and ProcessRate govern automatic cadence.
+
+The motion is illustrative, not a live debugger or runtime telemetry.
+
+-----
+
 ### Core Components and Relationships
 
 The `FSM` class acts as a container and orchestrator for all the other components. Its primary responsibility is to hold a collection of `FSMState` and `FSMTransition` objects, along with key configuration properties like `InitialState`, `ProcessingGroup`, and `ProcessRate`.
