@@ -7,7 +7,7 @@
 
 **Purpose:** make the remaining work visible so the integer-backed design can be resumed without reconstructing the whole vision from scattered commits.
 
-> **Status in one sentence:** a substantial integer-backed runtime exists on `feature/fsm-api-2.0`, but it is not merged into `development`; the update-loop mutation regressions are now fixed and the latest feature-branch CI passed 400/400 tests. The string-to-integer authoring bridge, complete parity proof, benchmarks, and integration remain open.
+> **Status in one sentence (2026-10-18):** the integer-backed runtime and its feature-branch tests have been ported into `development`, and a deterministic `FSMCompiler` bridge with reverse name mappings and focused tests has been added. The integration has not yet earned a new recorded green CI run; the historical 400/400 result applies only to feature-branch commit `dd96646`. Full parity, benchmark evidence, storage validation, branch cleanup, and release remain open.
 
 <p align="center">
   <a href="Visuals/Integer_Backing_Roadmap.svg">
@@ -17,9 +17,9 @@
 
 ## Current snapshot
 
-- **Working branch:** [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
-- **Target branch:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
-- **Separation confirmed:** the integer-backed source tree exists on the feature branch under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0/FSM_API/IntegerBacked); that directory and its integer tests are absent from `development`.
+- **Source of the original implementation:** [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
+- **Current integration target:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
+- **Integration snapshot:** the integer runtime and associated integer tests are now present under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/FSM_API/IntegerBacked) and [`Tests/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/Tests/IntegerBacked). The new string-to-integer compiler is in `FSM_API/IntegerBacked/FSMCompiler.cs`; current-branch CI validation is pending.
 - **Latest feature-branch validation:** [run 39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), commit [`dd96646`](https://github.com/TrentBest/FSM_API/commit/dd96646a3718923bb87a48af695a0c5b6819db8e), 2026-10-18. **400 passed, 0 failed**. The NuGet publish job was skipped; no package was published.
 - **Historical regression:** [run 34809515652](https://github.com/TrentBest/FSM_API/actions/runs/34809515652) on 2026-09-14 had 398 passed and 2 failed out of 400. Those two update-loop tests now pass after the feature-branch fix described below.
 - **Documentation CI:** [run 39102540029](https://github.com/TrentBest/FSM_API/actions/runs/39102540029) passed the local-link validator, DocFX generation, and documentation artifact upload on `development`. NuGet publishing was skipped.
@@ -45,7 +45,7 @@ The regression tests are `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipT
 
 ### 2. Complete string-backed ↔ integer-backed translation — **not found in the feature tree**
 
-The feature branch contains integer runtime types, but the source tree has no dedicated compiler/bridge/mapping component. Define that boundary rather than leaking string lookup into the integer hot path.
+The initial `FSMCompiler` now assigns dense deterministic IDs by ordinal state-name order, carries state actions and transition conditions into the integer representation, and returns immutable forward/reverse state-name mappings. Focused compiler tests have been added. Validate these changes on `development`, expand invalid-transition and mapping tests, and ensure no string lookup enters the execution hot path.
 
 Acceptance criteria:
 - deterministic mapping from authored state/FSM names to integer IDs;
