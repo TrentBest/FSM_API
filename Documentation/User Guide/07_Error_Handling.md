@@ -39,7 +39,7 @@ The system operates on multiple levels to contain and report errors:
 
 1. Catching All Exceptions
 
-All FSM_API operations that execute user-provided code, such as onEnter, onUpdate, onExit actions, and transition conditions, are wrapped in a try-catch block. This ensures that no exception goes unhandled within the FSM's execution cycle.
+During the scheduled instance update, `FSMHandle.Update` catches exceptions thrown by `Definition.Step` (including state actions and transition evaluation) and reports them through the instance-error system. This does not mean every public API operation swallows exceptions: for example, `FSMHandle.TransitionTo` reports a transition failure and then rethrows it to the caller. Handle direct API calls according to their documented exception behavior.
 
 2. Error Reporting
 
