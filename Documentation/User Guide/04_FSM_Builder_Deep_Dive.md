@@ -304,7 +304,8 @@ An empty builder is allowed. That example registers an unnamed definition with z
 | `WithProcessRate(...)`  | Sets the default update frequency (`onUpdate` calls and transition checks) for instances of this FSM definition. (e.g., every tick, every N ticks, or only when manually stepped).                                          |
 | `WithName(...)`         | Assigns the unique identifier for this FSM definition blueprint.                                                                                                                                                             |
 | `WithProcessingGroup(...)` | Assigns the default processing group for instances of this FSM definition, controlling when they are collectively updated by `FSM_API.Update("GroupName")`.                                                                 |
-| `BuildDefinition()`     | **Finalizes and registers** the FSM blueprint with FSM\_API. This is a mandatory last step after configuring your FSM.                                                                                                        |
+| `BuildDefinition()`     | Registers the FSM definition. May be used with a populated or empty builder.                                                                                                                                                |
+| `Build()`               | Alias for `BuildDefinition()`; useful for the parameterless `new FSMBuilder().Build()` empty-definition pattern.                                                                                                           |
 
 `FSMBuilder` is your FSM factory — design once, reuse everywhere, and rapidly iterate on your state-driven behaviors.
 
