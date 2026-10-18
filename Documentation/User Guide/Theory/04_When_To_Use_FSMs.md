@@ -14,6 +14,12 @@
 
 ---
 
+## 🧭 A quick model-selection guide
+
+<a href="Visuals/Choosing_A_Behavior_Model.svg" target="_blank"><img src="Visuals/Choosing_A_Behavior_Model.svg" alt="Decision guide for choosing a finite-state machine, separate or composed FSMs, a continuous controller, a behavior tree, or a goal-oriented planner" width="100%" style="max-width: 100%; height: auto;"></a>
+
+Use the diagram as a starting point, not a rigid rule. FSMs can be combined with controllers, behavior trees, and planners when each has a clear responsibility.
+
 ## 🎯 Ideal Scenarios for FSM Implementation
 
 Consider using an FSM when your system or entity exhibits one or more of the following characteristics:
@@ -60,9 +66,9 @@ When a single entity has multiple independent behaviors running in parallel, or 
 FSM_API is specifically engineered to excel in these contexts by providing:
 
 * **Clean Separation (IStateContext):** Ensures your FSM logic is reusable and decoupled from your specific game objects or data models.
-* **Performance:** Designed to handle numerous FSM instances efficiently, crucial for games with many AI entities.
-* **Robustness:** Built-in error handling (Cascading Degradation System) prevents crashes even if individual states or transitions encounter issues.
-* **Flexibility:** Supports both Unity and pure C# environments, making it versatile for any project requiring state management.
+* **Performance:** The library provides processing groups and per-instance execution, but actual throughput and allocations depend on workload and host scheduling. Benchmark representative scenarios before making performance claims.
+* **Error handling:** FSM_API has instance-error handling and configurable threshold behavior, but it does not guarantee that every exception is contained or that the host application cannot fail. Read the [error-handling guide](../07_Error_Handling.md) for the exact boundaries.
+* **Portability:** The core library is pure C# and engine-agnostic; engine-specific behavior belongs in integration packages or application code.
 
 By recognizing these patterns in your problem domain, you can effectively leverage FSM_API to build more organized, predictable, and maintainable software.
 
