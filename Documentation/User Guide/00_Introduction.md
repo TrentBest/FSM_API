@@ -24,6 +24,10 @@
 
 [11. Frequently Asked Questions (FAQ)](11_FAQ.md)
 
+### FSM theory — concepts beyond the API
+
+[01. What Are FSMs?](Theory/01_What_Are_FSMs.md) · [02. Types of FSMs](Theory/02_Types_Of_FSMs.md) · [03. Advantages and Disadvantages](Theory/03_Advantages_And_Disadvantages.md) · [04. When to Use FSMs](Theory/04_When_To_Use_FSMs.md) · [05. Limitations and Alternatives](Theory/05_FSM_Limitations_And_Alternatives.md) · [06. Tick Boundaries and Registry Ownership](Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
+
 
 ---
 
@@ -90,7 +94,7 @@ To best navigate this documentation, please consider your current understanding:
 
 * **New to Finite State Machines (FSMs)?**
     If terms like "states," "transitions," "event-driven," or "stepped" are new to you, begin with our **Theory folder** for comprehensive explanations and definitions:
-    * **[Theory/01_What_is_an_FSM.md](Theory/01_What_is_an_FSM.md)**
+    * **[Theory/01_What_Are_FSMs.md](Theory/01_What_is_an_FSM.md)**
     * **[Theory/02_Types_Of_FSMs.md](Theory/02_Types_Of_FSMs.md)**
     * **[Theory/03_Advantages_And_Disadvantages.md](Theory/03_Advantages_And_Disadvantages.md)**
     * **[Theory/04_When_To_Use_FSMs.md](Theory/04_When_To_Use_FSMs.md)**
