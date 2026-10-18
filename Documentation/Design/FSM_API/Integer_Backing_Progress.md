@@ -43,9 +43,9 @@ The fix is isolated on `feature/fsm-api-2.0`: [`FSMHandleInt.IsRegistered`](http
 
 The regression tests are `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipTheNextHandle` and `FSMRuntime_Stress_Tests.Update_NewHandlesMustNotRunUntilTheNextTick`. Both pass in [the 400/400 feature-branch run](https://github.com/TrentBest/FSM_API/actions/runs/39102742225). Keep this behavior protected by those tests.
 
-### 2. Complete string-backed ↔ integer-backed translation — **not found in the feature tree**
+### 2. Complete string-backed ↔ integer-backed translation — **initial bridge implemented; validation pending**
 
-The initial `FSMCompiler` now assigns dense deterministic IDs by ordinal state-name order, carries state actions and transition conditions into the integer representation, and returns immutable forward/reverse state-name mappings. Focused compiler tests have been added. Validate these changes on `development`, expand invalid-transition and mapping tests, and ensure no string lookup enters the execution hot path.
+The initial `FSMCompiler` assigns dense deterministic IDs by ordinal state-name order, carries state actions and transition conditions into the integer representation, and returns immutable forward/reverse state-name mappings. Focused tests now cover deterministic IDs, action/guard transfer, Any-State conversion, missing initial state, unknown transition source/destination, and mapping immutability. These tests have been committed to `development` but have not yet been executed in a recorded current-branch CI run. Serialization/reconstruction and broader invalid-definition coverage remain open.
 
 Acceptance criteria:
 - deterministic mapping from authored state/FSM names to integer IDs;
@@ -54,9 +54,9 @@ Acceptance criteria:
 - the mapping can be serialized or reconstructed consistently where required;
 - runtime execution does not need to look up state names.
 
-### 3. Prove behavioral parity — **partially covered**
+### 3. Prove behavioral parity — **partially covered; a concrete transition discrepancy is identified**
 
-The existing `IntegerParityTests.cs` checks selected cases, not the complete public behavior surface. Build a side-by-side parity matrix for state entry/update/exit, transition ordering and guards, any-state transitions, forced transitions, invalid contexts, lifecycle, timers, processing rates/groups, error paths, and runtime mutation. For each supported behavior, compare the string API and integer API under equivalent inputs.
+The existing `IntegerParityTests.cs` checks selected cases, not the complete public behavior surface. Source review found that both implementations update the current state before evaluating Any-State guards, but their transition-selection behavior differs: the string implementation can continue into its regular-transition loop after an Any-State transition changes the handle, while the integer implementation exits immediately after the first successful Any-State transition. Add trace-based parity tests and decide whether to align the integer behavior or document the difference as intentional. Then extend the matrix across state entry/update/exit, guard ordering, forced transitions, invalid contexts, lifecycle, timers, processing rates/groups, error paths, and runtime mutation.
 
 ### 4. Verify ID density and storage costs — **open design/validation gate**
 
@@ -85,8 +85,8 @@ The string API remains useful for readable authoring and rapid prototyping. The 
 ## Resume checklist
 
 - [x] Fix the two mutation test failures and verify the full 400-test suite passes on the feature branch.
-- [ ] Validate the new deterministic `FSMCompiler` and its focused tests on `development`; expand the bridge tests and close all failures before checking this gate.
-- [ ] Complete the string/integer behavior parity matrix.
+- [ ] Validate the new deterministic `FSMCompiler` and its focused tests on `development`; initial edge-case and mapping-immutability tests were added in commit [`14ca011`](https://github.com/TrentBest/FSM_API/commit/14ca011d5a753366e312abef952a971b78fd8c21), but they remain unexecuted until a current-branch CI result is recorded.
+- [ ] Complete the string/integer behavior parity matrix; resolve the newly documented Any-State/regular-transition ordering discrepancy.
 - [ ] Specify compact-ID and sparse-ID behavior; test memory and resizing.
 - [ ] Publish reproducible benchmark results.
 - [x] Port the integer runtime and existing integer tests into `development`; current-branch validation is still an open gate.
