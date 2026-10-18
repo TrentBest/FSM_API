@@ -92,3 +92,9 @@ A relevant runtime change is present in `FSM_API.Internal.cs` within `ResetAPI`.
 This makes the user's hypothesis—that ongoing FSM_API work fixed the Renderer failure—a credible explanation. It is not yet a proven single-variable cause: the two tested commits differ by 38 commits and other changes are present, and the test did not provide a controlled before/after run isolating this change. The current `DestroyInstance` implementation remains a list removal with no visible registry-wide lock. Do not call the race hypothesis disproven, but update the investigation priority: first test the lifecycle change against the failure before assuming the fix must be a concurrency lock.
 
 Evidence: [Renderer workflow and reruns](https://github.com/TrentBest/TheSingularityWorkshop.Renderer/actions/runs/39086967875). No runtime change was made during this comparison.
+
+### Renderer current-source verification (2026-10-18)
+
+Renderer workflow run [39086967875](https://github.com/TrentBest/TheSingularityWorkshop.Renderer/actions/runs/39086967875) has now completed successfully. Source-integration job `117594490093` checked out FSM_API `development` at `69949dc499c39f28d5b85d554d3f6006c7e9286d`; source restore and build succeeded and all 115 Renderer tests passed. Renderer’s independent build-and-test job also passed; NuGet publishing was skipped.
+
+This confirms the current FSM_API/Renderer source combination passes the previously relevant suite. It does not establish a single-variable cause for the earlier failure or prove the registry is safe under arbitrary concurrent mutation. Keep the invalid-context suspend/resume contract and explicit destruction semantics intact. Do not add registry-wide locking solely from the earlier stack trace; first require a reproducible failure or a focused test justified by the documented concurrency contract.
