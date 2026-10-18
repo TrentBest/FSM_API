@@ -62,3 +62,18 @@ The current `development` source reflects the recent semantic change and this di
 This changes the framing of the Renderer failure: the IsValid change itself should not remove an instance from the registry. The reported exception occurs on the explicit destruction path at `bucket.Instances.Remove(handle)`. Investigation should now prioritize Renderer disposal ownership/order, repeated or re-entrant destroy calls, and any concurrent registry writer. Do not revert deactivation semantics or use `IsValid` as a substitute for explicit destruction.
 
 One contract caveat remains visible in source: `DestroyHandle()` is teardown and always writes `Context.IsValid = false`, while `FSMHandle.IsValid` has no independent destroyed flag. Registry membership is the actual distinction between registered and unregistered; callers should not infer membership from `IsValid` alone.
+
+
+### Focused mutation-path finding (2026-10-18)
+
+The direct creation path confirms that the shared list has multiple unsynchronized writers:
+
+- Create.CreateInstance reads bucket.Instances.Count + 1, constructs a handle, then calls bucket.Instances.Add(handle) immediately.
+- Internal.DestroyInstance calls bucket.Instances.Remove(handle) immediately.
+- Internal.MoveInstance also removes/adds handles in those lists; other lifecycle operations clear lists or destroy whole buckets.
+- FSMHandle does not override equality, so List<FSMHandle>.Remove uses ordinary reference equality in this type. The observed List<T>.RemoveAt out-of-range exception is therefore particularly consistent with a list being shortened concurrently after Remove found its index. This is a strong race hypothesis, not yet a proven reproduction.
+- The Renderer coordinator's private _gate only serializes calls on that one coordinator. It does not protect the static FSM_API registry, nor does it coordinate separate coordinators or other consumers that share the Renderer.Representation bucket.
+
+Next discriminating test: run the Renderer source-integration suite with test parallelization disabled, then enabled, and compare. Also add a focused FSM_API stress/regression test that concurrently creates and destroys handles in one shared bucket, if concurrent calls are intended to be supported. If the documented contract is main-thread-only, instead locate which test/runtime path violates that contract and align docs with the actual guarantee. Do not infer that IsValid deactivation is the cause; it does not mutate the instance list.
+
+No runtime fix is made from this inspection alone. The correct fix depends on establishing whether concurrent registry access is supported and reproducing the interleaving; a lock around only DestroyInstance would leave the other list writers unsynchronized.
