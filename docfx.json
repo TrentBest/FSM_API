@@ -4,7 +4,9 @@
       "src": [
         {
           "src": "FSM_API",
-          "files": [ "**/*.csproj" ]
+          "files": [
+            "**/*.csproj"
+          ]
         }
       ],
       "dest": "api"
@@ -14,11 +16,26 @@
     "content": [
       {
         "src": ".",
-        "files": [ "index.md" ]
+        "files": [
+          "index.md"
+        ]
+      },
+      {
+        "src": ".",
+        "files": [
+          "Documentation/**/*.md",
+          "Documentation/**/*.svg",
+          "Documentation/**/*.png",
+          "Documentation/**/*.jpg",
+          "Documentation/**/*.jpeg",
+          "Documentation/**/*.gif"
+        ]
       },
       {
         "src": "api",
-        "files": [ "**/*.yml" ]
+        "files": [
+          "**/*.yml"
+        ]
       }
     ],
     "dest": "_site",
