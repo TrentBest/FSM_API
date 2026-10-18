@@ -38,7 +38,7 @@ FSM_API is a powerful, performance-driven library designed to help you easily ma
 <a href="Visuals/Light_Switch_FSM.svg" target="_blank">
     <img src="Visuals/Light_Switch_FSM.svg" alt="Animated LightSwitch FSM showing Off and On states, condition-driven transitions, and how application ticks advance the state machine" width="900" style="display: block; max-width: 100%; height: auto;">
 </a>
-<em>This is an illustrative animation of the state cycle, not a live process monitor. The current state changes only when a transition condition is satisfied; the next state's enter action runs on the subsequent tick. Prefer a static image? The original [LightSwitch diagram](Visuals/Light_Switch_FSM.png) remains available.</em>
+<em>This is an illustrative animation of the state cycle, not a live process monitor. The current state changes only when a transition condition is satisfied; the next state's enter action runs on the subsequent tick. The [LightSwitch SVG](Visuals/Light_Switch_FSM.svg) can also be opened directly to inspect its source.</em>
 
 ### See the same idea in a small, real C# demo
 
@@ -72,8 +72,8 @@ Its benefits include:
 <em>Transform tangled logic into a clear, manageable flow.</em>
 * **Testability:** FSM_API’s clean **separation of logic and context** makes it easy to write **automated unit tests** for your state machines.
 
-<a href="Visuals/FSM.png" target="_blank">
-    <img src="Visuals/FSM.png" alt="Visual of a Finite State Machine" height="200" style="display: block;">
+<a href="Visuals/FSM_Blueprint_Execution.svg" target="_blank">
+    <img src="Visuals/FSM_Blueprint_Execution.svg" alt="Diagram showing how an FSM blueprint is executed by a state-machine instance" height="200" style="display: block;">
 </a>
 *A concrete example of an FSM for character AI.*
 <a href="Visuals/Character_AI_FSM.png" target="_blank">
