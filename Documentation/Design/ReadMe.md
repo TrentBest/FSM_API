@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living moniker">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living moniker — a digital vortex converging on its central eye" width="128" />
+  </a>
+</p>
+
 
 # MyVR: A Decoupled and Distributed Platform for Digital Experiences
 
@@ -42,3 +48,14 @@ This layer is the bridge between the core FSM logic and practical, deployable ap
 ### The Cloud Infrastructure: MyVR
 
 **MyVR** is the ultimate destination—a fully cloud-based "digiverse" that abstracts and unifies all experiences. It's a scalable server architecture that will host and connect all of the experiences contained within it. The digiverse is organized into **Domains**, which are user-facing, immersive environments that serve as containers for specific applications and content. This layer provides the final abstraction, allowing users to move seamlessly between experiences within a unified digital world.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
