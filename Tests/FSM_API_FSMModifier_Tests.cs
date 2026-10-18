@@ -168,6 +168,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         }
 
         /// <summary>
+        /// A valid requested fallback is used for handles currently in the removed state.
+        /// </summary>
+        [Test]
+        public void FSMModifier_RemoveState_UsesProvidedFallbackWhenItExists()
+        {
+            FSM_API.Interaction.AddStateToFSM(FsmName, "Fallback", null, null, null, ProcessGroup);
+            var handle = FSM_API.Create.CreateInstance(FsmName, new MockStateContext(), ProcessGroup);
+            handle.TransitionTo("Running");
+
+            FSM_API.Interaction.RemoveStateFromFSM(FsmName, "Running", "Fallback", ProcessGroup);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("Fallback"));
+            Assert.That(FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup).HasState("Running"), Is.False);
+        }
+
+        /// <summary>
+        /// A missing requested fallback safely falls back to the definition's initial state.
+        /// </summary>
+        [Test]
+        public void FSMModifier_RemoveState_UsesInitialStateWhenProvidedFallbackIsMissing()
+        {
+            var handle = FSM_API.Create.CreateInstance(FsmName, new MockStateContext(), ProcessGroup);
+            handle.TransitionTo("Running");
+
+            FSM_API.Interaction.RemoveStateFromFSM(FsmName, "Running", "DoesNotExist", ProcessGroup);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("Idle"));
+            Assert.That(FSM_API.Internal.GetFsmDefinition(FsmName, ProcessGroup).HasState("Running"), Is.False);
+        }
+
+        /// <summary>
         /// Tests that a regular transition can be added between two states using the Interaction API.
         /// </summary>
         [Test]
