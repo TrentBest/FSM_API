@@ -201,7 +201,7 @@
 - [x] Corrected the workflow's NuGet publish condition on `development` so the explicit boolean publish gate can only publish from `master`, the designated release branch. Change: [`592cead`](https://github.com/TrentBest/FSM_API/commit/592ceada0b51ad9615e68e2c5d707c2949d1b729). This is a safety correction, **not** evidence that the workflow has passed CI; validate it in the next development workflow run.
 - [ ] Run and record current-`development` CI for the integer runtime/compiler integration; do not reuse the historical feature-branch 400/400 result as current-branch evidence.
 - [ ] Resolve the documented Any-State versus regular-transition ordering discrepancy with trace-based parity tests before declaring behavior parity.
-- [ ] Reconcile the current branch history carefully. Latest comparison snapshot reports `development` 214 commits ahead and 5 behind `master`; preserve unique commits before any history-changing action or branch deletion.
+- [ ] Reconcile the current branch history carefully. Latest comparison snapshot reports `development` 217 commits ahead and 5 behind `master`; preserve unique commits before any history-changing action or branch deletion.
 ### Initial audit findings (2026-10-18)
 
 - [x] Located an existing integer-backed implementation and broad tests on `feature/fsm-api-2.0`; latest recorded feature-branch CI reported 400/400 passing.
@@ -220,7 +220,7 @@
 
 ### Live branch and PR audit update (2026-10-18, latest connector inspection)
 
-The current live comparison supersedes the earlier count above: `development` is **214 commits ahead and 5 behind `master`** (merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`). The histories remain divergent; no merge or deletion is justified from counts alone.
+The current live comparison supersedes the earlier count above: `development` is **217 commits ahead and 5 behind `master`** (merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`). The histories remain divergent; no merge or deletion is justified from counts alone.
 
 Remote branch inventory returned 16 branches:
 - Protected intended branches: `master`, `development`.
@@ -245,3 +245,12 @@ Open PR audit:
 - [#20 — benchmark documentation](https://github.com/TrentBest/FSM_API/pull/20) and [#22 — README alignment](https://github.com/TrentBest/FSM_API/pull/22) also appear in the open-PR search and need their bases/heads reviewed before any closure or retargeting.
 
 **Still open:** this is a first-pass inventory, not a completed Operation Sith gate. Exact current head SHAs for every branch, open-PR linkage for each unique branch, unique file content comparison against `development`, and preservation of any still-useful material must be completed before branch deletion. No branch has been deleted, no PR has been merged/closed/retargeted, and `master` has not been changed.
+
+
+### Publication and branch comparison refresh (2026-10-18)
+
+- [x] Refreshed the live `master...development` comparison: `development` is **217 commits ahead and 5 behind** `master`; merge base remains `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`. This supersedes the prior 214-ahead snapshot above.
+- [x] Re-read the workflow files on both branches. On `development`, NuGet publishing requires a manual dispatch, explicit `inputs.publish == true`, and `github.ref == 'refs/heads/master'`. On `master`, the publish job remains explicitly disabled by an additional `&& false`; this is a safety state, not a release-ready publishing configuration. No package was published.
+- [ ] Before any release, reconcile the workflow policy deliberately: preserve the explicit boolean confirmation and master-only release boundary, then validate the resulting workflow in a real run. Do not remove the master-side disabled gate without explicit release authorization.
+- [ ] PR #18 (integer-backed runtime), PR #20 (benchmark documentation), and PR #22 (README alignment) are still open in the latest search; #18 and #20 are drafts. Review each PR's exact base/head and changed-file overlap before merge, retarget, or closure. No PR was merged or closed during this audit.
+- [ ] Current-branch CI and integer/string trace parity remain unverified; source presence and the historical feature-branch result do not close those gates.
