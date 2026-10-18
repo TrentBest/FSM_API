@@ -65,6 +65,12 @@ The `IsValid` property within `IStateContext` is an execution gate. If `context.
 
 As a developer, you have control over how sensitive the system is and can manually manage error counts.
 
+Visualizing the threshold path
+
+<a href="Visuals/Error_Threshold_Flow.svg" target="_blank"><img src="Visuals/Error_Threshold_Flow.svg" alt="Flow diagram of cumulative instance errors, deferred instance shutdown, definition error counting, definition-threshold destruction, and the different cleanup guarantees" width="100%" style="max-width: 100%; height: auto;"></a>
+
+The diagram reflects the current implementation, including an important asymmetry: definition destruction uses `try/catch/finally` for its destruction attempt and count cleanup, while the instance-threshold callback does not wrap its full reporting-and-destruction path in an encompassing `try/finally`. Do not treat threshold handling as a guarantee that every exception is contained or every cleanup step always completes.
+
 Adjusting Thresholds
 
 You can modify the default thresholds to match the needs of your application. For example, in a critical system, you might set the InstanceErrorThreshold to 1 to immediately shut down a failing instance.
