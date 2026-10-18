@@ -923,10 +923,8 @@ namespace TheSingularityWorkshop.FSM_API
                     foreach (var handle in instancesToTick)
                     {
 
-                        // Ensure the handle itself is not null, its context is not null,
-                        // AND its context is reported as valid by the context itself.
-                        // `handle` is FSMHandle (non-nullable List element), but we need to ensure FSMHandle.Context
-                        // is non-null before accessing its IsValid property.
+                        // Invalid contexts suspend processing but do not unregister the handle.
+                        // The same handle can resume when its context becomes valid again.
                         if (handle != null && handle.Context != null && handle.Context.IsValid)
                         {
 
@@ -970,10 +968,10 @@ namespace TheSingularityWorkshop.FSM_API
                         }
                         else
                         {
-                            Error.InvokeInstanceError(handle,
-                                "FSM instance or its context became null/invalid (IsValid returned false). Automatically shutting down due to instability.",
-                                new ApplicationException("FSM instance or its context became null/invalid (IsValid returned false)."), processingGroup);
-                            DestroyInstance(handle);//Fixed 1.0.13 - automatically destroy invalid instances.
+                            // IsValid is an execution gate, not a destruction request.
+                            // Keep the handle in its bucket so its state and identity can be reused.
+                            // Explicit DestroyInstance is responsible for teardown and collection removal.
+                            continue;
                         }
                     }
                 }
