@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living moniker">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living moniker — a digital vortex converging on its central eye" width="128" />
+  </a>
+</p>
+
 # FSM_API — finite-state behavior you can see
 
 A state machine is easier to understand when its states, transitions, and lifecycle can be seen. FSM_API is a pure C# library for describing reusable finite-state behavior and running independent instances in any host application.
@@ -95,10 +101,14 @@ The host decides when to call Update. Transition conditions determine whether an
 - [GUI.SVG adapter documentation](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
 - [Source repository and issues](https://github.com/TrentBest/FSM_API)
 
+
 ---
 
 <p align="center">
+  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
   <strong>The Singularity Workshop</strong><br />
   <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
-  <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
 </p>
