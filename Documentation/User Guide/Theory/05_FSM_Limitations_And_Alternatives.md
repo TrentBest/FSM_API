@@ -53,7 +53,7 @@ When FSMs fall short, or for different types of problems, other architectural pa
 ### 2. **State Pattern (Object-Oriented Design)** 🎨
 * **What it is:** A design pattern where the state of an object is represented by separate, interchangeable objects. The object's behavior changes depending on its current state object.
 * **When to use:** Good for simpler state management within a single class where the number of states is small, and the transitions are primarily handled by the object itself. It avoids large switch statements.
-* **FSM vs. State Pattern:** FSM_API is a **framework** for state machines; the State Pattern is a **design pattern** that *implements* a form of state machine. FSM_API offers more robust features like global transitions, nested FSMs, debugging tools, and performance optimizations.
+* **FSM vs. State Pattern:** FSM_API is a reusable state-machine library; the State Pattern is an object-oriented design pattern that can implement state-dependent behavior. FSM_API provides named definitions, states and guarded transitions, any-state transitions, lifecycle actions, runtime modification, and error diagnostics. It does not automatically provide hierarchical/nested-state semantics; consumers can compose multiple machines in application code. Performance depends on the workload and should be measured rather than assumed.
 
 ### 3. **Component-Based Architecture (ECS/Data-Oriented Design)** 🧱
 * **What it is:** Systems are built by composing entities from various independent components (data) and processing them with systems (logic).
