@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+<title id="title">FSMHandle: one instance through its lifecycle</title>
+<desc id="desc">Create a handle from an FSM definition and its own context. Its CurrentState is set to the initial state at construction, but the initial state's enter action waits until the first update. Each normal update runs the definition's step logic and stores the returned state. A forced TransitionTo bypasses normal transition conditions and immediately invokes the transition behavior. Destroying the instance exits the current state and invalidates its context.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#101c31"/><stop offset="1" stop-color="#1b2d47"/></linearGradient>
+<marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#94aecb"/></marker>
+<style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5ff}.small{font-size:15px;fill:#b8c9df}.head{font-size:21px;font-weight:700}.body{font-size:17px}.node{fill:#1d334e;stroke:#56718f;stroke-width:1.5}.cyan{fill:#173e50;stroke:#59cbe0;stroke-width:2}.purple{fill:#392e53;stroke:#b6a0ff;stroke-width:2}.gold{fill:#473b25;stroke:#e8c16b;stroke-width:2}.arrow{fill:none;stroke:#94aecb;stroke-width:2.5;marker-end:url(#arrow)}</style>
+</defs>
+<rect width="1000" height="440" rx="22" fill="url(#bg)"/>
+<text x="32" y="42" font-size="13" font-weight="700" letter-spacing="2.4" fill="#79dcff">FSM_API • INSTANCE LIFECYCLE</text>
+<text x="32" y="77" font-size="28" font-weight="750">The handle connects a definition to live behavior</text>
+<text x="32" y="105" class="small">Definition = reusable rules · Handle = per-instance state · Context = per-instance data</text>
+<rect class="node" x="32" y="140" width="270" height="90" rx="14"/>
+<text class="head" x="52" y="171">1 · Construct</text><text class="body" x="52" y="198">FSM definition + context</text><text class="small" x="52" y="218">CurrentState ← InitialState</text>
+<path class="arrow" d="M302 185 H350"/>
+<rect class="cyan" x="358" y="140" width="284" height="90" rx="14"/>
+<text class="head" x="378" y="171">2 · First Update</text><text class="body" x="378" y="198">Initial state's OnEnter runs</text><text class="small" x="378" y="218">Entry is deferred until stepping</text>
+<path class="arrow" d="M642 185 H690"/>
+<rect class="node" x="698" y="140" width="270" height="90" rx="14"/>
+<text class="head" x="718" y="171">3 · Normal Update</text><text class="body" x="718" y="198">Definition.Step(...)</text><text class="small" x="718" y="218">Handle stores returned state</text>
+<path class="arrow" d="M832 230 V266 H500 V230"/>
+<text class="small" x="664" y="257" text-anchor="middle">repeat when scheduled or explicitly updated</text>
+<rect class="purple" x="32" y="292" width="444" height="91" rx="14"/>
+<text class="head" x="52" y="323">Explicit override · TransitionTo(target)</text>
+<text class="body" x="52" y="350">Forces the change; normal conditions are bypassed.</text>
+<text class="small" x="52" y="371">Use for deliberate overrides, not routine flow.</text>
+<rect class="gold" x="500" y="292" width="468" height="91" rx="14"/>
+<text class="head" x="520" y="323">Teardown · DestroyInstance(handle)</text>
+<text class="body" x="520" y="350">Exits current state; invalidates its context.</text>
+<text class="small" x="520" y="371">A destroyed instance should no longer be used.</text>
+<text x="32" y="415" class="small">Conceptual teaching aid based on FSMHandle.cs; not live runtime telemetry.</text>
+<circle r="5" fill="#fff" stroke="#54c8dc" stroke-width="2"><animateMotion dur="4.5s" repeatCount="indefinite" path="M302 185 H350 M642 185 H690 M832 230 V266 H500 V230"/></circle>
+</svg>
