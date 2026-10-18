@@ -60,7 +60,7 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 - [Tick boundaries and registry ownership](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
 - [Use cases](User%20Guide/09_Common_Use_Cases.md)
 - [FAQ](User%20Guide/11_FAQ.md)
-- [Generated API reference](../_site/TheSingularityWorkshop.FSM_API.html)
+- [Generated API reference](TheSingularityWorkshop.FSM_API.html)
 - [Source repository](https://github.com/TrentBest/FSM_API)
 - [GUI.SVG adapter and gallery](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
 
