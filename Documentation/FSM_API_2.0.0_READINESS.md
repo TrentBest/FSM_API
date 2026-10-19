@@ -294,10 +294,10 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 
 - [x] Updated the string-backed `FSM.Step` to assign the matching Any-State target to `next` and return immediately after the first matching valid Any-State transition. This preserves Any-State precedence, prevents subsequent Any-State guards from firing, prevents regular-transition overwrite, and lets `FSMHandle.Update` retain the selected target.
 - [x] Added `Tests/FSM_API_AnyStateTransition_Tests.cs` to assert first-match behavior, Any-State precedence over a matching regular transition, resulting handle state, and callback trace.
-- [ ] Await CI for the runtime fix and regression test; no local build/test execution was available in this connector pass.
+- [x] Investigated the first regression-test CI failure: the test used `Transition(FSM.AnyStateIdentifier, ...)`, which routes through the regular-transition builder API. The supported explicit API is `AnyTransition(to, condition)`; the test now uses that API in commit `a4b016f`.
+- [ ] Await CI for the corrected regression test and runtime fix. The earlier test runs failed on the test's incorrect builder call; this is not yet evidence that the runtime fix passes the intended scenario.
 - [ ] Extend coverage to no-match behavior, invalid Any-State targets, and lifecycle entry timing; inspect any test failures before further changes.
 - [ ] Review whether direct `FSM.Step` invocation without a registered handle should have a defined transition-result contract; the existing implementation couples target resolution to the handle lookup.
-
 ### Deeper transition-result finding (2026-10-19)
 
 - [x] Re-read the complete string-backed `FSM.Step` and its caller `FSMHandle.Update` rather than relying only on the transition loop.
