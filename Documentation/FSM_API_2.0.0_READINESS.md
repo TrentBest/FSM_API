@@ -340,3 +340,11 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [ ] Validate test commit [`e56633e`](https://github.com/TrentBest/FSM_API/commit/e56633e4184a27dd47ac3c79406bcd7396167fa8) in development CI.
 - [x] For Any-State-only test commit [`79a71c6`](https://github.com/TrentBest/FSM_API/commit/79a71c6942f7d30d7c5843ebde5047dba6a5dbe7), the build/test/package job succeeded in [run #518](https://github.com/TrentBest/FSM_API/actions/runs/39179560009); documentation was still running at the time of this note, so the overall workflow is not yet marked green.
 - [ ] Inspect lifecycle entry timing in implementation and tests before changing the behavior or claiming parity.
+
+### Scheduled Any-State transition parity (2026-10-19)
+
+- [x] Added scheduler-level regression coverage in commit [`46c68fa`](https://github.com/TrentBest/FSM_API/commit/46c68faf8ddb1933da31c9dd5637a494c2608265). CI run [#522](https://github.com/TrentBest/FSM_API/actions/runs/39179828861) reproduced the defect: 405 tests passed and the new scheduled-update test failed because the handle remained in state `A` instead of transitioning to `B`.
+- [x] Fixed scheduled transition matching in commit [`10dec78`](https://github.com/TrentBest/FSM_API/commit/10dec7831dacf9e4a1e1b51db183a653ab4b5fee): scheduled ticks now match the Any-State sentinel as well as the current state, retain Any-State-first ordering from `GetAllTransitions()`, and skip missing targets before invoking guards.
+- [ ] Validate the scheduled Any-State fix in development CI; run [#523](https://github.com/TrentBest/FSM_API/actions/runs/39179884700) was queued when this note was written.
+- [ ] Continue lifecycle parity review, including consistency between `FSM.Step` documentation and its actual execution order; do not claim full parity from the scheduler regression alone.
+
