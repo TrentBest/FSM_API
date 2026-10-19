@@ -366,26 +366,26 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void EvaluateConditions()
         {
-            // Get all potential transitions originating from the current state.
-            // Convert to a list to avoid issues if a transition itself causes modifications
-            // to the underlying Definition's transition collection (though unlikely here).
+            // GetAllTransitions returns Any-State transitions before state-specific transitions.
+            // Include both the canonical sentinel and the builder's legacy marker for compatibility.
             var possibleTransitions = Definition.GetAllTransitions()
-                                                .Where(t => t.From == CurrentState)
-                                                .ToList();
+                .Where(t => t.From == FSM.AnyStateIdentifier || t.From == "*" || t.From == CurrentState)
+                .ToList();
 
-            // Iterate through possible transitions to find the first one whose condition is met.
-            // It's generally best practice to only take one transition per evaluation cycle
-            // to ensure predictable FSM behavior and avoid race conditions or unexpected state jumps
-            // if multiple conditions are simultaneously true.
             foreach (var transition in possibleTransitions)
             {
-                // Check if a condition is defined and if it evaluates to true for the current context.
+                // Match the scheduled/manual-step safety contract: don't run a guard for a missing target.
+                if (!Definition.HasState(transition.To))
+                {
+                    continue;
+                }
+
                 if (transition.Condition != null && transition.Condition.Invoke(Context))
                 {
-                    // Found a valid transition. Force the transition and then exit,
-                    // as only one transition should typically occur per evaluation.
                     Definition.ForceTransition(CurrentState, transition.To, Context);
-                    return; // Exit after the first successful transition
+                    CurrentState = transition.To;
+                    HasEnteredCurrentState = true;
+                    return; // Any-State transitions are first, and only one transition is taken per evaluation.
                 }
             }
         }
