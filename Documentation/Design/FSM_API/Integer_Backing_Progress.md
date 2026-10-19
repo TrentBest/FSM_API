@@ -7,11 +7,11 @@
 
 **Purpose:** make the remaining work visible so the integer-backed design can be resumed without reconstructing the whole vision from scattered commits.
 
-> **Status in one sentence (2026-10-18):** the integer-backed runtime and its feature-branch tests have been ported into `development`, and a deterministic `FSMCompiler` bridge with reverse name mappings and focused tests has been added. The integration has not yet earned a new recorded green CI run; the historical 400/400 result applies only to feature-branch commit `dd96646`. Full parity, benchmark evidence, storage validation, branch cleanup, and release remain open.
+> **Status in one sentence (2026-10-19):** the integer-backed runtime, broad tests, and deterministic `FSMCompiler` bridge are present on `development`; current-development CI is green, including run [#547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) at `02da084`. That run passed build/test/package and documentation jobs, uploaded coverage and artifacts, and skipped NuGet publishing. This proves the recorded development snapshot builds; it does not close behavior parity, benchmark evidence, storage validation, branch reconciliation, or release gates.
 
 <p align="center">
   <a href="Visuals/Integer_Backing_Roadmap.svg">
-    <img src="Visuals/Integer_Backing_Roadmap.svg" alt="Integer-backed runtime and tests are now ported to development; deterministic name-to-ID compilation is implemented, while current-branch CI, full parity, benchmark evidence, storage validation, branch cleanup, and release remain explicit gates." width="100%" />
+    <img src="Visuals/Integer_Backing_Roadmap.svg" alt="Integer-backed runtime and tests are integrated into development and current-development CI is green; full parity, benchmark evidence, storage validation, branch reconciliation, and release remain explicit gates." width="100%" />
   </a>
 </p>
 
@@ -19,10 +19,10 @@
 
 - **Source of the original implementation:** [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
 - **Current integration target:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
-- **Integration snapshot:** the integer runtime and associated integer tests are now present under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/FSM_API/IntegerBacked) and [`Tests/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/Tests/IntegerBacked). The new string-to-integer compiler is in `FSM_API/IntegerBacked/FSMCompiler.cs`; current-branch CI validation is pending.
+- **Integration snapshot:** the integer runtime and associated tests are present under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/FSM_API/IntegerBacked) and [`Tests/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/Tests/IntegerBacked). The deterministic string-to-integer compiler is in `FSM_API/IntegerBacked/FSMCompiler.cs`.
 - **Latest feature-branch validation:** [run 39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), commit [`dd96646`](https://github.com/TrentBest/FSM_API/commit/dd96646a3718923bb87a48af695a0c5b6819db8e), 2026-10-18. **400 passed, 0 failed**. The NuGet publish job was skipped; no package was published.
 - **Historical regression:** [run 34809515652](https://github.com/TrentBest/FSM_API/actions/runs/34809515652) on 2026-09-14 had 398 passed and 2 failed out of 400. Those two update-loop tests now pass after the feature-branch fix described below.
-- **Documentation CI:** [run 39102540029](https://github.com/TrentBest/FSM_API/actions/runs/39102540029) passed the local-link validator, DocFX generation, and documentation artifact upload on `development`. NuGet publishing was skipped.
+- **Current-development CI:** [run #547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) passed on `development` at `02da0840dd32889cc7a53250d293fcdfe80641c4`. The build/test/package job, .NET 8.0 test step, Codecov upload, package artifact upload, local documentation-link validation, DocFX generation, and documentation artifact upload all succeeded; NuGet publishing was skipped. The checklist records run #504 as 401 passed / 0 failed / 0 skipped for the integer integration snapshot. CI green is necessary, not a substitute for trace parity and performance evidence.
 - **No percentage is reported.** The gates have different weights, and “files exist” is not equivalent to “behavior is equivalent, faster, and safe to integrate.”
 
 ## Work already present on the feature branch
@@ -45,7 +45,7 @@ The regression tests are `FSMRuntime_Stress_Tests.Update_SelfRemovalMustNotSkipT
 
 ### 2. Complete string-backed ↔ integer-backed translation — **initial bridge implemented; validation pending**
 
-The initial `FSMCompiler` assigns dense deterministic IDs by ordinal state-name order, carries state actions and transition conditions into the integer representation, and returns immutable forward/reverse state-name mappings. Focused tests now cover deterministic IDs, action/guard transfer, Any-State conversion, missing initial state, unknown transition source/destination, and mapping immutability. These tests have been committed to `development` but have not yet been executed in a recorded current-branch CI run. Serialization/reconstruction and broader invalid-definition coverage remain open.
+The initial `FSMCompiler` assigns dense deterministic IDs by ordinal state-name order, carries state actions and transition conditions into the integer representation, and returns immutable forward/reverse state-name mappings. Focused tests cover deterministic IDs, action/guard transfer, Any-State conversion, missing initial state, unknown transition source/destination, and mapping immutability. Current-development CI has passed (see run #504 in the release checklist and current head run #547); serialization/reconstruction and broader invalid-definition coverage remain open.
 
 Acceptance criteria:
 - deterministic mapping from authored state/FSM names to integer IDs;
@@ -70,7 +70,7 @@ Use reproducible, equivalent workloads for string-backed and integer-backed impl
 
 ### 6. Integrate deliberately — **port completed; validation and review in progress**
 
-The integer runtime, its existing integer test suite, and the initial compiler bridge have been ported into `development`. The next gate is a recorded green build/test run on the current branch, followed by review and fixes for any failures. Then:
+The integer runtime, its existing integer test suite, and the initial compiler bridge have been ported into `development`. The current-development build/test/package and documentation jobs have a recorded green result. The next gate is behavior-parity review and trace-based regression testing, then:
 - run the full repository build, tests, package build, and documentation build;
 - document which API surface is string-backed versus integer-backed;
 - update examples and API docs; preserve the existing string API;
@@ -85,11 +85,11 @@ The string API remains useful for readable authoring and rapid prototyping. The 
 ## Resume checklist
 
 - [x] Fix the two mutation test failures and verify the full 400-test suite passes on the feature branch.
-- [ ] Validate the new deterministic `FSMCompiler` and its focused tests on `development`; initial edge-case and mapping-immutability tests were added in commit [`14ca011`](https://github.com/TrentBest/FSM_API/commit/14ca011d5a753366e312abef952a971b78fd8c21), but they remain unexecuted until a current-branch CI result is recorded.
+- [x] Record current-development build/test/package and documentation CI for the integrated runtime/compiler (run [#504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802), 401 passed; latest development-head workflow [#547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) also passed).
 - [ ] Complete the string/integer behavior parity matrix; resolve the newly documented Any-State/regular-transition ordering discrepancy.
 - [ ] Specify compact-ID and sparse-ID behavior; test memory and resizing.
 - [ ] Publish reproducible benchmark results.
-- [x] Port the integer runtime and existing integer tests into `development`; current-branch validation is still an open gate.
+- [x] Port the integer runtime and existing integer tests into `development`; current-development CI is green. The original feature branch still requires history/content reconciliation and is not a merge-ready substitute for the integrated state.
 - [ ] Run full CI and review package/versioning before release.
 
 Update this page whenever a gate changes status. Link the exact commit and successful workflow run; do not mark a gate complete from code presence alone.
