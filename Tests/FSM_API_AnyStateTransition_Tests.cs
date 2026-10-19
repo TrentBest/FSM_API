@@ -314,6 +314,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         }
 
         [Test]
+        public void EvaluateConditions_DoesNotRecordTargetRemovedByExitCallback()
+        {
+            var trace = new List<string>();
+            var definition = new FSM { Name = "ManualTargetRemovedByExit", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, _ =>
+            {
+                trace.Add("exit:A");
+                definition.RemoveState("B");
+            }));
+            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return true; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.HasEnteredCurrentState = true;
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("A"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "exit:A" }));
+        }
+
+        [Test]
         public void EvaluateConditions_ContinuesAfterThrowingAnyStateGuard()
         {
             var trace = new List<string>();
