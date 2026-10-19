@@ -285,5 +285,23 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(enteredTarget, Is.Zero);
         }
 
+        [Test]
+        public void Handle_DoesNotRemainEnteredWhenExitCallbackRemovesTransitionTarget()
+        {
+            IntegerFsm definition = null;
+            definition = new IntegerFsm(23011);
+            definition.AddState(new IntegerFsmState(0, null, null, _ => definition.RemoveState(1)));
+            definition.AddState(new IntegerFsmState(1, null, null, null));
+            definition.AddTransition(0, 1, _ => true);
+
+            var handle = new IntegerFsmHandle(definition, new Context());
+            handle.Initialize();
+            handle.Update();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(0));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(definition.HasState(1), Is.False);
+        }
+
     }
 }
