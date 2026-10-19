@@ -248,6 +248,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public int Step(int currentID, IStateContext context)
         {
+            // Preserve the public direct-Step contract: a direct step enters its target immediately.
+            return StepCore(currentID, context, enterTargetImmediately: true);
+        }
+
+        /// <summary>
+        /// Executes a normal handle update, deferring transition-target entry until the next update.
+        /// </summary>
+        internal int StepDeferred(int currentID, IStateContext context)
+        {
+            return StepCore(currentID, context, enterTargetImmediately: false);
+        }
+
+        private int StepCore(int currentID, IStateContext context, bool enterTargetImmediately)
+        {
             if (!TryGetState(currentID, out var currentState))
             {
                 ForceTransition(currentID, InitialStateID, context);
@@ -265,8 +279,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                // Normal transitions defer target entry until the next handle update,
-                // matching the string-backed runtime. ForceTransition remains immediate.
+                if (enterTargetImmediately)
+                {
+                    nextState.Enter(context);
+                }
                 return transition.ToID;
             }
 
@@ -279,8 +295,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                // Normal transitions defer target entry until the next handle update,
-                // matching the string-backed runtime. ForceTransition remains immediate.
+                if (enterTargetImmediately)
+                {
+                    nextState.Enter(context);
+                }
                 return transition.ToID;
             }
 
