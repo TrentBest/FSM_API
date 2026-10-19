@@ -165,5 +165,69 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 IntegerFsmTimers.RemoveIntTimer(intTimerID);
             }
         }
+
+        [Test]
+        public void StringAndIntegerHandles_ProduceMatchingDeferredTransitionTrace()
+        {
+            var stringTrace = new System.Collections.Generic.List<string>();
+            var integerTrace = new System.Collections.Generic.List<string>();
+            const string stringName = "ParityDeferredTransitionTrace";
+            const string group = "ParityDeferredTransitionTraceTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(stringName, 0, group)
+                .State("A",
+                    _ => stringTrace.Add("enter:A"),
+                    _ => stringTrace.Add("update:A"),
+                    _ => stringTrace.Add("exit:A"))
+                .State("B",
+                    _ => stringTrace.Add("enter:B"),
+                    _ => stringTrace.Add("update:B"),
+                    _ => stringTrace.Add("exit:B"))
+                .WithInitialState("A")
+                .Transition("A", "B", _ => { stringTrace.Add("guard:A:B"); return true; })
+                .BuildDefinition();
+
+            var stringHandle = FSM_API.Create.CreateInstance(stringName, new Context(), group);
+            stringHandle.Update(group); // Enter A before evaluating transitions.
+            stringTrace.Clear();
+            stringHandle.Update(group);
+
+            var integerDefinition = new IntegerFsm(23008);
+            integerDefinition.AddState(new IntegerFsmState(0,
+                _ => integerTrace.Add("enter:A"),
+                _ => integerTrace.Add("update:A"),
+                _ => integerTrace.Add("exit:A")));
+            integerDefinition.AddState(new IntegerFsmState(1,
+                _ => integerTrace.Add("enter:B"),
+                _ => integerTrace.Add("update:B"),
+                _ => integerTrace.Add("exit:B")));
+            integerDefinition.AddTransition(0, 1, _ => { integerTrace.Add("guard:A:B"); return true; });
+
+            var integerHandle = new IntegerFsmHandle(integerDefinition, new Context());
+            integerHandle.Initialize();
+            integerTrace.Clear();
+            integerHandle.Update();
+
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
+            Assert.That(stringTrace, Is.EqualTo(new[]
+            {
+                "update:A",
+                "guard:A:B",
+                "exit:A"
+            }));
+            Assert.That(stringHandle.CurrentState, Is.EqualTo("B"));
+            Assert.That(stringHandle.HasEnteredCurrentState, Is.False);
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(1));
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.False);
+
+            stringTrace.Clear();
+            integerTrace.Clear();
+            stringHandle.Update(group);
+            integerHandle.Update();
+
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
+            Assert.That(stringTrace, Is.EqualTo(new[] { "enter:B", "update:B" }));
+        }
+
     }
 }
