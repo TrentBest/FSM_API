@@ -71,8 +71,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             try
             {
+                // Match the string-backed lifecycle: enter the current state before its
+                // first update, but defer entry into a transition target until next Update.
+                if (!HasEnteredCurrentState)
+                {
+                    var currentState = Definition.GetState(CurrentStateID);
+                    if (currentState != null)
+                    {
+                        currentState.Enter(Context);
+                        HasEnteredCurrentState = true;
+                    }
+                }
+
+                var previousStateID = CurrentStateID;
                 CurrentStateID = Definition.Step(CurrentStateID, Context);
-                HasEnteredCurrentState = true;
+                HasEnteredCurrentState = CurrentStateID == previousStateID && HasEnteredCurrentState;
             }
             catch (Exception ex)
             {
