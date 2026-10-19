@@ -178,5 +178,34 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Is.EqualTo(new[] { "enter:A", "update:A" }));
         }
 
+        [Test]
+        public void EvaluateConditions_IncludesAnyStateTransitions_AndUpdatesHandle()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateManualEvaluation";
+            const string group = "AnyStateManualEvaluationTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", _ => trace.Add("enter:A"), null, _ => trace.Add("exit:A"))
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "guard:any:B",
+                "exit:A",
+                "enter:B"
+            }));
+        }
+
     }
 }
