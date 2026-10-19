@@ -224,6 +224,18 @@ namespace TheSingularityWorkshop.FSM_API
         {
             try
             {
+                // Manual updates must honor the same first-entry lifecycle as scheduled ticks.
+                // A transition marks the target as not yet entered; the next update will enter it.
+                if (!HasEnteredCurrentState)
+                {
+                    var currentState = Definition.GetState(CurrentState);
+                    if (currentState != null)
+                    {
+                        currentState.Enter(Context);
+                        HasEnteredCurrentState = true;
+                    }
+                }
+
                 string nextState;
                 Definition.Step(CurrentState, Context, out nextState);
                 CurrentState = nextState;
@@ -269,6 +281,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 Definition.ForceTransition(CurrentState, nextStateName, Context);
                 CurrentState = nextStateName;
+                HasEnteredCurrentState = Definition.HasState(nextStateName);
             }
             catch (Exception ex)
             {
@@ -295,6 +308,8 @@ namespace TheSingularityWorkshop.FSM_API
         public void ResetFSMInstance()
         {
             Definition.ForceTransition(CurrentState, Definition.InitialState, Context);
+            CurrentState = Definition.InitialState;
+            HasEnteredCurrentState = Definition.HasState(CurrentState);
         }
 
 
