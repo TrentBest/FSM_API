@@ -27,7 +27,7 @@
 - [ ] Preserve useful work from historical and feature branches before deleting any branch; branch deletion must not be the mechanism used to decide what work matters.
 - [ ] Treat `master` as the release branch and `development` as the only integration branch.
 - [ ] Consolidate the useful integer-runtime work from `feature/fsm-api-2.0` into a reviewable path targeting `development`; update or replace the existing draft 2.0 PR rather than losing its tests and history.
-- [ ] Reconcile the branch histories before declaring the repository clean. The live 2026-10-19 comparison reports `development` 311 commits ahead and 5 behind `master`, with merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`; earlier snapshots in this historical checklist are dated evidence, not current branch counts. Do not blindly merge either direction.
+- [ ] Reconcile the branch histories before declaring the repository clean. The live 2026-10-19 comparison reports `development` 320 commits ahead and 5 behind `master`, with merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`; earlier snapshots in this historical checklist are dated evidence, not current branch counts. Do not blindly merge either direction.
 - [ ] After preservation and verification, remove all remote branches except `master` and `development`. Confirm the final remote branch list contains exactly those two.
 - [ ] Ensure CI validates pushes and pull requests to `development` and `master`, while package publishing can occur only through the explicit release path on `master`.
 - [ ] Audit stale PRs and historical links before closing or retargeting them; preserve the meaningful technical record in this checklist or in the resulting PR.
@@ -497,3 +497,28 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Confirmed the `Enter`-mutation case is not merely untested: the PR's post-`ForceTransition()` target check can observe that the target was removed after its `Enter` callback ran, then leave the handle pointing at the old source state with `HasEnteredCurrentState = false`. The lifecycle contract for an already-exited source and an entered-then-removed target must be defined; simply adding a target-existence assertion is not enough.
 - [ ] Before integration, separate guard evaluation exception handling from lifecycle execution; define behavior when Exit/Enter callbacks throw or mutate state definitions; add trace-based tests for target removal during Enter and throwing Enter (including whether later candidates may run); then reconcile against current `development` and validate the reconciled head with CI.
 - [ ] Re-run the current-development regression gate independently after integration. PR-head CI does not establish that current `development` contains or passes the fix. No runtime code was changed, PR #23 was not merged, `master` was not modified, and package publication remains unauthorized.
+
+
+### Remote branch inventory refresh — 2026-10-19, 23:21 UTC
+
+A fresh GitHub branch listing returned **17 remote branches**: the policy branches `master` and `development`, plus **15 additional branches** requiring preservation review before any cleanup. No branch was deleted or modified during this inventory. Counts below are each branch's unique commits ahead of / behind the then-current `development` tip; these are triage snapshots, not merge recommendations.
+
+| Branch | Ahead / behind `development` | Audit note |
+|---|---:|---|
+| `AddingUnitTests` | 2 / 470 | Unique changes touch interaction/internal API, project files, and FSM state tests; inspect before disposition. |
+| `HireMeFSMDemo` | 1 / 575 | Comparison reports a workflow-only changed file; inspect the unique commit before deciding whether to preserve or retire. |
+| `RefactoringToHashBacking` | 2 / 366 | Changes core FSM/state/transition/interaction files and workflow; legacy implementation work needs comparison with current runtime. |
+| `Splitting-FSM_API-class-into-multiple-partial-classes` | 0 / 630 | No unique commits relative to its merge base; fully behind current development. |
+| `TargetingStarcraft2DotNet` | 0 / 597 | No unique commits relative to its merge base; fully behind current development. |
+| `TickCountingSystem` | 0 / 466 | No unique commits relative to its merge base; fully behind current development. |
+| `WindowsFormsEditor` | 2 / 563 | Unique editor project/source files exist; preserve or explicitly disposition the editor work before cleanup. |
+| `docs/benchmarking` | 3 / 359 | Contains benchmarking/README changes and workflow difference; review unique documentation before disposition. |
+| `docs/readme-standard` | 4 / 320 | Contains README and readiness-document changes plus workflow difference; compare before disposition. |
+| `feature/fsm-api-2.0-next` | 24 / 366 | Shares a broad 2.0-era diff with registry/work branches; compare branch tips and unique commits rather than treating names as distinct work. |
+| `feature/fsm-api-2.0-registry` | 24 / 366 | Shares the same merge base and broad file diff as next/work; branch-tip equivalence still needs exact commit comparison. |
+| `feature/fsm-api-2.0-work` | 24 / 366 | Shares the same merge base and broad file diff as next/registry; branch-tip equivalence still needs exact commit comparison. |
+| `feature/fsm-api-2.0` | 93 / 366 | Main integer-runtime integration source and test work; preserve and reconcile deliberately. |
+| `feature/integer-backed-runtime` | 1 / 364 | Unique changes are limited to project and incremental-version test files in this comparison; inspect its unique commit. |
+| `fix/manual-any-state-evaluation` | 15 / 68 | PR #23 work remains unreconciled with current development; lifecycle exception and callback-mutation review remains open. |
+
+**Inventory conclusion:** branch cleanup is still blocked. First compare the three 24-commit 2.0 branches at the commit level, preserve the integer-runtime and manual-transition fixes, and review the legacy editor/docs/core branches. The repository policy is not satisfied until that preservation review is complete and the final remote list is verified to contain only `master` and `development`. No branch cleanup is authorized by this snapshot.
