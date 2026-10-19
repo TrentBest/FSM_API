@@ -332,3 +332,11 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [ ] Validate test commit [`79a71c6`](https://github.com/TrentBest/FSM_API/commit/79a71c6942f7d30d7c5843ebde5047dba6a5dbe7) in development CI before treating the new test as passing.
 - [ ] Continue with invalid Any-State target behavior and lifecycle entry timing; do not infer full string/integer parity from this test alone.
 - [x] Confirmed checklist commit [`0e392a1`](https://github.com/TrentBest/FSM_API/commit/0e392a14018e13c95f65218c679d5cdf675dad01) completed [CI run #517](https://github.com/TrentBest/FSM_API/actions/runs/39179333904) successfully: build/test/package and documentation passed; NuGet publishing was skipped.
+
+
+### Invalid Any-State target regression (2026-10-19)
+
+- [x] Added a regression test proving a missing Any-State target is skipped before its guard executes, and a subsequent valid Any-State transition can still match.
+- [ ] Validate test commit [`e56633e`](https://github.com/TrentBest/FSM_API/commit/e56633e4184a27dd47ac3c79406bcd7396167fa8) in development CI.
+- [x] For Any-State-only test commit [`79a71c6`](https://github.com/TrentBest/FSM_API/commit/79a71c6942f7d30d7c5843ebde5047dba6a5dbe7), the build/test/package job succeeded in [run #518](https://github.com/TrentBest/FSM_API/actions/runs/39179560009); documentation was still running at the time of this note, so the overall workflow is not yet marked green.
+- [ ] Inspect lifecycle entry timing in implementation and tests before changing the behavior or claiming parity.
