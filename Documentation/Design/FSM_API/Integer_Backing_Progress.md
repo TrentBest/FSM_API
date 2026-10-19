@@ -54,9 +54,9 @@ Acceptance criteria:
 - the mapping can be serialized or reconstructed consistently where required;
 - runtime execution does not need to look up state names.
 
-### 3. Prove behavioral parity — **partially covered; a concrete transition discrepancy is identified**
+### 3. Prove behavioral parity — **partially covered; trace-based comparison still required**
 
-The existing `IntegerParityTests.cs` checks selected cases, not the complete public behavior surface. Source review found that both implementations update the current state before evaluating Any-State guards, but their transition-selection behavior differs: the string implementation can continue into its regular-transition loop after an Any-State transition changes the handle, while the integer implementation exits immediately after the first successful Any-State transition. Add trace-based parity tests and decide whether to align the integer behavior or document the difference as intentional. Then extend the matrix across state entry/update/exit, guard ordering, forced transitions, invalid contexts, lifecycle, timers, processing rates/groups, error paths, and runtime mutation.
+The existing `IntegerParityTests.cs` checks selected cases, not the complete public behavior surface. The existing tests do not yet establish full string/integer transition parity. Do not treat the suspected continued-loop/overwrite behavior as confirmed without reproducing it against current development. Add equivalent trace-based tests through the real handle update path for Any-State precedence, regular fallback, invalid targets, callback ordering, and final state; resolve observed differences or document intentional differences. Then extend the matrix across state entry/update/exit, guard ordering, forced transitions, invalid contexts, lifecycle, timers, processing rates/groups, error paths, and runtime mutation.
 
 ### 4. Verify ID density and storage costs — **open design/validation gate**
 
