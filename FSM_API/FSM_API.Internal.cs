@@ -939,23 +939,35 @@ namespace TheSingularityWorkshop.FSM_API
                                 }
                                 
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
-                              
+
+                                // GetAllTransitions returns Any-State transitions before state-specific
+                                // transitions. Match the Any-State sentinel explicitly so scheduled
+                                // ticks follow the same transition precedence as FSM.Step().
                                 var transitions = bucket.Definition.GetAllTransitions();
                                 foreach (var transition in transitions)
                                 {
-                                    
-                                    if (transition.From == handle.CurrentState)
+                                    if (transition.From != FSM.AnyStateIdentifier &&
+                                        transition.From != handle.CurrentState)
                                     {
-                                        
-                                        var result = transition.Condition.Invoke(handle.Context);
-                                        if (result)
-                                        {
-                                           
-                                            bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
-                                            handle.CurrentState = transition.To;
-                                            handle.HasEnteredCurrentState = false;
-                                            break;
-                                        }
+                                        continue;
+                                    }
+
+                                    // Invalid targets must be skipped before evaluating user guards.
+                                    if (bucket.Definition.GetState(transition.To) == null)
+                                    {
+                                        Error.InvokeInternalApiError(
+                                            $"FSM '{handle.Name}' transition targets non-existent state '{transition.To}'. Transition skipped for safety.",
+                                            new InvalidOperationException($"Transition target '{transition.To}' does not exist."));
+                                        continue;
+                                    }
+
+                                    var result = transition.Condition.Invoke(handle.Context);
+                                    if (result)
+                                    {
+                                        bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
+                                        handle.CurrentState = transition.To;
+                                        handle.HasEnteredCurrentState = false;
+                                        break;
                                     }
                                 }
                             }
