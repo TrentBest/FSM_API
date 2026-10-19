@@ -274,23 +274,35 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 // Guards are user callbacks and may mutate this runtime-editable definition.
-                // Never commit a transition if its target was removed while the guard ran.
-                if (!TryGetState(transition.ToID, out _))
+                var matched = transition.Evaluate(context);
+                var currentIndex = _anyStateTransitions.IndexOf(transition);
+                if (currentIndex < 0)
+                {
+                    // The transition was removed or replaced while its guard ran.
+                    i--;
+                    continue;
+                }
+
+                // A callback may remove an earlier item, shifting this transition left.
+                // Resume iteration from its current index so no remaining rule is skipped.
+                i = currentIndex;
+                if (!matched || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
 
-                // Exit callbacks may also remove or replace the target. Resolve it again
-                // after Exit rather than entering a stale object captured before user code.
-                if (!TryGetState(transition.ToID, out var nextState))
+                // Exit callbacks can mutate both states and transitions. A removed/replaced
+                // rule is canceled; the source has exited, so the handle must defer recovery.
+                if (_anyStateTransitions.IndexOf(transition) < 0 ||
+                    !TryGetState(transition.ToID, out var nextState))
                 {
                     exitedWithoutTransition = true;
                     return currentID;
@@ -306,21 +318,33 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 // Guards are user callbacks and may mutate this runtime-editable definition.
-                if (!TryGetState(transition.ToID, out _))
+                var matched = transition.Evaluate(context);
+                var currentIndex = _transitions.IndexOf(transition);
+                if (currentIndex < 0)
+                {
+                    // The transition was removed or replaced while its guard ran.
+                    i--;
+                    continue;
+                }
+
+                // A callback may remove an earlier item, shifting this transition left.
+                i = currentIndex;
+                if (!matched || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
 
-                // Exit callbacks may also remove or replace the target.
-                if (!TryGetState(transition.ToID, out var nextState))
+                // Exit callbacks can mutate both states and transitions.
+                if (_transitions.IndexOf(transition) < 0 ||
+                    !TryGetState(transition.ToID, out var nextState))
                 {
                     exitedWithoutTransition = true;
                     return currentID;
