@@ -248,5 +248,42 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
         }
 
+        [Test]
+        public void DirectStep_DoesNotCommitTargetRemovedByGuard()
+        {
+            var enteredTarget = 0;
+            var definition = new IntegerFsm(23009);
+            definition.AddState(new IntegerFsmState(0, null, null, null));
+            definition.AddState(new IntegerFsmState(1, _ => enteredTarget++, null, null));
+            definition.AddTransition(0, 1, _ =>
+            {
+                definition.RemoveState(1);
+                return true;
+            });
+
+            var result = definition.Step(0, new Context());
+
+            Assert.That(result, Is.EqualTo(0));
+            Assert.That(definition.HasState(1), Is.False);
+            Assert.That(enteredTarget, Is.Zero);
+        }
+
+        [Test]
+        public void DirectStep_DoesNotEnterTargetRemovedByExitCallback()
+        {
+            var enteredTarget = 0;
+            IntegerFsm definition = null;
+            definition = new IntegerFsm(23010);
+            definition.AddState(new IntegerFsmState(0, null, null, _ => definition.RemoveState(1)));
+            definition.AddState(new IntegerFsmState(1, _ => enteredTarget++, null, null));
+            definition.AddTransition(0, 1, _ => true);
+
+            var result = definition.Step(0, new Context());
+
+            Assert.That(result, Is.EqualTo(0));
+            Assert.That(definition.HasState(1), Is.False);
+            Assert.That(enteredTarget, Is.Zero);
+        }
+
     }
 }
