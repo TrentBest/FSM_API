@@ -393,6 +393,16 @@ namespace TheSingularityWorkshop.FSM_API
                         }
 
                         Definition.ForceTransition(CurrentState, transition.To, Context);
+
+                        // ForceTransition invokes the current state's Exit callback before its
+                        // final target lookup. That callback may remove the target, so verify
+                        // again before recording the transition as successful.
+                        if (!Definition.HasState(transition.To))
+                        {
+                            HasEnteredCurrentState = false;
+                            return;
+                        }
+
                         CurrentState = transition.To;
                         HasEnteredCurrentState = true;
                         return; // Any-State transitions are first, and only one transition is taken per evaluation.
