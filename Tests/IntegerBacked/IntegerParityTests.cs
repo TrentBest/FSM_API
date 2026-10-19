@@ -213,13 +213,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             integerTrace.Clear();
             integerHandle.Update();
 
-            Assert.That(integerTrace, Is.EqualTo(new[]
+            // Freeze the callback trace at the exact update boundary. If some later operation
+            // mutates the callback list, the immutable snapshot keeps the original result visible.
+            var firstIntegerUpdateTrace = integerTrace.ToArray();
+            Assert.That(firstIntegerUpdateTrace, Is.EqualTo(new[]
             {
                 "update:A",
                 "guard:A:B",
                 "exit:A"
             }), "The first integer update should transition from A without entering B.");
-            Assert.That(stringTrace, Is.EqualTo(integerTrace));
+            Assert.That(integerTrace, Is.EqualTo(firstIntegerUpdateTrace),
+                "The integer callback trace changed after the first update completed.");
+            Assert.That(stringTrace, Is.EqualTo(firstIntegerUpdateTrace));
             Assert.That(stringTrace, Is.EqualTo(new[]
             {
                 "update:A",
