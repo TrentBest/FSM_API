@@ -71,6 +71,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new KeyNotFoundException($"FSM definition '{fsmID}' is not registered.");
             }
 
+            // Handle IDs are monotonically increasing for the lifetime of this runtime. Refuse
+            // exhaustion rather than wrapping to a previously issued identity.
+            if (_nextHandleID == int.MaxValue)
+            {
+                throw new InvalidOperationException("The integer FSM runtime has exhausted its unique handle ID range.");
+            }
+
             var handle = new FSMHandleInt(definition, context, _nextHandleID++);
             handle.Initialize();
             handle.IsRegistered = true;
