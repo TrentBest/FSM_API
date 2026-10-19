@@ -204,10 +204,21 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             integerDefinition.AddTransition(0, 1, _ => { integerTrace.Add("guard:A:B"); return true; });
 
             var integerHandle = new IntegerFsmHandle(integerDefinition, new Context());
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(0), "The handle must start in state A.");
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.False);
             integerHandle.Initialize();
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(0), "Initialization must preserve the initial state ID.");
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.True);
+            Assert.That(integerTrace, Is.EqualTo(new[] { "enter:A" }), "Initialization should enter A only.");
             integerTrace.Clear();
             integerHandle.Update();
 
+            Assert.That(integerTrace, Is.EqualTo(new[]
+            {
+                "update:A",
+                "guard:A:B",
+                "exit:A"
+            }), "The first integer update should transition from A without entering B.");
             Assert.That(stringTrace, Is.EqualTo(integerTrace));
             Assert.That(stringTrace, Is.EqualTo(new[]
             {
