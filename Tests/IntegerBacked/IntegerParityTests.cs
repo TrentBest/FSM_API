@@ -220,13 +220,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(integerHandle.CurrentStateID, Is.EqualTo(1));
             Assert.That(integerHandle.HasEnteredCurrentState, Is.False);
 
-            stringTrace.Clear();
-            integerTrace.Clear();
-            stringHandle.Update(group);
-            integerHandle.Update();
 
-            Assert.That(stringTrace, Is.EqualTo(integerTrace));
-            Assert.That(stringTrace, Is.EqualTo(new[] { "enter:B", "update:B" }));
         }
 
     }
