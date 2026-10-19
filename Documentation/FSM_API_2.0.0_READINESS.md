@@ -290,6 +290,14 @@ These are review blockers/questions, not a claim that every change is necessaril
 This is a source-level finding only; no runtime behavior was changed in this review. Preserve string API compatibility unless a deliberate breaking change is explicitly approved.
 
 
+### Deeper transition-result finding (2026-10-19)
+
+- [x] Re-read the complete string-backed `FSM.Step` and its caller `FSMHandle.Update` rather than relying only on the transition loop.
+- [x] Confirmed the Any-State discrepancy has a second consequence: the string-backed Any-State branch mutates the registered handle's `CurrentState` and `HasEnteredCurrentState`, but does not assign `next` or return. `FSMHandle.Update` then unconditionally assigns `CurrentState = nextState`, where `nextState` is still the original state unless a regular transition also matches. Thus an Any-State-only match may be overwritten by the caller; if a regular transition also matches, that transition may overwrite the Any-State target after a second Exit.
+- [x] Confirmed the integer-backed `EvaluateConditions` documentation explicitly states Any-State first, then regular transitions, at most one transition per evaluation; the integer `Step` also returns after its first valid matching Any-State transition.
+- [ ] Add characterization tests for: one Any-State match with no regular match; multiple matching Any-State guards; Any-State and regular guards both matching; and exact Update/guard/Exit/Enter trace. Keep the contract decision explicit before implementation changes.
+- [ ] Test through the real string `FSMHandle.Update` path as well as direct blueprint evaluation, because the caller's unconditional state assignment is part of the observed behavior.
+
 ### CI and PR follow-up review (2026-10-18)
 
 - [x] [Workflow run #506](https://github.com/TrentBest/FSM_API/actions/runs/39178743981) completed successfully for checklist commit `c02989b`: build/test/package succeeded, documentation generation/link validation succeeded, and NuGet publishing was skipped. This run did not include the subsequent checklist-only commit `6d772d9`; the next push will trigger its own validation.
