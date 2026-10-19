@@ -357,34 +357,26 @@ namespace TheSingularityWorkshop.FSM_API
         /// moves to a new state.
         /// </summary>
         /// <remarks>
-        /// The FSM processes things in a specific order during each step:
+        /// State entry is managed by the owning instance lifecycle before an update;
+        /// this method itself does not execute the current state's `Enter` action.
+        /// During this step, the FSM processes logic in this order:
         /// <list type="number">
         ///     <item><description>
-        ///         **1. Check "Any State" Transitions:** The FSM first looks at all
-        ///         global "Any State" transitions (defined with <see cref="AddAnyStateTransition(string, Func{IStateContext, bool})"/>).
-        ///         If any of these conditions are met, the FSM immediately switches
-        ///         to that target state, and the `Step` process stops for this tick.
-        ///         Any problems during this check (like a condition causing an error,
-        ///         or trying to go to a state that doesn't exist) are reported internally,
-        ///         but the FSM tries to continue or skip the problematic transition.
+        ///         **1. Run Current State's Update:** Execute the current state's
+        ///         `Update` action. Exceptions are reported through
+        ///         <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
         ///     </description></item>
         ///     <item><description>
-        ///         **2. Enter State (if needed):** If the current state hasn't been
-        ///         officially "entered" yet (meaning its `Enter` action hasn't run),
-        ///         it will run now.
+        ///         **2. Check Any-State Transitions:** Evaluate global transitions in
+        ///         their defined order. A transition whose target state does not exist
+        ///         is skipped before its condition is evaluated. The first valid
+        ///         matching transition exits the current state and ends this step.
         ///     </description></item>
         ///     <item><description>
-        ///         **3. Run Current State's Update:** The FSM then executes the
-        ///         `Update` action of its current state. If this action causes an
-        ///         error, it's caught and reported by <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
-        ///     </description></item>
-        ///     <item><description>
-        ///         **4. Check Regular Transitions:** Finally, the FSM checks all
-        ///         transitions that specifically start from the <paramref name="current"/>
-        ///         state (defined with <see cref="AddTransition(string, string, Func{IStateContext, bool})"/>).
-        ///         The *first* transition whose condition is `true` will cause the
-        ///         FSM to move to its target state, and the `Step` process stops.
-        ///         Errors here are handled similarly to "Any State" transitions.
+        ///         **3. Check Regular Transitions:** If no Any-State transition matches,
+        ///         evaluate transitions originating from the current state. Missing
+        ///         targets are skipped before evaluating their conditions. The first
+        ///         valid matching transition exits the current state and ends this step.
         ///     </description></item>
         /// </list>
         /// If the FSM finds itself in a state that isn't defined in its blueprint,
