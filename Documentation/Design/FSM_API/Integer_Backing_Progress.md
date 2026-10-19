@@ -23,7 +23,7 @@
 - **Latest feature-branch validation:** [run 39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), commit [`dd96646`](https://github.com/TrentBest/FSM_API/commit/dd96646a3718923bb87a48af695a0c5b6819db8e), 2026-10-18. **400 passed, 0 failed**. The NuGet publish job was skipped; no package was published.
 - **Historical regression:** [run 34809515652](https://github.com/TrentBest/FSM_API/actions/runs/34809515652) on 2026-09-14 had 398 passed and 2 failed out of 400. Those two update-loop tests now pass after the feature-branch fix described below.
 - **Current-development CI:** [run #547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) passed on `development` at `02da0840dd32889cc7a53250d293fcdfe80641c4`. The build/test/package job, .NET 8.0 test step, Codecov upload, package artifact upload, local documentation-link validation, DocFX generation, and documentation artifact upload all succeeded; NuGet publishing was skipped. The checklist records run #504 as 401 passed / 0 failed / 0 skipped for the integer integration snapshot. CI green is necessary, not a substitute for trace parity and performance evidence.
-- **No percentage is reported.** The gates have different weights, and “files exist” is not equivalent to “behavior is equivalent, faster, and safe to integrate.”
+- **Release readiness: approximately 40%.** This is a cautious estimate, not a weighted claim that code presence equals completion. Trace-based parity, reproducible benchmarks, storage/identity validation, branch reconciliation, package review, and release-candidate validation remain open.
 
 ## Work already present on the feature branch
 
