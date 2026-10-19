@@ -380,12 +380,23 @@ namespace TheSingularityWorkshop.FSM_API
                     continue;
                 }
 
-                if (transition.Condition != null && transition.Condition.Invoke(Context))
+                try
                 {
-                    Definition.ForceTransition(CurrentState, transition.To, Context);
-                    CurrentState = transition.To;
-                    HasEnteredCurrentState = true;
-                    return; // Any-State transitions are first, and only one transition is taken per evaluation.
+                    if (transition.Condition != null && transition.Condition.Invoke(Context))
+                    {
+                        Definition.ForceTransition(CurrentState, transition.To, Context);
+                        CurrentState = transition.To;
+                        HasEnteredCurrentState = true;
+                        return; // Any-State transitions are first, and only one transition is taken per evaluation.
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Match scheduled evaluation: report a failed guard and continue to later candidates.
+                    FSM_API.Error.InvokeInternalApiError(
+                        $"Error evaluating manual transition condition from '{CurrentState}' to '{transition.To}' in FSM '{Name}'. Exception: {ex.Message}",
+                        ex
+                    );
                 }
             }
         }
