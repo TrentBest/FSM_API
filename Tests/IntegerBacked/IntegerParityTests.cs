@@ -57,6 +57,39 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(exited, Is.EqualTo(2));
         }
 
+
+        [Test]
+        public void Handle_NormalTransitionDefersTargetEntryUntilNextUpdate()
+        {
+            var trace = new System.Collections.Generic.List<string>();
+            var definition = new IntegerFsm(23006);
+            definition.AddState(new IntegerFsmState(0,
+                _ => trace.Add("enter:A"),
+                _ => trace.Add("update:A"),
+                _ => trace.Add("exit:A")));
+            definition.AddState(new IntegerFsmState(1,
+                _ => trace.Add("enter:B"),
+                _ => trace.Add("update:B"),
+                _ => trace.Add("exit:B")));
+            definition.AddTransition(0, 1, _ => { trace.Add("guard:A:B"); return true; });
+
+            var handle = new IntegerFsmHandle(definition, new Context());
+            handle.Initialize();
+            trace.Clear();
+
+            handle.Update();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(1));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "update:A", "guard:A:B", "exit:A" }));
+
+            trace.Clear();
+            handle.Update();
+
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[] { "enter:B", "update:B" }));
+        }
+
         [Test]
         public void SparseIntegerStateIDs_AreSupportedByDirectIndexedStorage()
         {
