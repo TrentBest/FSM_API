@@ -355,6 +355,6 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 
 - [x] Added regression coverage in commit [`045c35e`](https://github.com/TrentBest/FSM_API/commit/045c35e4ecf43ef37134226b90cc87df6e843fc2) for the documented contract that a manual first `FSMHandle.Update()` enters the initial state before updating it.
 - [x] Updated [`FSMHandle.Update`](https://github.com/TrentBest/FSM_API/commit/eed09b4bbb863acf53c7ecf342ff4ca1a9cd1d36) to run the current state's entry action once before the first manual step, and synchronized the entered flag/state for `TransitionTo` and `ResetFSMInstance` so explicit transitions do not cause a duplicate entry on the next manual update.
-- [ ] Validate the manual lifecycle change and the scheduled Any-State regression together in development CI.
+- [x] Confirmed the new manual lifecycle regression reproduces the defect in run [#528](https://github.com/TrentBest/FSM_API/actions/runs/39180137337): 406 tests passed and the new test failed because `HasEnteredCurrentState` remained false. The fix is in commit [`eed09b4`](https://github.com/TrentBest/FSM_API/commit/eed09b4bbb863acf53c7ecf342ff4ca1a9cd1d36); run [#529](https://github.com/TrentBest/FSM_API/actions/runs/39180160637) is validating it.
 - [ ] Review and correct `FSM.Step` lifecycle documentation: current remarks claim Any-State checks precede entry/update, but the implementation currently updates before evaluating Any-State transitions; preserve intentional behavior unless tests or prior contract establish otherwise.
 
