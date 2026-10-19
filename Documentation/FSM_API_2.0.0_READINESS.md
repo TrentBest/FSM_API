@@ -34,6 +34,34 @@
 
 **Safety note:** branches currently visible include old experiments as well as `feature/fsm-api-2.0`, which contains the integer runtime and tests. Do not delete any of them until their useful work has been preserved and verified.
 
+### Branch and pull-request inventory snapshot — 2026-10-19
+
+Read-only inventory taken while auditing this gate. Branch-tip SHAs below were observed from GitHub; “ahead” means commits unique to that branch when compared with the then-current `development` tip. The comparisons are triage evidence, not a decision that unique commits should be merged.
+
+| Branch | Tip SHA (abbreviated) | Branch-only commits vs. development | Initial disposition |
+|---|---|---:|---|
+| `development` | `618f9bd` | — | Active integration branch |
+| `master` | `cab0a89` | — | Release branch; untouched |
+| `feature/fsm-api-2.0` | `dd96646` | 93 | Preserve and review with draft PR #18 |
+| `feature/fsm-api-2.0-next` | `1dd4449` | 24 | Likely overlapping 2.0 line; compare unique commits before disposition |
+| `feature/fsm-api-2.0-registry` | `7d731c7` | 24 | Likely overlapping 2.0 line; compare unique commits before disposition |
+| `feature/fsm-api-2.0-work` | `ba2dd5d` | 24 | Likely overlapping 2.0 line; compare unique commits before disposition |
+| `feature/integer-backed-runtime` | `eaa1051` | 1 | Inspect project/target-framework and incremental-version changes |
+| `fix/manual-any-state-evaluation` | `3c6e4ca` | 15 | Preserve and reconcile with open draft PR #23 |
+| `docs/readme-standard` | `b6b0b39` | 4 | Open PR #22; review before branch cleanup |
+| `docs/benchmarking` | `b0b8ab4` | 3 | Open draft PR #20; benchmark evidence remains a release gate |
+| `AddingUnitTests` | `c054ef7` | 2 | Review old tests and project-file changes |
+| `RefactoringToHashBacking` | `d18ca45` | 2 | Review as historical design evidence; do not merge blindly |
+| `WindowsFormsEditor` | `cbf9060` | 2 | Contains a separate editor project; preserve/decide explicitly |
+| `HireMeFSMDemo` | `c7a3af5` | 1 | Inspect workflow-only commit before cleanup |
+| `Splitting-FSM_API-class-into-multiple-partial-classes` | `4193ee3` | 0 | No branch-only commits in comparison; old tip |
+| `TargetingStarcraft2DotNet` | `5318065` | 0 | No branch-only commits in comparison; old tip |
+| `TickCountingSystem` | `337ed24` | 0 | No branch-only commits in comparison; old tip |
+
+The open pull requests at inventory time were #23 (`fix/manual-any-state-evaluation`, draft), #22 (`docs/readme-standard`), #20 (`docs/benchmarking`, draft), and #18 (`feature/fsm-api-2.0`, draft), all targeting `development`. The three 2.0 side branches each report 24 branch-only commits and similar changed-file sets; treat them as probable overlapping lines of work, but compare commit ancestry and content before closing or deleting any. Branches with zero branch-only commits may still be referenced by old PRs, workflows, or documentation; verify references before removal.
+
+**Disposition:** inventory performed; no branch, PR, or release branch was changed. This snapshot is not a deletion authorization. The P0 branch gate remains open until the unique work, references, and PR outcomes are reconciled and the final remote branch list is verified.
+
 ## 1. Recover a clean 1.x baseline and release boundary
 
 ### P0
