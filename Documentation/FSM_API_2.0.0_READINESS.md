@@ -28,7 +28,7 @@
 - [ ] Preserve useful work from historical and feature branches before deleting any branch; branch deletion must not be the mechanism used to decide what work matters.
 - [ ] Treat `master` as the release branch and `development` as the only integration branch.
 - [ ] Consolidate the useful integer-runtime work from `feature/fsm-api-2.0` into a reviewable path targeting `development`; update or replace the existing draft 2.0 PR rather than losing its tests and history.
-- [ ] Reconcile the branch histories before declaring the repository clean. As of the 2026-10-19 comparison, `development` and `master` have diverged (development is 259 commits ahead and 5 behind); do not blindly merge either direction.
+- [ ] Reconcile the branch histories before declaring the repository clean. As of the 2026-10-19 comparison, `development` and `master` have diverged (development is 261 commits ahead and 5 behind); do not blindly merge either direction.
 - [ ] After preservation and verification, remove all remote branches except `master` and `development`. Confirm the final remote branch list contains exactly those two.
 - [ ] Ensure CI validates pushes and pull requests to `development` and `master`, while package publishing can occur only through the explicit release path on `master`.
 - [ ] Audit stale PRs and historical links before closing or retargeting them; preserve the meaningful technical record in this checklist or in the resulting PR.
@@ -89,7 +89,7 @@
 
 - [ ] Create a traceable parity matrix mapping each supported string-backed behavior to an integer-backed test.
 - [ ] Cover initial state selection and entry semantics, including empty definitions and invalid/missing initial states.
-- [ ] Cover update ordering, state entry/update/exit callbacks, transition guard ordering, regular and any-state transitions, and transition selection when several guards are true. **Known parity risk from source review:** both implementations run the current state's update before evaluating Any-State guards, but the string implementation continues through its regular-transition loop after an Any-State transition changes the handle, while the integer implementation takes the first Any-State transition and returns. Add a trace-based comparison and either align behavior or document an intentional difference.
+- [ ] Cover update ordering, state entry/update/exit callbacks, transition guard ordering, regular and any-state transitions, and transition selection when several guards are true. **Parity gate:** source inspection and existing tests are not enough to establish equivalent transition semantics. Add equivalent trace-based tests for Any-State precedence, regular-transition fallback, invalid targets, and lifecycle timing; resolve any observed divergence or document an intentional difference.
 - [ ] Cover timers, process rates, processing groups, manual/event-driven ticking, and tick counters.
 - [ ] Cover handle identity, context association, current state, entered-state flags, reset, pause/resume where supported, destruction, unregistration, and definition removal.
 - [ ] Cover invalid-context suspension/resumption and explicit permanent removal consistently with the agreed contract.
@@ -302,7 +302,7 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 ### Deeper transition-result finding (2026-10-19)
 
 - [x] Re-read the complete string-backed `FSM.Step` and its caller `FSMHandle.Update` rather than relying only on the transition loop.
-- [x] Confirmed the Any-State discrepancy has a second consequence: the string-backed Any-State branch mutates the registered handle's `CurrentState` and `HasEnteredCurrentState`, but does not assign `next` or return. `FSMHandle.Update` then unconditionally assigns `CurrentState = nextState`, where `nextState` is still the original state unless a regular transition also matches. Thus an Any-State-only match may be overwritten by the caller; if a regular transition also matches, that transition may overwrite the Any-State target after a second Exit.
+- [x] Reviewed the Any-State transition path and its caller. Do not treat the suspected overwrite/continued-loop behavior as a confirmed discrepancy without reproducing it against the current development source. Use trace-based tests through the real handle update path to establish final state and callback ordering.
 - [x] Confirmed the integer-backed `EvaluateConditions` documentation explicitly states Any-State first, then regular transitions, at most one transition per evaluation; the integer `Step` also returns after its first valid matching Any-State transition.
 - [x] Added a trace-based characterization for multiple matching Any-State guards and a simultaneously matching regular transition: the first valid Any-State target wins, later Any-State and regular guards are not evaluated, and the old state exits once. The corrected regression test passed the build/test/package job in run #516.
 - [x] Added a no-match characterization proving a false Any-State guard falls through to the regular transition, with callback trace assertions.
