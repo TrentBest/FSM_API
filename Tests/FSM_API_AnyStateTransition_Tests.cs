@@ -324,10 +324,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 definition.RemoveState("B");
             }));
             definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
-            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return true; });
+            var allowTransition = false;
+            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; });
 
             var handle = new FSMHandle(definition, new Context());
-            handle.HasEnteredCurrentState = true;
+            handle.Update(); // Enter A while the transition guard is false.
+            trace.Clear();
+            allowTransition = true;
 
             handle.EvaluateConditions();
 
