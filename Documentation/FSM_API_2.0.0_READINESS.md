@@ -295,16 +295,19 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Updated the string-backed `FSM.Step` to assign the matching Any-State target to `next` and return immediately after the first matching valid Any-State transition. This preserves Any-State precedence, prevents subsequent Any-State guards from firing, prevents regular-transition overwrite, and lets `FSMHandle.Update` retain the selected target.
 - [x] Added `Tests/FSM_API_AnyStateTransition_Tests.cs` to assert first-match behavior, Any-State precedence over a matching regular transition, resulting handle state, and callback trace.
 - [x] Investigated the first regression-test CI failure: the test used `Transition(FSM.AnyStateIdentifier, ...)`, which routes through the regular-transition builder API. The supported explicit API is `AnyTransition(to, condition)`; the test now uses that API in commit `a4b016f`.
-- [ ] Await CI for the corrected regression test and runtime fix. The earlier test runs failed on the test's incorrect builder call; this is not yet evidence that the runtime fix passes the intended scenario.
-- [ ] Extend coverage to no-match behavior, invalid Any-State targets, and lifecycle entry timing; inspect any test failures before further changes.
+- [x] The corrected regression test and runtime fix passed the build/test/package job in [CI run #516](https://github.com/TrentBest/FSM_API/actions/runs/39179228239) for commit `f0f78b0`; documentation validation was still in progress at checklist update time, and publishing was skipped. Earlier failures were caused by the test using the regular-transition builder API instead of `AnyTransition`. 
+- [x] Added no-match fallback coverage: when the Any-State guard returns false, the regular transition fires and the expected guard/exit trace is asserted. This is included in commit `f0f78b0` and its build/test/package job passed in run #516.
+- [ ] Extend coverage to invalid Any-State targets and lifecycle entry timing; inspect any test failures before further changes.
 - [ ] Review whether direct `FSM.Step` invocation without a registered handle should have a defined transition-result contract; the existing implementation couples target resolution to the handle lookup.
 ### Deeper transition-result finding (2026-10-19)
 
 - [x] Re-read the complete string-backed `FSM.Step` and its caller `FSMHandle.Update` rather than relying only on the transition loop.
 - [x] Confirmed the Any-State discrepancy has a second consequence: the string-backed Any-State branch mutates the registered handle's `CurrentState` and `HasEnteredCurrentState`, but does not assign `next` or return. `FSMHandle.Update` then unconditionally assigns `CurrentState = nextState`, where `nextState` is still the original state unless a regular transition also matches. Thus an Any-State-only match may be overwritten by the caller; if a regular transition also matches, that transition may overwrite the Any-State target after a second Exit.
 - [x] Confirmed the integer-backed `EvaluateConditions` documentation explicitly states Any-State first, then regular transitions, at most one transition per evaluation; the integer `Step` also returns after its first valid matching Any-State transition.
-- [ ] Add characterization tests for: one Any-State match with no regular match; multiple matching Any-State guards; Any-State and regular guards both matching; and exact Update/guard/Exit/Enter trace. Keep the contract decision explicit before implementation changes.
-- [ ] Test through the real string `FSMHandle.Update` path as well as direct blueprint evaluation, because the caller's unconditional state assignment is part of the observed behavior.
+- [x] Added a trace-based characterization for multiple matching Any-State guards and a simultaneously matching regular transition: the first valid Any-State target wins, later Any-State and regular guards are not evaluated, and the old state exits once. The corrected regression test passed the build/test/package job in run #516.
+- [x] Added a no-match characterization proving a false Any-State guard falls through to the regular transition, with callback trace assertions.
+- [ ] Add a separate Any-State-only match with no regular match, invalid Any-State target coverage, and lifecycle entry-timing coverage. Keep the contract decision explicit before declaring full parity.
+- [x] Regression coverage exercises the real handle update path and asserts the final `CurrentState`, so it covers the caller's state assignment as well as the transition trace.
 
 ### CI and PR follow-up review (2026-10-18)
 
@@ -313,3 +316,11 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] First-pass file review of [PR #22](https://github.com/TrentBest/FSM_API/pull/22): enables CI for both `master` and `development`, which matches the desired branch trigger direction, and proposes a README rewrite. It also adds an older, short version of this readiness checklist (38 lines) that conflicts with the authoritative expanded checklist now on `development`. Do not merge that stale checklist as-is; selectively review the README and workflow edits against current files.
 - [ ] Complete detailed benchmark-claim verification against the companion benchmark repository and confirm the reported values are reproducible before adopting any performance claims.
 - [ ] Reconcile PR #22's README/workflow value without replacing this authoritative readiness record; PR #20 remains subject to benchmark evidence review and a single, deliberate publish gate.
+
+
+### Any-State regression follow-up (2026-10-19)
+
+- [x] Verified the corrected test commit `f0f78b0035043fef6754c7943e1113452a38a2bf` passed the `build_test_and_package` job in [CI run #516](https://github.com/TrentBest/FSM_API/actions/runs/39179228239). At the time of this update, `build_documentation` was still in progress; `publish_nuget` was skipped.
+- [x] Confirmed [run #514](https://github.com/TrentBest/FSM_API/actions/runs/39179139688), validating the prior checklist commit, completed successfully: build/test and documentation passed, publishing skipped.
+- [ ] Recheck run #516 after the documentation job completes; only then mark the full workflow green.
+- [ ] Continue remaining transition parity work: an Any-State-only match without any regular transition, invalid-target handling, and lifecycle entry timing. Existing regression tests establish first-match precedence and false-guard fallback, not complete string/integer parity.
