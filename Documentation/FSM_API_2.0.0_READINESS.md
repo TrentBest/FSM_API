@@ -410,3 +410,11 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [ ] Reconcile PR [#18](https://github.com/TrentBest/FSM_API/pull/18) and its branch history. The original feature branch compares as 93 commits ahead and 305 behind `development` in the latest comparison; do not merge it wholesale. The runtime core files compared so far have identical blob SHAs on both branches, so inspect the remaining unique commits/files for work not represented in `development`.
 - [ ] Complete trace-based string/integer parity, storage/identity validation, reproducible benchmark evidence, multi-target/package review, and final release-candidate validation.
 - [ ] Operation Sith remains open: preserve and classify all useful branch/PR work before any branch deletion. No merge, branch deletion, `master` modification, or package publication was performed in this audit.
+
+
+### Current-development regression gate — 2026-10-19 03:57 UTC
+
+- [x] Verified development commit [`28b28db`](https://github.com/TrentBest/FSM_API/commit/28b28db38cc08ab39a2182d11db3116759de8046), which corrects the integer invalid-current-state recovery regression test to reproduce the scenario through public blueprint mutation rather than assigning internal-set properties.
+- [x] Verified [workflow #577](https://github.com/TrentBest/FSM_API/actions/runs/39197020703) completed successfully: `build_test_and_package` passed and `build_documentation` passed; `publish_nuget` was skipped. This is CI evidence for that commit only.
+- [ ] Continue trace-based string/integer parity review. The Any-State manual-evaluation fix remains isolated in draft [PR #23](https://github.com/TrentBest/FSM_API/pull/23) and is not yet part of development; do not treat its CI as proof of development parity.
+- [ ] Keep identity/storage semantics, repeatable benchmark evidence, supported-target/package validation, and divergent-branch reconciliation open. Release readiness remains approximately **40%**. No package was published, and publication remains unauthorized.
