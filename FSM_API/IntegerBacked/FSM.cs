@@ -322,6 +322,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // Exit callbacks may also remove or replace the target.
                 if (!TryGetState(transition.ToID, out var nextState))
                 {
+                    exitedWithoutTransition = true;
                     return currentID;
                 }
 
