@@ -84,7 +84,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 var previousStateID = CurrentStateID;
-                CurrentStateID = Definition.Step(CurrentStateID, Context);
+                CurrentStateID = Definition.StepDeferred(CurrentStateID, Context);
                 HasEnteredCurrentState = CurrentStateID == previousStateID && HasEnteredCurrentState;
             }
             catch (Exception ex)
