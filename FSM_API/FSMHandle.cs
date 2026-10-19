@@ -204,11 +204,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// <remarks>
         /// During this step:
         /// <list type="bullet">
-        ///     <item>The `OnUpdate` action of its <see cref="CurrentState"/> will run.</item>
-        ///     <item>It will then check if any transition rules are met to move to a new state.</item>
+        ///     <item>If the current state has not been entered, its `OnEnter` action runs first.</item>
+        ///     <item>The current state's `OnUpdate` action runs.</item>
+        ///     <item>Any-State transitions are evaluated before regular state-specific transitions.</item>
+        ///     <item>When a transition matches, the current state's `OnExit` action runs and
+        ///     <see cref="CurrentState"/> changes to the target. The target state's `OnEnter`
+        ///     action runs at the start of the next update.</item>
         /// </list>
-        /// If a transition rule is met, the FSM will exit its current state and enter the new one,
-        /// and its <see cref="CurrentState"/> will be updated.
+        /// Explicit forced transitions such as <see cref="TransitionTo(string)"/> enter their target
+        /// immediately rather than waiting for the next update.
         /// <para>
         /// **IMPORTANT: Usually, you won't call this directly!** This method is typically called
         /// automatically by the FSM_API's internal system on a regular schedule (like every frame in a game).
