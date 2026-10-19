@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -65,6 +66,27 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var runtime = new IntegerFSMRuntime();
 
             Assert.That(runtime.GetHandleCount(7), Is.Zero);
+        }
+
+
+        [Test]
+        public void Register_RejectsMaximumFSMIDBeforeCapacityCalculation()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateFSM(int.MaxValue);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => runtime.Register(fsm));
+            Assert.That(runtime.Contains(int.MaxValue), Is.False);
+        }
+
+        [Test]
+        public void AddState_RejectsMaximumStateIDBeforeCapacityCalculation()
+        {
+            var fsm = new IntegerFSM(1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                fsm.AddState(new IntegerFSMState(int.MaxValue, null, null, null)));
+            Assert.That(fsm.HasState(int.MaxValue), Is.False);
         }
 
         private static IntegerFSM CreateFSM(int id)
