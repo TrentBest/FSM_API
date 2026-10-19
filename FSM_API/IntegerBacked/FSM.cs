@@ -265,7 +265,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                nextState.Enter(context);
+                // Normal transitions defer target entry until the next handle update,
+                // matching the string-backed runtime. ForceTransition remains immediate.
                 return transition.ToID;
             }
 
@@ -278,7 +279,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                nextState.Enter(context);
+                // Normal transitions defer target entry until the next handle update,
+                // matching the string-backed runtime. ForceTransition remains immediate.
                 return transition.ToID;
             }
 
