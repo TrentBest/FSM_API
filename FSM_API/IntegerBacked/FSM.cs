@@ -51,9 +51,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(state));
             }
 
-            if (state.StateID < 0 || state.StateID == AnyStateIdentifier)
+            if (state.StateID < 0 || state.StateID == AnyStateIdentifier || state.StateID == int.MaxValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes that can be incremented to a required array length.");
             }
 
             EnsureStateCapacity(state.StateID + 1);
@@ -466,7 +466,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             var newLength = _states.Length == 0 ? 4 : _states.Length;
             while (newLength < requiredLength)
             {
-                newLength *= 2;
+                newLength = newLength > int.MaxValue / 2 ? requiredLength : newLength * 2;
             }
 
             Array.Resize(ref _states, newLength);
