@@ -107,5 +107,34 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "exit:A"
             }));
         }
+        [Test]
+        public void AnyStateTransition_InvalidTargetIsSkippedBeforeGuardEvaluation()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateInvalidTarget";
+            const string group = "AnyStateInvalidTargetTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
+                .State("B", null, null, null)
+                .WithInitialState("A")
+                .AnyTransition("Missing", _ => { trace.Add("guard:missing"); return true; })
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.Update(group);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "update:A",
+                "guard:any:B",
+                "exit:A"
+            }));
+        }
+
     }
 }
