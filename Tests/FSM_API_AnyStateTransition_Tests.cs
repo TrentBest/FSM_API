@@ -136,5 +136,27 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             }));
         }
 
+        [Test]
+        public void AnyStateTransition_IsEvaluatedByScheduledUpdate()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateScheduled";
+            const string group = "AnyStateScheduledTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, group)
+                .State("A", _ => trace.Add("enter:A"), _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+
+            FSM_API.Interaction.Update(group);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(trace, Does.Contain("guard:any:B"));
+            Assert.That(trace, Does.Contain("exit:A"));
+        }
     }
 }
