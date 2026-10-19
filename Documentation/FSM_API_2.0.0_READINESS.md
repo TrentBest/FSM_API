@@ -397,6 +397,6 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 
 - [x] Fixed the regression-test compile error by importing `System` in `Tests/FSM_API_AnyStateTransition_Tests.cs` (the test uses `InvalidOperationException`). Fix commit: [`1a40ed5`](https://github.com/TrentBest/FSM_API/commit/1a40ed512b5072a7b5434df4e7b3fb74e2296dc3).
 - [x] Verified corrected PR head in [workflow run #543](https://github.com/TrentBest/FSM_API/actions/runs/39184170040): `build_test_and_package` and `build_documentation` succeeded; `publish_nuget` was skipped.
-- [x] Added a regression test confirming a throwing Any-State guard is reported and does not prevent a subsequent eligible regular guard from transitioning. The test is present on the PR head validated by run #543.
+- [x] Added a regression test confirming a throwing Any-State guard is handled without aborting evaluation and does not prevent a subsequent eligible regular guard from transitioning. The test is present on the PR head validated by run #543.
 - [ ] Complete the manual-evaluation audit for regular-transition target safety and any concurrency edge cases; verify latest `development`-head CI independently.
 - [ ] PR #23 remains unmerged; PR CI is not proof that `development` itself contains the fix. No package publication is authorized by this checklist update.
