@@ -453,6 +453,9 @@ namespace TheSingularityWorkshop.FSM_API
                             handle.CurrentState = t.To; // Update the FSM handle's current state
                             handle.HasEnteredCurrentState = false;
                         }
+
+                        next = t.To;
+                        return; // Any-State transitions take precedence over state-specific transitions.
                     }
                 }
                 catch (Exception ex)
