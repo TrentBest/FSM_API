@@ -249,19 +249,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         public int Step(int currentID, IStateContext context)
         {
             // Preserve the public direct-Step contract: a direct step enters its target immediately.
-            return StepCore(currentID, context, enterTargetImmediately: true);
+            return StepCore(currentID, context, enterTargetImmediately: true, out _);
         }
 
         /// <summary>
         /// Executes a normal handle update, deferring transition-target entry until the next update.
         /// </summary>
-        internal int StepDeferred(int currentID, IStateContext context)
+        internal int StepDeferred(int currentID, IStateContext context, out bool exitedWithoutTransition)
         {
-            return StepCore(currentID, context, enterTargetImmediately: false);
+            return StepCore(currentID, context, enterTargetImmediately: false, out exitedWithoutTransition);
         }
 
-        private int StepCore(int currentID, IStateContext context, bool enterTargetImmediately)
+        private int StepCore(int currentID, IStateContext context, bool enterTargetImmediately, out bool exitedWithoutTransition)
         {
+            exitedWithoutTransition = false;
             if (!TryGetState(currentID, out var currentState))
             {
                 ForceTransition(currentID, InitialStateID, context);
@@ -291,6 +292,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // after Exit rather than entering a stale object captured before user code.
                 if (!TryGetState(transition.ToID, out var nextState))
                 {
+                    exitedWithoutTransition = true;
                     return currentID;
                 }
 
