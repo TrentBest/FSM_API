@@ -284,6 +284,36 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
 
         [Test]
+        public void EvaluateConditions_SkipsTargetRemovedByGuard()
+        {
+            var trace = new List<string>();
+            var definition = new FSM { Name = "ManualTargetRemovedByGuard", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, _ => trace.Add("exit:A")));
+            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            definition.AddState(new FSMState("C", _ => trace.Add("enter:C"), null, null));
+            definition.AddAnyStateTransition("B", _ =>
+            {
+                trace.Add("guard:any:B");
+                definition.RemoveState("B");
+                return true;
+            });
+            definition.AddAnyStateTransition("C", _ => { trace.Add("guard:any:C"); return true; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("C"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "guard:any:B",
+                "guard:any:C",
+                "exit:A",
+                "enter:C"
+            }));
+        }
+
+        [Test]
         public void EvaluateConditions_ContinuesAfterThrowingAnyStateGuard()
         {
             var trace = new List<string>();
