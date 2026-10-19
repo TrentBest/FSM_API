@@ -941,12 +941,13 @@ namespace TheSingularityWorkshop.FSM_API
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
 
                                 // GetAllTransitions returns Any-State transitions before state-specific
-                                // transitions. Match the Any-State sentinel explicitly so scheduled
-                                // ticks follow the same transition precedence as FSM.Step().
+                                // transitions. Recognize both the public sentinel and the builder's
+                                // legacy "*" marker so scheduled ticks evaluate global transitions.
                                 var transitions = bucket.Definition.GetAllTransitions();
                                 foreach (var transition in transitions)
                                 {
                                     if (transition.From != FSM.AnyStateIdentifier &&
+                                        transition.From != "*" &&
                                         transition.From != handle.CurrentState)
                                     {
                                         continue;
