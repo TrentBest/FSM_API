@@ -215,28 +215,89 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
-                ForceTransition(currentID, transition.ToID, context);
-                return transition.ToID;
+                // A guard is user code and may remove or replace this transition, or
+                // remove earlier entries and shift the list while it is being evaluated.
+                var matched = transition.Evaluate(context);
+                var currentIndex = _anyStateTransitions.IndexOf(transition);
+                if (currentIndex < 0)
+                {
+                    i--;
+                    continue;
+                }
+
+                i = currentIndex;
+                if (!matched || !TryGetState(transition.ToID, out _))
+                {
+                    continue;
+                }
+
+                if (TryEvaluateTransition(currentID, transition, _anyStateTransitions, context))
+                {
+                    return transition.ToID;
+                }
+
+                return currentID;
             }
 
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
-                ForceTransition(currentID, transition.ToID, context);
-                return transition.ToID;
+                var matched = transition.Evaluate(context);
+                var currentIndex = _transitions.IndexOf(transition);
+                if (currentIndex < 0)
+                {
+                    i--;
+                    continue;
+                }
+
+                i = currentIndex;
+                if (!matched || !TryGetState(transition.ToID, out _))
+                {
+                    continue;
+                }
+
+                if (TryEvaluateTransition(currentID, transition, _transitions, context))
+                {
+                    return transition.ToID;
+                }
+
+                return currentID;
             }
 
             return currentID;
+        }
+
+        private bool TryEvaluateTransition(int currentID, FSMTransition transition, List<FSMTransition> transitions, IStateContext context)
+        {
+            if (!transitions.Contains(transition) || !TryGetState(transition.ToID, out var nextState))
+            {
+                return false;
+            }
+
+            if (TryGetState(currentID, out var currentState))
+            {
+                currentState.Exit(context);
+            }
+
+            // Exit callbacks may edit the blueprint. Do not enter a target for a
+            // transition that no longer exists or whose target was removed.
+            if (!transitions.Contains(transition) || !TryGetState(transition.ToID, out nextState))
+            {
+                return false;
+            }
+
+            nextState.Enter(context);
+            return true;
         }
 
         /// <summary>
