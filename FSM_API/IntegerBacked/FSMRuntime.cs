@@ -27,9 +27,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (definition.FSM_ID < 0)
+            if (definition.FSM_ID < 0 || definition.FSM_ID == int.MaxValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes that can be incremented to a required array length.");
             }
 
             definition.ProcessingGroupID = processingGroupID;
@@ -252,7 +252,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             var newLength = _definitions.Length == 0 ? 4 : _definitions.Length;
             while (newLength < requiredLength)
             {
-                newLength *= 2;
+                newLength = newLength > int.MaxValue / 2 ? requiredLength : newLength * 2;
             }
 
             Array.Resize(ref _definitions, newLength);
