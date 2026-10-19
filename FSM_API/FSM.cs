@@ -444,10 +444,10 @@ namespace TheSingularityWorkshop.FSM_API
                         // commit a transition whose target disappeared during Exit.
                         if (!_states.ContainsKey(t.To))
                         {
-                            var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                            if (handle != null)
+                            var transitionHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (transitionHandle != null)
                             {
-                                handle.HasEnteredCurrentState = false;
+                                transitionHandle.HasEnteredCurrentState = false;
                             }
 
                             return;
@@ -501,10 +501,10 @@ namespace TheSingularityWorkshop.FSM_API
                             // commit a transition whose target disappeared during Exit.
                             if (!_states.ContainsKey(t.To))
                             {
-                                var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                                if (handle != null)
+                                var transitionHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (transitionHandle != null)
                                 {
-                                    handle.HasEnteredCurrentState = false;
+                                    transitionHandle.HasEnteredCurrentState = false;
                                 }
 
                                 return;
