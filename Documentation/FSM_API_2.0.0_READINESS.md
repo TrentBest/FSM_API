@@ -376,3 +376,9 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [ ] CI for PR #23 is queued as [workflow run #538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759). Do not mark the fix validated until build/tests and documentation complete successfully.
 - [ ] Review the broader manual-evaluation contract after CI: regular transition target safety, exception behavior, and parity with the scheduled path still require explicit characterization.
 - [ ] This PR is not merged and does not change `master`; no package was published. Release readiness remains below 100%.
+
+
+- [x] Rechecked PR #23 workflow [#538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759): `build_test_and_package` and `build_documentation` both completed successfully; `publish_nuget` was skipped as intended. This validates the PR head's current build/test/package and documentation jobs.
+- [x] Audited the manual-evaluation patch against `FSM.ForceTransition`: forced transitions invoke Exit and then Enter immediately, matching the explicit-transition contract; the patch skips missing targets before evaluating their guards and sets `HasEnteredCurrentState` after a successful forced transition.
+- [ ] Extend focused manual-evaluation tests for Any-State precedence over a true regular transition, invalid-target skip, and no-match behavior; existing scheduled-path tests do not establish those manual-path cases.
+- [ ] Review manual evaluation's exception/reporting behavior and regular-transition safety before declaring transition-path parity complete. Do not merge PR #23 or publish a package without explicit authorization.
