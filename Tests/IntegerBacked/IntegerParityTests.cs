@@ -91,6 +91,34 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Handle_InvalidCurrentStateRecovery_EntersInitialStateOnlyOnce()
+        {
+            var trace = new System.Collections.Generic.List<string>();
+            var definition = new IntegerFsm(23007);
+            definition.AddState(new IntegerFsmState(0,
+                _ => trace.Add("enter:initial"),
+                _ => trace.Add("update:initial"),
+                _ => trace.Add("exit:initial")));
+            definition.AddState(new IntegerFsmState(1, null, null, null));
+
+            var handle = new IntegerFsmHandle(definition, new Context());
+            handle.Initialize();
+            handle.CurrentStateID = 99; // Simulate a stale ID after definition mutation.
+            handle.HasEnteredCurrentState = true;
+            trace.Clear();
+
+            handle.Update();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(0));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[] { "enter:initial" }));
+
+            trace.Clear();
+            handle.Update();
+            Assert.That(trace, Is.EqualTo(new[] { "update:initial" }));
+        }
+
+        [Test]
         public void SparseIntegerStateIDs_AreSupportedByDirectIndexedStorage()
         {
             var definition = new IntegerFsm(23003);
