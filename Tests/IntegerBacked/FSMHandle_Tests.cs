@@ -99,6 +99,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             handle.Update();
 
             Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+
+            handle.Update();
+
             Assert.That(handle.HasEnteredCurrentState, Is.True);
         }
 
