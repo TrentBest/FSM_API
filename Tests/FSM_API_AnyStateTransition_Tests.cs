@@ -158,5 +158,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Does.Contain("guard:any:B"));
             Assert.That(trace, Does.Contain("exit:A"));
         }
+
+        [Test]
+        public void ManualHandleUpdate_EntersInitialStateBeforeUpdating()
+        {
+            var trace = new List<string>();
+            const string fsmName = "ManualLifecycle";
+            const string group = "ManualLifecycleTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", _ => trace.Add("enter:A"), _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
+                .WithInitialState("A")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            handle.Update(group);
+
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[] { "enter:A", "update:A" }));
+        }
+
     }
 }
