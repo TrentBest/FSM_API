@@ -288,3 +288,12 @@ These are review blockers/questions, not a claim that every change is necessaril
 - [ ] Review the existing string `FSMHandle.Update` / scheduler lifecycle before designing the cross-runtime harness, because the string runtime's `Step` updates the handle and defers entry handling through the handle's entered-state flag, whereas integer `Step` directly calls `Enter`/ `Exit`.
 
 This is a source-level finding only; no runtime behavior was changed in this review. Preserve string API compatibility unless a deliberate breaking change is explicitly approved.
+
+
+### CI and PR follow-up review (2026-10-18)
+
+- [x] [Workflow run #506](https://github.com/TrentBest/FSM_API/actions/runs/39178743981) completed successfully for checklist commit `c02989b`: build/test/package succeeded, documentation generation/link validation succeeded, and NuGet publishing was skipped. This run did not include the subsequent checklist-only commit `6d772d9`; the next push will trigger its own validation.
+- [x] First-pass file review of [PR #20](https://github.com/TrentBest/FSM_API/pull/20): adds benchmark documentation and README material, but its only workflow change appends another `&& false` to the publish condition. The documentation should be evaluated against the companion benchmark repo's executable workload, raw output, environment, and dates; the PR remains draft and is not merged.
+- [x] First-pass file review of [PR #22](https://github.com/TrentBest/FSM_API/pull/22): enables CI for both `master` and `development`, which matches the desired branch trigger direction, and proposes a README rewrite. It also adds an older, short version of this readiness checklist (38 lines) that conflicts with the authoritative expanded checklist now on `development`. Do not merge that stale checklist as-is; selectively review the README and workflow edits against current files.
+- [ ] Complete detailed benchmark-claim verification against the companion benchmark repository and confirm the reported values are reproducible before adopting any performance claims.
+- [ ] Reconcile PR #22's README/workflow value without replacing this authoritative readiness record; PR #20 remains subject to benchmark evidence review and a single, deliberate publish gate.
