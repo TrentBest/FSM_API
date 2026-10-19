@@ -416,6 +416,67 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Step_DoesNotCommitTransitionRemovedByItsGuard()
+        {
+            var exited = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exited = true));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                fsm.RemoveTransition(10, 20);
+                return true;
+            });
+
+            var result = fsm.Step(10, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(exited, Is.False);
+            Assert.That(fsm.HasTransition(10, 20), Is.False);
+        }
+
+        [Test]
+        public void Step_DoesNotCommitTransitionReplacedByItsGuard()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                fsm.AddTransition(10, 20, __ => false);
+                return true;
+            });
+
+            var result = fsm.Step(10, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(entered, Is.False);
+            Assert.That(fsm.HasTransition(10, 20), Is.True);
+        }
+
+        [Test]
+        public void Step_DoesNotCommitTransitionRemovedByExitCallback()
+        {
+            var exited = false;
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exited = true;
+                fsm.RemoveTransition(10, 20);
+            }));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            var result = fsm.Step(10, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(exited, Is.True);
+            Assert.That(entered, Is.False);
+        }
+
+        [Test]
         public void AddAnyStateTransition_UsesReservedAnyStateIdentity()
         {
             var fsm = new IntegerFSM(1);
