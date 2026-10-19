@@ -84,8 +84,19 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 var previousStateID = CurrentStateID;
+                var previousStateWasDefined = Definition.HasState(previousStateID);
                 CurrentStateID = Definition.StepDeferred(CurrentStateID, Context);
-                HasEnteredCurrentState = CurrentStateID == previousStateID && HasEnteredCurrentState;
+
+                // Invalid-state recovery forces entry into the initial state immediately.
+                // Keep the handle flag aligned so the next update does not enter it twice.
+                if (!previousStateWasDefined && Definition.HasState(CurrentStateID))
+                {
+                    HasEnteredCurrentState = true;
+                }
+                else
+                {
+                    HasEnteredCurrentState = CurrentStateID == previousStateID && HasEnteredCurrentState;
+                }
             }
             catch (Exception ex)
             {
