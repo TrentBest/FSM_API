@@ -348,3 +348,6 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [ ] Validate the scheduled Any-State fix in development CI; run [#523](https://github.com/TrentBest/FSM_API/actions/runs/39179884700) was queued when this note was written.
 - [ ] Continue lifecycle parity review, including consistency between `FSM.Step` documentation and its actual execution order; do not claim full parity from the scheduler regression alone.
 
+- [x] Follow-up inspection found that `FSMBuilder.AnyTransition` stores the legacy source marker `"*"`, while the direct FSM API also defines `FSM.AnyStateIdentifier`. The first scheduler fix recognized only the latter; CI run [#523](https://github.com/TrentBest/FSM_API/actions/runs/39179884700) confirmed the scheduled regression still failed.
+- [x] Updated commit [`d32e5aa`](https://github.com/TrentBest/FSM_API/commit/d32e5aa3fbeb70652ed89a13317732dfdba4e772) to recognize both markers. Validate this follow-up in the next development CI run before closing the regression.
+
