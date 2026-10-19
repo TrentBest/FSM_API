@@ -281,5 +281,42 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "guard:regular" }));
         }
 
+
+        [Test]
+        public void EvaluateConditions_ContinuesAfterThrowingAnyStateGuard()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateManualGuardException";
+            const string group = "AnyStateManualGuardExceptionTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, null, _ => trace.Add("exit:A"))
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .State("C", _ => trace.Add("enter:C"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ =>
+                {
+                    trace.Add("guard:any:throws");
+                    throw new InvalidOperationException("expected guard failure");
+                })
+                .Transition("A", "C", _ => { trace.Add("guard:regular"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            Assert.DoesNotThrow(() => handle.EvaluateConditions());
+
+            Assert.That(handle.CurrentState, Is.EqualTo("C"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "guard:any:throws",
+                "guard:regular",
+                "exit:A",
+                "enter:C"
+            }));
+        }
+
     }
 }
