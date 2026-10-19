@@ -207,5 +207,79 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             }));
         }
 
+        [Test]
+        public void EvaluateConditions_AnyStateMatchPreemptsTrueRegularTransition()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateManualPrecedence";
+            const string group = "AnyStateManualPrecedenceTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, null, _ => trace.Add("exit:A"))
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .State("C", _ => trace.Add("enter:C"), null, null)
+                .WithInitialState("A")
+                .Transition("A", "C", _ => { trace.Add("guard:regular"); return true; })
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "exit:A", "enter:B" }));
+        }
+
+        [Test]
+        public void EvaluateConditions_InvalidAnyStateTargetIsSkippedBeforeGuard()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateManualInvalidTarget";
+            const string group = "AnyStateManualInvalidTargetTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, null, null)
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("Missing", _ => { trace.Add("guard:missing"); return true; })
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "enter:B" }));
+        }
+
+        [Test]
+        public void EvaluateConditions_NoMatchingTransitionLeavesStateUnchanged()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateManualNoMatch";
+            const string group = "AnyStateManualNoMatchTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, null, _ => trace.Add("exit:A"))
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return false; })
+                .Transition("A", "B", _ => { trace.Add("guard:regular"); return false; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("A"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "guard:regular" }));
+        }
+
     }
 }
