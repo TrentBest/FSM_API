@@ -324,3 +324,11 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Confirmed [run #514](https://github.com/TrentBest/FSM_API/actions/runs/39179139688), validating the prior checklist commit, completed successfully: build/test and documentation passed, publishing skipped.
 - [ ] Recheck run #516 after the documentation job completes; only then mark the full workflow green.
 - [ ] Continue remaining transition parity work: an Any-State-only match without any regular transition, invalid-target handling, and lifecycle entry timing. Existing regression tests establish first-match precedence and false-guard fallback, not complete string/integer parity.
+
+
+### Any-State-only regression coverage (2026-10-19)
+
+- [x] Added a focused regression test for an Any-State guard that matches when no regular transitions are defined. It asserts the handle ends the update in the selected target state and checks the exact update/guard/exit trace.
+- [ ] Validate test commit [`79a71c6`](https://github.com/TrentBest/FSM_API/commit/79a71c6942f7d30d7c5843ebde5047dba6a5dbe7) in development CI before treating the new test as passing.
+- [ ] Continue with invalid Any-State target behavior and lifecycle entry timing; do not infer full string/integer parity from this test alone.
+- [x] Confirmed checklist commit [`0e392a1`](https://github.com/TrentBest/FSM_API/commit/0e392a14018e13c95f65218c679d5cdf675dad01) completed [CI run #517](https://github.com/TrentBest/FSM_API/actions/runs/39179333904) successfully: build/test/package and documentation passed; NuGet publishing was skipped.
