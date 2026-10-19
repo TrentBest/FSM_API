@@ -85,7 +85,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
                 var previousStateID = CurrentStateID;
                 var previousStateWasDefined = Definition.HasState(previousStateID);
-                CurrentStateID = Definition.StepDeferred(CurrentStateID, Context);
+                CurrentStateID = Definition.StepDeferred(CurrentStateID, Context, out var exitedWithoutTransition);
+
+                if (exitedWithoutTransition)
+                {
+                    HasEnteredCurrentState = false;
+                    return;
+                }
 
                 // Invalid-state recovery forces entry into the initial state immediately.
                 // Keep the handle flag aligned so the next update does not enter it twice.
