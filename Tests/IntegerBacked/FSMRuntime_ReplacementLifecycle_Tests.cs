@@ -1,3 +1,4 @@
+using System.Reflection;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
@@ -26,15 +27,23 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             runtime.Register(definition);
             IntegerFSMHandleInt handle = runtime.CreateInstance(7, new TestContext());
 
-            Assert.That(handle.IsRegistered, Is.True);
+            Assert.That(GetRegistrationFlag(handle), Is.True);
 
             var replacement = new IntegerFSM(7, -1);
             replacement.AddState(new IntegerFSMState(0, null, null, null));
             runtime.Register(replacement);
 
             Assert.That(runtime.GetHandleCount(0), Is.Zero);
-            Assert.That(handle.IsRegistered, Is.False,
+            Assert.That(GetRegistrationFlag(handle), Is.False,
                 "Replacing a definition removes its handles, so their registration flag must be cleared too.");
+        }
+
+        private static bool GetRegistrationFlag(IntegerFSMHandleInt handle)
+        {
+            var property = typeof(IntegerFSMHandleInt).GetProperty(
+                "IsRegistered", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(property, Is.Not.Null, "The runtime registration flag should remain an internal implementation detail.");
+            return (bool)property.GetValue(handle);
         }
     }
 }
