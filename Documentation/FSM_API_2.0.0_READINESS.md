@@ -4,7 +4,7 @@
 
 **Purpose:** one source-controlled checklist for taking FSM_API from the published 1.x line to the first 2.0 package with integer-backed execution. This is a release gate, not a promise that every item is already implemented.
 
-> **Current status (2026-10-18, active integration):** the integer-backed runtime and its test suite have now been ported into `development`; a deterministic string-to-integer compiler and focused compiler tests have also been added. These new changes are **not yet validated by a recorded CI run**. Full string/integer parity, benchmark evidence, branch cleanup, package validation, and release remain open. The historical 400/400 result applies only to the original feature-branch commit, not this integration.
+> **Current status (2026-10-18, active integration):** the integer-backed runtime and deterministic compiler bridge are present on `development`. Current-development CI run [#504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802) passed 401 tests and the documentation build for commit `e6c2638`; publishing was skipped. A newer checklist-only commit is being validated by run [#506](https://github.com/TrentBest/FSM_API/actions/runs/39178743981). This is integration evidence, not release readiness: trace-based parity, benchmark evidence, branch reconciliation, package validation, and release remain open. The historical 400/400 result applies only to the original feature-branch commit.
 
 ## Release rule
 
@@ -277,3 +277,14 @@ These are review blockers/questions, not a claim that every change is necessaril
 - [ ] Before any release, reconcile the workflow policy deliberately: preserve the explicit boolean confirmation and master-only release boundary, then validate the resulting workflow in a real run. Do not remove the master-side disabled gate without explicit release authorization.
 - [ ] PR #18 (integer-backed runtime), PR #20 (benchmark documentation), and PR #22 (README alignment) are still open in the latest search; #18 and #20 are drafts. Review each PR's exact base/head and changed-file overlap before merge, retarget, or closure. No PR was merged or closed during this audit.
 - [x] Current-`development` CI verified for commit `e6c2638935f2e478ab9807dcc9cfca12ca733f8a`: [run #504](https://github.com/TrentBest/FSM_API/actions/runs/39178589802) completed successfully; build/test/package and documentation jobs passed, with 401 tests passing and publish skipped. This does not certify a release commit.
+
+
+### Runtime transition source review (2026-10-18)
+
+- [x] Compared the current string-backed `FSM.Step` with `IntegerBacked.FSM.Step`.
+- [x] Confirmed a concrete semantic mismatch: the integer runtime evaluates the current state's `Update`, then takes the **first matching valid Any-State transition** and returns before checking regular transitions. The string runtime evaluates `Update`, then continues through all Any-State transitions without returning; it can call the old state's `Exit` multiple times, overwrite the handle's state more than once, and then evaluate a regular transition from the original state and overwrite the result again.
+- [ ] Do not patch this solely to make source look alike. Add trace-based tests that characterize callback order and transition selection on both paths; define the compatibility contract and expected single-step semantics, then align the implementation to that contract.
+- [ ] Extend parity tests beyond this transition case to include initial entry, manual condition evaluation, forced transitions, exception behavior, and handle lifecycle. The current `IntegerParityTests` has focused integer-only assertions but is not yet a cross-runtime trace parity suite.
+- [ ] Review the existing string `FSMHandle.Update` / scheduler lifecycle before designing the cross-runtime harness, because the string runtime's `Step` updates the handle and defers entry handling through the handle's entered-state flag, whereas integer `Step` directly calls `Enter`/ `Exit`.
+
+This is a source-level finding only; no runtime behavior was changed in this review. Preserve string API compatibility unless a deliberate breaking change is explicitly approved.
