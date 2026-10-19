@@ -373,12 +373,21 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Source review identified a separate manual-evaluation gap: `FSMHandle.EvaluateConditions()` filtered transitions to `From == CurrentState`, excluding Any-State transitions despite the API documentation defining them as global and `GetAllTransitions()` returning them first.
 - [x] Opened draft PR [#23](https://github.com/TrentBest/FSM_API/pull/23) on isolated branch `fix/manual-any-state-evaluation`. The proposed fix includes canonical and legacy Any-State markers, skips missing targets before invoking guards, and synchronizes `CurrentState` / `HasEnteredCurrentState` after a successful forced transition.
 - [x] Added a trace-based regression test for manually evaluating an Any-State transition without regular transitions.
-- [ ] CI for PR #23 is queued as [workflow run #538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759). Do not mark the fix validated until build/tests and documentation complete successfully.
+- [x] Initial PR #23 validation completed in [workflow run #538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759): build/test/package and documentation passed; NuGet publishing was skipped. Subsequent regression-test coverage was added and validated separately in run #541.
 - [ ] Review the broader manual-evaluation contract after CI: regular transition target safety, exception behavior, and parity with the scheduled path still require explicit characterization.
 - [ ] This PR is not merged and does not change `master`; no package was published. Release readiness remains below 100%.
 
 
 - [x] Rechecked PR #23 workflow [#538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759): `build_test_and_package` and `build_documentation` both completed successfully; `publish_nuget` was skipped as intended. This validates the PR head's current build/test/package and documentation jobs.
 - [x] Audited the manual-evaluation patch against `FSM.ForceTransition`: forced transitions invoke Exit and then Enter immediately, matching the explicit-transition contract; the patch skips missing targets before evaluating their guards and sets `HasEnteredCurrentState` after a successful forced transition.
-- [ ] Extend focused manual-evaluation tests for Any-State precedence over a true regular transition, invalid-target skip, and no-match behavior; existing scheduled-path tests do not establish those manual-path cases.
+- [x] Extended focused manual-evaluation tests for Any-State precedence over a true regular transition, invalid-target skip before guard invocation, and no-match behavior. The expanded test commit is [`afc21af`](https://github.com/TrentBest/FSM_API/commit/afc21af3f0c1cf23b492dcfe330ad62c87df98a7); all CI jobs are now complete in [run #541](https://github.com/TrentBest/FSM_API/actions/runs/39183015409): build/test/package and documentation passed, publish skipped.
 - [ ] Review manual evaluation's exception/reporting behavior and regular-transition safety before declaring transition-path parity complete. Do not merge PR #23 or publish a package without explicit authorization.
+
+
+### Expanded manual-evaluation verification (2026-10-19, UTC)
+
+- [x] Verified test commit [`afc21af`](https://github.com/TrentBest/FSM_API/commit/afc21af3f0c1cf23b492dcfe330ad62c87df98a7) with [CI run #541](https://github.com/TrentBest/FSM_API/actions/runs/39183015409): `build_test_and_package` succeeded, `build_documentation` succeeded, and `publish_nuget` was skipped.
+- [x] Confirmed the checklist's development-branch blob before this update was `61e9cca2eb7b103f27768c63b835081ff313a462`; this update records the complete PR-branch verification evidence, but does not claim the PR is merged or that development itself includes the fix.
+- [ ] Characterize manual guard exception handling and regular-transition target safety, then decide whether those behaviors should match the scheduled path or be documented as distinct.
+- [ ] Recheck the latest development-head CI independently. PR-branch CI is not proof that development or the release candidate is green.
+- [ ] Keep PR #23 unmerged and publishing unauthorized until the remaining review and explicit release approval are complete.
