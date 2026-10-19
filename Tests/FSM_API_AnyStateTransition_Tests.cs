@@ -79,6 +79,5 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "exit:A"
             }));
         }
-        }
     }
 }
