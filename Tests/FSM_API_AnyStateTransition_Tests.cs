@@ -48,5 +48,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "exit:A"
             }));
         }
+
+        [Test]
+        public void AnyStateTransition_NoMatch_AllowsRegularTransition()
+        {
+            var trace = new List<string>();
+            const string fsmName = "AnyStateNoMatch";
+            const string group = "AnyStateNoMatchTests";
+
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
+                .State("B", null, null, null)
+                .State("C", null, null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return false; })
+                .Transition("A", "C", _ => { trace.Add("guard:regular"); return true; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            trace.Clear();
+
+            handle.Update(group);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("C"));
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "update:A",
+                "guard:any:B",
+                "guard:regular",
+                "exit:A"
+            }));
+        }
+        }
     }
 }
