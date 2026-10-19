@@ -340,6 +340,32 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         }
 
         [Test]
+        public void Step_DoesNotRecordTargetRemovedByExitCallback()
+        {
+            var trace = new List<string>();
+            var definition = new FSM { Name = "StepTargetRemovedByExit", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, _ => trace.Add("update:A"), _ =>
+            {
+                trace.Add("exit:A");
+                definition.RemoveState("B");
+            }));
+            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            var allowTransition = false;
+            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.Update(); // Enter A and leave the transition guard false.
+            trace.Clear();
+            allowTransition = true;
+
+            handle.Update();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("A"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "update:A", "guard:any:B", "exit:A" }));
+        }
+
+        [Test]
         public void EvaluateConditions_ContinuesAfterThrowingAnyStateGuard()
         {
             var trace = new List<string>();
