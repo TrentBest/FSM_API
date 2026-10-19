@@ -367,3 +367,12 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Refreshed the live `master...development` comparison on 2026-10-19: `development` is **251 commits ahead and 5 behind** `master`. This is a newer snapshot than the 217-ahead count recorded above; the branches remain divergent, so no merge or branch deletion is implied.
 - [ ] Next technical gate remains a trace-driven lifecycle/parity audit, including entry timing after scheduled and manual transitions, reset/forced-transition semantics, invalid targets, and cross-runtime equivalence. Keep the Renderer `DestroyInstance` report on its separate reproduction track: the LLM handoff documents that the public contract does not promise arbitrary concurrent structural mutations, and no runtime synchronization patch should be made without a focused reproducer.
 - [ ] Reconfirm the latest head's full CI and update this checklist with exact commit/run evidence before promoting any further release gate. No package was published; publication remains explicitly unauthorized.
+
+### Manual condition evaluation parity follow-up (2026-10-19, UTC)
+
+- [x] Source review identified a separate manual-evaluation gap: `FSMHandle.EvaluateConditions()` filtered transitions to `From == CurrentState`, excluding Any-State transitions despite the API documentation defining them as global and `GetAllTransitions()` returning them first.
+- [x] Opened draft PR [#23](https://github.com/TrentBest/FSM_API/pull/23) on isolated branch `fix/manual-any-state-evaluation`. The proposed fix includes canonical and legacy Any-State markers, skips missing targets before invoking guards, and synchronizes `CurrentState` / `HasEnteredCurrentState` after a successful forced transition.
+- [x] Added a trace-based regression test for manually evaluating an Any-State transition without regular transitions.
+- [ ] CI for PR #23 is queued as [workflow run #538](https://github.com/TrentBest/FSM_API/actions/runs/39181325759). Do not mark the fix validated until build/tests and documentation complete successfully.
+- [ ] Review the broader manual-evaluation contract after CI: regular transition target safety, exception behavior, and parity with the scheduled path still require explicit characterization.
+- [ ] This PR is not merged and does not change `master`; no package was published. Release readiness remains below 100%.
