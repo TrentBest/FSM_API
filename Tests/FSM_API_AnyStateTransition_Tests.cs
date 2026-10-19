@@ -343,22 +343,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Step_DoesNotRecordTargetRemovedByExitCallback()
         {
             var trace = new List<string>();
-            var definition = new FSM { Name = "StepTargetRemovedByExit", InitialState = "A" };
-            definition.AddState(new FSMState("A", null, _ => trace.Add("update:A"), _ =>
-            {
-                trace.Add("exit:A");
-                definition.RemoveState("B");
-            }));
-            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            FSM definition = null;
             var allowTransition = false;
-            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; });
+            const string fsmName = "StepTargetRemovedByExit";
+            const string group = "StepTargetRemovedByExitTests";
 
-            var handle = new FSMHandle(definition, new Context());
-            handle.Update(); // Enter A and leave the transition guard false.
+            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+                .State("A", null, _ => trace.Add("update:A"), _ =>
+                {
+                    trace.Add("exit:A");
+                    definition.RemoveState("B");
+                })
+                .State("B", _ => trace.Add("enter:B"), null, null)
+                .WithInitialState("A")
+                .AnyTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; })
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            definition = handle.Definition;
+            handle.Update(group); // Enter A and leave the transition guard false.
             trace.Clear();
             allowTransition = true;
 
-            handle.Update();
+            handle.Update(group);
 
             Assert.That(handle.CurrentState, Is.EqualTo("A"));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
