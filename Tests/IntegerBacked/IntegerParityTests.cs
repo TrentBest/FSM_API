@@ -188,9 +188,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 .BuildDefinition();
 
             var stringHandle = FSM_API.Create.CreateInstance(stringName, new Context(), group);
-            stringHandle.Update(group); // Enter A before evaluating transitions.
-            stringTrace.Clear();
-            stringHandle.Update(group);
+            stringHandle.Update(group); // The first tick enters A, updates it, and evaluates the deferred transition.
+            Assert.That(stringTrace, Is.EqualTo(new[]
+            {
+                "enter:A",
+                "update:A",
+                "guard:A:B",
+                "exit:A"
+            }), "The string-backed handle should transition out of A on its first tick.");
+
+            // Integer handles are explicitly initialized before the tick under test, so remove
+            // only the string handle's initialization callback to compare equivalent tick traces.
+            stringTrace.RemoveAt(0);
 
             var integerDefinition = new IntegerFsm(23008);
             integerDefinition.AddState(new IntegerFsmState(0,
