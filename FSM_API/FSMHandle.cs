@@ -384,6 +384,14 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     if (transition.Condition != null && transition.Condition.Invoke(Context))
                     {
+                        // A guard can modify the runtime-editable blueprint. Revalidate after
+                        // invoking user code so a target removed by the guard is not committed
+                        // to the handle as if the forced transition had succeeded.
+                        if (!Definition.HasState(transition.To))
+                        {
+                            continue;
+                        }
+
                         Definition.ForceTransition(CurrentState, transition.To, Context);
                         CurrentState = transition.To;
                         HasEnteredCurrentState = true;
