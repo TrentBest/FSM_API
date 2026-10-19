@@ -351,3 +351,10 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Follow-up inspection found that `FSMBuilder.AnyTransition` stores the legacy source marker `"*"`, while the direct FSM API also defines `FSM.AnyStateIdentifier`. The first scheduler fix recognized only the latter; CI run [#523](https://github.com/TrentBest/FSM_API/actions/runs/39179884700) confirmed the scheduled regression still failed.
 - [x] Updated commit [`d32e5aa`](https://github.com/TrentBest/FSM_API/commit/d32e5aa3fbeb70652ed89a13317732dfdba4e772) to recognize both markers; its build/test/package job passed in run [#525](https://github.com/TrentBest/FSM_API/actions/runs/39180033916). Wait for the documentation job and checklist commit CI before closing the regression.
 
+### Manual handle entry lifecycle (2026-10-19)
+
+- [x] Added regression coverage in commit [`045c35e`](https://github.com/TrentBest/FSM_API/commit/045c35e4ecf43ef37134226b90cc87df6e843fc2) for the documented contract that a manual first `FSMHandle.Update()` enters the initial state before updating it.
+- [x] Updated [`FSMHandle.Update`](https://github.com/TrentBest/FSM_API/commit/eed09b4bbb863acf53c7ecf342ff4ca1a9cd1d36) to run the current state's entry action once before the first manual step, and synchronized the entered flag/state for `TransitionTo` and `ResetFSMInstance` so explicit transitions do not cause a duplicate entry on the next manual update.
+- [ ] Validate the manual lifecycle change and the scheduled Any-State regression together in development CI.
+- [ ] Review and correct `FSM.Step` lifecycle documentation: current remarks claim Any-State checks precede entry/update, but the implementation currently updates before evaluating Any-State transitions; preserve intentional behavior unless tests or prior contract establish otherwise.
+
