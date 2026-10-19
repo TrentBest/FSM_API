@@ -192,7 +192,7 @@
 ### Checklist maintenance checkpoint (2026-10-18)
 
 - Re-read the authoritative checklist and the integer-backing progress map on `development` before continuing implementation.
-- No release gate was promoted based on source-file presence alone. Current-branch build/test evidence is still absent from the recorded evidence, so compiler validation, parity, storage, benchmarks, branch reconciliation, package validation, and release remain open.
+- No release gate was promoted based on source-file presence alone. Current-development build/test/package and documentation CI is now recorded as green (runs #504 and #547 below); parity, storage, benchmarks, branch reconciliation, package validation, and release remain open.
 - Keep the checklist as the source of truth; update both documents whenever implementation or validation evidence changes, and record the exact commit plus workflow URL before closing a validation gate.
 
 ### Follow-up audit (2026-10-18, after locating this checklist)
@@ -220,7 +220,7 @@
 
 ### Live branch and PR audit update (2026-10-18, latest connector inspection)
 
-The current live comparison supersedes the earlier count above: `development` is **217 commits ahead and 5 behind `master`** (merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`). The histories remain divergent; no merge or deletion is justified from counts alone.
+The 2026-10-19 live comparison supersedes the earlier count above: `development` is **257 commits ahead and 5 behind `master`** (merge base `97956eb9b24f4f2d34bba9ccdc3bd7766e9f74aa`). The histories remain divergent; no merge or deletion is justified from counts alone.
 
 Remote branch inventory returned 16 branches:
 - Protected intended branches: `master`, `development`.
@@ -400,3 +400,13 @@ This is a source-level finding only; no runtime behavior was changed in this rev
 - [x] Added a regression test confirming a throwing Any-State guard is handled without aborting evaluation and does not prevent a subsequent eligible regular guard from transitioning. The test is present on the PR head validated by run #543.
 - [ ] Complete the manual-evaluation audit for regular-transition target safety and any concurrency edge cases; verify latest `development`-head CI independently.
 - [ ] PR #23 remains unmerged; PR CI is not proof that `development` itself contains the fix. No package publication is authorized by this checklist update.
+
+
+### Live integration follow-up (2026-10-19)
+
+- [x] Reconfirmed the integer-backed runtime is already present on `development`, including `FSM_API/IntegerBacked`, `Tests/IntegerBacked`, and the deterministic `FSMCompiler.cs` bridge. The source of the original implementation remains [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0).
+- [x] Verified current-development workflow [#547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) on commit [`02da084`](https://github.com/TrentBest/FSM_API/commit/02da0840dd32889cc7a53250d293fcdfe80641c4) completed successfully: build/test/package and documentation jobs passed; coverage and artifacts uploaded; NuGet publish skipped.
+- [x] Corrected the stale CI status in the [integer-backing progress map](Design/FSM_API/Integer_Backing_Progress.md) to distinguish current-development CI from historical feature-branch validation.
+- [ ] Reconcile PR [#18](https://github.com/TrentBest/FSM_API/pull/18) and its branch history. The original feature branch compares as 93 commits ahead and 303 behind `development`; do not merge it wholesale. The runtime core files compared so far have identical blob SHAs on both branches, so inspect the remaining unique commits/files for work not represented in `development`.
+- [ ] Complete trace-based string/integer parity, storage/identity validation, reproducible benchmark evidence, multi-target/package review, and final release-candidate validation.
+- [ ] Operation Sith remains open: preserve and classify all useful branch/PR work before any branch deletion. No merge, branch deletion, `master` modification, or package publication was performed in this audit.
