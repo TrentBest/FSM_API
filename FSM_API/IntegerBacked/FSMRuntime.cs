@@ -41,6 +41,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 {
                     if (_handles[i].FSM_ID == definition.FSM_ID)
                     {
+                        _handles[i].IsRegistered = false;
                         _handles.RemoveAt(i);
                     }
                 }
