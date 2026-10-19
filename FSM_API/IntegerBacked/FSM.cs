@@ -273,12 +273,27 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
+                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                {
+                    continue;
+                }
+
+                // Guards are user callbacks and may mutate this runtime-editable definition.
+                // Never commit a transition if its target was removed while the guard ran.
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
+
+                // Exit callbacks may also remove or replace the target. Resolve it again
+                // after Exit rather than entering a stale object captured before user code.
+                if (!TryGetState(transition.ToID, out var nextState))
+                {
+                    return currentID;
+                }
+
                 if (enterTargetImmediately)
                 {
                     nextState.Enter(context);
@@ -289,12 +304,25 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                {
+                    continue;
+                }
+
+                // Guards are user callbacks and may mutate this runtime-editable definition.
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
+
+                // Exit callbacks may also remove or replace the target.
+                if (!TryGetState(transition.ToID, out var nextState))
+                {
+                    return currentID;
+                }
+
                 if (enterTargetImmediately)
                 {
                     nextState.Enter(context);
