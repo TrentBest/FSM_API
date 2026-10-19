@@ -512,6 +512,43 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Step_DoesNotCommitAnyStateTransitionRemovedByItsGuard()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddAnyStateTransition(20, _ =>
+            {
+                fsm.RemoveState(20);
+                return true;
+            });
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+
+            var result = fsm.Step(10, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(entered, Is.False);
+        }
+
+        [Test]
+        public void Step_ContinuesAfterGuardRemovesItsOwnTransition()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                fsm.RemoveTransition(10, 20);
+                return true;
+            });
+            fsm.AddTransition(10, 30, _ => true);
+
+            Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(30));
+        }
+
+        [Test]
         public void AddAnyStateTransition_UsesReservedAnyStateIdentity()
         {
             var fsm = new IntegerFSM(1);
