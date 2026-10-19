@@ -439,6 +439,20 @@ namespace TheSingularityWorkshop.FSM_API
                     if (t.Condition(ctx))
                     {
                         currentState.Exit(ctx);
+
+                        // Exit callbacks can modify the runtime-editable definition. Do not
+                        // commit a transition whose target disappeared during Exit.
+                        if (!_states.ContainsKey(t.To))
+                        {
+                            var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (handle != null)
+                            {
+                                handle.HasEnteredCurrentState = false;
+                            }
+
+                            return;
+                        }
+
                         var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                         if (handle != null)
                         {
@@ -482,9 +496,26 @@ namespace TheSingularityWorkshop.FSM_API
                         if (t.Condition(ctx))
                         {
                             currentState.Exit(ctx);
+
+                            // Exit callbacks can modify the runtime-editable definition. Do not
+                            // commit a transition whose target disappeared during Exit.
+                            if (!_states.ContainsKey(t.To))
+                            {
+                                var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (handle != null)
+                                {
+                                    handle.HasEnteredCurrentState = false;
+                                }
+
+                                return;
+                            }
+
                             var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                            handle.CurrentState = t.To; // Update the FSM handle's current state
-                            handle.HasEnteredCurrentState = false;
+                            if (handle != null)
+                            {
+                                handle.CurrentState = t.To; // Update the FSM handle's current state
+                                handle.HasEnteredCurrentState = false;
+                            }
                             next = t.To;
                             return; // Transition occurred, exit
                         }
