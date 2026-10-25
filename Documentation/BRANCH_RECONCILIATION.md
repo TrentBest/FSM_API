@@ -61,3 +61,16 @@ The integer integration branch must not be conflated with the current IntegerBac
 ## Current status
 
 **Not ready for manual branch deletion.** This is the first inventory pass; several branches contain unreviewed unique changes, and the three 24-commit 2.0 variants still need exact-head verification. No branches have been merged or deleted by this audit. No package has been published.
+
+
+## Follow-up audit notes (2026-10-25, readiness document and integer-branch history)
+
+- Read `Documentation/FSM_API_2.0.0_READINESS.md` from `docs/readme-standard` (blob `906e21c7d937d1639c2774aec7658b7a2c3d7318`). The checklist is appropriately cautious: it does not promise a public selector/API shape or performance before implementation and tests verify them; it calls for parity across lifecycle, transitions, processing groups, deferred mutation, handles, identity boundaries, benchmarks, downstream FSM_COS review, clean consumer restore, metadata/migration notes, and an explicit owner approval gate for NuGet publication. Preserve this checklist as the release-gate source, then reconcile it into `development` once the actual 2.0 public API is decided. No gate is marked complete by the existence of this document.
+- Recompared `feature/fsm-api-2.0-work`, `feature/fsm-api-2.0-next`, and `feature/fsm-api-2.0-registry` against the current `development` head `e1230bb3cc893da2bf0f2b4a467c7b39a159b7dc`: each reports 24 ahead / 372 behind, merge base `1c91094f1541ec3c3d15bc92aefc9223def224b1`, and the same 64-file footprint. All three have the same workflow blob, but compare results alone do not prove identical heads or ancestry. Keep the exact-head check open; do not nominate a canonical branch based only on the names or matching file lists.
+- Integer branch version discrepancy: `feature/integer-backed-runtime/FSM_API/FSM_API.csproj` declares package version `1.0.15`, whereas the historical release baseline in the ledger is FSM_API 1.0.13. Treat this as branch-local metadata, not proof that 1.0.15 was published. The branch's only commit unique to current development adds the version/project-file change and a 46-line `IncrementalVersionTests.cs`; its test does not establish package provenance or runtime correctness.
+- Historical registry commits are now source-verified: `8a4cda4d2f534b7b664f2a0aa90a198b0fbcca4a` added a static dictionary registry with unsynchronized collections and a resetting handle counter; `a30c8ff8ddf061c694f470dfa9b86077032b5d1a` later removed that exact scaffold. This confirms that the older registry was explicitly withdrawn, so preserve its design rationale/history but do not resurrect it without a new design decision.
+- Readiness document's central direction is compatible with the current reconciliation: do not freeze downstream FSM_COS integration while integer backing is finished, but keep FSM_API 2.0 release readiness gated on a verified backing contract and behavioral parity.
+
+## Current status
+
+**Not ready for manual branch deletion.** The readiness checklist has been reviewed but not yet reconciled into the active development docs; exact head ancestry for the three sibling 2.0 branches remains unverified; the 2.0 implementation and its tests remain unreviewed as a whole. No branches have been merged or deleted by this audit. No package has been published.
