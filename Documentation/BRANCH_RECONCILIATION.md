@@ -112,3 +112,14 @@ The integer integration branch must not be conflated with the current IntegerBac
 ## Current status
 
 **Not ready for manual branch deletion.** The any-state branch contains a concrete list of candidate regression tests, but none of the eight additional cases has been ported and verified on current development yet. Overall 2.0 readiness remains **approximately 50% (provisional)**. No branches have been merged or deleted by this audit. No package has been published.
+
+## Follow-up audit notes (2026-10-25, regression tests committed)
+
+- Added three focused tests to current development in commit [46fe6ec](https://github.com/TrentBest/FSM_API/commit/46fe6ec7f330a71528214f8e9582491ce5ec4de8):
+  - `EvaluateConditions_SkipsAnyStateTargetRemovedByGuard`
+  - `EvaluateConditions_DoesNotCommitTargetRemovedByExitCallback`
+  - `EvaluateConditions_ContinuesAfterThrowingAnyStateGuard`
+- These exercise target removal during a guard, target removal during the outgoing state's exit callback, and continuation after a throwing Any-State guard. They are tests under verification, not yet confirmed passing.
+- GitHub Actions .NET workflow run [40164015816](https://github.com/TrentBest/FSM_API/actions/runs/40164015816) was queued for commit `46fe6ec7f330a71528214f8e9582491ce5ec4de8` when checked. Wait for its result and inspect any failures before changing production code. No local test run was performed.
+- Readiness remains **approximately 50% (provisional)**; this narrow test addition does not resolve the 2.0 API contract, integer runtime architecture, concurrency, benchmarks, consumer compatibility, or release gates. Still **not ready for manual branch deletion**. No branches merged/deleted; no NuGet package published.
+
