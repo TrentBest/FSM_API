@@ -130,3 +130,12 @@ The integer integration branch must not be conflated with the current IntegerBac
 - Adapted the three tests to exercise Any-State behavior through `FSMHandle.Update()` and match deferred-entry lifecycle semantics in [8dfaf76](https://github.com/TrentBest/FSM_API/commit/8dfaf76d37695e8174bc61f6f61ccf9e76a82e1b). The follow-up CI run is expected to validate these changes; no passing result claimed yet.
 - The initial failed run did not pack a package or publish NuGet; the publish job was skipped. No branches merged/deleted. Readiness remains **approximately 50% (provisional)** and the repo is **not ready for manual branch deletion** until follow-up CI and broader 2.0 reconciliation are complete.
 
+
+## Follow-up audit notes (2026-10-25, verified Any-State regression fix)
+
+- [x] Verified the latest development commit `b3227f5fe7e793d31c49a859ab4877a8e7f913d4` in [workflow #636](https://github.com/TrentBest/FSM_API/actions/runs/40166555251): build/test/package and documentation succeeded; the test suite passed **427/427**; NuGet publishing was skipped.
+- [x] The validated change set includes transition-list snapshots during evaluation, passes the owning `FSMHandle` into transition evaluation so direct handles receive state-entry updates, and corrects the throwing-guard test fixture.
+- [x] Updated `Documentation/FSM_API_2.0.0_READINESS.md` to replace its stale 2026-10-19 status with the current CI evidence and retain the provisional **50%** readiness estimate.
+- [ ] Continue the full 2.0 source/API reconciliation, sparse-ID and concurrency/lifecycle design, behavior parity, repeatable benchmark comparison, downstream compatibility, and release-gate review.
+
+**Current status:** CI for the latest targeted regression fix is green, but the repository is **not ready for manual branch deletion**. The broader branch-preservation gates remain open. No branches have been merged or deleted, and no NuGet package has been published.
