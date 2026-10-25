@@ -74,3 +74,6 @@ The integer integration branch must not be conflated with the current IntegerBac
 ## Current status
 
 **Not ready for manual branch deletion.** The readiness checklist has been reviewed but not yet reconciled into the active development docs; exact head ancestry for the three sibling 2.0 branches remains unverified; the 2.0 implementation and its tests remain unreviewed as a whole. No branches have been merged or deleted by this audit. No package has been published.
+
+
+- Exact sibling head commits retrieved: `feature/fsm-api-2.0-work` = `ba2dd5d26a91c928ce8b2fdcadc72dfc9829935f`; `feature/fsm-api-2.0-next` = `1dd4449c265595a45c6b4190907a2bc8c38721d7`; `feature/fsm-api-2.0-registry` = `7d731c747435c41e596e16ef9dfb80609e4564d0`. Pairwise comparisons give the same merge base `d45c7aae8c595cb470683701df12205824bceb4f`, one commit ahead/behind each way, and report only `.github/workflows/dotnet.yml` as changed. The three heads each use the same commit message, “ci: keep FSM_API NuGet publication disabled,” and the workflow blob is identical across branches. This strongly suggests equivalent CI edits committed independently, not three separate implementation deltas. Final tree/ancestry verification and canonical-reference selection remain open; do not delete a branch yet.
