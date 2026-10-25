@@ -241,7 +241,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 string nextState;
-                Definition.Step(CurrentState, Context, out nextState);
+                Definition.Step(CurrentState, Context, out nextState, this);
                 CurrentState = nextState;
             }
             catch (Exception ex)
