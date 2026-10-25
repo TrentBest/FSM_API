@@ -392,6 +392,11 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Step(string current, IStateContext ctx, out string next)
         {
+            Step(current, ctx, out next, null);
+        }
+
+        internal void Step(string current, IStateContext ctx, out string next, FSMHandle instanceHandle)
+        {
             next = current; // Assume state doesn't change unless a transition fires
 
             if (!_states.TryGetValue(current, out var currentState))
@@ -422,7 +427,7 @@ namespace TheSingularityWorkshop.FSM_API
 
             }
 
-            foreach (var t in _anyStateTransitions)
+            foreach (var t in _anyStateTransitions.ToArray())
             {
                 // Check if the target state exists before evaluating condition
                 if (!_states.ContainsKey(t.To))
@@ -451,7 +456,7 @@ namespace TheSingularityWorkshop.FSM_API
                         // Do not commit a transition to a state that no longer exists.
                         if (!_states.ContainsKey(t.To))
                         {
-                            var invalidatedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            var invalidatedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                             if (invalidatedHandle != null)
                             {
                                 invalidatedHandle.HasEnteredCurrentState = false;
@@ -460,11 +465,11 @@ namespace TheSingularityWorkshop.FSM_API
                             return;
                         }
 
-                        var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                        if (handle != null)
+                        var resolvedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                        if (resolvedHandle != null)
                         {
-                            handle.CurrentState = t.To; // Update the FSM handle's current state
-                            handle.HasEnteredCurrentState = false;
+                            resolvedHandle.CurrentState = t.To; // Update the FSM handle's current state
+                            resolvedHandle.HasEnteredCurrentState = false;
                         }
 
                         next = t.To;
@@ -482,7 +487,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
            
-            foreach (var t in _transitions)
+            foreach (var t in _transitions.ToArray())
             {
                
                 if (t.From == current) // Only consider transitions *from* the current state
@@ -523,11 +528,11 @@ namespace TheSingularityWorkshop.FSM_API
                                 return;
                             }
 
-                            var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                            if (handle != null)
+                            var resolvedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (resolvedHandle != null)
                             {
-                                handle.CurrentState = t.To; // Update the FSM handle's current state
-                                handle.HasEnteredCurrentState = false;
+                                resolvedHandle.CurrentState = t.To; // Update the FSM handle's current state
+                                resolvedHandle.HasEnteredCurrentState = false;
                             }
                             next = t.To;
                             return; // Transition occurred, exit
