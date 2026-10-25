@@ -92,3 +92,23 @@ The integer integration branch must not be conflated with the current IntegerBac
 ## Current status
 
 **Not ready for manual branch deletion.** Source inspection has identified concrete API parity, sparse-ID, synchronization, and handle-lifecycle questions that must be resolved before the main 2.0 implementation can be considered reconciled. Current readiness remains **approximately 50% (provisional)**: branch inventory and major design risks are documented, but the public API contract, selective implementation reconciliation, behavioral/concurrency tests, 2.0 benchmarks, downstream compatibility, consumer restore, and final release gates remain incomplete. No branches have been merged or deleted by this audit. No package has been published.
+
+
+## Follow-up audit notes (2026-10-25, any-state regression-test harvest)
+
+- Re-fetched `Tests/FSM_API_AnyStateTransition_Tests.cs` from current `development` and `fix/manual-any-state-evaluation`. Current development already contains six related tests, but the branch has eight additional cases that are not present by test name:
+  1. `EvaluateConditions_IncludesAnyStateTransitions_AndUpdatesHandle`
+  2. `EvaluateConditions_AnyStateMatchPreemptsTrueRegularTransition`
+  3. `EvaluateConditions_InvalidAnyStateTargetIsSkippedBeforeGuard`
+  4. `EvaluateConditions_NoMatchingTransitionLeavesStateUnchanged`
+  5. `EvaluateConditions_SkipsTargetRemovedByGuard`
+  6. `EvaluateConditions_DoesNotRecordTargetRemovedByExitCallback`
+  7. `Step_DoesNotRecordTargetRemovedByExitCallback`
+  8. `EvaluateConditions_ContinuesAfterThrowingAnyStateGuard`
+- The most valuable gaps are mutation during evaluation (a guard removes a proposed target; an exit callback removes a target after the guard succeeds) and exception resilience when an any-state guard throws. The branch uses direct `FSM`/`FSMHandle` construction for some cases, so adapt test setup to current public/internal API rather than copying the old file verbatim.
+- The candidate tests have not yet been ported or run against current development. They are not evidence that current development fails; they are an evidence-backed regression-test harvest list. Next action should be to add/adapt the cases on development, run the relevant test suite/CI, then inspect any failing expectations before deciding whether a minimal source fix is warranted.
+- Latest compare at this audit: `development` head `5b9a0864623e7a49e1c933e350e20c5ac193d4d4`; `fix/manual-any-state-evaluation` is 15 commits ahead / 77 behind, with three changed files (`FSM.cs`, `FSMHandle.cs`, and the test file). No branch was merged or deleted.
+
+## Current status
+
+**Not ready for manual branch deletion.** The any-state branch contains a concrete list of candidate regression tests, but none of the eight additional cases has been ported and verified on current development yet. Overall 2.0 readiness remains **approximately 50% (provisional)**. No branches have been merged or deleted by this audit. No package has been published.
