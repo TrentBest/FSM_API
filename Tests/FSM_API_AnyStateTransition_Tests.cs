@@ -240,7 +240,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             var trace = new List<string>();
             var definition = new FSM { Name = "ThrowingAnyStateGuard", InitialState = "A" };
-            definition.AddState(new FSMState("A", null, null, null));
+            definition.AddState(new FSMState("A", null, null, _ => trace.Add("exit:A")));
             definition.AddState(new FSMState("B", null, null, null));
             definition.AddState(new FSMState("C", null, null, null));
             definition.AddAnyStateTransition("B", _ =>
