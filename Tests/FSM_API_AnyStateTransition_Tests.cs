@@ -196,16 +196,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             definition.AddAnyStateTransition("C", _ => { trace.Add("guard:any:C"); return true; });
 
             var handle = new FSMHandle(definition, new Context());
-            handle.EvaluateConditions();
+            handle.Update();
 
             Assert.That(handle.CurrentState, Is.EqualTo("C"));
-            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
             Assert.That(trace, Is.EqualTo(new[]
             {
                 "guard:any:B",
                 "guard:any:C",
-                "exit:A",
-                "enter:C"
+                "exit:A"
             }));
         }
 
@@ -229,7 +228,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             trace.Clear();
             allowTransition = true;
 
-            handle.EvaluateConditions();
+            handle.Update();
 
             Assert.That(handle.CurrentState, Is.EqualTo("A"));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
@@ -252,10 +251,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             definition.AddAnyStateTransition("C", _ => { trace.Add("guard:any:C"); return true; });
 
             var handle = new FSMHandle(definition, new Context());
-            handle.EvaluateConditions();
+            handle.Update();
 
             Assert.That(handle.CurrentState, Is.EqualTo("C"));
-            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "guard:any:C" }));
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "guard:any:C", "exit:A" }));
         }
 
     }
