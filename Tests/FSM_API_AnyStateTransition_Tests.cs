@@ -178,5 +178,85 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Is.EqualTo(new[] { "enter:A", "update:A" }));
         }
 
+
+        [Test]
+        public void EvaluateConditions_SkipsAnyStateTargetRemovedByGuard()
+        {
+            var trace = new List<string>();
+            var definition = new FSM { Name = "TargetRemovedByGuard", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, _ => trace.Add("exit:A")));
+            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            definition.AddState(new FSMState("C", _ => trace.Add("enter:C"), null, null));
+            definition.AddAnyStateTransition("B", _ =>
+            {
+                trace.Add("guard:any:B");
+                definition.RemoveState("B");
+                return true;
+            });
+            definition.AddAnyStateTransition("C", _ => { trace.Add("guard:any:C"); return true; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("C"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "guard:any:B",
+                "guard:any:C",
+                "exit:A",
+                "enter:C"
+            }));
+        }
+
+        [Test]
+        public void EvaluateConditions_DoesNotCommitTargetRemovedByExitCallback()
+        {
+            var trace = new List<string>();
+            FSM definition = null;
+            var allowTransition = false;
+            definition = new FSM { Name = "TargetRemovedByExit", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, _ =>
+            {
+                trace.Add("exit:A");
+                definition.RemoveState("B");
+            }));
+            definition.AddState(new FSMState("B", _ => trace.Add("enter:B"), null, null));
+            definition.AddAnyStateTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.Update(); // Enter A with the transition disabled.
+            trace.Clear();
+            allowTransition = true;
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("A"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "exit:A" }));
+        }
+
+        [Test]
+        public void EvaluateConditions_ContinuesAfterThrowingAnyStateGuard()
+        {
+            var trace = new List<string>();
+            var definition = new FSM { Name = "ThrowingAnyStateGuard", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, null));
+            definition.AddState(new FSMState("B", null, null, null));
+            definition.AddState(new FSMState("C", null, null, null));
+            definition.AddAnyStateTransition("B", _ =>
+            {
+                trace.Add("guard:any:B");
+                throw new System.InvalidOperationException("test guard failure");
+            });
+            definition.AddAnyStateTransition("C", _ => { trace.Add("guard:any:C"); return true; });
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("C"));
+            Assert.That(trace, Is.EqualTo(new[] { "guard:any:B", "guard:any:C" }));
+        }
+
     }
 }
