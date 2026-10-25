@@ -438,7 +438,28 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     if (t.Condition(ctx))
                     {
+                        // A guard may mutate the blueprint and remove its own target.
+                        // Re-check after invoking user code before exiting the current state.
+                        if (!_states.ContainsKey(t.To))
+                        {
+                            continue;
+                        }
+
                         currentState.Exit(ctx);
+
+                        // Exit callbacks are user code too and may remove the target.
+                        // Do not commit a transition to a state that no longer exists.
+                        if (!_states.ContainsKey(t.To))
+                        {
+                            var invalidatedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (invalidatedHandle != null)
+                            {
+                                invalidatedHandle.HasEnteredCurrentState = false;
+                            }
+                            next = current;
+                            return;
+                        }
+
                         var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                         if (handle != null)
                         {
@@ -481,10 +502,33 @@ namespace TheSingularityWorkshop.FSM_API
                        
                         if (t.Condition(ctx))
                         {
+                            // A guard may remove the target while it is being evaluated.
+                            if (!_states.ContainsKey(t.To))
+                            {
+                                continue;
+                            }
+
                             currentState.Exit(ctx);
+
+                            // Exit callbacks may also remove the target. Keep the current
+                            // state identity rather than committing a stale target name.
+                            if (!_states.ContainsKey(t.To))
+                            {
+                                var invalidatedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (invalidatedHandle != null)
+                                {
+                                    invalidatedHandle.HasEnteredCurrentState = false;
+                                }
+                                next = current;
+                                return;
+                            }
+
                             var handle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
-                            handle.CurrentState = t.To; // Update the FSM handle's current state
-                            handle.HasEnteredCurrentState = false;
+                            if (handle != null)
+                            {
+                                handle.CurrentState = t.To; // Update the FSM handle's current state
+                                handle.HasEnteredCurrentState = false;
+                            }
                             next = t.To;
                             return; // Transition occurred, exit
                         }
