@@ -18,15 +18,17 @@
     /// </para>
     /// </summary>
     /// <remarks>
-    /// The `IStateContext` interface ensures your custom data model is compatible with the FSM system.
-    /// It requires the implementation of an `IsValid` property, which the FSM uses to manage its lifecycle.
+    /// The `IStateContext` interface ensures your caller-owned data model is compatible with the FSM system.
+    /// Its `IsValid` property is a computation-eligibility gate, not a handle lifecycle command. FSM_API
+    /// does not own, dispose, or invalidate the context; explicit instance APIs control handle registration.
     /// </remarks>
     public interface IStateContext : IContext
     {
         /// <summary>
-        /// Gets or sets a value indicating whether this context object is currently valid and active.
-        /// This is crucial for the FSM system to determine if an FSM instance associated with this context
-        /// should continue to be processed.
+        /// Gets or sets whether computation associated with this caller-owned context is currently permitted.
+        /// When false, scheduled and manual stepping/condition evaluation are skipped. The handle remains
+        /// registered and can resume if validity becomes true again. This property does not request handle
+        /// destruction, unregister instances, or transfer ownership of the context to FSM_API.
         /// <para>
         /// **For Non-Coders/Domain Experts:**
         /// This property tells the FSM if the "thing" it's controlling is still relevant or active.
@@ -35,11 +37,10 @@
         /// </para>
         /// <para>
         /// **For Developers:**
-        /// Your implementation of <c>IsValid</c> should reflect the active status of the underlying object.
-        /// For plain C# objects, this might involve checking if it has been explicitly "disposed",
-        /// marked as invalid, or if its dependencies are no longer available.
-        /// The FSM system relies on this property to prevent processing FSM instances tied to defunct contexts,
-        /// thereby ensuring error-tolerant FSM lifecycle management.
+        /// Your implementation of <c>IsValid</c> should reflect whether FSM computation is currently safe.
+        /// A false value suppresses computation for every handle sharing this context; it does not remove
+        /// those handles. The caller remains responsible for the context object's lifetime, while FSM_API
+        /// exposes explicit APIs for removing its own handle registrations.
         /// </para>
         /// </summary>
         /// <value><c>true</c> if the context is valid and active; otherwise, <c>false</c>.</value>
