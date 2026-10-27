@@ -157,6 +157,12 @@ namespace TheSingularityWorkshop.FSM_API
         public bool IsValid => Context?.IsValid ?? false;
 
         /// <summary>
+        /// Gets whether this handle has been explicitly torn down and removed from API management.
+        /// This lifecycle flag is independent of the caller-owned context's <see cref="IsValid"/> value.
+        /// </summary>
+        public bool IsDestroyed { get; private set; } = false;
+
+        /// <summary>
         /// Tracks whether the current state's entry action has run for this handle.
         /// This is distinct from <see cref="IsValid"/>: validity controls scheduler eligibility,
         /// while this flag prevents a resumed or repeatedly updated handle from being mistaken
@@ -228,7 +234,7 @@ namespace TheSingularityWorkshop.FSM_API
         {
             // Manual stepping must honor IsValid just like scheduled ticks. A caller-owned
             // context may be temporarily unavailable; that suspends computation, not lifecycle.
-            if (Context == null || !Context.IsValid)
+            if (IsDestroyed || Context == null || !Context.IsValid)
             {
                 return;
             }
@@ -335,6 +341,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         internal void DestroyHandle()
         {
+            if (IsDestroyed)
+            {
+                return;
+            }
+
+            // Mark the handle first so re-entrant callbacks and a scheduler snapshot cannot
+            // execute it again after explicit teardown begins.
+            IsDestroyed = true;
+
             if (Definition != null && !string.IsNullOrEmpty(CurrentState))
             {
                 // Try to get the current state object.
@@ -371,7 +386,7 @@ namespace TheSingularityWorkshop.FSM_API
         public void EvaluateConditions()
         {
             // Manual condition evaluation is still computation and respects the context gate.
-            if (Context == null || !Context.IsValid)
+            if (IsDestroyed || Context == null || !Context.IsValid)
             {
                 return;
             }
