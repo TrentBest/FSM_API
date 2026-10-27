@@ -343,12 +343,10 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
-            // Always invalidate the context, regardless of whether a state was successfully exited.
-            // We add a null check for Context just in case.
-            if (Context != null)
-            {
-                Context.IsValid = false;
-            }
+            // The context is supplied and owned by the caller. Teardown removes this
+            // FSM_API-owned handle/registration; it must not mutate the shared context's
+            // validity because other handles may still use the same context.
+
         }
 
         /// <summary>
