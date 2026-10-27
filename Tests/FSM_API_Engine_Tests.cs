@@ -132,8 +132,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             context.IsValid = false;
             FSM_API.Interaction.Update();
             FSM_API.Interaction.Update();
+            handle.Update();
+            handle.EvaluateConditions();
 
-            Assert.That(updateCount, Is.EqualTo(1), "An invalid context must be skipped.");
+            Assert.That(updateCount, Is.EqualTo(1), "Scheduled and manual execution must skip an invalid context.");
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1),
                 "Invalidating must preserve the registered handle for reuse.");
             Assert.That(handle.IsValid, Is.False);
