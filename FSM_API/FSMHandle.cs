@@ -108,9 +108,9 @@ namespace TheSingularityWorkshop.FSM_API
         /// This is the **data bag** 🎒 (context) specific to *this particular* FSM instance.
         /// </summary>
         /// <remarks>
-        /// It holds all the changing information that your FSM's actions need to read from or write to
-        /// (like a character's health, speed, or inventory). This "data bag" must follow the rules
-        /// of the <see cref="IStateContext"/> interface.
+        /// It holds the changing information that your FSM's actions read or write. The context is
+        /// supplied and owned by the caller; FSM_API does not dispose it or use its validity flag to
+        /// represent this handle's registration state. Multiple handles may reference the same context.
         /// <para>
         /// You *can* directly change this context data here (e.g., `handle.Context.Score = 100;`).
         /// However, it's generally safer and clearer if these changes happen through the
@@ -328,11 +328,10 @@ namespace TheSingularityWorkshop.FSM_API
         /// Performs instance teardown after the API removes this handle from its registered collection. 🚫
         /// </summary>
         /// <remarks>
-        /// This is extremely important for cleaning up and freeing up computer resources,
-        /// especially if you have many FSMs running or if your application runs for a long time.
-        /// After you call `DestroyHandle()`, this FSM handle will no longer be active or managed
-        /// by the FSM_API, and you should not try to use it anymore.
-        /// It tells the <see cref="FSM_API.Interaction.DestroyInstance(FSMHandle)"/> system to do the actual cleanup.
+        /// This executes the current state's exit callback when the state exists. The API removes
+        /// the handle from its registration before calling this method. Teardown must not invalidate,
+        /// dispose, or otherwise take ownership of <see cref="Context"/> because the caller owns it
+        /// and other handles may share it.
         /// </remarks>
         internal void DestroyHandle()
         {
