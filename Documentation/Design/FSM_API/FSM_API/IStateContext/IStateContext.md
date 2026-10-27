@@ -1,6 +1,6 @@
 ### `IStateContext` Interface: The State-Driven Data Model
 
-The `IStateContext` interface is the heart of the FSM's data model. It represents the "thing" or object whose behavior is being managed by a finite state machine. By inheriting from `IContext`, it builds upon the foundational concept of a unique name and adds the crucial `IsValid` property, which directly controls the FSM's lifecycle.
+The `IStateContext` interface represents the caller-owned data model whose behavior is processed by a finite state machine. It inherits the foundational `Name` contract from `IContext` and adds `IsValid`, which gates computation but does not control handle registration or destruction.
 
 -----
 
@@ -41,7 +41,7 @@ classDiagram
 
 ### The `IsValid` Property: Lifecycle Management
 
-The `IsValid` property is a processing gate, not an automatic destruction request. During a tick, FSM_API skips a handle whose context is null or whose `IsValid` property is `false`; the handle remains registered and can resume processing if the same context becomes valid again. Explicitly destroy or unregister an instance when it should be removed permanently. This distinction is grounded in `FSM_API.Internal.TickAll` and `FSM_API.Internal.DestroyInstance` on the current development branch.
+The `IsValid` property is a computation gate, not an automatic destruction request. Scheduled ticks and manual stepping/condition evaluation skip computation when it is false; the handle remains registered and can resume when the same context becomes valid again. The caller owns the context object and its lifetime. Explicitly destroy a specific FSM handle when that instance should be removed; destroying one handle must not invalidate a context shared with other handles. This distinction is grounded in `FSM_API.Internal.TickAll`, `FSMHandle.Update`, `FSMHandle.EvaluateConditions`, and `FSM_API.Internal.DestroyInstance` on the development branch.
 
 #### Lifecycle Flow: A Flowchart
 
