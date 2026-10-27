@@ -146,6 +146,47 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             Assert.That(FSM_API.Interaction.GetInstance(fsmName, context, "Update"), Is.SameAs(handle));
         }
 
+        [Test]
+        public void Destroying_One_Handle_Preserves_Shared_Context_And_Other_Handle()
+        {
+            var context = new MockContext();
+            int firstUpdates = 0;
+            int secondUpdates = 0;
+            int firstExits = 0;
+
+            FSM_API.Create.CreateFiniteStateMachine("SharedContextA", processRate: -1, processingGroup: "Update")
+                .State("Active", null, onUpdate: _ => firstUpdates++, onExit: _ => firstExits++)
+                .BuildDefinition();
+            FSM_API.Create.CreateFiniteStateMachine("SharedContextB", processRate: -1, processingGroup: "Update")
+                .State("Active", null, onUpdate: _ => secondUpdates++, onExit: null)
+                .BuildDefinition();
+
+            var firstHandle = FSM_API.Create.CreateInstance("SharedContextA", context);
+            var secondHandle = FSM_API.Create.CreateInstance("SharedContextB", context);
+
+            FSM_API.Interaction.Update();
+            Assert.That(firstUpdates, Is.EqualTo(1));
+            Assert.That(secondUpdates, Is.EqualTo(1));
+
+            FSM_API.Interaction.DestroyInstance(firstHandle);
+
+            Assert.That(context.IsValid, Is.True,
+                "Destroying an FSM handle must not invalidate the caller-owned shared context.");
+            Assert.That(firstExits, Is.EqualTo(1),
+                "Explicit handle destruction should still execute the target state's exit callback.");
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1),
+                "Only the explicitly targeted handle should be unregistered.");
+
+            FSM_API.Interaction.Update();
+
+            Assert.That(firstUpdates, Is.EqualTo(1),
+                "The destroyed handle must no longer be scheduled.");
+            Assert.That(secondUpdates, Is.EqualTo(2),
+                "A different live handle sharing the same context must continue processing.");
+            Assert.That(context.IsValid, Is.True);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
+
         /// <summary>
         /// 
         /// </summary>
