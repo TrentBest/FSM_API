@@ -88,7 +88,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             FSM_API.Interaction.DestroyInstance(handle);
 
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
-            Assert.That(handle.Context.IsValid, Is.False);
+            Assert.That(handle.Context.IsValid, Is.True,
+                "Destroying a handle must not mutate the caller-owned context.");
+            Assert.That(handle.IsDestroyed, Is.True,
+                "Handle teardown state must be independent from context validity.");
         }
 
         private static void BuildCompatibleDefinition(string name, string group, int processRate)
