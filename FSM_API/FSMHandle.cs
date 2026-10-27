@@ -226,6 +226,13 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Update(string processGroup = "Update")
         {
+            // Manual stepping must honor IsValid just like scheduled ticks. A caller-owned
+            // context may be temporarily unavailable; that suspends computation, not lifecycle.
+            if (Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             try
             {
                 // Manual updates must honor the same first-entry lifecycle as scheduled ticks.
@@ -364,6 +371,12 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void EvaluateConditions()
         {
+            // Manual condition evaluation is still computation and respects the context gate.
+            if (Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             // Get all potential transitions originating from the current state.
             // Convert to a list to avoid issues if a transition itself causes modifications
             // to the underlying Definition's transition collection (though unlikely here).
