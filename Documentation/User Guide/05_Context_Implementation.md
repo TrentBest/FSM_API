@@ -94,7 +94,7 @@ namespace TheSingularityWorkshop.FSM.API
 
 The `IsValid` property is crucial for robust FSM management, especially in dynamic environments like game engines:
 
-  * **Execution Gate:** If `IsValid` returns `false`, the scheduler skips that handle's update. This does not unregister or destroy the handle; if the context becomes valid again, the registered handle can resume. Explicitly destroy or unregister instances when they should be removed.
+  * **Execution Gate:** If `IsValid` returns `false`, scheduled ticks and manual stepping/condition evaluation skip computation. The handle remains registered and can resume when the same context becomes valid again. If several handles share one context, all are suspended by that context's validity gate; destroying one handle must not invalidate the context or remove the other handles. Explicitly destroy the specific handle when that instance should be removed.
   * **Performance:** Invalid contexts are skipped during processing, but remain registered until explicitly removed.
   * **Example Scenarios:**
       * If an application-owned context becomes invalid, `IsValid` should return `false`.
