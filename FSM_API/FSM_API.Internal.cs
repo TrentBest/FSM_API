@@ -925,7 +925,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                         // Invalid contexts suspend processing but do not unregister the handle.
                         // The same handle can resume when its context becomes valid again.
-                        if (handle != null && handle.Context != null && handle.Context.IsValid)
+                        if (handle != null && !handle.IsDestroyed && handle.Context != null && handle.Context.IsValid)
                         {
 
                            
