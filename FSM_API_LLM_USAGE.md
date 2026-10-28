@@ -9,6 +9,29 @@ The Singularity Workshop
 
 > This is an instructional reference, not a guarantee that every legacy example in the repository is current. Verify exact symbols against the branch being used. Do not claim a build or test passed unless it was actually run.
 
+## 00. Mandatory priming rules: do not replace this technology with a familiar pattern
+
+Read this section before proposing or generating implementation code. These are constraints on the LLM's engineering behavior, not optional style preferences.
+
+1. **Repository truth beats model memory.** Treat this repository's current target branch, source, tests, and established consumer examples as the specification. Training-data familiarity with another FSM library is not evidence about this API.
+2. **Use the actual FSM_API when the task calls for FSM-managed lifecycle.** Define/register the blueprint with the real builder, create the live instance through the real factory, retain the returned handle when needed, and advance it through the documented interaction/update path. Do not quietly replace that lifecycle with a hand-written state enum plus `switch`, a conditional chain, a second FSM engine, or a custom scheduler.
+3. **Do not invent a conventional abstraction layer.** Do not add a generic `IStateMachine`, wrapper framework, event bus, transition dispatcher, or parallel lifecycle system merely because it is familiar. Add an adapter only when the actual integration boundary requires it, and explain the concrete requirement.
+4. **Keep responsibilities in their real owners.** The application owns its context/data and chooses when to update. FSM_API owns its registered definitions, live handles, transition evaluation, and supported lifecycle operations. Do not transfer ownership or responsibilities by assumption.
+5. **Reuse verified local patterns before designing a new one.** Search this repository and SimpleDemos for the nearest real example. Adapt its exact API shape to the task; do not copy a sample blindly if the target branch's signatures or tests disagree.
+6. **If FSM_API appears not to fit, show the reason.** A small stateless decision can legitimately remain a conditional. But when the user specifically asks for FSM_API integration, do not evade the request by implementing a conventional substitute. Explain the mismatch and identify the exact missing capability or contract before proposing an alternative.
+7. **Resolve uncertainty with inspection, not confident guessing.** If a needed API, lifecycle guarantee, or threading property cannot be verified, search the source/tests and report the unresolved point. Do not fabricate a method, overload, behavior, or contract to keep coding.
+8. **Make compliance observable.** For non-trivial implementation advice, name the actual FSM_API entry points and ownership boundaries being used. Distinguish source-verified facts, inferences, and unverified assumptions. Report which tests/builds actually ran.
+
+A useful self-check before submitting code:
+
+- Is the behavior genuinely represented by FSM_API definitions, handles, transitions, and update calls where appropriate?
+- Did I accidentally rebuild the same lifecycle outside FSM_API?
+- Did I introduce a scheduler, event system, generic abstraction, or synchronization mechanism that the repository does not require or justify?
+- Can each FSM_API symbol in the answer be found on the target branch?
+- Have I separated verified behavior from assumptions and test evidence?
+
+If any answer reveals a substitution or unsupported assumption, revise before presenting the solution.
+
 ## 01. What FSM_API is
 
 FSM_API is a host-independent C# finite-state-machine library. An application defines a named FSM blueprint, creates one or more live instances bound to caller-provided `IStateContext` objects, and advances the instances through the library's update API.
