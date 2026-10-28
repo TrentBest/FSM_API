@@ -131,14 +131,14 @@ A context implements `IStateContext`. The current interface requires the `Name` 
 
 A returned `FSMHandle` represents a live instance. **Keep the handle** when your application needs to inspect or control that particular instance later. A context reference is not automatically a complete registry of every handle that references it.
 
-The intended ownership boundary is that the application owns its context object, while FSM_API manages its own instance/handle and registration. However, the repository currently has an open lifecycle-contract investigation around `IsValid` and explicit destruction (issues [#27](https://github.com/TrentBest/FSM_API/issues/27) and [#28](https://github.com/TrentBest/FSM_API/issues/28)). Until the implementation and tests settle that contract, an LLM must not confidently promise that setting `IsValid = false` preserves an instance, that destroying a handle leaves the context unchanged, or that multiple handles sharing a context are fully supported.
+The current `development` source now states the intended ownership boundary explicitly: the application owns its context object, while FSM_API manages its own handle and registration. `IStateContext.IsValid` is documented as a computation-eligibility gate, not a destruction command. The current `FSMHandle` source has a separate `IsDestroyed` lifecycle flag, and `DestroyHandle()` explicitly avoids invalidating or disposing the caller-owned context. The lifecycle issues [#27](https://github.com/TrentBest/FSM_API/issues/27) and [#28](https://github.com/TrentBest/FSM_API/issues/28) remain useful history/tracking; check their current status and regression tests before making a claim about verified behavior on another branch or release.
 
 Safe guidance for generated code:
 - Keep the application-owned context reference separately from the handle.
 - Keep each returned handle if later lifecycle operations may be needed.
-- Do not use `IsValid = false` as a substitute for an explicit instance-destruction API.
-- Do not assume destroying an FSM instance should dispose the context; no ownership transfer is implied by passing a context to `CreateInstance`.
-- If a task depends on invalidation, shared contexts, destruction, exit callbacks, or handle enumeration, inspect the current implementation and relevant tests first and flag unresolved behavior rather than guessing.
+- Use `IsValid = false` to suppress computation, not as a substitute for explicit instance destruction.
+- Explicit instance destruction uses `FSM_API.Interaction.DestroyInstance(handle)`; do not assume it disposes the context. No ownership transfer is implied by passing a context to `CreateInstance`.
+- If a task depends on invalidation, shared contexts, destruction, exit callbacks, or handle enumeration, inspect the current implementation and relevant tests on the target branch. The current development source says shared-context validity gates all handles using that context.
 
 ## 05. States, transitions, and the execution model
 
@@ -203,4 +203,4 @@ When source and prose disagree, prefer current source for exact signatures, test
 
 ---
 
-![The Singularity Workshop](https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/Branding/Avatar.jpg)
+![The Singularity Workshop](https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/Branding/TheSingularityWorkshop.png)
