@@ -160,7 +160,7 @@ if (Time.elapsed % 0.5f == 0) // Example: update every 0.5 seconds
 <li><strong>Minimize Allocations:</strong> Avoid creating new objects (e.g., <code>new Vector3()</code>, <code>new List&lt;T&gt;()</code>) within your <code>onUpdate</code> or transition conditions unless absolutely necessary. Reuse existing objects or use object pools.</li>
 <li><strong>Cache References:</strong> If your context needs to access other components or systems frequently, cache those references rather than looking them up repeatedly (e.g., <code>GetComponent&lt;T&gt;()</code> in Unity's <code>Awake()</code> or <code>Start()</code>).</li>
 <li><strong>Simple Data Access:</strong> Direct property access (<code>myContext.Health</code>) is faster than method calls or complex logic to retrieve data.</li>
-<li><strong>Accurate <code>IsValid</code>:</strong> A correctly implemented <code>IsValid</code> property is vital for performance and stability. When <code>IsValid</code> returns <code>false</code>, FSM_API automatically unregisters and cleans up the FSM instance. This prevents the system from wasting cycles trying to update invalid or destroyed objects.
+<li><strong>Accurate <code>IsValid</code>:</strong> A correctly implemented <code>IsValid</code> property is vital for performance and stability. When <code>IsValid</code> returns <code>false</code>, FSM_API skips computation but leaves the handle registered. If the context becomes valid again, the same handle can resume. Explicitly destroy instances that should be removed permanently.
 <ul>
 <li><strong>Unity Example:</strong>
 <pre><code class="lang-csharp">public bool IsValid =&gt; this != null &amp;&amp; gameObject.activeInHierarchy;
