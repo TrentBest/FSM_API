@@ -93,8 +93,7 @@ operate directly on instances of this context.
     <pre><code class="lang-csharp hljs">public interface IStateContext : IContext</code></pre>
   </div>
   <h5 id="TheSingularityWorkshop_FSM_API_IStateContext_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>The <code>IStateContext</code> interface ensures your custom data model is compatible with the FSM system.
-It requires the implementation of an <code>IsValid</code> property, which the FSM uses to manage its lifecycle.</p>
+  <div class="markdown level0 remarks"><p>The <code>IStateContext</code> interface ensures your caller-owned data model is compatible with the FSM system. Its <code>IsValid</code> property gates computation only: false suspends scheduled and manual computation without unregistering or destroying the handle. Restoring validity allows the same registered handle to resume. Explicit handle destruction does not invalidate or dispose the context.</p>
 </div>
   <h3 id="properties">Properties
 </h3>
@@ -122,8 +121,7 @@ Your implementation of <code>IsValid</code> should reflect the active status of 
 For Unity, this might involve checking if the GameObject or MonoBehaviour is still active and not destroyed.
 For plain C# objects, this might involve checking if it has been explicitly "disposed",
 marked as invalid, or if its dependencies are no longer available.
-The FSM system relies on this property to prevent processing FSM instances tied to defunct contexts,
-thereby ensuring error-tolerant FSM lifecycle management.
+The FSM_API skips computation while this property is false but leaves the handle registered. The caller owns the context; this property does not request handle destruction.
 </p>
 </div>
   <div class="markdown level1 conceptual"></div>
