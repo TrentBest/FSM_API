@@ -41,7 +41,7 @@ The `IStateContext` provides this crucial bridge:
 
   * **Access to Data:** It allows state actions (`onEnter`, `onUpdate`, `onExit`) and transition conditions to read and modify the specific properties of your object (e.g., `currentHealth`, `IsDoorOpen`).
   * **Execution of Logic:** It provides the methods that states will call to perform actual work (e.g., `PlayAnimation()`, `ApplyDamage()`).
-  * **Lifecycle Management:** For engines like host-specific, `IStateContext`'s `IsValid` property allows FSM\_API to track if the underlying object is still active and relevant, preventing errors if an object is destroyed.
+  * **Execution Eligibility, Not Ownership:** `IsValid` controls whether computation may run; it does not destroy or unregister a handle. The caller owns the context, and explicit handle destruction controls instance teardown.
 
 -----
 
