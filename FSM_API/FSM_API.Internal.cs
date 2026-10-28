@@ -599,8 +599,14 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 if (hardReset)
                 {
-                    _buckets.Clear();
+                    // A hard reset removes every registered handle, so mark each handle as
+                    // destroyed before dropping the registry. Contexts remain caller-owned.
+                    foreach (var instance in GetAllFsmHandles().ToList())
+                    {
+                        instance.DestroyHandle();
+                    }
 
+                    _buckets.Clear();
                     Error.Reset();
                 }
                 else
