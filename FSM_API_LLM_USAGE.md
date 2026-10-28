@@ -153,9 +153,11 @@ Do not assume that the target state's entry callback runs immediately during the
 Definitions are associated with a processing group; the default is `"Update"`. The host chooses when to call `FSM_API.Interaction.Update("Update")` or update another group. A group is a way to organize update cohorts, not a promise that all public operations are thread-safe.
 
 The current maintenance contract states:
-- `MoveInstance` queues the structural move for a safe deferred-modification boundary.
-- `Interaction.DestroyInstance` has been documented as synchronous in the current source audit.
-- Do not infer that deferred handling is a global lock or that direct creation/destruction can safely race with ticking.
+- The documented supported execution model is **main-thread operations with deferred mutation handling**.
+- `MoveInstance` queues its structural move for a safe deferred-modification boundary.
+- `Interaction.DestroyInstance` currently performs destruction synchronously; it is not automatically deferred by the move queue.
+- Creation, destruction, and moves can mutate instance-registry collections. Do not infer that deferred handling is a global lock or that direct creation/destruction can safely race with ticking or other registry mutations.
+- When diagnosing a destruction/registry failure, first verify that the caller obeys the main-thread contract. If that does not explain the failure, use a focused reproduction and compare serial versus normal test execution; a difference is evidence to investigate, not proof of a specific defect.
 - Do not claim cross-group concurrency, thread safety, or parallel ticking without evidence from source and tests.
 
 ## 06. Common mistakes an LLM must avoid
