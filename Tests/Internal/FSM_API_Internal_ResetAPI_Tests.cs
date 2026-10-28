@@ -106,13 +106,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         /// 
         /// </summary>
         [Test]
-        public void HardResetAPI_RemovesFSMInstanceTest()
+        public void HardResetAPI_RemovesFSMInstanceAndMarksHandleDestroyedWithoutInvalidatingContext()
         {
             FSM_API.Create.CreateFiniteStateMachine("TestFSM").BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext());
+            var context = new FSMTestContext();
+            var handle = FSM_API.Create.CreateInstance("TestFSM", context);
+
             FSM_API.Internal.ResetAPI(true);
 
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(context.IsValid, Is.True, "A hard reset must not invalidate caller-owned context.");
         }
     }
 
