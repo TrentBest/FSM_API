@@ -207,7 +207,41 @@ The current maintenance contract states:
 7. **Report discrepancies.** Point to the exact source/test/doc mismatch and create or reference an issue rather than silently papering it over.
 8. **Keep work in scope.** This manual is instructional onboarding; implementation changes and lifecycle redesign belong to the implementation owner/task.
 
-## 08. Source map: where to verify things
+## 08. LLM preflight: a repeatable method before editing
+
+Use this protocol whenever a task asks you to add, modify, or review code that may use FSM_API. The purpose is to turn the priming rules above into observable engineering steps.
+
+### Before proposing a design
+
+1. **Name the target.** Identify the consuming repository, branch, runtime/framework, and the user-visible behavior requested. Do not assume this is the FSM_API repository merely because this manual lives there.
+2. **Find the nearest real example.** Search the target repository first, then its tests and SimpleDemos. Prefer an existing integration that already solves a similar lifecycle problem over a new architecture.
+3. **Verify the contract.** Check the current branch’s public signatures and relevant implementation/tests for every API call or behavior on which the solution depends. Read `FSM_APILLM.md` for repository-work constraints. A symbol remembered from another project is not evidence.
+4. **Map the requirement to native concepts.** Write down which parts need a definition, state actions, transition conditions, an `IStateContext`, an `FSMHandle`, a processing group, and an update call. If a concept is not needed, do not add it just to make the design look elaborate.
+5. **Keep ownership explicit.** Identify who owns application data/context, who retains handles, who triggers updates, and who destroys instances. Do not silently move these responsibilities into a new wrapper.
+6. **Challenge the substitution instinct.** Before settling on a design, ask: “Am I implementing the requested lifecycle with FSM_API, or have I recreated it using enums, switches, events, or a home-grown scheduler?” If a substitute is genuinely justified, state the specific mismatch or integration constraint first.
+7. **State uncertainty honestly.** If the API cannot be verified or behavior is unclear, stop at the unresolved contract, name the source/test that needs inspection, and ask or report before inventing a method or guarantee.
+
+### Before changing files
+
+For substantial changes, provide a short plan that names the relevant existing files and exact FSM_API entry points. Keep the implementation as small as the requirement allows. Do not create a generic framework or parallel state engine as a precaution. Do not expand the task into unrelated lifecycle redesign.
+
+### Before reporting completion
+
+- Compare the actual change with the plan and the requested behavior.
+- Search for accidental duplicate lifecycle logic, fabricated API names, unnecessary abstractions, and update/destruction calls that bypass the documented ownership model.
+- Run the narrowest relevant build/tests available for code changes. For documentation-only changes, verify the rendered content and links where practical.
+- Report concrete evidence: changed files/commit, checks actually run and their outcomes, and checks not run. Never equate a commit, a green unrelated workflow, or a plausible code review with a passing test.
+- Keep release authorization separate from implementation completion. Never publish a package unless the owner explicitly authorizes publishing.
+
+### Reusable task prefix for another LLM
+
+Copy this block into an implementation task when you need to prime an assistant before it touches a consumer repository:
+
+> **FSM_API-native implementation constraint**
+>
+> Read `FSM_API_LLM_USAGE.md` and the target repository’s `FSM_APILLM.md` before editing. Inspect the target branch and find the closest existing consumer/test example. Verify every FSM_API symbol and behavior against current source/tests; do not use generic FSM knowledge as API evidence. If the task requests FSM_API integration, implement the lifecycle with the real definition builder, instance factory, handle, context, and update/destruction APIs that the task actually needs. Do not replace them with a hand-written enum/switch, another FSM engine, event bus, wrapper framework, or custom scheduler unless you first identify and explain a concrete incompatibility. Keep application-owned data and update cadence in the application. If the required contract is unclear, report the exact uncertainty instead of guessing. Make the smallest scoped change, run relevant checks where possible, and report commit/file evidence plus checks run and not run. Do not publish without explicit owner authorization.
+
+## 09. Source map: where to verify things
 
 Use these as starting points on the repository branch under discussion:
 
@@ -222,7 +256,7 @@ Use these as starting points on the repository branch under discussion:
 
 When source and prose disagree, prefer current source for exact signatures, tests for observed behavior, and raise a documentation discrepancy. Never turn an unresolved design question into an asserted contract.
 
-## 09. Final rule
+## 10. Final rule
 
 **Use FSM_API when explicit state makes behavior easier to model, reason about, maintain, or potentially evaluate more efficiently. Use measured evidence—not intuition alone—to decide whether it is faster. And use this repository—not an LLM's generic FSM knowledge—to decide how the API is called.**
 
