@@ -66,7 +66,7 @@ Here is the same two-state machine as a **living visual**. The animation highlig
   <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg" alt="Animated LightSwitch FSM showing Off and On states, transition conditions, and the application tick cycle" width="900">
 </p>
 
-[Open the SVG source](Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg) · [Read the FSM_API getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md) · [Explore the animated fox-and-dog C# demo](https://github.com/TrentBest/SimpleDemos)
+[Open the SVG source](Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg) · [Read the FSM_API getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md) · [LLM usage reference](FSM_API_LLM_USAGE.md) · [Explore the animated fox-and-dog C# demo](https://github.com/TrentBest/SimpleDemos)
 
 The diagram follows the same `Off`/`On` states and context-driven transition conditions used in the C# example below.
 
