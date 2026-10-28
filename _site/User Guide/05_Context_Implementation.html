@@ -86,7 +86,7 @@
 <ul>
 <li><strong>Access to Data:</strong> It allows state actions (<code>onEnter</code>, <code>onUpdate</code>, <code>onExit</code>) and transition conditions to read and modify the specific properties of your object (e.g., <code>currentHealth</code>, <code>IsDoorOpen</code>).</li>
 <li><strong>Execution of Logic:</strong> It provides the methods that states will call to perform actual work (e.g., <code>PlayAnimation()</code>, <code>ApplyDamage()</code>).</li>
-<li><strong>Lifecycle Management:</strong> For engines like Unity, <code>IStateContext</code>'s <code>IsValid</code> property allows FSM_API to track if the underlying object is still active and relevant, preventing errors if an object is destroyed.</li>
+<li><strong>Execution Eligibility, Not Ownership:</strong> <code>IsValid</code> controls whether computation may run; it does not destroy or unregister a handle. The caller owns the context, and explicit handle destruction controls instance teardown.</li>
 </ul>
 <hr>
 <h2 id="-the-icontext-interface-the-basic-identifier">🔀 The <code>IContext</code> Interface: The Basic Identifier</h2>
@@ -129,7 +129,7 @@ namespace TheSingularityWorkshop.FSM.API
 </code></pre>
 <p>The <code>IsValid</code> property is crucial for robust FSM management, especially in dynamic environments like game engines:</p>
 <ul>
-<li><strong>Automatic Cleanup:</strong> If <code>IsValid</code> returns <code>false</code>, FSM_API will automatically <strong>unregister and clean up</strong> the associated <code>FSMHandle</code> instance. This prevents memory leaks and errors that can occur if an FSM tries to interact with a non-existent or invalid object.</li>
+<li><strong>Execution Gate:</strong> If <code>IsValid</code> returns <code>false</code>, scheduled and manual computation is skipped while the handle remains registered. Restoring validity allows the same handle to resume; use explicit destruction to remove it.</li>
 <li><strong>Performance:</strong> Invalid FSMs are removed from processing queues, reducing overhead.</li>
 <li><strong>Example Scenarios:</strong>
 <ul>
