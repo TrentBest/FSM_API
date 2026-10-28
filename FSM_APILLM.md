@@ -13,3 +13,8 @@ The public README describes the supported execution model as **main-thread opera
 Therefore, “deferred mutation handling” must not be read as a guarantee that every public structural operation is thread-safe or automatically deferred. The current docs do not establish that direct destruction may race safely with ticking or other registry mutations. Renderer’s successful current-source run (115/115 tests against FSM_API 69949dc499c39f28d5b85d554d3f6006c7e9286d) means no runtime patch is justified yet.
 
 Next discriminating step: validate Renderer lifecycle calls against the documented main-thread-only contract, then run its source-integration suite in serial and normal parallel modes if that contract check does not explain the earlier failure. Treat a serial/parallel difference as evidence to investigate, not as proof by itself. Only add registry synchronization or a regression test after reproducing the defect and defining the intended concurrency contract.
+
+
+## LLM API usage reference
+
+For instructional onboarding—when to use FSM_API, verified usage patterns, performance trade-offs, and source/test verification—start with [FSM_API_LLM_USAGE.md](FSM_API_LLM_USAGE.md). This usage manual complements rather than replaces this file's maintenance, branch, CI, release, and evidence contract.
