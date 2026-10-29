@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # 04. When to Use Finite State Machines
 
 > Finite State Machines (FSMs) are not a silver bullet for every programming problem, but they are an incredibly powerful and elegant solution for specific types of challenges. This document outlines common scenarios and characteristics of problems where employing an FSM, especially with FSM_API, will yield significant benefits in terms of clarity, maintainability, and robustness.
