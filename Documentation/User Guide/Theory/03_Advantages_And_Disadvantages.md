@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 ﻿# 03\. Advantages and Disadvantages of Using FSMs
 
 > Like any architectural pattern, Finite State Machines come with their own set of benefits and drawbacks. Understanding these helps you make informed decisions about when and where to apply FSMs in your projects, maximizing their advantages while mitigating potential complexities.
