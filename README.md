@@ -255,6 +255,7 @@ MIT License. Use it, hack it, build amazing things with it.
 
 - **NuGet:** [TheSingularityWorkshop.FSM_API](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 - **Source Code:** [GitHub Repository](https://github.com/TrentBest/FSM_API)
+- **Benchmarking:** [How to measure FSM_API](Documentation/Benchmarking.md) · [Evidence and regression contract](Documentation/Performance/BenchmarkingContract.md)
 
 ### 💖 Support The Singularity Workshop
 
