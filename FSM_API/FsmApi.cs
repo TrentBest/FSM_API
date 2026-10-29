@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TheSingularityWorkshop.FSM_API.IntegerBacked;
 
 namespace TheSingularityWorkshop.FSM_API
@@ -58,6 +59,26 @@ namespace TheSingularityWorkshop.FSM_API
             public static void CreateProcessingGroup(string processingGroup)
             {
                 FSM_API.Create.CreateProcessingGroup(processingGroup);
+            }
+        }
+
+        /// <summary>Explicitly transfers FSM definitions between the string and integer representations.</summary>
+        public static class Transfer
+        {
+            /// <summary>Compiles a string-backed definition to integer-backed form with a deterministic state-name mapping.</summary>
+            public static FSMCompilationResult ToInteger(FSM definition, int fsmID, int processingGroupID = 0)
+            {
+                return FSMCompiler.Compile(definition, fsmID, processingGroupID);
+            }
+
+            /// <summary>Reconstructs a string-backed definition from an integer-backed definition using caller-supplied state names.</summary>
+            public static FSM ToString(
+                IntegerBacked.FSM definition,
+                string fsmName,
+                string processingGroup,
+                IReadOnlyDictionary<int, string> stateIDToName)
+            {
+                return FSMCompiler.Decompile(definition, fsmName, processingGroup, stateIDToName);
             }
         }
 
