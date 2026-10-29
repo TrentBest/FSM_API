@@ -1,4 +1,8 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Tick boundaries, deferred work, and registry ownership
+
+This implementation-focused chapter is part of the [FSM_API Theory learning path](README.md).
 
 FSM_API has a useful deferred-mutation mechanism, but **a deferred queue is not a global lock**. Understanding that distinction matters when a host updates or disposes instances.
 
