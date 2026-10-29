@@ -64,7 +64,7 @@ Also known as **nested FSMs**, HSMs allow states to contain their own sub-FSMs. 
     * **Reduced Complexity:** Breaking down a large FSM into smaller, manageable sub-FSMs makes design and debugging much easier.
     * **Code Reusability:** Common behaviors (e.g., `Attacking` in both `MeleeCombat` and `RangedCombat` superstates) can be represented once in a sub-FSM.
     * **Easier Global Transitions:** A transition out of a superstate means exiting *any* of its substates and moving to a new state in the parent FSM, simplifying global exits (like a "Stunned" state interrupting any combat action).
-* **FSM_API Relevance:** FSM_API can support Hierarchical FSMs by having separate FSM definitions that are activated/deactivated by the `onEnter` and `onExit` methods of a parent FSM's states. Your context object (IStateContext) would typically manage the active sub-FSM handle.
+* **FSM_API boundary:** FSM_API does not expose native nested-state or superstate semantics. An application can approximate hierarchy by composing separate FSM definitions and using parent-state `onEnter`/`onExit` actions to manage a child handle through its context. The application must implement activation, deactivation, history, and cross-level transition rules; these are composition responsibilities, not guarantees supplied by the library.
 
 
 
@@ -92,7 +92,7 @@ Concurrent FSMs allow a system to be in **multiple states simultaneously**, with
 
 ---
 
-By understanding these different types, you can leverage FSM_API to build systems that are not only robust and performant but also elegant and maintainable, regardless of their behavioral complexity.
+These classifications are useful modeling tools, not a list of built-in FSM_API modes. Mealy-style output, hierarchical nesting, and concurrent behavior require explicit modeling or application-level composition where the API has no dedicated primitive. Robustness and performance still depend on the concrete design, workload, and tests.
 
 ---
 
