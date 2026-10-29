@@ -99,6 +99,14 @@ These classifications are useful modeling tools, not a list of built-in FSM_API 
 
 [➡️ Continue to: 03. Advantages and Disadvantages of Using FSMs](03_Advantages_And_Disadvantages.md)
 
+## Verify the FSM_API-specific boundaries
+
+The descriptions above distinguish general FSM theory from features that this library actually exposes. For implementation details, inspect the [runtime interaction API](../../../FSM_API/FSM_API.Interaction.cs) and [internal tick/registry implementation](../../../FSM_API/FSM_API.Internal.cs). The [transition tests](../../../Tests/FSM_API_FSMTransition_Tests.cs), [instance-creation tests](../../../Tests/Create/FSM_API_Create_CreateInstance_Tests.cs), and [update tests](../../../Tests/Interaction/FSM_API_Interaction_Update_Tests.cs) are useful starting points for checking concrete behavior.
+
+These links identify source and test entry points; they do not mean every conceptual pattern in this chapter has a dedicated conformance test. In particular, hierarchical nesting and Mealy-style transition outputs are discussed as modeling choices, not asserted as native FSM_API modes.
+
+---
+
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
 
 ---
