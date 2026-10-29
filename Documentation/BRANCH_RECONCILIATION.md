@@ -234,3 +234,18 @@ The following live compare counts were refreshed against `development` after the
 ### Disposition remains blocked
 
 The remaining required work is a final review of the full 93-commit main 2.0 feature history, PR states and branch references, the remaining docs PRs, and current CI on the latest development head. This ledger deliberately does not provide a deletion list yet. No branch has been deleted and no NuGet package has been published.
+
+
+## Explicit disposition of remaining main 2.0 branch differences
+
+The current development implementation was compared directly with `feature/fsm-api-2.0` by tree/blob SHA, not inferred from merge-base diff counts:
+
+- Thirty shared IntegerBacked source/test files have identical blob IDs. `FSMRuntime.cs` differs only by the development-side lifecycle correction that sets `IsRegistered = false` when a handle is removed. Development also contains the compiler/decompiler, additive facade, replacement-lifecycle regression test, and later edge-case tests.
+- The feature branch's extra `FSM_ID`, `InitialState_ID`, `ProcessingGroup_ID`, and `CurrentStateID` fields on the string-backed classes are **not ported**. The release contract intentionally keeps string-backed identities readable and gives integer identity its own representation rather than mixing integer IDs into string definitions.
+- The feature branch's rename of the existing `FSM_API` public surface to `FsmApi` is **not ported**. Development adds `FsmApi` as an additive facade while retaining the existing API for compatibility.
+- The feature branch's `ChangeProcessingGroup` method is a convenience wrapper over the public `FSMModifier.WithProcessGroup(...).ModifyDefinition()` path. It is not required to prove the 2.0 integer-backing contract and is excluded from this release scope unless a later API review explicitly promotes it.
+- The feature branch's `IContext` / `DefaultStateContext` additions and `Context_ID` property are not required by the current `IStateContext` contract and are not ported.
+- The old project metadata/version edits and `Tests/IncrementalVersionTests.cs` are not ported: the 2.0 candidate is not a new 1.0.14 release, and the version-marker test is not runtime or package-version evidence.
+- Legacy source changes shared with `RefactoringToHashBacking` are superseded by the current string runtime, the separate direct-indexed IntegerBacked runtime, and later correctness fixes. The three side 2.0 branches (`-work`, `-next`, `-registry`) each have only a workflow-only branch commit relative to the main 2.0 feature branch; current development's stricter live Sith gate supersedes those workflow variants.
+
+This is the recorded rationale for not merging the main feature branch wholesale. The code/test work that is in scope is already on `development`; excluded historical experiments are documented rather than silently lost.
