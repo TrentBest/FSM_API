@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # 05. FSM Limitations and Alternatives
 
 > While Finite State Machines (FSMs) are excellent for managing discrete, state-driven behaviors, no single architectural pattern is universally applicable. Understanding the limitations of FSMs and knowing about alternative approaches is crucial for making informed design decisions and choosing the most effective solution for your specific problem.
