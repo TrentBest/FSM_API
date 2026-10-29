@@ -176,9 +176,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 "Execution",
                 compiled.StateIDToName);
 
-            Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
-            Assert.That(restored.GetAllTransitions()[0].From, Is.EqualTo(StringFsm.AnyStateIdentifier));
-            Assert.That(restored.GetAllTransitions()[0].To, Is.EqualTo("Finish"));
+            var restoredTransition = System.Linq.Enumerable.Single(restored.GetAllTransitions());
+            Assert.That(restoredTransition.From, Is.EqualTo(StringFsm.AnyStateIdentifier));
+            Assert.That(restoredTransition.To, Is.EqualTo("Finish"));
         }
 
         [Test]
