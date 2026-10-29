@@ -26,7 +26,7 @@
 
 ### FSM theory — concepts beyond the API
 
-[01. What Are Finite State Machines (FSMs)? — A Deeper Dive](Theory/01_What_Are_FSMs.md) · [02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent](Theory/02_Types_Of_FSMs.md) · [03. Advantages and Disadvantages of Using FSMs](Theory/03_Advantages_And_Disadvantages.md) · [04. When to Use Finite State Machines](Theory/04_When_To_Use_FSMs.md) · [05. FSM Limitations and Alternatives](Theory/05_FSM_Limitations_And_Alternatives.md) · [06. Tick boundaries, deferred work, and registry ownership](Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
+Start with the [FSM_API Theory learning path](Theory/README.md), which orders the chapters, explains how to move from theory to implementation, and distinguishes conceptual teaching aids from source- and test-backed behavior.
 
 
 ---
