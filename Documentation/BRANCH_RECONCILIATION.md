@@ -289,3 +289,41 @@ A direct method-name comparison was completed for the shared test files changed 
 - Development has 425 passing tests in the latest fully green code workflow [40963470313](https://github.com/TrentBest/FSM_API/actions/runs/40963470313), compared with 400 on historical feature-branch run [39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225). The additional tests include the string/integer compiler and transfer surface, replacement lifecycle, manual Any-State evaluation, and null callback/formatting cases.
 
 These differences are deliberate contract decisions, not test coverage to transplant blindly.
+
+
+## Final owner cleanup recommendation — 2026-10-29
+
+**Disposition: all 16 noncanonical branches are READY FOR OWNER DELETION in one batch.** The latest live inventory was exactly 18 branches, and the latest fully green workflow [40965093718](https://github.com/TrentBest/FSM_API/actions/runs/40965093718) matched the current `development` head `5acc04855343937d31d18646d7ae1c7bd7fe033b`: build/test/package preparation succeeded, documentation validation and DocFX succeeded, and NuGet publication was skipped.
+
+No branch has been deleted. The owner performs the one cleanup batch. Keep `master` and `development`.
+
+### Exact deletion list
+
+- [ ] `TrentBest/FSM_API:feature/fsm-api-2.0` — useful IntegerBacked code/tests are preserved; remaining legacy ID fields, API rename, 1.0.14 metadata/version ledger, and obsolete Unity note have documented exclusion rationales. **Open draft PR #18** remains as historical review; do not merge it.
+- [ ] `TrentBest/FSM_API:feature/fsm-api-2.0-work` — older duplicate 2.0 snapshot; its workflow-only difference is superseded by current development.
+- [ ] `TrentBest/FSM_API:feature/fsm-api-2.0-next` — older duplicate 2.0 snapshot; its workflow-only difference is superseded by current development.
+- [ ] `TrentBest/FSM_API:feature/fsm-api-2.0-registry` — older duplicate 2.0 snapshot; its workflow-only difference is superseded by current development.
+- [ ] `TrentBest/FSM_API:feature/integer-backed-runtime` — obsolete registry scaffold and nonbehavioral incremental-version test are superseded/not needed.
+- [ ] `TrentBest/FSM_API:RefactoringToHashBacking` — old string/hash-ID experiment; its only branch-only commit relative to the main 2.0 branch changes workflow.
+- [ ] `TrentBest/FSM_API:fix/manual-any-state-evaluation` — behavior/tests are selectively integrated and validated. **Open draft PR #23** remains as historical review; do not merge it wholesale.
+- [ ] `TrentBest/FSM_API:AddingUnitTests` — distinct useful state tests are preserved; obsolete project metadata and historical API variants are not needed.
+- [ ] `TrentBest/FSM_API:Splitting-FSM_API-class-into-multiple-partial-classes` — zero branch-only commits.
+- [ ] `TrentBest/FSM_API:TickCountingSystem` — zero branch-only commits.
+- [ ] `TrentBest/FSM_API:TargetingStarcraft2DotNet` — zero branch-only commits.
+- [ ] `TrentBest/FSM_API:HireMeFSMDemo` — owner confirmed this old demo is no longer needed.
+- [ ] `TrentBest/FSM_API:WindowsFormsEditor` — owner confirmed the standalone editor is no longer needed.
+- [ ] `TrentBest/FSM_API:benchmark-contract-docs` — contract is preserved on development. **Open draft PR #25** remains as historical review; no merge needed.
+- [ ] `TrentBest/FSM_API:docs/benchmarking` — guide is preserved on development. **Open draft PR #20** remains as historical review; no merge needed.
+- [ ] `TrentBest/FSM_API:docs/readme-standard` — README/readiness content is adapted on development. **Open PR #22** remains as historical review; no merge needed.
+
+### Open PR handling
+
+PRs #18, #20, #22, #23, and #25 remain open and have been annotated with the preservation/disposition rationale. No PR was closed or merged. Deleting their source branches leaves those PRs without an active source branch; the owner may retain the historical records or close them manually after reviewing the comments. Their presence does not indicate unpreserved implementation work.
+
+### Separate release-readiness note
+
+Branch cleanup readiness is not the same as 2.0 publication authorization. The live Sith gate blocks publication while extra branches exist, and the owner must explicitly authorize any release after the two-branch inventory is restored. One documentation-standard detail remains unresolved: the accessible FSM_API/FSM_COS trees contain the static `Documentation/Branding/TheSingularityWorkshop.png` footer asset, but no canonical `Avatar.jpg` was found. No speculative/broken Avatar URL was added. Resolve that asset reference before claiming the README/footer standard is fully compliant.
+
+### Owner action
+
+Perform one batch deletion of the 16 exact refs above, then refresh the live branch API and verify that only `TrentBest/FSM_API:master` and `TrentBest/FSM_API:development` remain. Do not publish NuGet as part of branch cleanup.
