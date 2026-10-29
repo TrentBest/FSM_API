@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 ﻿# 01. What Are Finite State Machines (FSMs)? — A Deeper Dive
 
 Before learning the term *finite-state machine*, notice how often you already reason about states.
