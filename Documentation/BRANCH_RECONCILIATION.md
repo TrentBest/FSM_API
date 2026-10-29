@@ -249,3 +249,29 @@ The current development implementation was compared directly with `feature/fsm-a
 - Legacy source changes shared with `RefactoringToHashBacking` are superseded by the current string runtime, the separate direct-indexed IntegerBacked runtime, and later correctness fixes. The three side 2.0 branches (`-work`, `-next`, `-registry`) each have only a workflow-only branch commit relative to the main 2.0 feature branch; current development's stricter live Sith gate supersedes those workflow variants.
 
 This is the recorded rationale for not merging the main feature branch wholesale. The code/test work that is in scope is already on `development`; excluded historical experiments are documented rather than silently lost.
+
+
+## Historical branch CI evidence snapshot — 2026-10-29 22:13 UTC
+
+GitHub Actions was queried by branch name. “No run found” means the Actions runs endpoint returned no run for that branch in the current query; it is not a claim that the branch code is correct.
+
+| Branch | Latest returned run | Result and interpretation |
+|---|---|---|
+| `feature/fsm-api-2.0` | [39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), head `dd96646a`, 2026-10-18 | Success on the historical branch head. Its IntegerBacked files are represented on development, with later fixes and additional compiler/transfer tests; the run does not replace validation of current development. |
+| `feature/fsm-api-2.0-work` | None returned | No branch-specific Actions evidence found in the query. |
+| `feature/fsm-api-2.0-next` | None returned | No branch-specific Actions evidence found in the query. |
+| `feature/fsm-api-2.0-registry` | None returned | No branch-specific Actions evidence found in the query. |
+| `feature/integer-backed-runtime` | [34244086368](https://github.com/TrentBest/FSM_API/actions/runs/34244086368), head `3b5d5f60`, 2026-09-08 | Failure on the old integer-runtime foundation. Its registry scaffold was later removed from the main 2.0 branch; its incremental-version test is not behavioral evidence. |
+| `RefactoringToHashBacking` | None returned | No branch-specific Actions evidence found in the query. |
+| `fix/manual-any-state-evaluation` | [39193319566](https://github.com/TrentBest/FSM_API/actions/runs/39193319566), head `3c6e4ca5`, 2026-10-19 | Success on the historical PR head. Its useful behavioral intent is now represented by the current development implementation and tests; the old branch is not a wholesale merge target. |
+| `AddingUnitTests` | None returned | No branch-specific Actions evidence found in the query. Its distinct state-setter and formatting tests have been added to development and validated there. |
+| `Splitting-FSM_API-class-into-multiple-partial-classes` | None returned | No branch-specific Actions evidence found; compare has zero branch-only commits. |
+| `TickCountingSystem` | None returned | No branch-specific Actions evidence found; compare has zero branch-only commits. |
+| `TargetingStarcraft2DotNet` | None returned | No branch-specific Actions evidence found; compare has zero branch-only commits. |
+| `HireMeFSMDemo` | None returned | No branch-specific Actions evidence found. Owner has said the demo is no longer needed. |
+| `WindowsFormsEditor` | None returned | No branch-specific Actions evidence found. Owner has said the editor is no longer needed. |
+| `benchmark-contract-docs` | [40231261197](https://github.com/TrentBest/FSM_API/actions/runs/40231261197), head `52461ccb`, 2026-10-25 | Success on its documentation PR head. The contract has been preserved and the current development workflow is green on the adopted version. |
+| `docs/benchmarking` | [37082503547](https://github.com/TrentBest/FSM_API/actions/runs/37082503547), head `29debbf9`, 2026-10-03 | Success on the historical documentation branch head. The guide has been preserved and current development CI validated the adopted content. |
+| `docs/readme-standard` | [37850996490](https://github.com/TrentBest/FSM_API/actions/runs/37850996490), head `b6b0b39e`, 2026-10-08 | Success on the historical README branch head. The onboarding content has been adapted and current development CI validated the README. |
+
+The current development test job passed with 425 tests and the corresponding full workflow [40963470313](https://github.com/TrentBest/FSM_API/actions/runs/40963470313) succeeded. Newer documentation-only commits are running through CI independently; verify the latest development head's full workflow before issuing the final cleanup recommendation.
