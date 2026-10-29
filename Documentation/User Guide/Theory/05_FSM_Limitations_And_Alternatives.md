@@ -79,6 +79,14 @@ FSM_API provides a solid foundation for robust state management, and understandi
 
 ---
 
+## Verify the FSM_API-specific boundaries
+
+Use the [runtime interaction API](../../../FSM_API/FSM_API.Interaction.cs) and [internal tick/registry implementation](../../../FSM_API/FSM_API.Internal.cs) to check library-specific claims about instance updates and processing groups. The [instance-creation tests](../../../Tests/Create/FSM_API_Create_CreateInstance_Tests.cs) and [update tests](../../../Tests/Interaction/FSM_API_Interaction_Update_Tests.cs) provide test entry points for instance and scheduling behavior.
+
+The comparisons with behavior trees, planners, ECS, rules engines, and the State Pattern are architectural guidance, not benchmark results or claims that one approach is universally faster. Choose against the requirements of the actual workload, then validate the implementation with focused tests and named benchmarks.
+
+---
+
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
 
 ---
