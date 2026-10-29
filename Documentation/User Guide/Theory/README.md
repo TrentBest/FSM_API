@@ -1,4 +1,4 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 
 # FSM_API Theory — A Learning Path
 
@@ -48,4 +48,7 @@ This repository owns general finite-state-machine theory and FSM_API-specific be
 
 ---
 
-<p align="center"><em>The Singularity Workshop — If a picture is worth a thousand words, what is a living picture worth?</em></p>
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
