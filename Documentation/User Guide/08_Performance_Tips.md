@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # 08\. Performance Tips & Best Practices
 
 > FSM\_API is built for **high performance and efficiency**, capable of managing hundreds or even thousands of active state machines simultaneously. Achieving optimal performance, however, also depends on how you design and integrate your FSMs. This guide provides best practices and tips to ensure your applications run smoothly.
@@ -58,9 +61,11 @@ Transition conditions (`Func<IStateContext, bool>`) are evaluated frequently, of
 
 The `processRate` parameter (set via `FSMBuilder.WithProcessRate()` or `FSM_API.CreateFiniteStateMachine()`) controls how often an FSM instance's `onUpdate` and transition conditions are evaluated. This is your primary tool for managing CPU load.
 
-  * **`processRate = 1` (Default):** Updates every tick. Use for critical, real-time FSMs (e.g., player input, combat AI).
-  * **`processRate = N` (N \> 1):** Updates every N ticks. Ideal for less critical or slower-moving FSMs (e.g., ambient AI, background processes, distant enemies). For example, a `processRate` of `5` means the FSM only updates its `onUpdate` and checks conditions every 5 frames/ticks.
-  * **`processRate = 0`:** Updates *only* when explicitly called via `FSM_API.Interaction.Step()`. Perfect for purely event-driven FSMs (e.g., UI elements that only react to user clicks, backend processes triggered by messages).
+  * **`processRate = -1`:** The scheduler processes the instance on every call to `Interaction.Update(processingGroup)`. The host still controls the timing of those calls.
+  * **`processRate = 1`:** The scheduler considers the instance on every update call for its processing group. This is the default for the runtime tick cadence described by this API.
+  * **`processRate = N` (N > 1):** The scheduler processes the instance every Nth call to `Interaction.Update(processingGroup)`. This is a count of update calls—not milliseconds or a wall-clock duration. For example, `processRate: 5` means every fifth call to update that group; if the host calls the group once per frame, that corresponds to every fifth frame.
+  * **`processRate = 0`:** Automatic group ticking skips the instance. Use explicit stepping or event/interaction APIs when you want to control evaluation yourself; do not interpret zero as a timed interval.
+  * **Values below `-1`:** The creation API coerces them to `0` and reports an internal API error. Prefer valid documented values.
 
 <!-- end list -->
 
@@ -145,3 +150,8 @@ By thoughtfully applying these performance tips and best practices, you can ensu
 -----
 
 [➡️ Continue to: 09. Common Use Cases & Examples](09_Common_Use_Cases.md)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
