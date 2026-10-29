@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # FSM_API Branch Reconciliation Ledger
 
 **Purpose:** Reconcile pre-Sith-policy branches deliberately before reducing the repository to the two enduring branches, `master` and `development`.
