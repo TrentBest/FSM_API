@@ -23,8 +23,8 @@ using TheSingularityWorkshop.FSM_API;
 
 var namedDefinition = FsmApi.Create
     .CreateFiniteStateMachine("Worker", processRate: -1, processingGroup: "Update")
-    .State("Idle")
-    .State("Working")
+    .State("Idle", onEnter: null, onUpdate: null, onExit: null)
+    .State("Working", onEnter: null, onUpdate: null, onExit: null)
     .WithInitialState("Idle")
     .Transition("Idle", "Working", context => true)
     .BuildDefinition();
