@@ -4,14 +4,9 @@
 
 ---
 
-## 📚 Table of Contents (for Theory Folder)
+## Continue the learning path
 
-* [01. What Are Finite State Machines (FSMs)? - A Deeper Dive](01_What_Are_FSMs.md)
-* [02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent](02_Types_Of_FSMs.md)
-* [03. Advantages and Disadvantages of Using FSMs](03_Advantages_And_Disadvantages.md)
-* [04. When to Use Finite State Machines](04_When_To_Use_FSMs.md)
-* [05. FSM Limitations and Alternatives](05_FSM_Limitations_And_Alternatives.md)
-* [06. Tick boundaries, deferred work, and registry ownership](06_Tick_Boundaries_And_Registry_Ownership.md)
+Return to the [FSM_API Theory learning path](README.md) for the complete chapter sequence and implementation links.
 
 ---
 
