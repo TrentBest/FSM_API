@@ -51,9 +51,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(state));
             }
 
-            if (state.StateID < 0 || state.StateID == AnyStateIdentifier || state.StateID == int.MaxValue)
+            if (state.StateID < 0 || state.StateID == AnyStateIdentifier)
             {
-                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes that can be incremented to a required array length.");
+                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes.");
             }
 
             EnsureStateCapacity(state.StateID + 1);
@@ -215,89 +215,28 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _))
+                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                // A guard is user code and may remove or replace this transition, or
-                // remove earlier entries and shift the list while it is being evaluated.
-                var matched = transition.Evaluate(context);
-                var currentIndex = _anyStateTransitions.IndexOf(transition);
-                if (currentIndex < 0)
-                {
-                    i--;
-                    continue;
-                }
-
-                i = currentIndex;
-                if (!matched || !TryGetState(transition.ToID, out _))
-                {
-                    continue;
-                }
-
-                if (TryEvaluateTransition(currentID, transition, _anyStateTransitions, context))
-                {
-                    return transition.ToID;
-                }
-
-                return currentID;
+                ForceTransition(currentID, transition.ToID, context);
+                return transition.ToID;
             }
 
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
-                var matched = transition.Evaluate(context);
-                var currentIndex = _transitions.IndexOf(transition);
-                if (currentIndex < 0)
-                {
-                    i--;
-                    continue;
-                }
-
-                i = currentIndex;
-                if (!matched || !TryGetState(transition.ToID, out _))
-                {
-                    continue;
-                }
-
-                if (TryEvaluateTransition(currentID, transition, _transitions, context))
-                {
-                    return transition.ToID;
-                }
-
-                return currentID;
+                ForceTransition(currentID, transition.ToID, context);
+                return transition.ToID;
             }
 
             return currentID;
-        }
-
-        private bool TryEvaluateTransition(int currentID, FSMTransition transition, List<FSMTransition> transitions, IStateContext context)
-        {
-            if (!transitions.Contains(transition) || !TryGetState(transition.ToID, out var nextState))
-            {
-                return false;
-            }
-
-            if (TryGetState(currentID, out var currentState))
-            {
-                currentState.Exit(context);
-            }
-
-            // Exit callbacks may edit the blueprint. Do not enter a target for a
-            // transition that no longer exists or whose target was removed.
-            if (!transitions.Contains(transition) || !TryGetState(transition.ToID, out nextState))
-            {
-                return false;
-            }
-
-            nextState.Enter(context);
-            return true;
         }
 
         /// <summary>
@@ -309,21 +248,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public int Step(int currentID, IStateContext context)
         {
-            // Preserve the public direct-Step contract: a direct step enters its target immediately.
-            return StepCore(currentID, context, enterTargetImmediately: true, out _);
-        }
-
-        /// <summary>
-        /// Executes a normal handle update, deferring transition-target entry until the next update.
-        /// </summary>
-        internal int StepDeferred(int currentID, IStateContext context, out bool exitedWithoutTransition)
-        {
-            return StepCore(currentID, context, enterTargetImmediately: false, out exitedWithoutTransition);
-        }
-
-        private int StepCore(int currentID, IStateContext context, bool enterTargetImmediately, out bool exitedWithoutTransition)
-        {
-            exitedWithoutTransition = false;
             if (!TryGetState(currentID, out var currentState))
             {
                 ForceTransition(currentID, InitialStateID, context);
@@ -335,86 +259,26 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _))
-                {
-                    continue;
-                }
-
-                // Guards are user callbacks and may mutate this runtime-editable definition.
-                var matched = transition.Evaluate(context);
-                var currentIndex = _anyStateTransitions.IndexOf(transition);
-                if (currentIndex < 0)
-                {
-                    // The transition was removed or replaced while its guard ran.
-                    i--;
-                    continue;
-                }
-
-                // A callback may remove an earlier item, shifting this transition left.
-                // Resume iteration from its current index so no remaining rule is skipped.
-                i = currentIndex;
-                if (!matched || !TryGetState(transition.ToID, out _))
+                if (!TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
-
-                // Exit callbacks can mutate both states and transitions. A removed/replaced
-                // rule is canceled; the source has exited, so the handle must defer recovery.
-                if (_anyStateTransitions.IndexOf(transition) < 0 ||
-                    !TryGetState(transition.ToID, out var nextState))
-                {
-                    exitedWithoutTransition = true;
-                    return currentID;
-                }
-
-                if (enterTargetImmediately)
-                {
-                    nextState.Enter(context);
-                }
+                nextState.Enter(context);
                 return transition.ToID;
             }
 
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _))
-                {
-                    continue;
-                }
-
-                // Guards are user callbacks and may mutate this runtime-editable definition.
-                var matched = transition.Evaluate(context);
-                var currentIndex = _transitions.IndexOf(transition);
-                if (currentIndex < 0)
-                {
-                    // The transition was removed or replaced while its guard ran.
-                    i--;
-                    continue;
-                }
-
-                // A callback may remove an earlier item, shifting this transition left.
-                i = currentIndex;
-                if (!matched || !TryGetState(transition.ToID, out _))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
-
-                // Exit callbacks can mutate both states and transitions.
-                if (_transitions.IndexOf(transition) < 0 ||
-                    !TryGetState(transition.ToID, out var nextState))
-                {
-                    exitedWithoutTransition = true;
-                    return currentID;
-                }
-
-                if (enterTargetImmediately)
-                {
-                    nextState.Enter(context);
-                }
+                nextState.Enter(context);
                 return transition.ToID;
             }
 
@@ -466,7 +330,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             var newLength = _states.Length == 0 ? 4 : _states.Length;
             while (newLength < requiredLength)
             {
-                newLength = newLength > int.MaxValue / 2 ? requiredLength : newLength * 2;
+                newLength *= 2;
             }
 
             Array.Resize(ref _states, newLength);

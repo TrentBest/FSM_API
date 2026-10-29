@@ -27,9 +27,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (definition.FSM_ID < 0 || definition.FSM_ID == int.MaxValue)
+            if (definition.FSM_ID < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes that can be incremented to a required array length.");
+                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
             }
 
             definition.ProcessingGroupID = processingGroupID;
@@ -41,7 +41,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 {
                     if (_handles[i].FSM_ID == definition.FSM_ID)
                     {
-                        _handles[i].IsRegistered = false;
                         _handles.RemoveAt(i);
                     }
                 }
@@ -69,13 +68,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             if (!TryGetDefinition(fsmID, out var definition))
             {
                 throw new KeyNotFoundException($"FSM definition '{fsmID}' is not registered.");
-            }
-
-            // Handle IDs are monotonically increasing for the lifetime of this runtime. Refuse
-            // exhaustion rather than wrapping to a previously issued identity.
-            if (_nextHandleID == int.MaxValue)
-            {
-                throw new InvalidOperationException("The integer FSM runtime has exhausted its unique handle ID range.");
             }
 
             var handle = new FSMHandleInt(definition, context, _nextHandleID++);
@@ -259,7 +251,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             var newLength = _definitions.Length == 0 ? 4 : _definitions.Length;
             while (newLength < requiredLength)
             {
-                newLength = newLength > int.MaxValue / 2 ? requiredLength : newLength * 2;
+                newLength *= 2;
             }
 
             Array.Resize(ref _definitions, newLength);

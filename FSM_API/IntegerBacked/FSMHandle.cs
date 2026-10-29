@@ -71,38 +71,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             try
             {
-                // Match the string-backed lifecycle: enter the current state before its
-                // first update, but defer entry into a transition target until next Update.
-                if (!HasEnteredCurrentState)
-                {
-                    var currentState = Definition.GetState(CurrentStateID);
-                    if (currentState != null)
-                    {
-                        currentState.Enter(Context);
-                        HasEnteredCurrentState = true;
-                    }
-                }
-
-                var previousStateID = CurrentStateID;
-                var previousStateWasDefined = Definition.HasState(previousStateID);
-                CurrentStateID = Definition.StepDeferred(CurrentStateID, Context, out var exitedWithoutTransition);
-
-                if (exitedWithoutTransition)
-                {
-                    HasEnteredCurrentState = false;
-                    return;
-                }
-
-                // Invalid-state recovery forces entry into the initial state immediately.
-                // Keep the handle flag aligned so the next update does not enter it twice.
-                if (!previousStateWasDefined && Definition.HasState(CurrentStateID))
-                {
-                    HasEnteredCurrentState = true;
-                }
-                else
-                {
-                    HasEnteredCurrentState = CurrentStateID == previousStateID && HasEnteredCurrentState;
-                }
+                CurrentStateID = Definition.Step(CurrentStateID, Context);
+                HasEnteredCurrentState = true;
             }
             catch (Exception ex)
             {
