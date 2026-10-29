@@ -275,3 +275,17 @@ GitHub Actions was queried by branch name. “No run found” means the Actions 
 | `docs/readme-standard` | [37850996490](https://github.com/TrentBest/FSM_API/actions/runs/37850996490), head `b6b0b39e`, 2026-10-08 | Success on the historical README branch head. The onboarding content has been adapted and current development CI validated the README. |
 
 The current development test job passed with 425 tests and the corresponding full workflow [40963470313](https://github.com/TrentBest/FSM_API/actions/runs/40963470313) succeeded. Newer documentation-only commits are running through CI independently; verify the latest development head's full workflow before issuing the final cleanup recommendation.
+
+
+## Main 2.0 branch test-case audit
+
+A direct method-name comparison was completed for the shared test files changed on `feature/fsm-api-2.0` (create, error, builder, engine, handle, modifier, state, transition, lifecycle, sequence, interaction, and internal registry tests):
+
+- The public create/error/handle/transition/lifecycle/sequence/interaction/internal suites have matching test method names on development; the edits are largely old `FsmApi` renames or old versions of assertions, not missing test cases.
+- Three historical expectations are intentionally superseded rather than copied:
+  - `Engine_AutoShutdown_On_Invalid_Context` expected an invalid context to destroy the handle. Development instead suspends execution while `IsValid == false`, retains the caller-owned context/registered handle, and resumes the same handle if it becomes valid again. This is documented in [the context implementation guide](User%20Guide/05_Context_Implementation.md) and tested by `Engine_Invalid_Context_Suspends_And_Can_Resume_Same_Handle`.
+  - `FSMBuilder_BuildDefinition_FailsWhenNoStatesAdded` is superseded by development tests that explicitly require an empty definition to be built safely, including `FSMBuilder_BuildDefinition_WithNoStates_ReturnsValidEmptyDefinition`.
+  - `HardResetAPI_RemovesFSMInstanceTest` is superseded by `HardResetAPI_RemovesFSMInstanceAndMarksHandleDestroyedWithoutInvalidatingContext`, which asserts both handle destruction and preservation of caller-owned context validity.
+- Development has 425 passing tests in the latest fully green code workflow [40963470313](https://github.com/TrentBest/FSM_API/actions/runs/40963470313), compared with 400 on historical feature-branch run [39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225). The additional tests include the string/integer compiler and transfer surface, replacement lifecycle, manual Any-State evaluation, and null callback/formatting cases.
+
+These differences are deliberate contract decisions, not test coverage to transplant blindly.
