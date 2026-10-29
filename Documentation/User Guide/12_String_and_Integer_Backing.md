@@ -26,7 +26,7 @@ var namedDefinition = FsmApi.Create
     .State("Idle")
     .State("Working")
     .WithInitialState("Idle")
-    .Transition("Idle", "Working", context => IsWorkAvailable(context))
+    .Transition("Idle", "Working", context => true)
     .BuildDefinition();
 ```
 
