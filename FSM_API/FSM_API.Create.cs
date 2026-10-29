@@ -44,7 +44,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// The default processing rate for instances of this FSM definition.
             /// <list type="bullet">
             /// <item><term>0 (default)</term><description>Event-driven: FSM instances will only process when explicitly triggered by an event.</description></item>
-            /// <item><term>&gt; 0</term><description>Tick-based: FSM instances will process at a fixed interval (e.g., in milliseconds), in addition to event triggers.</description></item>
+            /// <item><term>&gt; 0</term><description>Tick-based: FSM instances are processed every Nth call to `Interaction.Update(processingGroup)`, where N is `processRate`, in addition to event triggers. This is update-call/frame-based scheduling, not a wall-clock interval; the host determines how often `Interaction.Update` is called.</description></item>
             /// <item><term>-1</term><description>Manual: FSM instances require explicit calls to their process method (e.g., FSMHandle.Process()) and are not automatically ticked or purely event-driven.</description></item>
             /// </list>
             /// Values less than -1 will be silently coerced to 0 (event-driven).
