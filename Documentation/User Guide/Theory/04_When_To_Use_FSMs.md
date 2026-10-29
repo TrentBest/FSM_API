@@ -1,4 +1,4 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 
 # 04. When to Use Finite State Machines
 
@@ -74,8 +74,9 @@ By recognizing these patterns in your problem domain, you can effectively levera
 
 [➡️ Continue to: 05. FSM Limitations and Alternatives](05_FSM_Limitations_And_Alternatives.md)
 
-<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
-</a>
-
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
