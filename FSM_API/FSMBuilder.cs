@@ -356,7 +356,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// same name already exists in the system, it is overwritten by this definition.
         /// </para>
         /// </remarks>
-        public void BuildDefinition()
+        public FSM BuildDefinition()
         {
             string finalInitialState = string.Empty;
             if (string.IsNullOrWhiteSpace(_initialState))
@@ -411,7 +411,8 @@ namespace TheSingularityWorkshop.FSM_API
             _processGroup = "Update";
             _anyTransitions.Clear();
             _fsmName = "UnNamedFSM"; // Reset to default name for next use
-            
+
+            return machine;
         }
 
         /// <summary>
