@@ -124,11 +124,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void Decompile_RestoresNamedDefinitionUsingExplicitMapping()
         {
             var updated = 0;
-            var source = new StringFsm { Name = "Authored", ProcessingGroup = "Authoring", ProcessRate = 3 };
-            source.AddState(new StringFsmState("Start", null, _ => updated++, null));
-            source.AddState(new StringFsmState("Finish", null, null, null));
-            source.InitialState = "Start";
-            source.AddTransition("Start", "Finish", _ => true);
+            var source = FSM_API.Create.CreateFiniteStateMachine("Authored", 3, "Authoring")
+                .State("Start", onUpdate: _ => updated++)
+                .State("Finish")
+                .WithInitialState("Start")
+                .Transition("Start", "Finish", _ => true)
+                .BuildDefinition();
 
             var compiled = FSMCompiler.Compile(source, 49, 7);
             var restored = FSMCompiler.Decompile(
