@@ -145,7 +145,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
 
             var restoredStart = new FSMHandle(restored, new Context());
-            restoredStart.Initialize();
             restoredStart.Update("Execution");
             Assert.That(updated, Is.EqualTo(1));
         }
