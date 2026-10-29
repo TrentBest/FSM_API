@@ -389,5 +389,21 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Is.EqualTo(new[] { "update:A", "guard:any:B", "exit:A" }));
         }
 
+        [Test]
+        public void EvaluateConditions_RecognizesLegacyAnyStateMarker()
+        {
+            var definition = new FSM { Name = "LegacyAnyStateMarker", InitialState = "A" };
+            definition.AddState(new FSMState("A", null, null, null));
+            definition.AddState(new FSMState("B", null, null, null));
+            definition.AddAnyStateTransition(new FSMTransition("*", "B", _ => true));
+
+            var handle = new FSMHandle(definition, new Context());
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+        }
+
+
     }
 }
