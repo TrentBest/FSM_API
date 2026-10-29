@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # 04. FSMBuilder Deep Dive: Building Your FSMs
 
 > The `FSMBuilder` is your primary tool for **designing and configuring the blueprint** for your Finite State Machines. It provides a fluent, step-by-step approach to define complex state behaviors and transitions.
@@ -220,10 +223,12 @@ builder.WithProcessRate(5); // Instances of this FSM will update every 5 ticks o
 
 ### Parameters:
 
-  * `processRate` (int): The update frequency.
-      * `0`: Only updates when manually stepped using `FSM_API.Step()`.
-      * `1`: Updates every tick.
-      * `N` (where N \> 1): Updates every N ticks.
+  * `processRate` (int): Controls automatic processing-group ticks; the host controls when each `Interaction.Update(processingGroup)` call occurs.
+      * `-1`: Process on every update call.
+      * `0`: Skip automatic group ticks. Use explicit stepping or interaction/event APIs when evaluation should be controlled directly.
+      * `1`: Process on every update call.
+      * `N` (where N > 1): Process every Nth update call for that group. This is a count of calls, not a duration in milliseconds or wall-clock time.
+      * Values below `-1` are coerced to `0` by the creation API and report an internal API error.
 
 -----
 
@@ -312,3 +317,8 @@ An empty builder is allowed. That example registers an unnamed definition with z
 -----
 
 [➡️ Continue to: 05. Understanding and Implementing Your Context (IStateContext)](05_Context_Implementation.md)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
