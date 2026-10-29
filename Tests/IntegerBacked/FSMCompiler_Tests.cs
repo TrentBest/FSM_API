@@ -124,12 +124,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void Decompile_RestoresNamedDefinitionUsingExplicitMapping()
         {
             var updated = 0;
-            var source = FSM_API.Create.CreateFiniteStateMachine("Authored", 3, "Authoring")
-                .State("Start", onUpdate: _ => updated++)
-                .State("Finish")
-                .WithInitialState("Start")
-                .Transition("Start", "Finish", _ => true)
-                .BuildDefinition();
+            var source = new StringFsm { Name = "Authored" };
+            source.AddState(new StringFsmState("Start", null, _ => updated++, null));
+            source.AddState(new StringFsmState("Finish", null, null, null));
+            source.InitialState = "Start";
+            source.AddTransition("Start", "Finish", _ => true);
 
             var compiled = FSMCompiler.Compile(source, 49, 7);
             var restored = FSMCompiler.Decompile(
@@ -140,7 +139,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.That(restored.Name, Is.EqualTo("Restored"));
             Assert.That(restored.ProcessingGroup, Is.EqualTo("Execution"));
-            Assert.That(restored.ProcessRate, Is.EqualTo(3));
+            Assert.That(restored.ProcessRate, Is.EqualTo(source.ProcessRate));
             Assert.That(restored.InitialState, Is.EqualTo("Start"));
             Assert.That(restored.GetAllStates().Count, Is.EqualTo(2));
             Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
