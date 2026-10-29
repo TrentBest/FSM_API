@@ -1,4 +1,4 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 
 # Tick boundaries, deferred work, and registry ownership
 
@@ -49,3 +49,8 @@ A stack trace is evidence of where a failure surfaced, not by itself proof of wh
 - [Renderer integration investigation](../../../RendererLLM.md)
 
 The implementation and regression tests are authoritative. Revisit this document whenever the registry ownership or deferred-mutation contract changes.
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
