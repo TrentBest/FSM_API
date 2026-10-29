@@ -1,196 +1,40 @@
 ![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
-FSM_API
+# FSM_API
+
+**FSM_API is a framework-independent C# finite-state-machine library for defining behavior separately from the objects whose behavior it controls.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget&logoColor=white)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 [![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
-
 [![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Last commit](https://img.shields.io/github/last-commit/TrentBest/FSM_API/master)](https://github.com/TrentBest/FSM_API/commits/master)
 [![Code Coverage](https://img.shields.io/codecov/c/github/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/actions?query=workflow%3A%22dotnet.yml%22+branch%3Amaster)
-[![Known Vulnerabilities](https://snyk.io/test/github/TrentBest/FSM_API/badge.svg)](https://snyk.io/test/github/TrentBest/FSM_API)
 
-[![GitHub stars](https://img.shields.io/github/stars/TrentBest/FSM_API?style=social)](https://github.com/TrentBest/FSM_API/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/graphs/contributors)
-[![Open Issues](https://img.shields.io/github/issues/TrentBest/FSM_API)](https://github.com/TrentBest/FSM_API/issues)
+## 🟣 01 — Why use FSM_API?
 
-[![CoderLegion](https://coderlegion.com/cl_badge_logo1.png) Join the CoderLegion Community](https://coderlegion.com/user/The+Singularity+Workshop)
+Application behavior often becomes tangled into large update methods, UI callbacks, or framework-specific components. FSM_API gives that behavior an explicit model: **states, transition conditions, and actions**, bound to a context object that remains owned by your application.
 
-Blazing-fast, software-agnostic Finite State Machine system for any C# application.
+Define a state-machine blueprint once, create independent instances for your own objects, and update the processing group from your application's existing loop. FSM_API does not require a game engine, UI framework, web host, database, or other external package.
 
-🔍 Overview
+A useful mental model:
 
-FSM_API is a modular, runtime-safe, and fully event-aware Finite State Machine (FSM) 
-system designed to plug directly into any C# application from enterprise software to 
-games, simulations, robotics, or reactive systems. It provides a powerful and decoupled
-approach to managing complex state-driven logic, ensuring clarity, consistency, and 
-control across diverse domains.
-
-    ✅ Deferred mutation handling (registry mutations are processed on the main thread)
-
-    🧠 Decoupled state logic from data (POCO-friendly)
-
-    🏗️ Define once, instantiate many
-
-    🛠️ Error-tolerant FSM lifecycle management
-
-    🧪 Dynamic update ticking with frame/process throttling
-
-No external dependencies. No frameworks required. No boilerplate setup. Pure C# power for your 
-application's core logic.
-
-
-💡 Why FSM_API?
-
-
-Traditional FSM systems often suffer from tight coupling to specific environments or force rigid 
-coding patterns. FSM_API liberates your state management:
-
-| Feature                           | FSM_API ✅ | Traditional FSM ❌ |
-|----------------------------------|------------|--------------------|
-| Framework agnostic                | ✅         | ❌                 |
-| Runtime-modifiable definitions    | ✅         | ❌                 |
-| Deferred mutation queue            | ✅         | ❌                 |
-| Named FSMs & Processing Groups    | ✅         | ❌                 |
-| Built-in diagnostics & thresholds| ✅         | ❌                 |
-| Pure C# with no external deps     | ✅         | ❌                 |
-
-🚀 Quickstart
-
-A simple FSM is often best understood visually. For example, our `LightSwitchFSM` has two states, `Off` and `On`, and can only transition between them.
-
-Here is the same two-state machine as a **living visual**. The animation highlights the illustrative active state and transition path; it is a teaching aid, not a live connection to a running process.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg" alt="Animated LightSwitch FSM showing Off and On states, transition conditions, and the application tick cycle" width="900">
-</p>
-
-[Open the SVG source](Documentation/User%20Guide/Visuals/Light_Switch_FSM.svg) · [Read the FSM_API getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md) · [LLM usage reference](FSM_API_LLM_USAGE.md) · [Explore the animated fox-and-dog C# demo](https://github.com/TrentBest/SimpleDemos)
-
-The diagram follows the same `Off`/`On` states and context-driven transition conditions used in the C# example below.
-
-Here is how the FSM interacts with your application:
-
-```mermaid
-sequenceDiagram
-    participant App as Application
-    participant FSM_API as FSM_API
-    participant LightSwitch as IStateContext (LightSwitch)
-
-    App->>FSM_API: Create.CreateInstance("LightSwitchFSM", lightSwitch)
-    FSM_API->>LightSwitch: onEnter("Off")
-    loop Application Update Loop
-        App->>FSM_API: Interaction.Update("MainLoop")
-        FSM_API->>FSM_API: Evaluate Conditions
-        alt Condition Met (lightSwitch.IsOn == true)
-            FSM_API->>LightSwitch: onExit("Off")
-            FSM_API->>LightSwitch: onEnter("On")
-        else Condition Not Met
-            FSM_API->>FSM_API: Stay in Current State
-        end
-    end
+```text
+Your application owns the object and its data
+                 │
+                 ▼
+       IStateContext (your POCO)
+                 ▲
+                 │ reads / updates through callbacks
+          FSM_API instance
+                 ▲
+                 │ created from
+          FSM blueprint
+      states + transitions + actions
 ```
 
-To implement this FSM yourself, follow these steps:
+---
 
-1.  Define a simple context (your data model):
-    C\\#
-
-<!-- end list -->
-
-```csharp
-public class LightSwitch : IStateContext
-{
-    public bool IsOn = false;
-    public bool IsValid => true; // FSM API will not operate on this if IsValid is false.
-    public string Name { get; set; } = "KitchenLight";
-}
-```
-
-2.  Define and build your FSM:
-    C\\#
-
-<!-- end list -->
-
-```csharp
-// Optional: Create a named processing group for organizing FSM updates
-FSM_API.CreateProcessingGroup("MainLoop");
-
-// Define a simple condition function
-private static bool CheckUserInput(IStateContext ctx)
-{
-    // A simplified example of checking for input
-    // In a real app, this would check for a key press or a UI event
-    return ((LightSwitch)ctx).IsOn; // This is a placeholder
-}
-
-FSM_API.Create.CreateFiniteStateMachine("LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
-    .State("Off", 
-        onEnter: (ctx) => { 
-            if (ctx is LightSwitch l) l.IsOn = false; 
-        }, 
-        onUpdate: null, 
-        onExit: null)
-    .State("On", 
-        onEnter: (ctx) => { 
-            if (ctx is LightSwitch l) l.IsOn = true; 
-        }, 
-        onUpdate: null, 
-        onExit: null)
-    .WithInitialState("Off") // Must set an initial state
-    // Now define the transitions between states
-    .Transition("Off", "On", (ctx) => ((LightSwitch)ctx).IsOn)
-    .Transition("On", "Off", (ctx) => !((LightSwitch)ctx).IsOn)
-    .BuildDefinition(); // Finalize the FSM definition
-```
-
-3.  Create an instance for your context:
-    C\\#
-
-<!-- end list -->
-
-```csharp
-var kitchenLight = new LightSwitch();
-// Associate your context with an FSM instance and assign it to a processing group
-var handle = FSM_API.Create.CreateInstance("LightSwitchFSM", kitchenLight, "MainLoop");
-```
-
-4.  Tick the FSM from your application's main loop:
-    C\\#
-
-<!-- end list -->
-
-```csharp
-// Process all FSMs in the "MainLoop" group
-FSM_API.Interaction.Update("MainLoop");
-```
-
-🔧 Core Concepts
-
-    FSMBuilder: Fluently define states, transitions, and associated OnEnter/OnExit actions.
-    This is your declarative interface for FSM construction.
-
-    FSMHandle: Represents a runtime instance of an FSM operating on a specific context.
-    Provides full control over instance lifecycle, including pausing, resetting, and
-    retrieving current state.
-
-    IStateContext: The interface your custom data models (Plain Old C\\# Objects - POCOs)
-    must implement. This ensures clean separation of FSM logic from your application's data.
-
-    Processing Groups: Organize and control the update cycles of multiple FSM instances. Ideal
-    for managing FSMs that need to tick together or at different rates (e.g., UI, AI, physics).
-     If you were to use the API across multiple threads you would need to ensure context isn't
-     accessed across different process groups, each process group will itself be sequential...  
-
-    Error Handling: Built-in thresholds and diagnostics prevent runaway logic or invalid state
-     contexts, ensuring application stability without crashing.
-
-    Deferred Mutation Boundary: Operations explicitly queued by the API are processed after the
-    tick. This is not a global lock: immediate registry operations must not race with ticking or
-    other registry mutations.
-
-## 📦 Features at a Glance
+## 🟦 02 — What does FSM_API do?
 
 | Capability                       | Description                                                                                                                                                                                                                                                                                                                                                                                                       |
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -207,6 +51,158 @@ FSM_API.Interaction.Update("MainLoop");
 
 ---
 
+---
+
+## 🩵 03 — Where FSM_API fits
+
+- **FSM blueprint:** the named definition of states, transitions, guards, and callbacks.
+- **`IStateContext`:** the object whose behavior is being modeled; the application owns it.
+- **`FSMHandle`:** a live instance bound to a context.
+- **Processing group:** the named set of instances that the host updates together.
+- **Host application:** decides when to call update and owns platform-specific behavior.
+
+FSM_API is a foundational behavior package. It does not depend on FSM_COS, MicroBundleDomain, or any Workshop application layer.
+
+---
+
+## 🟢 04 — See it in a minute
+
+This tutorial uses the published **TheSingularityWorkshop.FSM_API 1.0.13** package and a Visual Studio Console App.
+
+### 1. Create a project
+
+In Visual Studio, choose **Create a new project → Console App**, select C#, and target **.NET 8**.
+
+### 2. Open the terminal
+
+Choose **View → Terminal** in Visual Studio. Make sure the terminal is in the directory containing your new project's `.csproj` file.
+
+### 3. Install FSM_API
+
+```powershell
+dotnet add package TheSingularityWorkshop.FSM_API --version 1.0.13
+```
+
+### 4. Replace `Program.cs` with this example
+
+```csharp
+using TheSingularityWorkshop.FSM_API;
+
+var door = new DoorContext { RequestOpen = true };
+
+FSM_API.Create.CreateFiniteStateMachine(
+        "DoorFSM",
+        processRate: 1,
+        processingGroup: "Tutorial")
+    .State("Closed",
+        onEnter: context => ((DoorContext)context).IsOpen = false)
+    .State("Open",
+        onEnter: context => ((DoorContext)context).IsOpen = true)
+    .WithInitialState("Closed")
+    .Transition("Closed", "Open",
+        context => ((DoorContext)context).RequestOpen)
+    .Transition("Open", "Closed",
+        context => !((DoorContext)context).RequestOpen)
+    .BuildDefinition();
+
+_ = FSM_API.Create.CreateInstance("DoorFSM", door, "Tutorial");
+
+// The host application decides when the FSM is updated.
+for (var tick = 0; tick < 3; tick++)
+    FSM_API.Interaction.Update("Tutorial");
+
+Console.WriteLine($"{door.Name} open: {door.IsOpen}");
+
+public sealed class DoorContext : IStateContext
+{
+    public string Name { get; set; } = "FrontDoor";
+    public bool IsValid { get; set; } = true;
+    public bool RequestOpen { get; set; }
+    public bool IsOpen { get; set; }
+}
+```
+
+Expected output:
+
+```text
+FrontDoor open: True
+```
+
+**What happened?** Your application owns `DoorContext`. FSM_API owns the state-machine definition and instance lifecycle. The context's `RequestOpen` value satisfies a transition condition, and the `Open` state's entry action updates `IsOpen`. The host explicitly drives the update calls.
+
+---
+
+## 🟪 05 — Create your next thing
+
+- Lifecycle and workflow state machines.
+- Application/domain behavior separated from UI and hosting code.
+- Independent stateful agents, entities, and simulations.
+- Multiple FSM instances sharing a definition while keeping their own contexts.
+- Behavior that can be tested without a specific presentation framework.
+
+## Add FSM_API to an Existing Project
+
+Already have an application? You do not need to rebuild it around FSM_API.
+
+1. Add the package to the existing C# project that owns the behavior:
+   ```powershell
+   dotnet add package TheSingularityWorkshop.FSM_API --version 1.0.13
+   ```
+2. Implement `IStateContext` on an application-owned object or create a small adapter around an existing model. Provide `Name` and `IsValid`.
+3. Define the state machine during your existing startup/setup phase.
+4. Create an FSM instance for each object that needs the behavior.
+5. Call `FSM_API.Interaction.Update("YourProcessingGroup")` from the update point your application already controls.
+
+Your application continues to own its data, services, UI, networking, and main loop. FSM_API supplies the state/transition mechanism; it does not take over application scheduling or presentation.
+
+For a library or service, use the same pattern at the lifecycle point appropriate to that host. See the [source repository](https://github.com/TrentBest/FSM_API) and [documentation directory](https://github.com/TrentBest/FSM_API/tree/development/Documentation) for deeper guides.
+
+---
+
+## Version and 2.0.0 direction
+
+The published 1.0.13 package remains the supported release for existing string-backed use. The 2.0.0 candidate on `development` now includes the integer-backed runtime and explicit definition-transfer APIs, but it remains under verification and is **not released**. Do not assume integer-backed functionality is available from the published 1.0.13 package.
+
+Downstream Workshop work—including FSM_COS integration, documentation, and validation—can proceed using the current package wherever it meets the contract. Integer-backed parity, lifecycle edge cases, performance evidence, branch reconciliation, documentation, and release authorization must be verified before 2.0.0 can ship.
+
+See [FSM_API 2.0.0 Readiness](Documentation/FSM_API_2.0.0_READINESS.md) for the release gates. No publication is authorized by this roadmap.
+
+---
+
+## What This Does Not Do
+
+- It does not provide a GUI, web server, game engine, or application host.
+- It does not own your domain data; your context object remains application-owned.
+- It does not replace your application's update loop or choose when the application runs.
+- It does not require the rest of the Workshop ecosystem.
+- It does not promise thread-safe access to arbitrary context objects across concurrently updated processing groups. Keep context ownership and cross-thread access under your application's control.
+
+---
+
+## Development
+
+Open `FSM_API.sln` in Visual Studio, or use the terminal from the repository root:
+
+```powershell
+dotnet build FSM_API.sln -c Release
+dotnet test FSM_API.sln -c Release
+```
+
+The library project currently targets `net8.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`. Confirm the relevant SDK/reference packs are installed when building all target frameworks.
+
+---
+
+## Status and Compatibility
+
+- **Published package:** `TheSingularityWorkshop.FSM_API` version `1.0.13`.
+- **Dependencies:** no external package dependencies declared by the library project.
+- **License:** MIT.
+- **API and runtime details:** see the guides and reference material in the [Documentation directory](https://github.com/TrentBest/FSM_API/tree/development/Documentation).
+
+---
+
+---
+
 ## 🔬 Internal Architecture (Advanced)
 
 For academic interest or advanced debugging, the `FSM_API.Internal` namespace exposes the engine's core machinery. 
@@ -214,18 +210,12 @@ For academic interest or advanced debugging, the `FSM_API.Internal` namespace ex
 > **Warning:** These methods are intended for internal use. Direct modification may bypass safety checks.
 
 ### Core Components
-* **FsmBucket**: The registry container holding an FSM Definition (`FSM`) and its active instances (`List<FSMHandle>`).
+* **FsmBucket**: The atomic container holding an FSM Definition (`FSM`) and its active Instances (`List<FSMHandle>`).
 * **TickAll(group)**: The heart of the system. It iterates `FsmBucket`s, respects `ProcessRate`, and executes the logic cycle.
-* **Deferred Modifications**: Operations that explicitly enqueue work are processed after `TickAll` returns. This is a per-update boundary, not a global lock: creation and explicit instance destruction currently mutate registry lists immediately. Do not allow those immediate mutations to race with ticking or other registry writers.
+* **Deferred Modifications**: To ensure thread safety on the main loop, structural changes (like destroying an FSM) are queued and executed only *after* the tick cycle completes.
 
 ### Tick Cycle Logic
 A single tick performs at most one "Enter", one "Update", and one "Exit" operation to ensure deterministic execution time.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/development/Documentation/User%20Guide/Visuals/State_Lifecycle.svg" alt="Animated FSM_API state lifecycle explaining enter, update, condition evaluation, exit, target selection, and next-tick entry" width="900">
-</p>
-
-[Open the lifecycle SVG source](Documentation/User%20Guide/Visuals/State_Lifecycle.svg)
 
 1. **Enter (If Needed)**: If the instance is new to its current state, `OnEnter` is executed and the `HasEntered` flag is set.
 2. **Update**: The `OnUpdate` action of the `CurrentState` is executed.
@@ -246,6 +236,8 @@ designing new extensions, or just fixing typos, PRs and issues are appreciated.
 📄 License
 
 MIT License. Use it, hack it, build amazing things with it.
+
+---
 
 ---
 
@@ -276,6 +268,8 @@ MIT License. Use it, hack it, build amazing things with it.
 
 ---
 
+---
+
 ## 🔗 The Singularity Workshop
 
 This project is part of a deliberately troublesome ecosystem:
@@ -285,11 +279,4 @@ This project is part of a deliberately troublesome ecosystem:
 - **[FSM_Serialization](https://github.com/TrentBest/TheSingularityWorkshop.FSM_Serialization)** — representation and the byte boundary.
 - **[WebPage](https://github.com/TrentBest/WebPage)** — browser manifestation and proving ground.
 
-<p align="center">
-  <a href="https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/wwwroot/Images" aria-label="The Singularity Workshop living avatar">
-    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
-  </a><br />
-  <strong>The Singularity Workshop</strong><br />
-  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
-  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
-</p>
+<p align="center"><em>The Singularity Workshop — Tools for the curious, the bold, and the systemically inclined.</em><br><strong>Because state shouldn't be a mess.</strong><br><em>And because static boundaries are invitations to cause trouble.</em></p>
