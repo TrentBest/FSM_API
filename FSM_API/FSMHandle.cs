@@ -393,7 +393,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             var possibleTransitions = Definition.GetAllTransitions()
-                .Where(t => t.From == FSM.AnyStateIdentifier || t.From == CurrentState)
+                .Where(t => t.From == FSM.AnyStateIdentifier || t.From == "*" || t.From == CurrentState)
                 .ToList();
 
             foreach (var transition in possibleTransitions)
