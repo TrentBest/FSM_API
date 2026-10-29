@@ -318,4 +318,8 @@ To run this pure C\# FSM example:
 
 -----
 
+## Choosing a backing for FSM_API 2.0
+
+FSM_API supports both readable string-backed definitions and integer-backed runtime definitions, with explicit definition transfer between them. See the [String and Integer Backing guide](12_String_and_Integer_Backing.md) before choosing a representation.
+
 [➡️ Continue to: 04. FSMBuilder Deep Dive: Building Your FSMs](04_FSM_Builder_Deep_Dive.md)
