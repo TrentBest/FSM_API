@@ -1,4 +1,5 @@
-
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
 
 # FSM_API Theory — A Learning Path
 
@@ -46,9 +47,6 @@ Do not treat asymptotic complexity, benchmark timing, formal proof, conceptual d
 
 This repository owns general finite-state-machine theory and FSM_API-specific behavior. Higher-level Workshop projects should explain their own domain and link here for general FSM concepts rather than duplicating this material. Engine-specific integrations belong in their integration repositories; FSM_API itself remains framework-agnostic.
 
----
-
----
 
 <!-- THE SINGULARITY WORKSHOP FOOTER -->
 <p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
