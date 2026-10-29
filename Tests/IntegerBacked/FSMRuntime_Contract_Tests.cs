@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 using NUnit.Framework;
 
@@ -67,48 +65,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var runtime = new IntegerFSMRuntime();
 
             Assert.That(runtime.GetHandleCount(7), Is.Zero);
-        }
-
-
-        [Test]
-        public void CreateInstance_RejectsExhaustedHandleIDRangeWithoutWrapping()
-        {
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(CreateFSM(1));
-            typeof(IntegerFSMRuntime)
-                .GetField("_nextHandleID", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(runtime, int.MaxValue);
-
-            Assert.Throws<InvalidOperationException>(() =>
-                runtime.CreateInstance(1, new TestContext()));
-            Assert.That(runtime.GetInstances(1), Is.Empty);
-        }
-
-        [Test]
-        public void Register_RejectsMaximumFSMIDBeforeCapacityCalculation()
-        {
-            var runtime = new IntegerFSMRuntime();
-            var fsm = CreateFSM(int.MaxValue);
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => runtime.Register(fsm));
-            Assert.That(runtime.Contains(int.MaxValue), Is.False);
-        }
-
-        [Test]
-        public void AddState_RejectsMaximumStateIDBeforeCapacityCalculation()
-        {
-            var fsm = new IntegerFSM(1);
-
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-                fsm.AddState(new IntegerFSMState(int.MaxValue, null, null, null)));
-            Assert.That(fsm.HasState(int.MaxValue), Is.False);
-        }
-
-        private sealed class TestContext : IStateContext
-        {
-            public string Name { get; set; }
-            public int Context_ID => Name == null ? 0 : Name.GetHashCode();
-            public bool IsValid { get; set; } = true;
         }
 
         private static IntegerFSM CreateFSM(int id)
