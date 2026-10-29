@@ -173,8 +173,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 Name = fsmName,
                 ProcessRate = source.ProcessRate,
-                ProcessingGroup = processingGroup,
-                InitialState = initialStateName
+                ProcessingGroup = processingGroup
             };
 
             foreach (var state in states)
@@ -186,6 +185,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     context => state.Update(context),
                     context => state.Exit(context)));
             }
+
+            // AddState assigns the first inserted state as initial, so restore the source initial state afterward.
+            result.InitialState = initialStateName;
 
             foreach (var transition in source.GetAllTransitions())
             {
