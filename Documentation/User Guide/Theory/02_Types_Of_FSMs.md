@@ -1,6 +1,6 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
-﻿# 02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent
+
+# 02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent
 
 > While all Finite State Machines share the core concepts of states and transitions, their specific behavior and structure can vary. Understanding these different types allows you to choose the most appropriate FSM model for your particular problem, from simple reactive systems to highly complex, adaptive behaviors.
 
@@ -98,9 +98,9 @@ These classifications are useful modeling tools, not a list of built-in FSM_API 
 
 [➡️ Continue to: 03. Advantages and Disadvantages of Using FSMs](03_Advantages_And_Disadvantages.md)
 
-
-<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
-</a>
-
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
