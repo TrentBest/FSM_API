@@ -28,6 +28,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         }
 
         [Test]
+        public void TransferFacade_RoundTripsDefinitionAcrossBothRepresentations()
+        {
+            var namedDefinition = FsmApi.Create.CreateFiniteStateMachine(
+                    "FsmApiFacadeTests.Transfer",
+                    processRate: -1,
+                    processingGroup: "FsmApiFacadeTests")
+                .State("Idle", null, null, null)
+                .State("Working", null, null, null)
+                .WithInitialState("Idle")
+                .Transition("Idle", "Working", _ => true)
+                .BuildDefinition();
+
+            var compiled = FsmApi.Transfer.ToInteger(namedDefinition, 32103, 323);
+            var restored = FsmApi.Transfer.ToString(
+                compiled.Definition,
+                "FsmApiFacadeTests.Restored",
+                "FsmApiFacadeTests.RestoredGroup",
+                compiled.StateIDToName);
+
+            Assert.That(compiled.Definition.FSM_ID, Is.EqualTo(32103));
+            Assert.That(compiled.StateNameToID["Idle"], Is.EqualTo(0));
+            Assert.That(restored.InitialState, Is.EqualTo("Idle"));
+            Assert.That(restored.GetAllStates().Count, Is.EqualTo(2));
+            Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
+        }
+
+        [Test]
         public void IntegerFacade_CreatesAndUpdatesWithoutUsingStringRegistry()
         {
             const int fsmID = 32102;
