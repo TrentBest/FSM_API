@@ -98,6 +98,120 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 nameToID,
                 idToName);
         }
+
+        /// <summary>
+        /// Reconstructs a string-backed definition from an integer-backed definition using an explicit
+        /// state-ID-to-name mapping. The caller supplies the human-facing FSM and processing-group names.
+        /// </summary>
+        /// <remarks>
+        /// Integer IDs have no intrinsic names, so this conversion never invents state names. Actions and
+        /// transition conditions are preserved by delegating to the source integer state and transition.
+        /// Runtime instances are not transferred; this operation creates a definition only.
+        /// </remarks>
+        public static StringFsm Decompile(
+            FSM source,
+            string fsmName,
+            string processingGroup,
+            IReadOnlyDictionary<int, string> stateIDToName)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (string.IsNullOrWhiteSpace(fsmName))
+            {
+                throw new ArgumentException("A non-empty FSM name is required.", nameof(fsmName));
+            }
+
+            if (string.IsNullOrWhiteSpace(processingGroup))
+            {
+                throw new ArgumentException("A non-empty processing-group name is required.", nameof(processingGroup));
+            }
+
+            if (stateIDToName == null)
+            {
+                throw new ArgumentNullException(nameof(stateIDToName));
+            }
+
+            var states = source.GetAllStates().OrderBy(state => state.StateID).ToList();
+            if (states.Count == 0)
+            {
+                throw new InvalidOperationException($"Integer FSM '{source.FSM_ID}' has no states to decompile.");
+            }
+
+            var idToName = new Dictionary<int, string>();
+            var nameToID = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var state in states)
+            {
+                if (!stateIDToName.TryGetValue(state.StateID, out var name) || string.IsNullOrWhiteSpace(name))
+                {
+                    throw new InvalidOperationException($"No valid state name was supplied for integer state ID '{state.StateID}'.");
+                }
+
+                if (string.Equals(name, StringFsm.AnyStateIdentifier, StringComparison.Ordinal))
+                {
+                    throw new InvalidOperationException($"State name '{name}' is reserved for Any-State transitions.");
+                }
+
+                if (nameToID.ContainsKey(name))
+                {
+                    throw new InvalidOperationException($"State name '{name}' maps to more than one integer state ID.");
+                }
+
+                idToName.Add(state.StateID, name);
+                nameToID.Add(name, state.StateID);
+            }
+
+            if (!idToName.TryGetValue(source.InitialStateID, out var initialStateName))
+            {
+                throw new InvalidOperationException(
+                    $"Initial integer state ID '{source.InitialStateID}' is not defined in the source FSM.");
+            }
+
+            var result = new StringFsm
+            {
+                Name = fsmName,
+                ProcessRate = source.ProcessRate,
+                ProcessingGroup = processingGroup,
+                InitialState = initialStateName
+            };
+
+            foreach (var state in states)
+            {
+                var stateName = idToName[state.StateID];
+                result.AddState(new StringFsmState(
+                    stateName,
+                    context => state.Enter(context),
+                    context => state.Update(context),
+                    context => state.Exit(context)));
+            }
+
+            foreach (var transition in source.GetAllTransitions())
+            {
+                if (!idToName.TryGetValue(transition.ToID, out var targetName))
+                {
+                    throw new InvalidOperationException(
+                        $"Transition target integer state ID '{transition.ToID}' is not defined in the source FSM.");
+                }
+
+                if (transition.FromID == FSM.AnyStateIdentifier)
+                {
+                    result.AddAnyStateTransition(targetName, transition.Condition);
+                    continue;
+                }
+
+                if (!idToName.TryGetValue(transition.FromID, out var sourceName))
+                {
+                    throw new InvalidOperationException(
+                        $"Transition source integer state ID '{transition.FromID}' is not defined in the source FSM.");
+                }
+
+                result.AddTransition(sourceName, targetName, transition.Condition);
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
