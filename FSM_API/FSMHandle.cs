@@ -385,33 +385,75 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void EvaluateConditions()
         {
-            // Manual condition evaluation is still computation and respects the context gate.
+            // Manual evaluation follows the same precedence as scheduled stepping:
+            // Any-State transitions first, then transitions originating in CurrentState.
             if (IsDestroyed || Context == null || !Context.IsValid)
             {
                 return;
             }
 
-            // Get all potential transitions originating from the current state.
-            // Convert to a list to avoid issues if a transition itself causes modifications
-            // to the underlying Definition's transition collection (though unlikely here).
             var possibleTransitions = Definition.GetAllTransitions()
-                                                .Where(t => t.From == CurrentState)
-                                                .ToList();
+                .Where(t => t.From == FSM.AnyStateIdentifier || t.From == CurrentState)
+                .ToList();
 
-            // Iterate through possible transitions to find the first one whose condition is met.
-            // It's generally best practice to only take one transition per evaluation cycle
-            // to ensure predictable FSM behavior and avoid race conditions or unexpected state jumps
-            // if multiple conditions are simultaneously true.
             foreach (var transition in possibleTransitions)
             {
-                // Check if a condition is defined and if it evaluates to true for the current context.
-                if (transition.Condition != null && transition.Condition.Invoke(Context))
+                // Do not invoke user guards for invalid destinations.
+                if (!Definition.HasState(transition.To))
                 {
-                    // Found a valid transition. Force the transition and then exit,
-                    // as only one transition should typically occur per evaluation.
-                    Definition.ForceTransition(CurrentState, transition.To, Context);
-                    return; // Exit after the first successful transition
+                    continue;
                 }
+
+                bool matches;
+                try
+                {
+                    matches = transition.Condition != null && transition.Condition.Invoke(Context);
+                }
+                catch (Exception ex)
+                {
+                    // A guard failure is isolated to that candidate; later transitions may still match.
+                    FSM_API.Error.InvokeInternalApiError(
+                        $"Error evaluating manual transition condition from '{CurrentState}' to '{transition.To}' in FSM '{Name}'. Exception: {ex.Message}",
+                        ex);
+                    continue;
+                }
+
+                if (!matches)
+                {
+                    continue;
+                }
+
+                // Guards can mutate the runtime-editable definition.
+                if (!Definition.HasState(transition.To))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    Definition.ForceTransition(CurrentState, transition.To, Context);
+                }
+                catch
+                {
+                    // ForceTransition can run Exit before an Enter callback throws. Do not
+                    // pretend the old state is still fully entered, and never try another
+                    // candidate after a partially completed transition.
+                    HasEnteredCurrentState = false;
+                    throw;
+                }
+
+                // ForceTransition's Exit callback can remove the target; it logs and returns
+                // without entering it in that case. Keep the prior state identity but mark
+                // its lifecycle as requiring re-entry.
+                if (!Definition.HasState(transition.To))
+                {
+                    HasEnteredCurrentState = false;
+                    return;
+                }
+
+                CurrentState = transition.To;
+                HasEnteredCurrentState = true;
+                return; // One transition per evaluation; Any-State candidates are ordered first.
             }
         }
     }
