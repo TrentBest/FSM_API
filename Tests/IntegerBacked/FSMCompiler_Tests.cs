@@ -119,5 +119,47 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.Throws<InvalidOperationException>(() => FSMCompiler.Compile(source, 45));
         }
+
+        [Test]
+        public void Decompile_RestoresNamedDefinitionUsingExplicitMapping()
+        {
+            var updated = 0;
+            var source = new StringFsm { Name = "Authored", ProcessingGroup = "Authoring", ProcessRate = 3 };
+            source.AddState(new StringFsmState("Start", null, _ => updated++, null));
+            source.AddState(new StringFsmState("Finish", null, null, null));
+            source.InitialState = "Start";
+            source.AddTransition("Start", "Finish", _ => true);
+
+            var compiled = FSMCompiler.Compile(source, 49, 7);
+            var restored = FSMCompiler.Decompile(
+                compiled.Definition,
+                "Restored",
+                "Execution",
+                compiled.StateIDToName);
+
+            Assert.That(restored.Name, Is.EqualTo("Restored"));
+            Assert.That(restored.ProcessingGroup, Is.EqualTo("Execution"));
+            Assert.That(restored.ProcessRate, Is.EqualTo(3));
+            Assert.That(restored.InitialState, Is.EqualTo("Start"));
+            Assert.That(restored.GetAllStates().Count, Is.EqualTo(2));
+            Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
+
+            var restoredStart = new FSMHandle(restored, new Context());
+            restoredStart.Initialize();
+            restoredStart.Update("Execution");
+            Assert.That(updated, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Decompile_RejectsMissingStateNameMapping()
+        {
+            var definition = new FSMBuilderInt(50).State(0).BuildDefinition();
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Decompile(
+                definition,
+                "MissingMap",
+                "Execution",
+                new System.Collections.Generic.Dictionary<int, string>()));
+        }
     }
 }
