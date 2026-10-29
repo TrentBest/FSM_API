@@ -46,7 +46,7 @@ When FSMs fall short, or for different types of problems, other architectural pa
 ### 1. **Behavior Trees (BTs)** 🌳
 * **What it is:** A hierarchical system where behaviors are organized as a tree structure of tasks. Nodes represent actions, conditions, or composite logic (selectors, sequences).
 * **When to use:** Excellent for complex AI, especially for game characters that need more flexible decision-making and task sequencing than a pure FSM can offer. They are often more intuitive for designers.
-* **FSM vs. BT:** FSMs excel at defining *what state* an entity is in; BTs excel at defining *how an entity behaves* in response to its environment, often handling complex sequences and failures gracefully. BTs are inherently more "plan-based."
+* **FSM vs. BT:** FSMs make named modes and guarded transitions explicit. Behavior trees organize task selection and execution through tree nodes such as sequences and selectors. Either can express complex behavior; behavior trees are not inherently planners, and neither pattern is universally more flexible. Compare the actual control flow, authoring needs, debugging tools, and runtime costs for the intended workload.
 
 ### 2. **State Pattern (Object-Oriented Design)** 🎨
 * **What it is:** A design pattern where the state of an object is represented by separate, interchangeable objects. The object's behavior changes depending on its current state object.
