@@ -139,3 +139,62 @@ The integer integration branch must not be conflated with the current IntegerBac
 - [ ] Continue the full 2.0 source/API reconciliation, sparse-ID and concurrency/lifecycle design, behavior parity, repeatable benchmark comparison, downstream compatibility, and release-gate review.
 
 **Current status:** CI for the latest targeted regression fix is green, but the repository is **not ready for manual branch deletion**. The broader branch-preservation gates remain open. No branches have been merged or deleted, and no NuGet package has been published.
+
+
+## Current audit refresh (2026-10-29)
+
+This section supersedes the old branch-count snapshot above for the **current inventory**. Historical ahead/behind counts and dated findings remain useful audit history but must not be treated as current values.
+
+GitHub's live branch search returned exactly these 18 refs on 2026-10-29:
+
+```text
+AddingUnitTests
+HireMeFSMDemo
+RefactoringToHashBacking
+Splitting-FSM_API-class-into-multiple-partial-classes
+TargetingStarcraft2DotNet
+TickCountingSystem
+WindowsFormsEditor
+benchmark-contract-docs
+development
+docs/benchmarking
+docs/readme-standard
+feature/fsm-api-2.0
+feature/fsm-api-2.0-next
+feature/fsm-api-2.0-registry
+feature/fsm-api-2.0-work
+feature/integer-backed-runtime
+fix/manual-any-state-evaluation
+master
+```
+
+The canonical set is `master` + `development`; the other 16 refs remain under audit. No branch was deleted, no stale PR was merged, and `master` was not changed.
+
+### Refreshed comparisons and new evidence
+
+| Branch | Current compare against `development` | Required disposition work |
+|---|---|---|
+| `RefactoringToHashBacking` | 2 ahead / 469 behind; six runtime source files plus workflow changed | Reconcile runtime semantics and tests; not safe to retire yet. |
+| `AddingUnitTests` | 2 ahead / 573 behind; interaction/internal API, project files, and FSM state tests changed | Extract and port distinct useful test coverage; not safe to retire yet. |
+| `fix/manual-any-state-evaluation` | 15 ahead / 171 behind; FSM, handle, and Any-State tests changed | Correctness review and selective integration are still required; PR #23 is draft. |
+| `benchmark-contract-docs` | 1 ahead / 84 behind; unique `Documentation/Performance/BenchmarkingContract.md` | Reconcile and preserve useful benchmark contract content; ensure links resolve. |
+| `docs/benchmarking` | 3 ahead / 463 behind; benchmark guide, README, workflow | Reconcile user-facing guidance; do not copy the branch's workflow wholesale. |
+| `docs/readme-standard` | 4 ahead / 424 behind; README, readiness, workflow | Compare onboarding and release claims to current code and the Workshop documentation standard. |
+
+Comparison counts may change as `development` advances; each must be refreshed again before final disposition. The two owner-approved candidates (`HireMeFSMDemo`, `WindowsFormsEditor`) remain candidates only until the same commit/reference/PR audit is complete. Branches previously observed with zero commits ahead also need current-tip and reference checks.
+
+### Latest CI finding
+
+- [Run 40956077990](https://github.com/TrentBest/FSM_API/actions/runs/40956077990) failed during test compilation: `Tests/IntegerBacked/FSMCompiler_Tests.cs` indexed an `IReadOnlyCollection<FSMTransition>` at lines 180–181.
+- The test was corrected to select the single transition through `System.Linq.Enumerable.Single(...)` in commit [`da04cc8`](https://github.com/TrentBest/FSM_API/commit/da04cc89dbaaa30fa734f81a39b164c90b1997db).
+- Follow-up run [40961786751](https://github.com/TrentBest/FSM_API/actions/runs/40961786751) was in progress at the time of this refresh. Do not mark the compile failure resolved until that run (or a newer run on the current `development` head) completes successfully and the relevant test job is green.
+
+### Sith / CiAi coordination
+
+The FSM_API workflow contains a live `sith_branch_policy` job for an explicitly requested publish. It queries the live GitHub branch inventory and requires exactly `development master`, and requires `refs/heads/master`; the publish job requires that gate to succeed. The current extra branches therefore block publication. Build/test/package checks may run without satisfying the publish gate, and passing the gate does not authorize a release.
+
+CiAi already tracks the reusable fail-closed policy and branch audit in [issue #22](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/issues/22) and [issue #23](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/issues/23). Keep this repository's live gate and CiAi's reusable evidence/authorization work coordinated; do not create a parallel policy engine or weaken either check.
+
+### Current disposition
+
+**Audit remains IN PROGRESS. No branch is being declared ready for deletion in this refresh.** Final owner-facing deletion recommendations must be delivered once, after all unique code/tests/docs/workflow behavior is reconciled, CI evidence is current, and all PR/reference checks are complete.
