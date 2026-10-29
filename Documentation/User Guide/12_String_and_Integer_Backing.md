@@ -4,6 +4,8 @@
 
 FSM_API supports two distinct representations. Choose the one that best fits the boundary you are working at; neither representation is mandatory for every application.
 
+> **Version note:** The unified `FsmApi` facade and definition-transfer API described here are part of the unreleased 2.0 development work. They are not a claim about the currently published NuGet package.
+
 ## Choose a backing
 
 | Concern | String-backed | Integer-backed |
