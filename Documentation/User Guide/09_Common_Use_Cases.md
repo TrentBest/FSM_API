@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # 09\. Common Use Cases & Examples
 
 > Finite State Machines (FSMs) are a foundational pattern in software development, providing a clear and organized way to manage behavior that changes based on different modes or stages. FSM\_API empowers you to implement these patterns efficiently across a wide range of applications.
@@ -238,3 +241,8 @@ By applying FSM\_API thoughtfully, you can bring structure, clarity, and maintai
 </a>
 
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
