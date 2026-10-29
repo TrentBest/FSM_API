@@ -1,6 +1,6 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
-﻿# 01. What Are Finite State Machines (FSMs)? — A Deeper Dive
+
+# 01. What Are Finite State Machines (FSMs)? — A Deeper Dive
 
 Before learning the term *finite-state machine*, notice how often you already reason about states.
 
@@ -161,9 +161,9 @@ FSM_API provides the tools to build these powerful, organized, and reliable stat
 
 [➡️ Continue to: 02. Types of FSMs: Mealy, Moore, Hierarchical, and Concurrent](02_Types_Of_FSMs.md)
 
-
-<a href="https://www.patreon.com/TheSingularityWorkshop" target="_blank">
-    <img src="Branding/TheSingularityWorkshop.png" alt="Support The Singularity Workshop on Patreon" height="200" style="display: block;">
-</a>
-
 **Support the project:** [**Donate via PayPal**](https://www.paypal.com/donate/?hosted_button_id=3Z7263LCQMV9J)
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
