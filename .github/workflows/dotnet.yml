@@ -101,10 +101,46 @@ jobs:
           name: fsm-api-documentation
           path: _site
   
-  publish_nuget:
-    needs: build_test_and_package
+  sith_branch_policy:
+    # Only evaluate branch governance when someone explicitly requests publication.
+    # Ordinary build/test/package CI remains usable while historical branches are reviewed.
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/master' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Verify live branch inventory follows Operation Sith
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t actual_branches < <(gh api --paginate "repos/${GITHUB_REPOSITORY}/branches?per_page=100" --jq '.[].name' | sort)
+          expected_branches=("development" "master")
+
+          printf 'Live branches reported by GitHub:\n'
+          printf '  %s\n' "${actual_branches[@]}"
+
+          if [[ "${#actual_branches[@]}" -ne "${#expected_branches[@]}" ]] || [[ "${actual_branches[*]}" != "${expected_branches[*]}" ]]; then
+            printf '\nERROR: NuGet publication is blocked by Operation Sith.\n' >&2
+            printf 'Expected exactly: %s\n' "${expected_branches[*]}" >&2
+            printf 'Found:            %s\n' "${actual_branches[*]:-(none)}" >&2
+            printf 'Preserve and review surplus branches, then have the repository owner perform any approved cleanup.\n' >&2
+            exit 1
+          fi
+
+          if [[ "${GITHUB_REF}" != "refs/heads/master" ]]; then
+            echo "ERROR: NuGet publication is allowed only from refs/heads/master." >&2
+            exit 1
+          fi
+
+          echo "Operation Sith branch inventory verified; publication gate may proceed."
+          
+  publish_nuget:
+    needs: [build_test_and_package, sith_branch_policy]
+    runs-on: ubuntu-24.04
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/master' && needs.build_test_and_package.result == 'success' && needs.sith_branch_policy.result == 'success' }}
     permissions:
       contents: read
       id-token: write
