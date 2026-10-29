@@ -127,5 +127,41 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             }, "FSMState should handle null actions gracefully.");
         }
 
+        [Test]
+        public void FSMState_SetOnEnterNull_ReplacesCallbackWithNoOp()
+        {
+            var state = new FSMState("NullEnter", _ => throw new InvalidOperationException("Callback should have been replaced"), null, null);
+
+            Assert.DoesNotThrow(() => state.SetOnEnter(null));
+            Assert.DoesNotThrow(() => state.Enter(null));
+        }
+
+        [Test]
+        public void FSMState_SetOnUpdateNull_ReplacesCallbackWithNoOp()
+        {
+            var state = new FSMState("NullUpdate", null, _ => throw new InvalidOperationException("Callback should have been replaced"), null);
+
+            Assert.DoesNotThrow(() => state.SetOnUpdate(null));
+            Assert.DoesNotThrow(() => state.Update(null));
+        }
+
+        [Test]
+        public void FSMState_SetOnExitNull_ReplacesCallbackWithNoOp()
+        {
+            var state = new FSMState("NullExit", null, null, _ => throw new InvalidOperationException("Callback should have been replaced"));
+
+            Assert.DoesNotThrow(() => state.SetOnExit(null));
+            Assert.DoesNotThrow(() => state.Exit(null));
+        }
+
+        [Test]
+        public void FSMState_ToStringIncludesStateName()
+        {
+            var state = new FSMState("ReadableState", null, null, null);
+
+            Assert.That(state.ToString(), Is.EqualTo("FSMState: ReadableState"));
+        }
+
+
     }
 }
