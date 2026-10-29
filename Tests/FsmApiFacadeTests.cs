@@ -24,7 +24,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(stringBuilder, Is.Not.Null);
             Assert.That(integerBuilder, Is.Not.Null);
-            Assert.That(integerBuilder.BuildDefinition().FSM_ID, Is.EqualTo(32101));
+            Assert.That(integerBuilder.State(0).BuildDefinition().FSM_ID, Is.EqualTo(32101));
         }
 
         [Test]
