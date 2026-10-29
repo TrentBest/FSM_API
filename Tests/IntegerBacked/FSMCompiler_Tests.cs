@@ -160,5 +160,66 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 "Execution",
                 new System.Collections.Generic.Dictionary<int, string>()));
         }
+
+        [Test]
+        public void Decompile_PreservesAnyStateTransitions()
+        {
+            var source = new StringFsm { Name = "AnyStateRoundTrip" };
+            source.AddState(new StringFsmState("Start", null, null, null));
+            source.AddState(new StringFsmState("Finish", null, null, null));
+            source.AddAnyStateTransition("Finish", _ => true);
+
+            var compiled = FSMCompiler.Compile(source, 51);
+            var restored = FSMCompiler.Decompile(
+                compiled.Definition,
+                "RestoredAnyState",
+                "Execution",
+                compiled.StateIDToName);
+
+            Assert.That(restored.GetAllTransitions().Count, Is.EqualTo(1));
+            Assert.That(restored.GetAllTransitions()[0].From, Is.EqualTo(StringFsm.AnyStateIdentifier));
+            Assert.That(restored.GetAllTransitions()[0].To, Is.EqualTo("Finish"));
+        }
+
+        [Test]
+        public void Decompile_RejectsDuplicateStateNamesInMapping()
+        {
+            var source = new StringFsm { Name = "DuplicateMapping" };
+            source.AddState(new StringFsmState("Alpha", null, null, null));
+            source.AddState(new StringFsmState("Beta", null, null, null));
+            var compiled = FSMCompiler.Compile(source, 52);
+            var duplicateNames = new System.Collections.Generic.Dictionary<int, string>
+            {
+                [compiled.StateNameToID["Alpha"]] = "Duplicate",
+                [compiled.StateNameToID["Beta"]] = "Duplicate"
+            };
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Decompile(
+                compiled.Definition,
+                "RestoredDuplicate",
+                "Execution",
+                duplicateNames));
+        }
+
+        [Test]
+        public void Decompile_RejectsMissingInitialStateMapping()
+        {
+            var source = new StringFsm { Name = "MissingInitialMapping" };
+            source.AddState(new StringFsmState("Start", null, null, null));
+            source.AddState(new StringFsmState("Finish", null, null, null));
+            source.InitialState = "Finish";
+            var compiled = FSMCompiler.Compile(source, 53);
+            var mapping = new System.Collections.Generic.Dictionary<int, string>
+            {
+                [compiled.StateNameToID["Start"]] = "Start"
+            };
+
+            Assert.Throws<InvalidOperationException>(() => FSMCompiler.Decompile(
+                compiled.Definition,
+                "RestoredMissingInitial",
+                "Execution",
+                mapping));
+        }
+
     }
 }
