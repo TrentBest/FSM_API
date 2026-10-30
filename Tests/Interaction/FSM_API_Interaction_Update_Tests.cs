@@ -440,7 +440,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             FSM_API.Interaction.Update(_testProcessingGroup);
             Assert.That(updateCount, Is.EqualTo(1));
             Assert.That(guardCount, Is.EqualTo(1));
-            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
         }
 
         [Test]
