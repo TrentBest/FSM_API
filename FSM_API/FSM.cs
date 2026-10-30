@@ -461,6 +461,19 @@ namespace TheSingularityWorkshop.FSM_API
 
                         currentState.Exit(ctx);
 
+                        // OnExit is user code and may suspend execution. Keep the current
+                        // state and require its entry callback to run again after resumption.
+                        if (!ctx.IsValid)
+                        {
+                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (suspendedHandle != null)
+                            {
+                                suspendedHandle.HasEnteredCurrentState = false;
+                            }
+                            next = current;
+                            return;
+                        }
+
                         // Exit callbacks are user code too and may remove the target.
                         // Do not commit a transition to a state that no longer exists.
                         if (!_states.ContainsKey(t.To))
@@ -528,6 +541,19 @@ namespace TheSingularityWorkshop.FSM_API
                             }
 
                             currentState.Exit(ctx);
+
+                            // OnExit may suspend execution. Keep the current state and
+                            // re-run its entry callback when the context becomes valid again.
+                            if (!ctx.IsValid)
+                            {
+                                var suspendedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (suspendedHandle != null)
+                                {
+                                    suspendedHandle.HasEnteredCurrentState = false;
+                                }
+                                next = current;
+                                return;
+                            }
 
                             // Exit callbacks may also remove the target. Keep the current
                             // state identity rather than committing a stale target name.
