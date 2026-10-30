@@ -412,6 +412,77 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(transitionChecks, Is.EqualTo(2));
             Assert.That(handle.IsDestroyed, Is.False);
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+
+        [Test]
+        public void ContextInvalidatedDuringOnEnter_StopsRemainingWorkForThatTick()
+        {
+            var updateCount = 0;
+            var guardCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", ctx => ctx.IsValid = false, _ => updateCount++, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(updateCount, Is.Zero);
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+        }
+
+        [Test]
+        public void ContextInvalidatedDuringOnUpdate_SkipsTransitionEvaluation()
+        {
+            var guardCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", null, ctx => ctx.IsValid = false, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ContextInvalidatedByTransitionGuard_DoesNotCommitTransition()
+        {
+            var exitCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", null, null, _ => exitCount++)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", ctx => { ctx.IsValid = false; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
         }
     }
 }
