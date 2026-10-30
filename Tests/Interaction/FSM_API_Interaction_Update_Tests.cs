@@ -375,5 +375,43 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // OnUpdate for StateA ran one last time before transition.
         //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
         //}
+
+        [Test]
+        public void InvalidContext_SuspendsExecutionWithoutUnregistering_AndResumesSameHandle()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            var transitionChecks = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", _ => enterCount++, _ => updateCount++, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { transitionChecks++; return false; })
+                .BuildDefinition();
+
+            var context = new TestContext { IsValid = false };
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            Assert.That(context.IsValid, Is.True);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(transitionChecks, Is.EqualTo(1));
+
+            context.IsValid = false;
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(transitionChecks, Is.EqualTo(1));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+
+            context.IsValid = true;
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(2));
+            Assert.That(transitionChecks, Is.EqualTo(2));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
     }
 }
