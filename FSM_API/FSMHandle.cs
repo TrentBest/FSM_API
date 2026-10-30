@@ -202,6 +202,11 @@ namespace TheSingularityWorkshop.FSM_API
             Id = id;
             ProcessingGroup = processingGroup;
             CurrentState = Definition.InitialState;
+
+            // A successfully constructed handle starts eligible for its next scheduled update.
+            // The context remains caller-owned; this initializes its execution gate without
+            // coupling validity to registration or destruction.
+            Context.IsValid = true;
         }
 
         /// <summary>
@@ -251,6 +256,13 @@ namespace TheSingularityWorkshop.FSM_API
                         currentState.Enter(Context);
                         HasEnteredCurrentState = true;
                     }
+                }
+
+                // OnEnter may suspend the caller-owned context. Do not run OnUpdate
+                // or transition guards after that callback closes the execution gate.
+                if (!Context.IsValid)
+                {
+                    return;
                 }
 
                 string nextState;

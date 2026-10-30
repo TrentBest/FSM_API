@@ -417,6 +417,10 @@ namespace TheSingularityWorkshop.FSM_API
             try
             {
                 currentState.Update(ctx);
+                if (!ctx.IsValid)
+                {
+                    return;
+                }
             }
             catch (Exception ex)
             {
@@ -441,7 +445,12 @@ namespace TheSingularityWorkshop.FSM_API
 
                 try
                 {
-                    if (t.Condition(ctx))
+                    var conditionMatched = t.Condition(ctx);
+                    if (!ctx.IsValid)
+                    {
+                        return;
+                    }
+                    if (conditionMatched)
                     {
                         // A guard may mutate the blueprint and remove its own target.
                         // Re-check after invoking user code before exiting the current state.
@@ -451,6 +460,19 @@ namespace TheSingularityWorkshop.FSM_API
                         }
 
                         currentState.Exit(ctx);
+
+                        // OnExit is user code and may suspend execution. Keep the current
+                        // state and require its entry callback to run again after resumption.
+                        if (!ctx.IsValid)
+                        {
+                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (suspendedHandle != null)
+                            {
+                                suspendedHandle.HasEnteredCurrentState = false;
+                            }
+                            next = current;
+                            return;
+                        }
 
                         // Exit callbacks are user code too and may remove the target.
                         // Do not commit a transition to a state that no longer exists.
@@ -505,7 +527,12 @@ namespace TheSingularityWorkshop.FSM_API
                     try
                     {
                        
-                        if (t.Condition(ctx))
+                        var conditionMatched = t.Condition(ctx);
+                        if (!ctx.IsValid)
+                        {
+                            return;
+                        }
+                        if (conditionMatched)
                         {
                             // A guard may remove the target while it is being evaluated.
                             if (!_states.ContainsKey(t.To))
@@ -514,6 +541,19 @@ namespace TheSingularityWorkshop.FSM_API
                             }
 
                             currentState.Exit(ctx);
+
+                            // OnExit may suspend execution. Keep the current state and
+                            // re-run its entry callback when the context becomes valid again.
+                            if (!ctx.IsValid)
+                            {
+                                var suspendedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (suspendedHandle != null)
+                                {
+                                    suspendedHandle.HasEnteredCurrentState = false;
+                                }
+                                next = current;
+                                return;
+                            }
 
                             // Exit callbacks may also remove the target. Keep the current
                             // state identity rather than committing a stale target name.
