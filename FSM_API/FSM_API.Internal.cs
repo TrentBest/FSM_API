@@ -995,6 +995,15 @@ namespace TheSingularityWorkshop.FSM_API
                                     if (result)
                                     {
                                         bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
+
+                                        // OnExit may suspend this context. Do not commit the
+                                        // pending transition; re-enter the current state on resume.
+                                        if (!handle.Context.IsValid)
+                                        {
+                                            handle.HasEnteredCurrentState = false;
+                                            break;
+                                        }
+
                                         handle.CurrentState = transition.To;
                                         handle.HasEnteredCurrentState = false;
                                         break;
