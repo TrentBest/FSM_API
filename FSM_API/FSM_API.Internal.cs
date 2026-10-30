@@ -942,9 +942,23 @@ namespace TheSingularityWorkshop.FSM_API
                                    //1.0.13 fixed from always using the initial state to using the current state.
                                     bucket.Definition.GetState(handle.CurrentState).Enter(handle.Context);
                                     handle.HasEnteredCurrentState = true;
+
+                                    // A callback may suspend its own context. Finish this handle's
+                                    // current callback boundary, then stop all remaining work this tick.
+                                    if (!handle.Context.IsValid)
+                                    {
+                                        continue;
+                                    }
                                 }
-                                
+
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
+
+                                // OnUpdate may also suspend the context. Do not evaluate guards
+                                // or transition callbacks after the execution gate closes.
+                                if (!handle.Context.IsValid)
+                                {
+                                    continue;
+                                }
 
                                 // GetAllTransitions returns Any-State transitions before state-specific
                                 // transitions. Recognize both the public sentinel and the builder's
@@ -969,6 +983,15 @@ namespace TheSingularityWorkshop.FSM_API
                                     }
 
                                     var result = transition.Condition.Invoke(handle.Context);
+
+                                    // Transition conditions are user callbacks too. If a guard
+                                    // closes the gate, stop evaluating this handle immediately and
+                                    // do not commit a transition from a suspended context.
+                                    if (!handle.Context.IsValid)
+                                    {
+                                        break;
+                                    }
+
                                     if (result)
                                     {
                                         bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
