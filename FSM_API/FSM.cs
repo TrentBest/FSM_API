@@ -417,6 +417,10 @@ namespace TheSingularityWorkshop.FSM_API
             try
             {
                 currentState.Update(ctx);
+                if (!ctx.IsValid)
+                {
+                    return;
+                }
             }
             catch (Exception ex)
             {
@@ -441,7 +445,12 @@ namespace TheSingularityWorkshop.FSM_API
 
                 try
                 {
-                    if (t.Condition(ctx))
+                    var conditionMatched = t.Condition(ctx);
+                    if (!ctx.IsValid)
+                    {
+                        return;
+                    }
+                    if (conditionMatched)
                     {
                         // A guard may mutate the blueprint and remove its own target.
                         // Re-check after invoking user code before exiting the current state.
@@ -505,7 +514,12 @@ namespace TheSingularityWorkshop.FSM_API
                     try
                     {
                        
-                        if (t.Condition(ctx))
+                        var conditionMatched = t.Condition(ctx);
+                        if (!ctx.IsValid)
+                        {
+                            return;
+                        }
+                        if (conditionMatched)
                         {
                             // A guard may remove the target while it is being evaluated.
                             if (!_states.ContainsKey(t.To))
