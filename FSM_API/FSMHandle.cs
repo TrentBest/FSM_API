@@ -202,6 +202,11 @@ namespace TheSingularityWorkshop.FSM_API
             Id = id;
             ProcessingGroup = processingGroup;
             CurrentState = Definition.InitialState;
+
+            // A successfully constructed handle starts eligible for its next scheduled update.
+            // The context remains caller-owned; this initializes its execution gate without
+            // coupling validity to registration or destruction.
+            Context.IsValid = true;
         }
 
         /// <summary>
