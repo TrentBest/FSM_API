@@ -471,7 +471,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             var exitCount = 0;
             FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
-                .State("StateA", _ => enterCount++, _ => updateCount++, ctx => { exitCount++; ctx.IsValid = false; })
+                .State("StateA", _ => enterCount++, _ => updateCount++, ctx => { exitCount++; if (exitCount == 1) ctx.IsValid = false; })
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", _ => true)
                 .BuildDefinition();
@@ -507,7 +507,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             var exitCount = 0;
             FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
-                .State("StateA", _ => enterCount++, _ => updateCount++, ctx => { exitCount++; ctx.IsValid = false; })
+                .State("StateA", _ => enterCount++, _ => updateCount++, ctx => { exitCount++; if (exitCount == 1) ctx.IsValid = false; })
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", _ => true)
                 .BuildDefinition();
