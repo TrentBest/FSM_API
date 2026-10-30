@@ -258,6 +258,13 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                 }
 
+                // OnEnter may suspend the caller-owned context. Do not run OnUpdate
+                // or transition guards after that callback closes the execution gate.
+                if (!Context.IsValid)
+                {
+                    return;
+                }
+
                 string nextState;
                 Definition.Step(CurrentState, Context, out nextState, this);
                 CurrentState = nextState;
