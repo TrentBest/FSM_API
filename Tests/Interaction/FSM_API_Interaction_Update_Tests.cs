@@ -412,6 +412,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(transitionChecks, Is.EqualTo(2));
             Assert.That(handle.IsDestroyed, Is.False);
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
 
         [Test]
         public void ContextInvalidatedDuringOnEnter_StopsRemainingWorkForThatTick()
@@ -482,7 +483,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(exitCount, Is.Zero);
             Assert.That(handle.IsDestroyed, Is.False);
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
-        }
         }
     }
 }
