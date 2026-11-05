@@ -2,6 +2,7 @@
 
 # FSM_API
 
+[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml)
 **FSM_API is a framework-independent C# finite-state-machine library for defining behavior separately from the objects whose behavior it controls.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
