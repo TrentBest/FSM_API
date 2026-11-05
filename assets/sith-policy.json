@@ -1,0 +1,34 @@
+{
+  "repository": "TrentBest/FSM_API",
+  "policy": "exactly-master-and-development",
+  "required_branches": [
+    "development",
+    "master"
+  ],
+  "actual_branches": [
+    "AddingUnitTests",
+    "HireMeFSMDemo",
+    "RefactoringToHashBacking",
+    "Splitting-FSM_API-class-into-multiple-partial-classes",
+    "TargetingStarcraft2DotNet",
+    "TickCountingSystem",
+    "WindowsFormsEditor",
+    "benchmark-contract-docs",
+    "development",
+    "docs/benchmarking",
+    "docs/readme-standard",
+    "feature/fsm-api-2.0",
+    "feature/fsm-api-2.0-next",
+    "feature/fsm-api-2.0-registry",
+    "feature/fsm-api-2.0-work",
+    "feature/integer-backed-runtime",
+    "fix/context-validity-execution-gate",
+    "fix/manual-any-state-evaluation",
+    "master"
+  ],
+  "branch_count": 19,
+  "status": "NON-COMPLIANT",
+  "evaluated_at": "2026-11-05T04:39:57Z",
+  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/41969186296",
+  "triggering_commit": "29a81f0214841e32c42ea164bc864de889961779"
+}
