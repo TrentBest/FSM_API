@@ -22,6 +22,8 @@
 
 [![CoderLegion](https://coderlegion.com/cl_badge_logo1.png) Join the CoderLegion Community](https://coderlegion.com/user/The+Singularity+Workshop)
 
+[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml)
+
 Blazing-fast, software-agnostic Finite State Machine system for any C# application.
 
 🔍 Overview
@@ -45,9 +47,7 @@ control across diverse domains.
 No external dependencies. No frameworks required. No boilerplate setup. Pure C# power for your 
 application's core logic.
 
-
 💡 Why FSM_API?
-
 
 Traditional FSM systems often suffer from tight coupling to specific environments or force rigid 
 coding patterns. FSM_API liberates your state management:
@@ -192,7 +192,6 @@ FSM_API.Interaction.Update("MainLoop");
     deferred and processed safely on the main thread post-update, eliminating common concurrency
      issues.
 
-
 This README follows the Workshop's shared [Documentation Standard](https://github.com/TrentBest/TheSingularityWorkshop.FSM_COS/blob/master/DOCUMENTATION_STANDARD.md), while keeping this repository's own purpose and implementation authoritative.
 
 ## 📦 Features at a Glance
@@ -270,7 +269,6 @@ MIT License. Use it, hack it, build amazing things with it.
   <em>The Singularity Workshop — Tools for the curious, the bold, and the systemically inclined.</em><br>
   <strong>Because state shouldn't be a mess.</strong>
 </p>
-
 
 ---
 
