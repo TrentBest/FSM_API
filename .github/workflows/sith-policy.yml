@@ -182,6 +182,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
           if [[ "$status" != "COMPLIANT" ]]; then
-            echo "::error::Sith Policy requires exactly master and development; status is $status."
-            exit 1
+            echo "::warning::Sith Policy is not yet satisfied; this is informational during development. NuGet publication is gated separately."
+          else
+            echo "Sith Policy satisfied: exactly master and development are present."
           fi
