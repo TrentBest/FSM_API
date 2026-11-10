@@ -37,6 +37,30 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Step_RecoversInvalidCurrentStateToInitialState()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, _ => entered = true, null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.RemoveState(20);
+
+            var result = fsm.Step(20, new TestContext());
+
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void Step_WithInvalidCurrentAndMissingInitial_DoesNotThrow()
+        {
+            var fsm = new IntegerFSM(1);
+
+            Assert.DoesNotThrow(() =>
+                Assert.That(fsm.Step(999, new TestContext()), Is.EqualTo(IntegerFSM.AnyStateIdentifier)));
+        }
+
+        [Test]
         public void Step_IgnoresTransitionToMissingTargetState()
         {
             var fsm = CreateFSMWithStates(10, 20);
