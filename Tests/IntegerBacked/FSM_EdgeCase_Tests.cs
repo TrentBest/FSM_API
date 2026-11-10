@@ -113,6 +113,21 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Handle_EvaluateConditionsWithoutTransition_PreservesEntryState()
+        {
+            var fsm = CreateFSMWithStates(10, 20);
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void Step_WhenUpdateThrows_ContinuesToEvaluateTransitions()
         {
             var guardEvaluated = false;
