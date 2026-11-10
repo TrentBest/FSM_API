@@ -132,7 +132,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                FSM_API.Error.InvokeInstanceError(this, $"Transition to integer state {nextStateID} failed.", ex);
+                FSM_API.Error.InvokeInternalApiError($"Transition to integer state {nextStateID} failed for FSM handle {Id}.", ex);
                 throw;
             }
         }
