@@ -86,6 +86,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void ForceTransition_WhenExitThrows_StillEntersTargetState()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+                throw new InvalidOperationException("Exit failed.")));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+
+            Assert.DoesNotThrow(() =>
+                fsm.ForceTransition(10, 20, new TestContext()));
+
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
+        public void ForceTransition_WhenEnterThrows_PropagatesException()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ =>
+                throw new InvalidOperationException("Enter failed."), null, null));
+
+            Assert.Throws<InvalidOperationException>(() =>
+                fsm.ForceTransition(10, 20, new TestContext()));
+        }
+
+        [Test]
         public void Step_WhenUpdateThrows_ContinuesToEvaluateTransitions()
         {
             var guardEvaluated = false;
