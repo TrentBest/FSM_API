@@ -275,6 +275,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (!TryGetState(currentID, out var currentState))
             {
+                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    $"FSM '{FSM_ID}' has invalid current state '{currentID}'. Attempting recovery to initial state '{InitialStateID}'.",
+                    new InvalidOperationException($"Current state '{currentID}' does not exist in FSM '{FSM_ID}'."));
+
+                // Match the string-backed recovery contract: an invalid current state
+                // is recovered to the configured initial identity. If that target was
+                // also removed, report the broken definition without throwing from Step.
+                if (!TryGetState(InitialStateID, out _))
+                {
+                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                        $"Initial state '{InitialStateID}' does not exist in integer FSM '{FSM_ID}'. Recovery cannot enter a state.",
+                        new InvalidOperationException($"Initial state '{InitialStateID}' does not exist in FSM '{FSM_ID}'."));
+                    return InitialStateID;
+                }
+
                 ForceTransition(currentID, InitialStateID, context);
                 return InitialStateID;
             }
