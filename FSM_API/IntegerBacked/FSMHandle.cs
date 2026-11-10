@@ -106,6 +106,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </summary>
         public void EvaluateConditions()
         {
+            // Match the string-backed handle: an invalid caller-owned context suspends
+            // evaluation without changing state or lifecycle bookkeeping.
+            if (Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             CurrentStateID = Definition.EvaluateConditions(CurrentStateID, Context);
             HasEnteredCurrentState = true;
         }
