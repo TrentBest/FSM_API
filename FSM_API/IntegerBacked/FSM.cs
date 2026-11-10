@@ -207,6 +207,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public int EvaluateConditions(int currentID, IStateContext context)
         {
+            return EvaluateConditions(currentID, context, out _);
+        }
+
+        /// <summary>
+        /// Evaluates transitions and reports whether a transition completed, including a same-state transition.
+        /// </summary>
+        public int EvaluateConditions(int currentID, IStateContext context, out bool transitioned)
+        {
+            transitioned = false;
             if (!TryGetState(currentID, out _))
             {
                 return currentID;
@@ -228,6 +237,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 ForceTransition(currentID, transition.ToID, context);
+                transitioned = true;
                 return transition.ToID;
             }
 
@@ -247,6 +257,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 ForceTransition(currentID, transition.ToID, context);
+                transitioned = true;
                 return transition.ToID;
             }
 
