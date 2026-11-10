@@ -69,10 +69,31 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Update()
         {
+            if (Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             try
             {
+                if (!HasEnteredCurrentState)
+                {
+                    var currentState = Definition.GetState(CurrentStateID);
+                    if (currentState != null)
+                    {
+                        currentState.Enter(Context);
+                        HasEnteredCurrentState = true;
+                    }
+                }
+
+                var previousStateID = CurrentStateID;
                 CurrentStateID = Definition.Step(CurrentStateID, Context);
-                HasEnteredCurrentState = true;
+                if (CurrentStateID != previousStateID)
+                {
+                    // Match the string-backed lifecycle: the target state's Enter action
+                    // runs at the beginning of the next update, not during this transition.
+                    HasEnteredCurrentState = false;
+                }
             }
             catch (Exception ex)
             {
