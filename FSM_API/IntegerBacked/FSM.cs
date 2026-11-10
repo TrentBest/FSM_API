@@ -215,7 +215,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _anyStateTransitions.Count; i++)
             {
                 var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (!TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
                     continue;
                 }
@@ -227,7 +227,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < _transitions.Count; i++)
             {
                 var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !transition.Evaluate(context))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
                     continue;
                 }
@@ -297,6 +297,23 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             toState.Enter(context);
+        }
+
+        private bool EvaluateCondition(FSMTransition transition, int currentID, IStateContext context)
+        {
+            try
+            {
+                return transition.Evaluate(context);
+            }
+            catch (Exception ex)
+            {
+                // Match string-backed manual evaluation: isolate a failing guard to its
+                // candidate so later transitions can still be considered.
+                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    $"Error evaluating manual integer transition condition from '{currentID}' to '{transition.ToID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                    ex);
+                return false;
+            }
         }
 
         /// <summary>Reserved integer identity representing Any-State.</summary>
