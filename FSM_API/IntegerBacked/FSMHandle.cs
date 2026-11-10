@@ -53,7 +53,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Initialize()
         {
-            if (HasEnteredCurrentState)
+            if (HasEnteredCurrentState || Context == null || !Context.IsValid)
             {
                 return;
             }
