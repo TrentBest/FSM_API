@@ -101,6 +101,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void EvaluateConditions_WhenGuardRemovesItsTarget_ContinuesToLaterCandidate()
+        {
+            var laterGuardEvaluated = false;
+            var fsm = CreateFSM();
+            fsm.AddAnyStateTransition(20, _ =>
+            {
+                fsm.RemoveState(20);
+                return true;
+            });
+            fsm.AddAnyStateTransition(30, _ =>
+            {
+                laterGuardEvaluated = true;
+                return true;
+            });
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+
+            handle.EvaluateConditions();
+
+            Assert.That(laterGuardEvaluated, Is.True);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(30));
+        }
+
+        [Test]
         public void EvaluateConditions_WhenContextIsInvalid_DoesNotEvaluateOrChangeLifecycle()
         {
             var conditionEvaluated = false;
