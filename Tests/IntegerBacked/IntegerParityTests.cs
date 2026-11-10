@@ -79,10 +79,88 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             public List<string> Trace { get; }
             public bool ShouldTransition { get; set; }
+            public bool AnyStateShouldTransition { get; set; }
             public bool IsValid { get; set; } = true;
             public string Name { get; set; } = "LifecycleParity";
             public int Context_ID => 23006;
             public bool HasEnteredCurrentState { get; set; }
+        }
+
+
+        [Test]
+        public void AnyStateTransition_PriorityAndCallbackTrace_MatchStringBackedImplementation()
+        {
+            var stringTrace = new List<string>();
+            var integerTrace = new List<string>();
+            var stringContext = new LifecycleContext(stringTrace) { ShouldTransition = true, AnyStateShouldTransition = true };
+            var integerContext = new LifecycleContext(integerTrace) { ShouldTransition = true, AnyStateShouldTransition = true };
+
+            var stringDefinition = new StringFsm { Name = "StringAnyStateParity" };
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "A", _ => stringTrace.Add("A.Enter"), _ => stringTrace.Add("A.Update"), _ => stringTrace.Add("A.Exit")));
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "B", _ => stringTrace.Add("B.Enter"), _ => stringTrace.Add("B.Update"), _ => stringTrace.Add("B.Exit")));
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "C", _ => stringTrace.Add("C.Enter"), _ => stringTrace.Add("C.Update"), _ => stringTrace.Add("C.Exit")));
+            stringDefinition.AddTransition("A", "B", context => ((LifecycleContext)context).ShouldTransition);
+            stringDefinition.AddAnyStateTransition("C", context => ((LifecycleContext)context).AnyStateShouldTransition);
+
+            var integerDefinition = new IntegerFsm(23007);
+            integerDefinition.AddState(new IntegerFsmState(
+                0, _ => integerTrace.Add("A.Enter"), _ => integerTrace.Add("A.Update"), _ => integerTrace.Add("A.Exit")));
+            integerDefinition.AddState(new IntegerFsmState(
+                1, _ => integerTrace.Add("B.Enter"), _ => integerTrace.Add("B.Update"), _ => integerTrace.Add("B.Exit")));
+            integerDefinition.AddState(new IntegerFsmState(
+                2, _ => integerTrace.Add("C.Enter"), _ => integerTrace.Add("C.Update"), _ => integerTrace.Add("C.Exit")));
+            integerDefinition.AddTransition(0, 1, context => ((LifecycleContext)context).ShouldTransition);
+            integerDefinition.AddAnyStateTransition(2, context => ((LifecycleContext)context).AnyStateShouldTransition);
+
+            var stringHandle = new StringFsmHandle(stringDefinition, stringContext);
+            var integerHandle = new IntegerFsmHandle(integerDefinition, integerContext);
+            integerHandle.Initialize();
+
+            stringHandle.Update();
+            integerHandle.Update();
+
+            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringHandle.CurrentState, Is.EqualTo("C"));
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(2));
+            Assert.That(stringTrace, Does.Not.Contain("C.Enter"));
+        }
+
+        [Test]
+        public void InvalidContext_SuspendsInitializationAndUpdate_InBothImplementations()
+        {
+            var stringTrace = new List<string>();
+            var integerTrace = new List<string>();
+            var stringContext = new LifecycleContext(stringTrace) { IsValid = false };
+            var integerContext = new LifecycleContext(integerTrace) { IsValid = false };
+
+            var stringDefinition = new StringFsm { Name = "StringInvalidContextParity" };
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "A", _ => stringTrace.Add("A.Enter"), _ => stringTrace.Add("A.Update"), null));
+
+            var integerDefinition = new IntegerFsm(23008);
+            integerDefinition.AddState(new IntegerFsmState(
+                0, _ => integerTrace.Add("A.Enter"), _ => integerTrace.Add("A.Update"), null));
+
+            var stringHandle = new StringFsmHandle(stringDefinition, stringContext);
+            var integerHandle = new IntegerFsmHandle(integerDefinition, integerContext);
+            integerHandle.Initialize();
+            stringHandle.Update();
+            integerHandle.Update();
+
+            Assert.That(stringTrace, Is.Empty);
+            Assert.That(integerTrace, Is.Empty);
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.False);
+
+            stringContext.IsValid = true;
+            integerContext.IsValid = true;
+            stringHandle.Update();
+            integerHandle.Update();
+
+            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            CollectionAssert.AreEqual(new[] { "A.Enter", "A.Update" }, integerTrace);
         }
 
         [Test]
