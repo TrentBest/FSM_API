@@ -151,7 +151,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void Step_EntersTargetStateOnRegularTransition()
+        public void Step_DefersTargetStateEntryOnRegularTransition()
         {
             var exited = false;
             var entered = false;
@@ -163,7 +163,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             fsm.Step(10, new TestContext());
 
             Assert.That(exited, Is.True);
-            Assert.That(entered, Is.True);
+            Assert.That(entered, Is.False);
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void Step_EntersTargetStateOnAnyStateTransition()
+        public void Step_DefersTargetStateEntryOnAnyStateTransition()
         {
             var entered = false;
             var fsm = new IntegerFSM(1);
@@ -219,7 +219,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             fsm.Step(10, new TestContext());
 
-            Assert.That(entered, Is.True);
+            Assert.That(entered, Is.False);
         }
 
         [Test]
