@@ -212,9 +212,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return currentID;
             }
 
-            for (var i = 0; i < _anyStateTransitions.Count; i++)
+            var anyStateTransitions = _anyStateTransitions.ToArray();
+            for (var i = 0; i < anyStateTransitions.Length; i++)
             {
-                var transition = _anyStateTransitions[i];
+                var transition = anyStateTransitions[i];
                 if (!TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
                     continue;
@@ -230,9 +231,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return transition.ToID;
             }
 
-            for (var i = 0; i < _transitions.Count; i++)
+            var transitions = _transitions.ToArray();
+            for (var i = 0; i < transitions.Length; i++)
             {
-                var transition = _transitions[i];
+                var transition = transitions[i];
                 if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
                     continue;
