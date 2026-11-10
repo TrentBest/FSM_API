@@ -85,6 +85,51 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(entered, Is.True);
         }
 
+        [Test]
+        public void Step_WhenUpdateThrows_ContinuesToEvaluateTransitions()
+        {
+            var guardEvaluated = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, _ => throw new InvalidOperationException("Update failed."), null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                guardEvaluated = true;
+                return true;
+            });
+
+            Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(20));
+            Assert.That(guardEvaluated, Is.True);
+        }
+
+        [Test]
+        public void Step_WhenExitThrows_ContinuesToLaterTransitionCandidate()
+        {
+            var exitCalls = 0;
+            var laterGuardEvaluated = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exitCalls++;
+                if (exitCalls == 1)
+                {
+                    throw new InvalidOperationException("Exit failed.");
+                }
+            }));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddState(new IntegerFSMState(30, null, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+            fsm.AddTransition(10, 30, _ =>
+            {
+                laterGuardEvaluated = true;
+                return true;
+            });
+
+            Assert.That(fsm.Step(10, new TestContext()), Is.EqualTo(30));
+            Assert.That(laterGuardEvaluated, Is.True);
+            Assert.That(exitCalls, Is.EqualTo(2));
+        }
+
         private static IntegerFSM CreateFSMWithStates(int firstID, int secondID)
         {
             var fsm = new IntegerFSM(1);
