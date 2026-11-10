@@ -81,6 +81,26 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void EvaluateConditions_WhenGuardThrows_ContinuesToLaterCandidate()
+        {
+            var laterGuardEvaluated = false;
+            var fsm = CreateFSM();
+            fsm.AddAnyStateTransition(20, _ => throw new System.InvalidOperationException("Guard failed."));
+            fsm.AddAnyStateTransition(30, _ =>
+            {
+                laterGuardEvaluated = true;
+                return true;
+            });
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+
+            Assert.DoesNotThrow(() => handle.EvaluateConditions());
+
+            Assert.That(laterGuardEvaluated, Is.True);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(30));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+        }
+
+        [Test]
         public void EvaluateConditions_WhenContextIsInvalid_DoesNotEvaluateOrChangeLifecycle()
         {
             var conditionEvaluated = false;
