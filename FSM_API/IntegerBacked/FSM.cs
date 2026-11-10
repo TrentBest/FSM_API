@@ -220,6 +220,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     continue;
                 }
 
+                // A guard is user code and may remove its own target state.
+                if (!TryGetState(transition.ToID, out _))
+                {
+                    continue;
+                }
+
                 ForceTransition(currentID, transition.ToID, context);
                 return transition.ToID;
             }
@@ -228,6 +234,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 var transition = _transitions[i];
                 if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
+                {
+                    continue;
+                }
+
+                // A guard is user code and may remove its own target state.
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
