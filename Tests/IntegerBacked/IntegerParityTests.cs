@@ -1,4 +1,8 @@
+using System.Collections.Generic;
 using NUnit.Framework;
+using TheSingularityWorkshop.FSM_API;
+using StringFsm = TheSingularityWorkshop.FSM_API.FSM;
+using StringFsmHandle = TheSingularityWorkshop.FSM_API.FSMHandle;
 using TheSingularityWorkshop.FSM_API.IntegerBacked;
 using IntegerFsm = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFsmState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
@@ -15,6 +19,69 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             public bool IsValid { get; set; } = true;
             public string Name { get; set; } = "IntegerParityTests";
             public int Context_ID => 23;
+            public bool HasEnteredCurrentState { get; set; }
+        }
+
+
+        [Test]
+        public void NormalTransition_EntryCallbackTiming_MatchesStringBackedImplementation()
+        {
+            var stringTrace = new List<string>();
+            var integerTrace = new List<string>();
+            var stringContext = new LifecycleContext(stringTrace);
+            var integerContext = new LifecycleContext(integerTrace);
+
+            var stringDefinition = new StringFsm { Name = "StringLifecycleParity" };
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "A", _ => stringTrace.Add("A.Enter"), _ => stringTrace.Add("A.Update"), _ => stringTrace.Add("A.Exit")));
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "B", _ => stringTrace.Add("B.Enter"), _ => stringTrace.Add("B.Update"), _ => stringTrace.Add("B.Exit")));
+            stringDefinition.AddTransition("A", "B", context => ((LifecycleContext)context).ShouldTransition);
+
+            var integerDefinition = new IntegerFsm(23006);
+            integerDefinition.AddState(new IntegerFsmState(
+                0, _ => integerTrace.Add("A.Enter"), _ => integerTrace.Add("A.Update"), _ => integerTrace.Add("A.Exit")));
+            integerDefinition.AddState(new IntegerFsmState(
+                1, _ => integerTrace.Add("B.Enter"), _ => integerTrace.Add("B.Update"), _ => integerTrace.Add("B.Exit")));
+            integerDefinition.AddTransition(0, 1, context => ((LifecycleContext)context).ShouldTransition);
+
+            var stringHandle = new StringFsmHandle(stringDefinition, stringContext);
+            var integerHandle = new IntegerFsmHandle(integerDefinition, integerContext);
+            integerHandle.Initialize();
+
+            stringHandle.Update();
+            integerHandle.Update();
+            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringHandle.CurrentState, Is.EqualTo("A"));
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(0));
+
+            stringContext.ShouldTransition = true;
+            integerContext.ShouldTransition = true;
+            stringHandle.Update();
+            integerHandle.Update();
+            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringHandle.CurrentState, Is.EqualTo("B"));
+            Assert.That(integerHandle.CurrentStateID, Is.EqualTo(1));
+            Assert.That(stringTrace, Does.Not.Contain("B.Enter"));
+
+            stringHandle.Update();
+            integerHandle.Update();
+            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringTrace, Does.Contain("B.Enter"));
+        }
+
+        private sealed class LifecycleContext : IStateContext
+        {
+            public LifecycleContext(List<string> trace)
+            {
+                Trace = trace;
+            }
+
+            public List<string> Trace { get; }
+            public bool ShouldTransition { get; set; }
+            public bool IsValid { get; set; } = true;
+            public string Name { get; set; } = "LifecycleParity";
+            public int Context_ID => 23006;
             public bool HasEnteredCurrentState { get; set; }
         }
 
