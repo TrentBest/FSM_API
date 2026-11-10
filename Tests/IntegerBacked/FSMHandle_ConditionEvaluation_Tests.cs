@@ -80,6 +80,32 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(handle.CurrentStateID, Is.EqualTo(30));
         }
 
+        [Test]
+        public void EvaluateConditions_WhenContextIsInvalid_DoesNotEvaluateOrChangeLifecycle()
+        {
+            var conditionEvaluated = false;
+            var exited = false;
+            var entered = false;
+            var context = new TestContext { IsValid = false };
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exited = true));
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddTransition(10, 20, _ =>
+            {
+                conditionEvaluated = true;
+                return true;
+            });
+            var handle = new IntegerFSMHandle(fsm, context);
+
+            handle.EvaluateConditions();
+
+            Assert.That(conditionEvaluated, Is.False);
+            Assert.That(exited, Is.False);
+            Assert.That(entered, Is.False);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
         private static IntegerFSM CreateFSM()
         {
             var fsm = new IntegerFSM(1);
