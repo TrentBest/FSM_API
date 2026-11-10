@@ -113,6 +113,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Handle_TransitionTo_WhenEnterThrows_PropagatesOriginalException()
+        {
+            var failure = new InvalidOperationException("Enter failed.");
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ => throw failure, null, null));
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+
+            var thrown = Assert.Throws<InvalidOperationException>(() => handle.TransitionTo(20));
+
+            Assert.That(thrown, Is.SameAs(failure));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
         public void Handle_EvaluateConditionsWithoutTransition_PreservesEntryState()
         {
             var fsm = CreateFSMWithStates(10, 20);
