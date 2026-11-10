@@ -270,28 +270,41 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             currentState.Update(context);
 
-            for (var i = 0; i < _anyStateTransitions.Count; i++)
+            // Snapshot collections so callbacks can safely add/remove transitions while stepping.
+            var anyStateTransitions = _anyStateTransitions.ToArray();
+            for (var i = 0; i < anyStateTransitions.Length; i++)
             {
-                var transition = _anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
+                var transition = anyStateTransitions[i];
+                if (!TryGetState(transition.ToID, out _) || !EvaluateStepCondition(transition, currentID, context))
+                {
+                    continue;
+                }
+
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
-                return transition.ToID;
+                return TryGetState(transition.ToID, out _) ? transition.ToID : currentID;
             }
 
-            for (var i = 0; i < _transitions.Count; i++)
+            var transitions = _transitions.ToArray();
+            for (var i = 0; i < transitions.Length; i++)
             {
-                var transition = _transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out var nextState) || !transition.Evaluate(context))
+                var transition = transitions[i];
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateStepCondition(transition, currentID, context))
+                {
+                    continue;
+                }
+
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
                 currentState.Exit(context);
-                return transition.ToID;
+                return TryGetState(transition.ToID, out _) ? transition.ToID : currentID;
             }
 
             return currentID;
@@ -311,6 +324,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             toState.Enter(context);
+        }
+
+        private bool EvaluateStepCondition(FSMTransition transition, int currentID, IStateContext context)
+        {
+            try
+            {
+                return transition.Evaluate(context);
+            }
+            catch (Exception ex)
+            {
+                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    $"Error evaluating integer transition condition from '{currentID}' to '{transition.ToID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                    ex);
+                return false;
+            }
         }
 
         private bool EvaluateCondition(FSMTransition transition, int currentID, IStateContext context)
