@@ -346,7 +346,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (TryGetState(fromID, out var fromState))
             {
-                fromState.Exit(context);
+                try
+                {
+                    fromState.Exit(context);
+                }
+                catch (Exception ex)
+                {
+                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                        $"Error during Exit logic of integer state '{fromID}' during forced transition to '{toID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                        ex);
+                    // Match the string-backed contract: an Exit failure is reported,
+                    // but does not prevent the target state's Enter callback.
+                }
             }
 
             if (!TryGetState(toID, out var toState))
