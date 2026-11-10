@@ -265,7 +265,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                nextState.Enter(context);
                 return transition.ToID;
             }
 
@@ -278,7 +277,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 currentState.Exit(context);
-                nextState.Enter(context);
                 return transition.ToID;
             }
 
