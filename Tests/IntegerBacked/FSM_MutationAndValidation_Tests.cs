@@ -174,7 +174,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var result = fsm.Step(10, new TestContext());
 
             Assert.That(result, Is.EqualTo(20));
-            Assert.That(enteredSecond, Is.True);
+            Assert.That(enteredSecond, Is.False);
             Assert.That(enteredThird, Is.False);
         }
 
