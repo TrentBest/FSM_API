@@ -51,7 +51,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             stringHandle.Update();
             integerHandle.Update();
-            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
             Assert.That(stringHandle.CurrentState, Is.EqualTo("A"));
             Assert.That(integerHandle.CurrentStateID, Is.EqualTo(0));
 
@@ -59,14 +59,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             integerContext.ShouldTransition = true;
             stringHandle.Update();
             integerHandle.Update();
-            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
             Assert.That(stringHandle.CurrentState, Is.EqualTo("B"));
             Assert.That(integerHandle.CurrentStateID, Is.EqualTo(1));
             Assert.That(stringTrace, Does.Not.Contain("B.Enter"));
 
             stringHandle.Update();
             integerHandle.Update();
-            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
             Assert.That(stringTrace, Does.Contain("B.Enter"));
         }
 
@@ -122,7 +122,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             stringHandle.Update();
             integerHandle.Update();
 
-            CollectionAssert.AreEqual(stringTrace, integerTrace);
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
             Assert.That(stringHandle.CurrentState, Is.EqualTo("C"));
             Assert.That(integerHandle.CurrentStateID, Is.EqualTo(2));
             Assert.That(stringTrace, Does.Not.Contain("C.Enter"));
@@ -159,8 +159,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             stringHandle.Update();
             integerHandle.Update();
 
-            CollectionAssert.AreEqual(stringTrace, integerTrace);
-            CollectionAssert.AreEqual(new[] { "A.Enter", "A.Update" }, integerTrace);
+            Assert.That(stringTrace, Is.EqualTo(integerTrace));
+            Assert.That(new[] { "A.Enter", Is.EqualTo("A.Update" }, integerTrace));
         }
 
         [Test]
