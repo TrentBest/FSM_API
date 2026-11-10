@@ -160,7 +160,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             integerHandle.Update();
 
             Assert.That(stringTrace, Is.EqualTo(integerTrace));
-            Assert.That(new[] { "A.Enter", Is.EqualTo("A.Update" }, integerTrace));
+            Assert.That(integerTrace, Is.EqualTo(new[] { "A.Enter", "A.Update" }));
         }
 
         [Test]
