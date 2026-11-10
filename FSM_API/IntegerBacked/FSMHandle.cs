@@ -113,8 +113,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            var previousStateID = CurrentStateID;
             CurrentStateID = Definition.EvaluateConditions(CurrentStateID, Context);
-            HasEnteredCurrentState = true;
+            if (CurrentStateID != previousStateID)
+            {
+                HasEnteredCurrentState = true;
+            }
         }
 
         /// <summary>Forces an immediate transition to an integer state identity.</summary>
