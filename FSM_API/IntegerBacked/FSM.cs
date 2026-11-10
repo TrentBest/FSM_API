@@ -323,7 +323,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     continue;
                 }
 
-                currentState.Exit(context);
+                try
+                {
+                    currentState.Exit(context);
+                }
+                catch (Exception ex)
+                {
+                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                        $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                        ex);
+                    continue;
+                }
+
                 return TryGetState(transition.ToID, out _) ? transition.ToID : currentID;
             }
 
