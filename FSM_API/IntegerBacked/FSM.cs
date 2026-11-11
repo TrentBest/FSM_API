@@ -237,6 +237,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 ForceTransition(currentID, transition.ToID, context);
+
+                // The source Exit callback can mutate the definition and remove its
+                // own target. Match the string-backed handle: retain the source identity
+                // and leave entry bookkeeping false when the target was not entered.
+                if (!TryGetState(transition.ToID, out _))
+                {
+                    return currentID;
+                }
+
                 transitioned = true;
                 return transition.ToID;
             }
