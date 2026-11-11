@@ -215,7 +215,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </summary>
         public int EvaluateConditions(int currentID, IStateContext context, out bool transitioned)
         {
+            return EvaluateConditions(currentID, context, out transitioned, out _);
+        }
+
+        /// <summary>
+        /// Evaluates transitions and reports whether the current state's Exit callback ran
+        /// without a target being entered.
+        /// </summary>
+        public int EvaluateConditions(int currentID, IStateContext context, out bool transitioned, out bool currentStateExited)
+        {
             transitioned = false;
+            currentStateExited = false;
             if (!TryGetState(currentID, out _))
             {
                 return currentID;
@@ -243,6 +253,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // and leave entry bookkeeping false when the target was not entered.
                 if (!TryGetState(transition.ToID, out _))
                 {
+                    currentStateExited = true;
                     return currentID;
                 }
 
