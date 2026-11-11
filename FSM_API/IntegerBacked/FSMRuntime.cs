@@ -41,6 +41,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             if (_definitions[definition.FSM_ID] != null)
             {
+                _definitionErrorCounts.Remove(definition.FSM_ID);
                 for (var i = _handles.Count - 1; i >= 0; i--)
                 {
                     if (_handles[i].FSM_ID == definition.FSM_ID)
@@ -135,6 +136,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             _definitions[fsmID] = null;
             _processCounters[fsmID] = 0;
+            _definitionErrorCounts.Remove(fsmID);
 
             for (var i = _handles.Count - 1; i >= 0; i--)
             {
