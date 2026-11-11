@@ -21,9 +21,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void Register_ReplacementMarksRemovedHandlesUnregistered()
         {
+            var exits = 0;
             var runtime = new IntegerFSMRuntime();
             var definition = new IntegerFSM(7, -1);
-            definition.AddState(new IntegerFSMState(0, null, null, null));
+            definition.AddState(new IntegerFSMState(0, null, null, _ => exits++));
             runtime.Register(definition);
             IntegerFSMHandleInt handle = runtime.CreateInstance(7, new TestContext());
 
@@ -36,6 +37,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(runtime.GetHandleCount(0), Is.Zero);
             Assert.That(GetRegistrationFlag(handle), Is.False,
                 "Replacing a definition removes its handles, so their registration flag must be cleared too.");
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(exits, Is.EqualTo(1), "Replacement must tear down the old definition's live instance exactly once.");
         }
 
         private static bool GetRegistrationFlag(IntegerFSMHandleInt handle)
