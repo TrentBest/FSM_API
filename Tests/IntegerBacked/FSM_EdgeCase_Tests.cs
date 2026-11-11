@@ -194,6 +194,52 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Handle_EvaluateConditions_WhenExitRemovesTarget_DoesNotMarkTargetEntered()
+        {
+            var exitCalls = 0;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exitCalls++;
+                fsm.RemoveState(20);
+            }));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+            handle.Update();
+            fsm.AddTransition(10, 20, _ => true);
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(exitCalls, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Handle_EvaluateAnyStateConditions_WhenExitRemovesTarget_DoesNotMarkTargetEntered()
+        {
+            var exitCalls = 0;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exitCalls++;
+                fsm.RemoveState(20);
+            }));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+            handle.Update();
+            fsm.AddAnyStateTransition(20, _ => true);
+
+            handle.EvaluateConditions();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(exitCalls, Is.EqualTo(1));
+        }
+
+        [Test]
         public void Handle_EvaluateConditionsWithoutTransition_PreservesEntryState()
         {
             var fsm = CreateFSMWithStates(10, 20);
