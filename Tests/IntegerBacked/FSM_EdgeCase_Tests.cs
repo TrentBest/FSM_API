@@ -125,6 +125,28 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void ForceTransition_WhenTargetIsMissing_ReportsAndReturns()
+        {
+            var fsm = CreateFSMWithStates(10, 20);
+
+            Assert.DoesNotThrow(() =>
+                fsm.ForceTransition(10, 999, new TestContext()));
+        }
+
+        [Test]
+        public void Handle_TransitionTo_WhenTargetIsMissing_UpdatesIdentityWithoutMarkingEntered()
+        {
+            var fsm = CreateFSMWithStates(10, 20);
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+
+            Assert.DoesNotThrow(() => handle.TransitionTo(999));
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(999));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void ForceTransition_WhenEnterThrows_PropagatesException()
         {
             var fsm = new IntegerFSM(1);
