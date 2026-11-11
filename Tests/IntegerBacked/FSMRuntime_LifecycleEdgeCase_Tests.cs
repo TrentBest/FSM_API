@@ -114,13 +114,21 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 FSM_API.Error.DefinitionErrorThreshold = 10;
                 var runtime = new IntegerFSMRuntime();
                 var fsm = new IntegerFSM(10, -1);
-                fsm.AddState(new IntegerFSMState(10, null, _ => throw new System.InvalidOperationException("update failed"), _ => exits++));
+                fsm.AddState(new IntegerFSMState(10, null, null, null));
+                fsm.AddState(new IntegerFSMState(11,
+                    _ => throw new System.InvalidOperationException("enter failed"), null, _ => exits++));
+                fsm.AddTransition(10, 11, _ => true);
                 runtime.Register(fsm);
                 var handle = runtime.CreateInstance(10, new TestContext());
 
+                // First tick transitions to state 11. Its Enter callback is attempted on the
+                // following tick and fails; the runtime records rather than leaks that exception.
                 Assert.DoesNotThrow(() => runtime.UpdateAll());
                 Assert.That(handle.IsDestroyed, Is.False);
                 Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+
+                Assert.DoesNotThrow(() => runtime.UpdateAll());
+                Assert.That(handle.IsDestroyed, Is.False);
 
                 Assert.DoesNotThrow(() => runtime.UpdateAll());
 
