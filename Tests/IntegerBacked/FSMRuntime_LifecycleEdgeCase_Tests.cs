@@ -140,7 +140,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             {
                 FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
                 FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
-                FSM_API.Error.Reset();
             }
         }
 
