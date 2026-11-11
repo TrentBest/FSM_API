@@ -36,6 +36,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Indicates whether the current state has been entered.</summary>
         public bool HasEnteredCurrentState { get; internal set; }
 
+        /// <summary>Indicates whether this handle has completed teardown.</summary>
+        public bool IsDestroyed { get; private set; }
+
+        /// <summary>Indicates that runtime teardown has been scheduled.</summary>
+        internal bool IsPendingDestruction { get; set; }
+
         /// <summary>Creates an integer-backed FSM handle.</summary>
         public FSMHandle(FSM definition, IStateContext context, int id = -1)
         {
@@ -53,7 +59,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Initialize()
         {
-            if (HasEnteredCurrentState || Context == null || !Context.IsValid)
+            if (IsDestroyed || IsPendingDestruction || HasEnteredCurrentState || Context == null || !Context.IsValid)
             {
                 return;
             }
@@ -69,7 +75,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Update()
         {
-            if (Context == null || !Context.IsValid)
+            if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
             {
                 return;
             }
@@ -108,7 +114,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             // Match the string-backed handle: an invalid caller-owned context suspends
             // evaluation without changing state or lifecycle bookkeeping.
-            if (Context == null || !Context.IsValid)
+            if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
             {
                 return;
             }
@@ -123,6 +129,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Forces an immediate transition to an integer state identity.</summary>
         public void TransitionTo(int nextStateID)
         {
+            if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             try
             {
                 Definition.ForceTransition(CurrentStateID, nextStateID, Context);
@@ -139,9 +150,42 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Resets this instance to the blueprint's initial state.</summary>
         public void ResetFSMInstance()
         {
+            if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context);
             CurrentStateID = Definition.InitialStateID;
             HasEnteredCurrentState = true;
+        }
+
+        /// <summary>Runs the current state's Exit callback exactly once during teardown.</summary>
+        internal void DestroyHandle()
+        {
+            if (IsDestroyed)
+            {
+                return;
+            }
+
+            IsDestroyed = true;
+            IsPendingDestruction = false;
+            HasEnteredCurrentState = false;
+
+            var state = Definition.GetState(CurrentStateID);
+            if (state != null && Context != null)
+            {
+                try
+                {
+                    state.Exit(Context);
+                }
+                catch (Exception ex)
+                {
+                    FSM_API.Error.InvokeInternalApiError(
+                        $"Error during teardown of integer FSM '{FSM_ID}' handle '{Id}' in state '{CurrentStateID}'.",
+                        ex);
+                }
+            }
         }
     }
 }
