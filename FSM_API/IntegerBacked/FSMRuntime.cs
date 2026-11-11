@@ -254,7 +254,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             var count = _instanceErrorCounts.TryGetValue(handle, out var current) ? current + 1 : 1;
             _instanceErrorCounts[handle] = count;
             FSM_API.Error.InvokeInternalApiError(
-                $"Integer FSM instance '{handle.FSM_ID}' (handle {handle.Id}, context ID: {handle.Context?.Context_ID ?? 0}) " +
+                $"Integer FSM instance '{handle.FSM_ID}' (handle {handle.Id}, context ID: {handle.Context?.GetHashCode() ?? 0}) " +
                 $"in processing group '{handle.Definition.ProcessingGroupID}' failed in state '{handle.CurrentStateID}'. " +
                 $"Count: {count}/{FSM_API.Error.InstanceErrorThreshold}.", exception);
 
