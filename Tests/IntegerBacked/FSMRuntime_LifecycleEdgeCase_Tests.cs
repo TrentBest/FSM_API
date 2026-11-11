@@ -63,6 +63,79 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.DoesNotThrow(() => runtime.Update(10));
         }
 
+
+        [Test]
+        public void RemoveInstance_RunsExitExactlyOnceAndPreventsFurtherUpdates()
+        {
+            var exits = 0;
+            var updates = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(8, -1);
+            fsm.AddState(new IntegerFSMState(10, null, _ => updates++, _ => exits++));
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(8, new TestContext());
+
+            Assert.That(runtime.RemoveInstance(handle), Is.True);
+            Assert.That(runtime.RemoveInstance(handle), Is.False);
+            handle.Update();
+
+            Assert.That(exits, Is.EqualTo(1));
+            Assert.That(updates, Is.Zero);
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+        }
+
+        [Test]
+        public void Unregister_RunsExitForEveryRemovedInstance()
+        {
+            var exits = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(9, -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exits++));
+            runtime.Register(fsm);
+            runtime.CreateInstance(9, new TestContext());
+            runtime.CreateInstance(9, new TestContext());
+
+            Assert.That(runtime.Unregister(9), Is.True);
+
+            Assert.That(exits, Is.EqualTo(2));
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+        }
+
+        [Test]
+        public void UpdateAll_IsolatesRepeatedInstanceFailuresAndDefersTeardown()
+        {
+            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
+            var exits = 0;
+            try
+            {
+                FSM_API.Error.InstanceErrorThreshold = 2;
+                FSM_API.Error.DefinitionErrorThreshold = 10;
+                var runtime = new IntegerFSMRuntime();
+                var fsm = new IntegerFSM(10, -1);
+                fsm.AddState(new IntegerFSMState(10, null, _ => throw new System.InvalidOperationException("update failed"), _ => exits++));
+                runtime.Register(fsm);
+                var handle = runtime.CreateInstance(10, new TestContext());
+
+                Assert.DoesNotThrow(() => runtime.UpdateAll());
+                Assert.That(handle.IsDestroyed, Is.False);
+                Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+
+                Assert.DoesNotThrow(() => runtime.UpdateAll());
+
+                Assert.That(handle.IsDestroyed, Is.True);
+                Assert.That(exits, Is.EqualTo(1));
+                Assert.That(runtime.GetHandleCount(0), Is.Zero);
+            }
+            finally
+            {
+                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+                FSM_API.Error.Reset();
+            }
+        }
+
         private static IntegerFSM CreateFSM(int id)
         {
             var fsm = new IntegerFSM(id);
