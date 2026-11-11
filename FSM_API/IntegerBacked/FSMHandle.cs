@@ -66,7 +66,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             Definition.EnterInitial(Context);
             CurrentStateID = Definition.InitialStateID;
-            HasEnteredCurrentState = Definition.HasState(CurrentStateID);
+            HasEnteredCurrentState = true;
         }
 
         /// <summary>Advances this FSM instance by one step.</summary>
@@ -157,7 +157,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context);
             CurrentStateID = Definition.InitialStateID;
-            HasEnteredCurrentState = true;
+            HasEnteredCurrentState = Definition.HasState(CurrentStateID);
         }
 
         /// <summary>Runs the current state's Exit callback exactly once during teardown.</summary>
