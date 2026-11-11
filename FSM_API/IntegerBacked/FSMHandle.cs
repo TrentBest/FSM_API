@@ -119,8 +119,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
-            CurrentStateID = Definition.EvaluateConditions(CurrentStateID, Context, out var transitioned);
-            if (transitioned)
+            CurrentStateID = Definition.EvaluateConditions(
+                CurrentStateID, Context, out var transitioned, out var currentStateExited);
+            if (currentStateExited)
+            {
+                HasEnteredCurrentState = false;
+            }
+            else if (transitioned)
             {
                 HasEnteredCurrentState = true;
             }
