@@ -253,6 +253,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(exitCalls, Is.EqualTo(2));
         }
 
+        [Test]
+        public void Handle_ResetWithMissingInitialState_DoesNotMarkStateEntered()
+        {
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+
+            fsm.RemoveState(10);
+
+            Assert.DoesNotThrow(() => handle.ResetFSMInstance());
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(IntegerFSM.AnyStateIdentifier));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
         private static IntegerFSM CreateFSMWithStates(int firstID, int secondID)
         {
             var fsm = new IntegerFSM(1);
