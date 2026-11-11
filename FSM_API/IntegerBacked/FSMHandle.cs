@@ -138,7 +138,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 Definition.ForceTransition(CurrentStateID, nextStateID, Context);
                 CurrentStateID = nextStateID;
-                HasEnteredCurrentState = true;
+                HasEnteredCurrentState = Definition.HasState(nextStateID);
             }
             catch (Exception ex)
             {
