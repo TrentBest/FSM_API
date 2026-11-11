@@ -66,7 +66,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             Definition.EnterInitial(Context);
             CurrentStateID = Definition.InitialStateID;
-            HasEnteredCurrentState = true;
+            HasEnteredCurrentState = Definition.HasState(CurrentStateID);
         }
 
         /// <summary>Advances this FSM instance by one step.</summary>
