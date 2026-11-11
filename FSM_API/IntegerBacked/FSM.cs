@@ -388,10 +388,23 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             if (!TryGetState(toID, out var toState))
             {
-                throw new ArgumentException($"Target state '{toID}' does not exist in FSM '{FSM_ID}'.", nameof(toID));
+                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    $"Target state '{toID}' for forced transition does not exist in integer FSM '{FSM_ID}'. Forced transition failed.",
+                    new ArgumentException($"Target state '{toID}' does not exist in FSM '{FSM_ID}.", nameof(toID)));
+                return;
             }
 
-            toState.Enter(context);
+            try
+            {
+                toState.Enter(context);
+            }
+            catch (Exception ex)
+            {
+                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    $"Error during Enter logic of integer state '{toID}' during forced transition from '{fromID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                    ex);
+                throw;
+            }
         }
 
         private bool EvaluateStepCondition(FSMTransition transition, int currentID, IStateContext context)
