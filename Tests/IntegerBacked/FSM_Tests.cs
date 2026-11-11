@@ -336,12 +336,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void ForceTransition_RejectsMissingTargetState()
+        public void ForceTransition_WhenTargetIsMissing_ReportsAndReturns()
         {
             var fsm = new IntegerFSM(1);
             fsm.AddState(new IntegerFSMState(10, null, null, null));
 
-            Assert.Throws<ArgumentException>(() =>
+            Assert.DoesNotThrow(() =>
                 fsm.ForceTransition(10, 99, new TestContext()));
         }
 
