@@ -17,6 +17,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private FSM[] _definitions = new FSM[0];
         private int[] _processCounters = new int[0];
         private readonly List<FSMHandleInt> _handles = new List<FSMHandleInt>();
+        private readonly Dictionary<FSMHandleInt, int> _instanceErrorCounts = new Dictionary<FSMHandleInt, int>();
+        private readonly Dictionary<int, int> _definitionErrorCounts = new Dictionary<int, int>();
+        private readonly List<FSMHandleInt> _pendingRemovalHandles = new List<FSMHandleInt>();
+        private readonly List<int> _pendingUnregisterIDs = new List<int>();
         private int _nextHandleID;
 
         /// <summary>Registers an integer-backed FSM definition for a processing group.</summary>
@@ -41,8 +45,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 {
                     if (_handles[i].FSM_ID == definition.FSM_ID)
                     {
-                        _handles[i].IsRegistered = false;
-                        _handles.RemoveAt(i);
+                        RemoveHandleAt(i);
                     }
                 }
             }
@@ -87,12 +90,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return false;
             }
 
-            if (!_handles.Remove(handle))
+            var index = _handles.IndexOf(handle);
+            if (index < 0)
             {
                 return false;
             }
 
-            handle.IsRegistered = false;
+            RemoveHandleAt(index);
             return true;
         }
 
@@ -136,8 +140,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 if (_handles[i].FSM_ID == fsmID)
                 {
-                    _handles[i].IsRegistered = false;
-                    _handles.RemoveAt(i);
+                    RemoveHandleAt(i);
                 }
             }
 
@@ -162,6 +165,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
                 UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
             }
+
+            ProcessPendingLifecycleChanges();
         }
 
         /// <summary>Updates eligible live instances regardless of processing group.</summary>
@@ -178,6 +183,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
                 }
             }
+
+            ProcessPendingLifecycleChanges();
         }
 
         /// <summary>Returns the number of live handles in a processing group.</summary>
@@ -218,16 +225,95 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return true;
         }
 
-        private static void UpdateDefinitionInstances(int fsmID, FSMHandleInt[] handlesAtTickStart)
+        private void UpdateDefinitionInstances(int fsmID, FSMHandleInt[] handlesAtTickStart)
         {
             for (var i = 0; i < handlesAtTickStart.Length; i++)
             {
                 var handle = handlesAtTickStart[i];
-                if (handle.IsRegistered && handle.FSM_ID == fsmID && handle.IsValid)
+                if (!handle.IsRegistered || handle.IsDestroyed || handle.IsPendingDestruction ||
+                    handle.FSM_ID != fsmID || !handle.IsValid)
+                {
+                    continue;
+                }
+
+                try
                 {
                     handle.Update();
                 }
+                catch (Exception ex)
+                {
+                    RecordInstanceError(handle, ex);
+                }
             }
+        }
+
+        private void RecordInstanceError(FSMHandleInt handle, Exception exception)
+        {
+            var count = _instanceErrorCounts.TryGetValue(handle, out var current) ? current + 1 : 1;
+            _instanceErrorCounts[handle] = count;
+            FSM_API.Error.InvokeInternalApiError(
+                $"Integer FSM instance '{handle.FSM_ID}' (handle {handle.Id}, context ID: {handle.Context?.Context_ID ?? 0}) " +
+                $"in processing group '{handle.Definition.ProcessingGroupID}' failed in state '{handle.CurrentStateID}'. " +
+                $"Count: {count}/{FSM_API.Error.InstanceErrorThreshold}.", exception);
+
+            if (count < FSM_API.Error.InstanceErrorThreshold || handle.IsPendingDestruction)
+            {
+                return;
+            }
+
+            handle.IsPendingDestruction = true;
+            _pendingRemovalHandles.Add(handle);
+
+            var definitionCount = _definitionErrorCounts.TryGetValue(handle.FSM_ID, out var previous) ? previous + 1 : 1;
+            _definitionErrorCounts[handle.FSM_ID] = definitionCount;
+            FSM_API.Error.InvokeInternalApiError(
+                $"Integer FSM definition '{handle.FSM_ID}' recorded a failing instance removal. " +
+                $"Definition failure count: {definitionCount}/{FSM_API.Error.DefinitionErrorThreshold}.", null);
+
+            if (definitionCount >= FSM_API.Error.DefinitionErrorThreshold && !_pendingUnregisterIDs.Contains(handle.FSM_ID))
+            {
+                _pendingUnregisterIDs.Add(handle.FSM_ID);
+                FSM_API.Error.InvokeInternalApiError(
+                    $"Integer FSM definition '{handle.FSM_ID}' reached its definition error threshold. " +
+                    "Unregistration is scheduled for the end of this update tick.", null);
+            }
+        }
+
+        private void ProcessPendingLifecycleChanges()
+        {
+            if (_pendingUnregisterIDs.Count > 0)
+            {
+                var definitions = _pendingUnregisterIDs.ToArray();
+                _pendingUnregisterIDs.Clear();
+                for (var i = 0; i < definitions.Length; i++)
+                {
+                    Unregister(definitions[i]);
+                }
+            }
+
+            if (_pendingRemovalHandles.Count > 0)
+            {
+                var handles = _pendingRemovalHandles.ToArray();
+                _pendingRemovalHandles.Clear();
+                for (var i = 0; i < handles.Length; i++)
+                {
+                    var handle = handles[i];
+                    if (handle.IsRegistered)
+                    {
+                        RemoveInstance(handle);
+                    }
+                }
+            }
+        }
+
+        private void RemoveHandleAt(int index)
+        {
+            var handle = _handles[index];
+            _handles.RemoveAt(index);
+            handle.IsRegistered = false;
+            handle.IsPendingDestruction = false;
+            _instanceErrorCounts.Remove(handle);
+            handle.DestroyHandle();
         }
 
         private bool TryGetDefinition(int fsmID, out FSM definition)
