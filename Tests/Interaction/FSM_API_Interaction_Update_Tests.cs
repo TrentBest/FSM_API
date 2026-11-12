@@ -592,5 +592,50 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.IsDestroyed, Is.False);
         }
 
+
+        [Test]
+        public void FsmApiNamespaceFacade_CreatesAndUpdatesStringBackedMachine()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            const string name = "FacadeFSM";
+
+            global::FSM_API.FsmApi.Create.CreateFiniteStateMachine(name, -1, _testProcessingGroup)
+                .State("Ready", _ => enterCount++, _ => updateCount++, null)
+                .WithInitialState("Ready")
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = global::FSM_API.FsmApi.Create.CreateInstance(
+                name, context, _testProcessingGroup);
+
+            global::FSM_API.FsmApi.Interact.Update(_testProcessingGroup);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("Ready"));
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void FsmApiNamespaceFacade_ForwardsErrorNotifications()
+        {
+            string observedMessage = null;
+            global::TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler handler =
+                (message, exception) => observedMessage = message;
+
+            global::FSM_API.FsmApi.Error.OnInternalApiError += handler;
+            try
+            {
+                global::FSM_API.FsmApi.Error.InvokeInternalApiError("facade-test", null);
+            }
+            finally
+            {
+                global::FSM_API.FsmApi.Error.OnInternalApiError -= handler;
+            }
+
+            Assert.That(observedMessage, Is.EqualTo("facade-test"));
+        }
+
     }
 }
