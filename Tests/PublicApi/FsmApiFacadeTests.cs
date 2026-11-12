@@ -17,7 +17,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
         [SetUp]
         public void SetUp()
         {
-            FSM_API.Internal.ResetAPI();
+            FSM_API.Internal.ResetAPI(true);
         }
 
         [Test]
