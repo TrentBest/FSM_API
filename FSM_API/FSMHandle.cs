@@ -186,7 +186,8 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         /// <param name="definition">The blueprint (<see cref="FSM"/>) for this FSM instance.</param>
         /// <param name="context">The data bag (<see cref="IStateContext"/>) for this specific FSM instance.</param>
-        /// <param name="id">ID of the handle</param>
+        /// <param name="id">ID of the handle.</param>
+        /// <param name="processingGroup">The processing group that schedules this instance. Defaults to <c>Update</c>.</param>
         /// <exception cref="ArgumentNullException">
         /// This happens if you try to create an FSM handle without a blueprint (`definition` is `null`)
         /// or without a data bag (`context` is `null`).
