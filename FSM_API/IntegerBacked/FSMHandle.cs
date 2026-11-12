@@ -15,6 +15,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </remarks>
     public class FSMHandle
     {
+        private bool _isExecutingExitCallback;
         /// <summary>Unique identity of this running FSM instance.</summary>
         public int Id { get; internal set; }
 
@@ -169,7 +170,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             try
             {
-                Definition.ForceTransition(CurrentStateID, nextStateID, Context);
+                Definition.ForceTransition(CurrentStateID, nextStateID, Context, this);
                 CurrentStateID = nextStateID;
                 HasEnteredCurrentState = Definition.HasState(nextStateID);
             }
@@ -188,9 +189,28 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
-            Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context);
+            Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context, this);
             CurrentStateID = Definition.InitialStateID;
             HasEnteredCurrentState = Definition.HasState(CurrentStateID);
+        }
+
+        /// <summary>Invokes this handle's Exit callback while preventing same-handle reentrant duplication.</summary>
+        internal void ExitState(FSMState state)
+        {
+            if (state == null || _isExecutingExitCallback)
+            {
+                return;
+            }
+
+            _isExecutingExitCallback = true;
+            try
+            {
+                state.Exit(Context);
+            }
+            finally
+            {
+                _isExecutingExitCallback = false;
+            }
         }
 
         /// <summary>Runs the current state's Exit callback exactly once during teardown.</summary>
@@ -205,8 +225,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             IsPendingDestruction = false;
             HasEnteredCurrentState = false;
 
+            // If teardown was triggered from this handle's own Exit callback, that
+            // callback is already the lifecycle exit for this state. Do not invoke it again.
+            var wasExecutingExitCallback = _isExecutingExitCallback;
             var state = Definition.GetState(CurrentStateID);
-            if (state != null && Context != null)
+            if (!wasExecutingExitCallback && state != null && Context != null)
             {
                 try
                 {
