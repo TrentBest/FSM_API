@@ -74,7 +74,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         public void UpdateAll_SkipsInvalidContexts()
         {
             var updates = 0;
-            var fsm = new IntegerFSM(7);
+            var fsm = new IntegerFSM(7, processRate: -1);
             fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
             var runtime = new IntegerFSMRuntime();
             runtime.Register(fsm);
