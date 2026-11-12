@@ -50,6 +50,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Id = id;
             CurrentStateID = Definition.InitialStateID;
+
+            // Match the string-backed constructor contract: a successfully created handle
+            // begins eligible for execution. The context remains caller-owned.
+            Context.IsValid = true;
         }
 
         /// <summary>
@@ -112,6 +116,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                         }
 
                         HasEnteredCurrentState = true;
+
+                        // Entry is a user callback. If it suspends the context, do not
+                        // execute Update or evaluate transitions during this step.
+                        if (!Context.IsValid)
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -176,7 +187,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             try
             {
-                Definition.ForceTransition(CurrentStateID, nextStateID, Context, this);
+                if (!Definition.ForceTransition(CurrentStateID, nextStateID, Context, this))
+                {
+                    return;
+                }
                 CurrentStateID = nextStateID;
                 HasEnteredCurrentState = Definition.HasState(nextStateID);
             }
@@ -195,7 +209,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
-            Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context, this);
+            if (!Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context, this))
+            {
+                return;
+            }
             CurrentStateID = Definition.InitialStateID;
             HasEnteredCurrentState = Definition.HasState(CurrentStateID);
         }
