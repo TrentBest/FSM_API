@@ -85,6 +85,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             ShortApi.Create.RegisterDefinition(definition);
 
             var handle = ShortApi.Create.CreateInstance(definitionID, new Context());
+            var previousThreshold = ShortApi.Error.InstanceErrorThreshold;
+            ShortApi.Error.InstanceErrorThreshold = 5;
             try
             {
                 ShortApi.Interact.Update(processingGroupID);
@@ -100,6 +102,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             {
                 ShortApi.Interact.DestroyInstance(handle);
                 ShortApi.Interact.Unregister(definitionID);
+                ShortApi.Error.InstanceErrorThreshold = previousThreshold;
             }
         }
 
