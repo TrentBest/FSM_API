@@ -169,7 +169,7 @@ namespace FSM_API
         }
 
         /// <summary>Diagnostic notifications and error policy for the string-backed runtime.</summary>
-        /// <remarks>Integer-backed error accounting is not yet part of this facade.</remarks>
+        /// <remarks>String-backed diagnostics retain their legacy operations; integer-backed diagnostics are exposed through explicitly named snapshot and reset methods.</remarks>
         public static class Error
         {
             /// <summary>Threshold for scheduling shutdown of a repeatedly failing instance.</summary>
