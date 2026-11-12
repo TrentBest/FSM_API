@@ -120,11 +120,14 @@ The overall score is a weighted engineering estimate, not code coverage or a rel
 
 ## 7. Compatibility and migration
 
-The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to the additive `FSM_API` namespace facade. The facade currently returns runtime types in the established namespace, so consumers that need explicit type names may still need `TheSingularityWorkshop.FSM_API` imports. The intended call shape is:
+The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to the additive `FSM_API` namespace facade. The facade currently returns runtime types in the established namespace, so consumers that need explicit type names may also import `TheSingularityWorkshop.FSM_API`. Because that namespace contains the compatibility `FsmApi` type too, use an alias to keep the new facade unambiguous: The intended call shape is:
 
 ```csharp
-using FSM_API;
+using FsmApi = FSM_API.FsmApi;
+using TheSingularityWorkshop.FSM_API;
+```
 
+```csharp
 FsmApi.Create.CreateFiniteStateMachine();
 FsmApi.Interact.Update("Update");
 ```
