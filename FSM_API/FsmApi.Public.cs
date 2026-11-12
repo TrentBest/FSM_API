@@ -65,7 +65,7 @@ namespace FSM_API
                 string fsmName,
                 string processingGroup,
                 IReadOnlyDictionary<int, string> stateIDToName)
-                => TheSingularityWorkshop.FSM_API.FSMCompiler.Decompile(
+                => IntegerBacked.FSMCompiler.Decompile(
                     definition, fsmName, processingGroup, stateIDToName);
         }
 
