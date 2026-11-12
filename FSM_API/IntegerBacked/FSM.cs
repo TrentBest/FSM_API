@@ -305,7 +305,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return StepCore(currentID, context, null);
         }
 
-        internal int Step(int currentID, IStateContext context, FSMHandleInt owner)
+        internal int Step(int currentID, IStateContext context, FSMHandle owner)
         {
             return StepCore(currentID, context, owner);
         }
