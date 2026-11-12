@@ -70,6 +70,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             // Keep this handle on the state whose Enter callback actually ran.
             var initialStateID = Definition.InitialStateID;
             Definition.EnterInitial(Context);
+
+            // The Enter callback can re-enter the runtime and destroy this handle
+            // (for example, by unregistering its definition). Teardown owns the
+            // final lifecycle state; initialization must not revive the handle.
+            if (IsDestroyed || IsPendingDestruction)
+            {
+                return;
+            }
+
             CurrentStateID = initialStateID;
             HasEnteredCurrentState = Definition.HasState(initialStateID);
         }
