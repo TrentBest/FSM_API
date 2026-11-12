@@ -172,6 +172,24 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void ResetFSMInstance_WhenInitialStateIsMissingMatchesStringBackedLifecycle()
+        {
+            var exitCount = 0;
+            var fsm = new IntegerFSM(31);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exitCount++));
+            fsm.RemoveState(10);
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+
+            handle.ResetFSMInstance();
+
+            // The string-backed reset attempts its ordinary forced transition. A missing
+            // initial target leaves the current identity unchanged after source Exit.
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void TransitionTo_MissingTargetMatchesStringBackedLifecycle()
         {
             var exitCount = 0;
