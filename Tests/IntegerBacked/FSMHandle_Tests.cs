@@ -176,8 +176,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var fsm = new IntegerFSM(31);
             fsm.AddState(new IntegerFSMState(10, null, null, null));
-            fsm.RemoveState(10);
             var handle = new IntegerFSMHandle(fsm, new TestContext());
+            fsm.RemoveState(10);
 
             handle.ResetFSMInstance();
 
