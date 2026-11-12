@@ -522,3 +522,17 @@ A fresh GitHub branch listing returned **17 remote branches**: the policy branch
 | `fix/manual-any-state-evaluation` | 15 / 68 | PR #23 work remains unreconciled with current development; lifecycle exception and callback-mutation review remains open. |
 
 **Inventory conclusion:** branch cleanup is still blocked. First compare the three 24-commit 2.0 branches at the commit level, preserve the integer-runtime and manual-transition fixes, and review the legacy editor/docs/core branches. The repository policy is not satisfied until that preservation review is complete and the final remote list is verified to contain only `master` and `development`. No branch cleanup is authorized by this snapshot.
+
+
+### Context execution gate and public namespace facade — 2026-11-12 UTC
+
+- [x] Implemented constructor-time Context.IsValid = true after successful FSMHandle initialization. The context remains caller-owned; validity is not a handle-registration or destruction flag.
+- [x] Added execution-gate checks to scheduled TickAll and manual FSMHandle.Update / FSM.Step callback boundaries. Invalidating during OnUpdate or a transition guard stops subsequent callbacks and transition evaluation for that step. Invalidating during OnExit prevents transition commit and marks the current state for re-entry when the same handle resumes.
+- [x] Added five focused regressions for construction, suspension/resumption, invalidation during update, guard and exit callbacks, and manual stepping.
+- [x] Added an additive FSM_API.FsmApi namespace facade with Create, Interact, and Error modules, plus tests for string-backed creation/update and diagnostic-event forwarding. The existing TheSingularityWorkshop.FSM_API.FsmApi entry point remains intact. Returned runtime types still use the established namespaces; this is not a wholesale public-type namespace migration.
+- [x] Updated the README and public API contract to distinguish the implemented facade bridge from the remaining type-namespace migration.
+- [ ] Run and verify the current development .NET 8 build/test/package and documentation workflows. The GitHub status query for the latest facade/test commit returned no status entries or workflow runs; no green CI result is claimed.
+- [ ] Add equivalent invalid-context suspension/resumption coverage to the integer-backed runtime and compare observable string/integer traces. The current Error facade forwards the string-backed diagnostics only; integer-backed Error parity remains open.
+- [ ] Complete full public API namespace migration, target-framework/package validation, benchmark evidence, and branch-history reconciliation.
+- [ ] Current branch inventory still contains 19 branches (the policy branches plus 17 surplus branches). Preserve and classify all unique work before any cleanup; no branch was deleted, no PR was merged, master was not modified, and no NuGet package was published.
+
