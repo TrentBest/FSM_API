@@ -185,6 +185,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            // Preserve the requested identity even when the definition no longer
+            // contains that state. The handle remains unentered until a valid state
+            // can be entered by a later reset or transition.
+            if (!Definition.HasState(nextStateID))
+            {
+                CurrentStateID = nextStateID;
+                HasEnteredCurrentState = false;
+                return;
+            }
+
             try
             {
                 if (!Definition.ForceTransition(CurrentStateID, nextStateID, Context, this))
@@ -192,7 +202,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     return;
                 }
                 CurrentStateID = nextStateID;
-                HasEnteredCurrentState = Definition.HasState(nextStateID);
+                HasEnteredCurrentState = true;
             }
             catch (Exception ex)
             {
@@ -209,12 +219,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            // A definition with no remaining states has no enterable initial state.
+            // Reset still moves the handle to the explicit Any-State sentinel.
+            if (!Definition.HasState(Definition.InitialStateID))
+            {
+                CurrentStateID = FSM.AnyStateIdentifier;
+                HasEnteredCurrentState = false;
+                return;
+            }
+
             if (!Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context, this))
             {
                 return;
             }
             CurrentStateID = Definition.InitialStateID;
-            HasEnteredCurrentState = Definition.HasState(CurrentStateID);
+            HasEnteredCurrentState = true;
         }
 
         /// <summary>Invokes this handle's Exit callback while preventing same-handle reentrant duplication.</summary>
