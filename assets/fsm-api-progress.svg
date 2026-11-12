@@ -14,8 +14,8 @@
   <rect x="91" y="43" width="130.2" height="14" rx="7" fill="url(#overall)"/>
   <text x="16" y="86" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">PUBLIC MODULES</text>
   <text x="16" y="108" fill="#e5e7eb" font-family="Segoe UI,Arial,sans-serif" font-size="12" font-weight="600">CREATE</text>
-  <rect x="106" y="98" width="245" height="10" rx="5" fill="#343746"/><rect x="106" y="98" width="110.25" height="10" rx="5" fill="url(#create)"/>
-  <text x="365" y="107" fill="#c4b5fd" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">45%</text>
+  <rect x="106" y="98" width="245" height="10" rx="5" fill="#343746"/><rect x="106" y="98" width="122.5" height="10" rx="5" fill="url(#create)"/>
+  <text x="365" y="107" fill="#c4b5fd" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">50%</text>
   <text x="16" y="132" fill="#e5e7eb" font-family="Segoe UI,Arial,sans-serif" font-size="12" font-weight="600">INTERACT</text>
   <rect x="106" y="122" width="245" height="10" rx="5" fill="#343746"/><rect x="106" y="122" width="98" height="10" rx="5" fill="url(#interact)"/>
   <text x="365" y="131" fill="#a5f3fc" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">40%</text>
