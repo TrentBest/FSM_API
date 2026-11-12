@@ -205,5 +205,38 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(targetEnterCount, Is.Zero);
         }
 
+
+        [Test]
+        public void ForcedTransition_TargetEnterMaySuspendAfterCommittingTarget()
+        {
+            var targetEnterCount = 0;
+            var targetUpdateCount = 0;
+
+            var fsm = new IntegerFSM(29);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, context =>
+            {
+                targetEnterCount++;
+                context.IsValid = false;
+            }, _ => targetUpdateCount++, null));
+
+            var context = new TestContext();
+            var handle = new IntegerFSMHandle(fsm, context);
+
+            handle.TransitionTo(20);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(targetEnterCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            handle.Update();
+
+            Assert.That(targetEnterCount, Is.EqualTo(1));
+            Assert.That(targetUpdateCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+        }
+
     }
 }
