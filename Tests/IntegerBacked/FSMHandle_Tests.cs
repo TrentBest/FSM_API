@@ -130,5 +130,80 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.That(handle.IsValid, Is.False);
         }
+
+        [Test]
+        public void EvaluateConditions_InvalidatingGuardStopsBeforeExit()
+        {
+            var guardCount = 0;
+            var exitCount = 0;
+            var suspendOnce = true;
+
+            var fsm = new IntegerFSM(27);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exitCount++));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, context =>
+            {
+                guardCount++;
+                if (suspendOnce)
+                {
+                    suspendOnce = false;
+                    context.IsValid = false;
+                    return true;
+                }
+                return false;
+            });
+
+            var context = new TestContext();
+            var handle = new IntegerFSMHandle(fsm, context);
+
+            handle.EvaluateConditions();
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+
+            context.IsValid = true;
+            handle.EvaluateConditions();
+
+            Assert.That(guardCount, Is.EqualTo(2));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ForcedTransition_StopsAfterOnExitInvalidatesContext()
+        {
+            var targetEnterCount = 0;
+            var suspendOnce = true;
+
+            var fsm = new IntegerFSM(28);
+            fsm.AddState(new IntegerFSMState(10, null, null, context =>
+            {
+                if (suspendOnce)
+                {
+                    suspendOnce = false;
+                    context.IsValid = false;
+                }
+            }));
+            fsm.AddState(new IntegerFSMState(20, _ => targetEnterCount++, null, null));
+
+            var context = new TestContext();
+            var handle = new IntegerFSMHandle(fsm, context);
+
+            handle.TransitionTo(20);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(targetEnterCount, Is.Zero);
+
+            context.IsValid = true;
+            handle.Update();
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(targetEnterCount, Is.Zero);
+        }
+
     }
 }
