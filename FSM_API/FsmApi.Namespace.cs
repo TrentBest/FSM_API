@@ -56,11 +56,8 @@ namespace FSM_API
             {
                 UnifiedApi.Create.CreateProcessingGroup(processingGroup);
             }
-        }
 
-        /// <summary>Explicit conversion between string and integer-backed definitions.</summary>
-        public static class Transfer
-        {
+            /// <summary>Compiles a string-backed definition into the integer-backed representation.</summary>
             public static Legacy.FSMCompilationResult ToInteger(
                 Legacy.FSM definition,
                 int fsmID,
@@ -69,6 +66,7 @@ namespace FSM_API
                 return UnifiedApi.Transfer.ToInteger(definition, fsmID, processingGroupID);
             }
 
+            /// <summary>Reconstructs a string-backed definition from an integer-backed representation.</summary>
             public static Legacy.FSM ToString(
                 Integer.FSM definition,
                 string fsmName,
