@@ -404,8 +404,13 @@ namespace TheSingularityWorkshop.FSM_API
                 FSM_API.Error.InvokeInternalApiError(
                     $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", new Exception()
                 );
-                // Attempt to recover by transitioning to the initial state
-                ForceTransition(current, InitialState, ctx);
+                // Attempt to recover by transitioning to the initial state. If the
+                // source Exit callback suspends the context, do not commit recovery.
+                if (!TryForceTransition(current, InitialState, ctx, instanceHandle))
+                {
+                    next = current;
+                    return;
+                }
                 next = InitialState;
                 return;
             }
@@ -649,11 +654,25 @@ namespace TheSingularityWorkshop.FSM_API
         /// </exception>
         public void ForceTransition(string from, string to, IStateContext ctx)
         {
-            // Check if the "from" state actually exists and handle gracefully if not
-            // (e.g., initial state wasn't entered properly or FSM was in an invalid state).
-            // We still try to call Exit if possible.
+            TryForceTransition(from, to, ctx, null);
+        }
+
+        /// <summary>
+        /// Performs a forced transition while honoring context suspension between user callbacks.
+        /// A completed target Enter callback counts as a completed transition even if it suspends
+        /// the context; suspension during source Exit aborts the transition before target entry.
+        /// </summary>
+        internal bool TryForceTransition(string from, string to, IStateContext ctx, FSMHandle owner)
+        {
+            if (ctx == null || !ctx.IsValid || (owner != null && owner.IsDestroyed))
+            {
+                return false;
+            }
+
+            var exitStarted = false;
             if (!string.IsNullOrEmpty(from) && _states.TryGetValue(from, out var fromState))
             {
+                exitStarted = true;
                 try
                 {
                     fromState.Exit(ctx);
@@ -664,15 +683,30 @@ namespace TheSingularityWorkshop.FSM_API
                         $"Error during Exit logic of state '{from}' during forced transition to '{to}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
                     );
-                    // Do not re-throw, continue to enter the new state if possible.
+                    if (!ctx.IsValid)
+                    {
+                        if (owner != null) owner.HasEnteredCurrentState = false;
+                        return false;
+                    }
+                }
+
+                if (!ctx.IsValid)
+                {
+                    if (owner != null) owner.HasEnteredCurrentState = false;
+                    return false;
                 }
             }
-            else if (!string.IsNullOrEmpty(from)) // Only log if 'from' was specified but not found
+            else if (!string.IsNullOrEmpty(from))
             {
                 FSM_API.Error.InvokeInternalApiError(
                     $"Attempted to force transition from non-existent state '{from}' for FSM '{Name}'. Exiting original state skipped.",
-                    null // Passing null for exception as it's not an exception but a missing state
+                    null
                 );
+            }
+
+            if (owner != null && owner.IsDestroyed)
+            {
+                return false;
             }
 
             if (!_states.TryGetValue(to, out var toState))
@@ -681,7 +715,8 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Target state '{to}' for forced transition does not exist in FSM '{Name}'. Forced transition failed.",
                     new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to))
                 );
-                return;
+                if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
+                return false;
             }
 
             try
@@ -694,8 +729,11 @@ namespace TheSingularityWorkshop.FSM_API
                     $"Error during Enter logic of state '{to}' during forced transition from '{from}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex
                 );
-                throw; // Re-throw, as the FSM might now be in a partially entered state.
+                if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
+                throw;
             }
+
+            return owner == null || !owner.IsDestroyed;
         }
 
         /// <summary>
