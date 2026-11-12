@@ -130,7 +130,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var conditionEvaluated = false;
             var exited = false;
             var entered = false;
-            var context = new TestContext { IsValid = false };
+            var context = new TestContext();
             var fsm = new IntegerFSM(1);
             fsm.AddState(new IntegerFSMState(10, null, null, _ => exited = true));
             fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
@@ -140,6 +140,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 return true;
             });
             var handle = new IntegerFSMHandle(fsm, context);
+            // Construction establishes the handle's initial validity; invalidation
+            // after construction must suspend manual condition evaluation.
+            context.IsValid = false;
 
             handle.EvaluateConditions();
 
