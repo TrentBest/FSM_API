@@ -536,3 +536,16 @@ A fresh GitHub branch listing returned **17 remote branches**: the policy branch
 - [ ] Complete full public API namespace migration, target-framework/package validation, benchmark evidence, and branch-history reconciliation.
 - [ ] Current branch inventory still contains 19 branches (the policy branches plus 17 surplus branches). Preserve and classify all unique work before any cleanup; no branch was deleted, no PR was merged, master was not modified, and no NuGet package was published.
 
+
+
+### String/integer context-gate parity follow-through — 2026-11-12 UTC
+
+- [x] Extended the context execution gate to integer-backed handle construction and execution. Integer handles now initialize caller-owned contexts as valid after successful construction, suspend without unregistering when validity becomes false, and resume the same handle when validity returns.
+- [x] Added integer StepCore checks after Update, transition guards, and Exit callbacks. Invalidation during Exit aborts transition commit and requires the current state to be entered again after resumption.
+- [x] Aligned manual condition evaluation and explicit forced transitions in both representations: a guard that closes the gate stops evaluation; an Exit callback that closes the gate prevents target entry; a completed target Enter callback may finish the transition and leave the handle suspended in the target state.
+- [x] Added six integer-backed regressions and two additional string-backed manual-transition regressions, supplementing the earlier scheduled/manual gate tests and facade tests. Tests are committed but have not yet been run in a verified workflow.
+- [x] Updated context documentation to state that successful handle construction initializes IsValid to true; a caller that wants the handle initially suspended must set it false after construction and before the next update.
+- [ ] Verify the current development .NET 8 test/build/package workflow and documentation workflow. The GitHub status queries for the latest commits returned no status entries; no CI pass is claimed.
+- [ ] Complete trace comparison for the full string/integer behavior matrix, especially exception and callback-mutation paths. Integer-backed Error policy parity and full public-type namespace migration remain open.
+- [ ] Keep performance evidence, target-framework/package validation, and branch-history reconciliation open. No PR was merged, no branch was deleted, master was not modified, and no NuGet package was published.
+
