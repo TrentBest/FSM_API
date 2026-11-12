@@ -188,9 +188,27 @@ namespace FSM_API
             public static void ResetDefinitionErrorCount(string fsmName)
                 => TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetDefinitionErrorCount(fsmName);
 
+            /// <summary>Records an error for a string-backed live instance.</summary>
+            public static void InvokeInstanceError(
+                FSMHandle handle, string message, Exception exception, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInstanceError(
+                    handle, message, exception, processingGroup);
+
+            /// <summary>Records an error for a string-backed definition.</summary>
+            public static void InvokeDefinitionError(string fsmName, string processingGroup)
+                => TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeDefinitionError(fsmName, processingGroup);
+
             /// <summary>Resets accumulated errors for a string-backed instance.</summary>
             public static void ResetInstanceErrorCount(FSMHandle handle)
                 => TheSingularityWorkshop.FSM_API.FSM_API.Error.ResetInstanceErrorCount(handle);
+
+            /// <summary>Returns the current string-backed instance error counts.</summary>
+            public static Dictionary<FSMHandle, int> GetErrorCounts()
+                => TheSingularityWorkshop.FSM_API.FSM_API.Error.GetErrorCounts();
+
+            /// <summary>Returns the current string-backed definition error counts.</summary>
+            public static Dictionary<string, int> GetDefinitionErrorCounts()
+                => TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts();
         }
     }
 }
