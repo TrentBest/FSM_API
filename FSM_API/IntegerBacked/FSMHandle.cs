@@ -209,15 +209,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
-            // A definition with no remaining states has no enterable initial state.
-            // Reset still moves the handle to the explicit Any-State sentinel.
-            if (!Definition.HasState(Definition.InitialStateID))
-            {
-                CurrentStateID = FSM.AnyStateIdentifier;
-                HasEnteredCurrentState = false;
-                return;
-            }
-
             if (!Definition.ForceTransition(CurrentStateID, Definition.InitialStateID, Context, this))
             {
                 return;
