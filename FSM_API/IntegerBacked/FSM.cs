@@ -240,9 +240,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < anyStateTransitions.Length; i++)
             {
                 var transition = anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
+                var conditionMet = TryGetState(transition.ToID, out _) && EvaluateCondition(transition, currentID, context);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
+                if (!context.IsValid) return currentID;
+                if (!conditionMet)
                 {
-                    if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
                     continue;
                 }
 
@@ -250,7 +252,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
                 if (!TryGetState(transition.ToID, out _)) continue;
 
-                ForceTransition(currentID, transition.ToID, context, owner);
+                var transitionCompleted = ForceTransition(currentID, transition.ToID, context, owner);
+                if (!transitionCompleted)
+                {
+                    currentStateExited = owner != null && !owner.HasEnteredCurrentState;
+                    return currentID;
+                }
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
                     currentStateExited = true;
@@ -271,16 +278,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < transitions.Length; i++)
             {
                 var transition = transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
-                {
-                    if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
-                    continue;
-                }
+                if (transition.FromID != currentID) continue;
+                var conditionMet = TryGetState(transition.ToID, out _) && EvaluateCondition(transition, currentID, context);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
+                if (!context.IsValid) return currentID;
+                if (!conditionMet) continue;
 
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
                 if (!TryGetState(transition.ToID, out _)) continue;
 
-                ForceTransition(currentID, transition.ToID, context, owner);
+                var transitionCompleted = ForceTransition(currentID, transition.ToID, context, owner);
+                if (!transitionCompleted)
+                {
+                    currentStateExited = owner != null && !owner.HasEnteredCurrentState;
+                    return currentID;
+                }
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
                     currentStateExited = true;
@@ -336,8 +348,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     return InitialStateID;
                 }
 
-                ForceTransition(currentID, InitialStateID, context, owner);
-                return InitialStateID;
+                return ForceTransition(currentID, InitialStateID, context, owner)
+                    ? InitialStateID
+                    : currentID;
             }
 
             try
@@ -353,7 +366,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             // A callback may unregister the definition and destroy this handle.
             // Stop the step before evaluating guards or invoking further callbacks.
-            if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+            if ((owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) || !context.IsValid)
             {
                 return currentID;
             }
@@ -369,7 +382,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 var conditionMet = EvaluateStepCondition(transition, currentID, context);
-                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                if ((owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) || !context.IsValid)
                 {
                     return currentID;
                 }
@@ -388,11 +401,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
+                    if (!context.IsValid)
+                    {
+                        if (owner != null) owner.HasEnteredCurrentState = false;
+                        return currentID;
+                    }
                     continue;
                 }
 
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
+                    return currentID;
+                }
+                if (!context.IsValid)
+                {
+                    if (owner != null) owner.HasEnteredCurrentState = false;
                     return currentID;
                 }
 
@@ -409,7 +432,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 var conditionMet = EvaluateStepCondition(transition, currentID, context);
-                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                if ((owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) || !context.IsValid)
                 {
                     return currentID;
                 }
@@ -428,11 +451,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
+                    if (!context.IsValid)
+                    {
+                        if (owner != null) owner.HasEnteredCurrentState = false;
+                        return currentID;
+                    }
                     continue;
                 }
 
                 if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
+                    return currentID;
+                }
+                if (!context.IsValid)
+                {
+                    if (owner != null) owner.HasEnteredCurrentState = false;
                     return currentID;
                 }
 
@@ -448,10 +481,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             ForceTransition(fromID, toID, context, null);
         }
 
-        internal void ForceTransition(int fromID, int toID, IStateContext context, FSMHandle owner)
+        internal bool ForceTransition(int fromID, int toID, IStateContext context, FSMHandle owner)
         {
+            if (context == null || !context.IsValid ||
+                (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)))
+            {
+                return false;
+            }
+
+            var exitStarted = false;
             if (TryGetState(fromID, out var fromState))
             {
+                exitStarted = true;
                 try
                 {
                     if (owner != null) owner.ExitState(fromState); else fromState.Exit(context);
@@ -462,13 +503,25 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                         $"Error during Exit logic of integer state '{fromID}' during forced transition to '{toID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     // Match the string-backed contract: an Exit failure is reported,
-                    // but does not prevent the target state's Enter callback.
+                    // but does not prevent the target state's Enter callback unless
+                    // that callback also closed the execution gate.
+                    if (!context.IsValid)
+                    {
+                        if (owner != null) owner.HasEnteredCurrentState = false;
+                        return false;
+                    }
+                }
+
+                if (!context.IsValid)
+                {
+                    if (owner != null) owner.HasEnteredCurrentState = false;
+                    return false;
                 }
             }
 
             if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
             {
-                return;
+                return false;
             }
 
             if (!TryGetState(toID, out var toState))
@@ -476,7 +529,8 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
                     $"Target state '{toID}' for forced transition does not exist in integer FSM '{FSM_ID}'. Forced transition failed.",
                     new ArgumentException($"Target state '{toID}' does not exist in FSM '{FSM_ID}.", nameof(toID)));
-                return;
+                if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
+                return false;
             }
 
             try
@@ -488,8 +542,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
                     $"Error during Enter logic of integer state '{toID}' during forced transition from '{fromID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
+                if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
                 throw;
             }
+
+            return owner == null || (!owner.IsDestroyed && !owner.IsPendingDestruction);
         }
 
         private bool EvaluateStepCondition(FSMTransition transition, int currentID, IStateContext context)
