@@ -17,19 +17,28 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void CreateInstance_InitializesTheHandleBeforeReturningIt()
+        public void CreateInstance_DefersInitialEntryUntilFirstUpdate()
         {
             var entered = 0;
-            var fsm = new IntegerFSM(7);
-            fsm.AddState(new IntegerFSMState(10, _ => entered++, null, null));
+            var updated = 0;
+            var fsm = new IntegerFSM(7, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, _ => entered++, _ => updated++, null));
             var runtime = new IntegerFSMRuntime();
             runtime.Register(fsm);
 
             var handle = runtime.CreateInstance(7, new TestContext());
 
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(entered, Is.Zero);
+            Assert.That(updated, Is.Zero);
+
+            runtime.UpdateAll();
+
             Assert.That(handle.HasEnteredCurrentState, Is.True);
             Assert.That(handle.CurrentStateID, Is.EqualTo(10));
             Assert.That(entered, Is.EqualTo(1));
+            Assert.That(updated, Is.EqualTo(1));
         }
 
         [Test]
