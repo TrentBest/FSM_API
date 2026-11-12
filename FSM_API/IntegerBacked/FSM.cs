@@ -302,6 +302,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public int Step(int currentID, IStateContext context)
         {
+            return StepCore(currentID, context, null);
+        }
+
+        internal int Step(int currentID, IStateContext context, FSMHandleInt owner)
+        {
+            return StepCore(currentID, context, owner);
+        }
+
+        private int StepCore(int currentID, IStateContext context, FSMHandleInt owner)
+        {
             if (!TryGetState(currentID, out var currentState))
             {
                 TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
@@ -334,17 +344,30 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     ex);
             }
 
+            // A callback may unregister the definition and destroy this handle.
+            // Stop the step before evaluating guards or invoking further callbacks.
+            if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+            {
+                return currentID;
+            }
+
             // Snapshot collections so callbacks can safely add/remove transitions while stepping.
             var anyStateTransitions = _anyStateTransitions.ToArray();
             for (var i = 0; i < anyStateTransitions.Length; i++)
             {
                 var transition = anyStateTransitions[i];
-                if (!TryGetState(transition.ToID, out _) || !EvaluateStepCondition(transition, currentID, context))
+                if (!TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
-                if (!TryGetState(transition.ToID, out _))
+                var conditionMet = EvaluateStepCondition(transition, currentID, context);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                {
+                    return currentID;
+                }
+
+                if (!conditionMet || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
@@ -359,6 +382,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     continue;
+                }
+
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                {
+                    return currentID;
                 }
 
                 return TryGetState(transition.ToID, out _) ? transition.ToID : currentID;
@@ -368,12 +396,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             for (var i = 0; i < transitions.Length; i++)
             {
                 var transition = transitions[i];
-                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateStepCondition(transition, currentID, context))
+                if (transition.FromID != currentID || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
 
-                if (!TryGetState(transition.ToID, out _))
+                var conditionMet = EvaluateStepCondition(transition, currentID, context);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                {
+                    return currentID;
+                }
+
+                if (!conditionMet || !TryGetState(transition.ToID, out _))
                 {
                     continue;
                 }
@@ -388,6 +422,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     continue;
+                }
+
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+                {
+                    return currentID;
                 }
 
                 return TryGetState(transition.ToID, out _) ? transition.ToID : currentID;
