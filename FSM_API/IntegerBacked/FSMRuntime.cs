@@ -62,7 +62,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return TryGetDefinition(fsmID, out var definition) ? definition : null;
         }
 
-        /// <summary>Creates and initializes a live integer handle for a registered FSM definition.</summary>
+        /// <summary>Creates a live integer handle for a registered FSM definition. Initial state entry occurs on its first update.</summary>
         public FSMHandleInt CreateInstance(int fsmID, IStateContext context)
         {
             if (!TryGetDefinition(fsmID, out var definition))
@@ -72,29 +72,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             var handle = new FSMHandleInt(definition, context, _nextHandleID++);
 
-            // Track the handle before invoking user code. The initial Enter callback
-            // may re-enter this runtime and unregister or replace its own definition.
-            // Registering first ensures that those lifecycle operations can see and
-            // tear down the in-progress handle rather than leaving it orphaned.
+            // Match the string-backed lifecycle: creation registers the handle but
+            // does not execute user callbacks. Initial entry runs on the first update.
+            // This keeps CreateInstance side-effect-free and makes both representations
+            // expose the same observable lifecycle ordering.
             handle.IsRegistered = true;
             _handles.Add(handle);
-
-            try
-            {
-                handle.Initialize();
-            }
-            catch
-            {
-                // Initialization did not complete. Remove the partially-created
-                // handle from runtime ownership before preserving the original error.
-                var index = _handles.IndexOf(handle);
-                if (index >= 0)
-                {
-                    RemoveHandleAt(index);
-                }
-
-                throw;
-            }
 
             return handle;
         }
