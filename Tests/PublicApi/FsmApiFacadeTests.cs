@@ -10,6 +10,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
         private sealed class Context : IStateContext
         {
             public bool IsValid { get; set; } = true;
+            public string Name { get; set; } = "FacadeTestContext";
             public int Updates { get; set; }
         }
 
