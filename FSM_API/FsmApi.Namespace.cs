@@ -241,6 +241,11 @@ namespace FSM_API
                 LegacyApi.Error.InvokeInternalApiError(message, exception);
             }
 
+            public static void Report(string message, Exception exception = null)
+            {
+                LegacyApi.Error.InvokeInternalApiError(message, exception);
+            }
+
             public static void InvokeInstanceError(
                 Legacy.FSMHandle handle,
                 string message,
