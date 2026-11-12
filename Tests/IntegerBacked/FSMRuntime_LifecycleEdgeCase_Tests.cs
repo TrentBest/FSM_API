@@ -104,6 +104,40 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Update_WhenTargetEnterUnregistersDefinition_DoesNotContinueSteppingDestroyedHandle()
+        {
+            var enters = 0;
+            var updates = 0;
+            var exits = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(13, -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20,
+                _ =>
+                {
+                    enters++;
+                    runtime.Unregister(13);
+                },
+                _ => updates++,
+                _ => exits++));
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(13, new TestContext());
+
+            runtime.UpdateAll();
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            Assert.DoesNotThrow(() => runtime.UpdateAll());
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(enters, Is.EqualTo(1));
+            Assert.That(updates, Is.Zero);
+            Assert.That(exits, Is.EqualTo(1));
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+        }
+
+        [Test]
         public void Unregister_WhenExitCallbackRemovesSibling_DetachesAllHandlesBeforeCallbacks()
         {
             var exits = 0;
