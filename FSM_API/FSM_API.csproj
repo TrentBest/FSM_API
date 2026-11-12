@@ -24,7 +24,7 @@
 	  <PackageReleaseNotes>
 		  - Critical Fix: Resolved InvalidOperationException in TickAll/Destroy where collection modification during iteration caused crashes.
 		  - Logic Fix: Fixed OnEnter behavior to correctly target CurrentState rather than defaulting to InitialState on re-entry.
-		  - Stability: Automatically destroys FSM instances if their context becomes invalid (IsValid returns false).
+		  - Stability: Invalid contexts suspend execution without transferring ownership of caller contexts or implicitly destroying registered instances.
 		  - Internal API: Enhanced null safety and internal documentation.
 		  - Increased Unit Test Coverage.
 		  - Cleanup: Removed legacy 'HireMeFSMDemo' proof-of-concept project.
