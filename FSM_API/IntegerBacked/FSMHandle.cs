@@ -64,9 +64,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            // Capture the identity being entered before invoking user code. The
+            // Enter callback may mutate the definition (including removing the
+            // initial state and causing InitialStateID to select another state).
+            // Keep this handle on the state whose Enter callback actually ran.
+            var initialStateID = Definition.InitialStateID;
             Definition.EnterInitial(Context);
-            CurrentStateID = Definition.InitialStateID;
-            HasEnteredCurrentState = true;
+            CurrentStateID = initialStateID;
+            HasEnteredCurrentState = Definition.HasState(initialStateID);
         }
 
         /// <summary>Advances this FSM instance by one step.</summary>
