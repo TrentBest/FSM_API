@@ -718,5 +718,40 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(targetEnterCount, Is.Zero);
         }
 
+
+        [Test]
+        public void ForcedTransition_TargetEnterMaySuspendAfterCommittingTarget()
+        {
+            var targetEnterCount = 0;
+            var targetUpdateCount = 0;
+
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, null)
+                .State("StateB", context =>
+                {
+                    targetEnterCount++;
+                    context.IsValid = false;
+                }, _ => targetUpdateCount++, null)
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+
+            handle.TransitionTo("StateB");
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(targetEnterCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            handle.Update();
+
+            Assert.That(targetEnterCount, Is.EqualTo(1));
+            Assert.That(targetUpdateCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+        }
+
     }
 }
