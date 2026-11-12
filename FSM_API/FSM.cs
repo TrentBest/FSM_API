@@ -427,6 +427,13 @@ namespace TheSingularityWorkshop.FSM_API
 
             }
 
+            // State callbacks are user code. A callback may close the execution gate
+            // without destroying the handle; stop this step at that callback boundary.
+            if (!ctx.IsValid)
+            {
+                return;
+            }
+
             foreach (var t in _anyStateTransitions.ToArray())
             {
                 // Check if the target state exists before evaluating condition
@@ -439,9 +446,15 @@ namespace TheSingularityWorkshop.FSM_API
                     continue; // Skip this problematic transition
                 }
 
+                var exitStarted = false;
                 try
                 {
-                    if (t.Condition(ctx))
+                    var conditionMatched = t.Condition(ctx);
+                    if (!ctx.IsValid)
+                    {
+                        return;
+                    }
+                    if (conditionMatched)
                     {
                         // A guard may mutate the blueprint and remove its own target.
                         // Re-check after invoking user code before exiting the current state.
@@ -450,7 +463,19 @@ namespace TheSingularityWorkshop.FSM_API
                             continue;
                         }
 
+                        exitStarted = true;
                         currentState.Exit(ctx);
+
+                        if (!ctx.IsValid)
+                        {
+                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (suspendedHandle != null)
+                            {
+                                suspendedHandle.HasEnteredCurrentState = false;
+                            }
+                            next = current;
+                            return;
+                        }
 
                         // Exit callbacks are user code too and may remove the target.
                         // Do not commit a transition to a state that no longer exists.
@@ -483,6 +508,20 @@ namespace TheSingularityWorkshop.FSM_API
                         ex
                     );
 
+                    // A callback can invalidate and then throw. Never continue evaluating
+                    // transitions after the execution gate has closed.
+                    if (!ctx.IsValid)
+                    {
+                        if (exitStarted)
+                        {
+                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (suspendedHandle != null)
+                            {
+                                suspendedHandle.HasEnteredCurrentState = false;
+                            }
+                        }
+                        return;
+                    }
                 }
             }
 
@@ -502,10 +541,15 @@ namespace TheSingularityWorkshop.FSM_API
                         continue; // Skip this problematic transition
                     }
 
+                    var exitStarted = false;
                     try
                     {
-                       
-                        if (t.Condition(ctx))
+                        var conditionMatched = t.Condition(ctx);
+                        if (!ctx.IsValid)
+                        {
+                            return;
+                        }
+                        if (conditionMatched)
                         {
                             // A guard may remove the target while it is being evaluated.
                             if (!_states.ContainsKey(t.To))
@@ -513,7 +557,19 @@ namespace TheSingularityWorkshop.FSM_API
                                 continue;
                             }
 
+                            exitStarted = true;
                             currentState.Exit(ctx);
+
+                            if (!ctx.IsValid)
+                            {
+                                var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (suspendedHandle != null)
+                                {
+                                    suspendedHandle.HasEnteredCurrentState = false;
+                                }
+                                next = current;
+                                return;
+                            }
 
                             // Exit callbacks may also remove the target. Keep the current
                             // state identity rather than committing a stale target name.
@@ -545,6 +601,18 @@ namespace TheSingularityWorkshop.FSM_API
                             ex
                         );
 
+                        if (!ctx.IsValid)
+                        {
+                            if (exitStarted)
+                            {
+                                var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (suspendedHandle != null)
+                                {
+                                    suspendedHandle.HasEnteredCurrentState = false;
+                                }
+                            }
+                            return;
+                        }
                     }
                 }
             }
