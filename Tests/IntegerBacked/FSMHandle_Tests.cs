@@ -35,6 +35,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Constructor_InitializesCallerOwnedContextAsValid()
+        {
+            var context = new TestContext { IsValid = false };
+            var fsm = new IntegerFSM(7);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+
+            var handle = new IntegerFSMHandle(fsm, context, 42);
+
+            Assert.That(context.IsValid, Is.True);
+            Assert.That(handle.Context, Is.SameAs(context));
+            Assert.That(handle.IsValid, Is.True);
+        }
+
+        [Test]
         public void IntegerRuntime_ReturnsExplicitIntegerHandle()
         {
             var fsm = new IntegerFSM(7);
