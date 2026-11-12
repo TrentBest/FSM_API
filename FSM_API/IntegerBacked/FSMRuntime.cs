@@ -214,6 +214,33 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return count;
         }
 
+        /// <summary>Returns a snapshot of accumulated integer-instance error counts.</summary>
+        public Dictionary<FSMHandleInt, int> GetInstanceErrorCounts()
+        {
+            return new Dictionary<FSMHandleInt, int>(_instanceErrorCounts);
+        }
+
+        /// <summary>Returns a snapshot of accumulated integer-definition error counts.</summary>
+        public Dictionary<int, int> GetDefinitionErrorCounts()
+        {
+            return new Dictionary<int, int>(_definitionErrorCounts);
+        }
+
+        /// <summary>Clears the accumulated error count for one integer-backed instance.</summary>
+        public void ResetInstanceErrorCount(FSMHandleInt handle)
+        {
+            if (handle != null)
+            {
+                _instanceErrorCounts.Remove(handle);
+            }
+        }
+
+        /// <summary>Clears the accumulated error count for one integer-backed definition.</summary>
+        public void ResetDefinitionErrorCount(int fsmID)
+        {
+            _definitionErrorCounts.Remove(fsmID);
+        }
+
         private bool ShouldProcess(FSM definition)
         {
             if (definition.ProcessRate < 0)
