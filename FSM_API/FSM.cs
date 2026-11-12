@@ -429,6 +429,12 @@ namespace TheSingularityWorkshop.FSM_API
                     ex
                 );
 
+                // An exception does not reopen the execution gate. If the callback
+                // invalidated its context before throwing, stop this step here.
+                if (!ctx.IsValid)
+                {
+                    return;
+                }
             }
 
             foreach (var t in _anyStateTransitions.ToArray())
@@ -443,6 +449,7 @@ namespace TheSingularityWorkshop.FSM_API
                     continue; // Skip this problematic transition
                 }
 
+                var exitStarted = false;
                 try
                 {
                     var conditionMatched = t.Condition(ctx);
@@ -459,6 +466,7 @@ namespace TheSingularityWorkshop.FSM_API
                             continue;
                         }
 
+                        exitStarted = true;
                         currentState.Exit(ctx);
 
                         // OnExit is user code and may suspend execution. Keep the current
@@ -505,6 +513,20 @@ namespace TheSingularityWorkshop.FSM_API
                         ex
                     );
 
+                    // A callback can invalidate and then throw. Never continue to
+                    // another transition after the execution gate has closed.
+                    if (!ctx.IsValid)
+                    {
+                        if (exitStarted)
+                        {
+                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            if (suspendedHandle != null)
+                            {
+                                suspendedHandle.HasEnteredCurrentState = false;
+                            }
+                        }
+                        return;
+                    }
                 }
             }
 
@@ -524,6 +546,7 @@ namespace TheSingularityWorkshop.FSM_API
                         continue; // Skip this problematic transition
                     }
 
+                    var exitStarted = false;
                     try
                     {
                        
@@ -540,6 +563,7 @@ namespace TheSingularityWorkshop.FSM_API
                                 continue;
                             }
 
+                            exitStarted = true;
                             currentState.Exit(ctx);
 
                             // OnExit may suspend execution. Keep the current state and
@@ -585,6 +609,19 @@ namespace TheSingularityWorkshop.FSM_API
                             ex
                         );
 
+                        // Preserve suspension even when the user callback throws.
+                        if (!ctx.IsValid)
+                        {
+                            if (exitStarted)
+                            {
+                                var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                if (suspendedHandle != null)
+                                {
+                                    suspendedHandle.HasEnteredCurrentState = false;
+                                }
+                            }
+                            return;
+                        }
                     }
                 }
             }
