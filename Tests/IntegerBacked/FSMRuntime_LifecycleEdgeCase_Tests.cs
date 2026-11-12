@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
+using FSMHandleInt = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt;
 
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
@@ -99,6 +100,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(runtime.Unregister(9), Is.True);
 
             Assert.That(exits, Is.EqualTo(2));
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+        }
+
+        [Test]
+        public void Unregister_WhenExitCallbackRemovesSibling_DetachesAllHandlesBeforeCallbacks()
+        {
+            var exits = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(12, -1);
+            FSMHandleInt first = null;
+            fsm.AddState(new IntegerFSMState(10, null, null, context =>
+            {
+                exits++;
+                if (((TestContext)context).Name == "second")
+                {
+                    runtime.RemoveInstance(first);
+                }
+            }));
+            runtime.Register(fsm);
+            first = runtime.CreateInstance(12, new TestContext { Name = "first" });
+            var second = runtime.CreateInstance(12, new TestContext { Name = "second" });
+
+            Assert.DoesNotThrow(() => runtime.Unregister(12));
+
+            Assert.That(exits, Is.EqualTo(2));
+            Assert.That(first.IsDestroyed, Is.True);
+            Assert.That(second.IsDestroyed, Is.True);
             Assert.That(runtime.GetHandleCount(0), Is.Zero);
         }
 
