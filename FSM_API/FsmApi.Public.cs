@@ -222,6 +222,22 @@ namespace FSM_API
             /// <summary>Returns the current string-backed definition error counts.</summary>
             public static Dictionary<string, int> GetDefinitionErrorCounts()
                 => TheSingularityWorkshop.FSM_API.FSM_API.Error.GetDefinitionErrorCounts();
+
+            /// <summary>Returns a snapshot of integer-backed instance error counts.</summary>
+            public static Dictionary<IntegerBacked.FSMHandleInt, int> GetIntegerInstanceErrorCounts()
+                => IntegerBacked.FsmApi.Runtime.GetInstanceErrorCounts();
+
+            /// <summary>Returns a snapshot of integer-backed definition error counts.</summary>
+            public static Dictionary<int, int> GetIntegerDefinitionErrorCounts()
+                => IntegerBacked.FsmApi.Runtime.GetDefinitionErrorCounts();
+
+            /// <summary>Resets the accumulated error count for an integer-backed instance.</summary>
+            public static void ResetIntegerInstanceErrorCount(IntegerBacked.FSMHandleInt handle)
+                => IntegerBacked.FsmApi.Runtime.ResetInstanceErrorCount(handle);
+
+            /// <summary>Resets the accumulated error count for an integer-backed definition.</summary>
+            public static void ResetIntegerDefinitionErrorCount(int fsmID)
+                => IntegerBacked.FsmApi.Runtime.ResetDefinitionErrorCount(fsmID);
         }
     }
 }
