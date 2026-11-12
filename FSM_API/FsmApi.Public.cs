@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TheSingularityWorkshop.FSM_API;
 using IntegerBacked = TheSingularityWorkshop.FSM_API.IntegerBacked;
+using IntegerFSMCompilationResult = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMCompilationResult;
 
 namespace FSM_API
 {
@@ -23,7 +24,7 @@ namespace FSM_API
                     fsmName, processRate, processingGroup);
 
             /// <summary>Begins building an integer-backed FSM definition.</summary>
-            public static FSMBuilderInt CreateFiniteStateMachine(
+            public static IntegerBacked.FSMBuilderInt CreateFiniteStateMachine(
                 int fsmID,
                 int processRate = 0,
                 int processingGroupID = 0)
@@ -39,7 +40,7 @@ namespace FSM_API
                     fsmName, context, processingGroup);
 
             /// <summary>Creates an integer-backed instance bound to the caller-owned context.</summary>
-            public static FSMHandleInt CreateInstance(int fsmID, IStateContext context)
+            public static IntegerBacked.FSMHandleInt CreateInstance(int fsmID, IStateContext context)
                 => IntegerBacked.FsmApi.Create.CreateInstance(fsmID, context);
 
             /// <summary>Registers a completed integer-backed definition.</summary>
@@ -55,8 +56,8 @@ namespace FSM_API
         public static class Transfer
         {
             /// <summary>Compiles a string-backed definition into the integer-backed representation.</summary>
-            public static FSMCompilationResult ToInteger(FSM definition, int fsmID, int processingGroupID = 0)
-                => TheSingularityWorkshop.FSM_API.FSMCompiler.Compile(definition, fsmID, processingGroupID);
+            public static IntegerFSMCompilationResult ToInteger(FSM definition, int fsmID, int processingGroupID = 0)
+                => IntegerBacked.FSMCompiler.Compile(definition, fsmID, processingGroupID);
 
             /// <summary>Reconstructs a string-backed definition using an explicit reverse state-name map.</summary>
             public static FSM ToString(
