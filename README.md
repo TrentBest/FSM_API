@@ -2,7 +2,7 @@
 
 # FSM_API
 
-[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml)
+[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml) [![FSM_API 2.0.0 estimated progress](assets/fsm-api-progress.svg)](Documentation/FSM_API_2.0.0_READINESS.md)
 **FSM_API is a framework-independent C# finite-state-machine library for defining behavior separately from the objects whose behavior it controls.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,6 +10,37 @@
 [![NuGet downloads](https://img.shields.io/nuget/dt/TheSingularityWorkshop.FSM_API?logo=nuget&style=flat-square)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=development&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions/workflows/dotnet.yml?query=branch%3Adevelopment)
 [![Code Coverage](https://codecov.io/gh/TrentBest/FSM_API/graph/badge.svg)](https://codecov.io/gh/TrentBest/FSM_API)
+
+## FSM_API 2.0.0 development progress
+
+**Estimated readiness: 56%** · Weighted engineering estimate · Updated 2026-11-12
+
+This is a deliberately evidence-based estimate of the work required to deliver the first 2.0.0 release. It is not code coverage, a count of completed files, or a promise of release timing. Each workstream has a fixed weight; its assessed completion contributes that fraction to the overall estimate.
+
+| Workstream | Weight | Estimated completion | Weighted contribution |
+| :-- | --: | --: | --: |
+| Runtime and public API foundation | 20% | 90% | 18.00 points |
+| String/integer behavior and lifecycle parity | 25% | 55% | 13.75 points |
+| Identity, compiler bridge, and storage contract | 15% | 60% | 9.00 points |
+| Tests, CI, target frameworks, and package validation | 15% | 55% | 8.25 points |
+| Reproducible performance evidence | 10% | 10% | 1.00 point |
+| Documentation, examples, and migration guidance | 5% | 75% | 3.75 points |
+| Branch reconciliation and release governance | 10% | 20% | 2.00 points |
+| **Weighted total** | **100%** |  | **55.75 → 56%** |
+
+### What moves the estimate
+
+- **Runtime/API:** both readable string-backed and integer-backed execution paths are present; remaining work is integration and contract validation.
+- **Parity/lifecycle:** callback ordering, transition semantics, invalidation, re-entrancy, mutation, and destruction must be demonstrated with a traceable cross-implementation matrix.
+- **Identity/storage:** deterministic compilation and name mappings exist; durable identity, serialization/versioning, edge cases, and hot-path guarantees remain to be closed.
+- **Verification/package:** regression coverage is substantial, but the latest PR validation [run #848](https://github.com/TrentBest/FSM_API/actions/runs/43166172644) reported **463 passed and 1 failed**. The failing invalid-context parity test must be reconciled before this gate can be considered green.
+- **Performance:** a reproducible, equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
+- **Documentation:** core README and readiness material exist, while migration, API reference, and implementation-linked living proof still need completion.
+- **Release governance:** branch history still requires careful preservation and reconciliation. The master branch remains the release line; development remains the integration line.
+
+The SVG badge is a compact visual of this estimate. Update the score, bar, and table together when evidence changes; do not raise it merely because code was added or a single workflow passed. The detailed, evolving acceptance checklist is [FSM_API 2.0.0 Readiness](Documentation/FSM_API_2.0.0_READINESS.md). **100% means all release gates are evidenced and ready for owner review—not that publication is automatically authorized.**
+
+---
 
 ## 🟣 01 — Why use FSM_API?
 
