@@ -167,6 +167,31 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Update_WhenExitCallbackUnregistersDefinition_DoesNotInvokeExitTwice()
+        {
+            var exits = 0;
+            var targetEnters = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(15, -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exits++;
+                runtime.Unregister(15);
+            }));
+            fsm.AddState(new IntegerFSMState(20, _ => targetEnters++, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(15, new TestContext());
+
+            Assert.DoesNotThrow(() => runtime.UpdateAll());
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(exits, Is.EqualTo(1));
+            Assert.That(targetEnters, Is.Zero);
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+        }
+
+        [Test]
         public void Unregister_WhenExitCallbackRemovesSibling_DetachesAllHandlesBeforeCallbacks()
         {
             var exits = 0;
