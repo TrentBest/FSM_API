@@ -38,10 +38,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 var handle = IntegerFsmApi.Create.CreateInstance(fsmID, new Context());
 
                 Assert.That(handle.CurrentStateID, Is.EqualTo(0));
-                Assert.That(entered, Is.EqualTo(1));
+                Assert.That(entered, Is.Zero);
+                Assert.That(updated, Is.Zero);
 
                 IntegerFsmApi.Interaction.Update(processingGroupID);
 
+                Assert.That(entered, Is.EqualTo(1));
                 Assert.That(updated, Is.EqualTo(1));
                 Assert.That(exited, Is.EqualTo(1));
                 Assert.That(handle.CurrentStateID, Is.EqualTo(1));
