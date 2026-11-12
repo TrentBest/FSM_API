@@ -115,7 +115,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
 
                 var previousStateID = CurrentStateID;
-                CurrentStateID = Definition.Step(CurrentStateID, Context);
+                var nextStateID = Definition.Step(CurrentStateID, Context, this);
+                if (IsDestroyed || IsPendingDestruction)
+                {
+                    return;
+                }
+
+                CurrentStateID = nextStateID;
                 if (CurrentStateID != previousStateID)
                 {
                     // Match the string-backed lifecycle: the target state's Enter action
