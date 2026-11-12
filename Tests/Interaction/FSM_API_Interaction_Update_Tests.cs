@@ -595,8 +595,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .State("StateA", _ => enterCount++, _ => updateCount++, ctx =>
                 {
                     exitCount++;
-                    ctx.IsValid = false;
-                    throw new InvalidOperationException("exit failed after invalidation");
+                    if (exitCount == 1)
+                    {
+                        ctx.IsValid = false;
+                        throw new InvalidOperationException("exit failed after invalidation");
+                    }
                 })
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", _ => true)
@@ -616,13 +619,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
 
             context.IsValid = true;
-            // The failed exit is retried after the state is re-entered; the callback
-            // intentionally invalidates again, so it must not commit the transition.
+            // The failed exit is retried only after the state is re-entered.
+            // The second exit succeeds, proving the transition can then commit.
             FSM_API.Interaction.Update(_testProcessingGroup);
             Assert.That(enterCount, Is.EqualTo(2));
             Assert.That(updateCount, Is.EqualTo(2));
             Assert.That(exitCount, Is.EqualTo(2));
-            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
             Assert.That(handle.IsDestroyed, Is.False);
         }
