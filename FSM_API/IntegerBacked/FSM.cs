@@ -310,7 +310,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             return StepCore(currentID, context, owner);
         }
 
-        private int StepCore(int currentID, IStateContext context, FSMHandleInt owner)
+        private int StepCore(int currentID, IStateContext context, FSMHandle owner)
         {
             if (!TryGetState(currentID, out var currentState))
             {
