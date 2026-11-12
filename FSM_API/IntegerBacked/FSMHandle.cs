@@ -102,6 +102,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     if (currentState != null)
                     {
                         currentState.Enter(Context);
+
+                        // Entry callbacks can unregister this definition and destroy
+                        // the handle. Do not continue into the step after teardown.
+                        if (IsDestroyed || IsPendingDestruction)
+                        {
+                            return;
+                        }
+
                         HasEnteredCurrentState = true;
                     }
                 }
