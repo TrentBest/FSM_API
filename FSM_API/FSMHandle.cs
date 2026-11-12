@@ -307,9 +307,17 @@ namespace TheSingularityWorkshop.FSM_API
                 throw new ArgumentException("Target state name cannot be null or empty.", nameof(nextStateName));
             }
 
+            if (IsDestroyed || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
             try
             {
-                Definition.ForceTransition(CurrentState, nextStateName, Context);
+                if (!Definition.TryForceTransition(CurrentState, nextStateName, Context, this))
+                {
+                    return;
+                }
                 CurrentState = nextStateName;
                 HasEnteredCurrentState = Definition.HasState(nextStateName);
             }
@@ -337,7 +345,15 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void ResetFSMInstance()
         {
-            Definition.ForceTransition(CurrentState, Definition.InitialState, Context);
+            if (IsDestroyed || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
+            if (!Definition.TryForceTransition(CurrentState, Definition.InitialState, Context, this))
+            {
+                return;
+            }
             CurrentState = Definition.InitialState;
             HasEnteredCurrentState = Definition.HasState(CurrentState);
         }
@@ -428,7 +444,16 @@ namespace TheSingularityWorkshop.FSM_API
                     FSM_API.Error.InvokeInternalApiError(
                         $"Error evaluating manual transition condition from '{CurrentState}' to '{transition.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex);
+                    if (!Context.IsValid)
+                    {
+                        return;
+                    }
                     continue;
+                }
+
+                if (!Context.IsValid)
+                {
+                    return;
                 }
 
                 if (!matches)
@@ -444,7 +469,10 @@ namespace TheSingularityWorkshop.FSM_API
 
                 try
                 {
-                    Definition.ForceTransition(CurrentState, transition.To, Context);
+                    if (!Definition.TryForceTransition(CurrentState, transition.To, Context, this))
+                    {
+                        return;
+                    }
                 }
                 catch
                 {
