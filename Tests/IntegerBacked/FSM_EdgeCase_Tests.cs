@@ -134,15 +134,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void Handle_TransitionTo_WhenTargetIsMissing_UpdatesIdentityWithoutMarkingEntered()
+        public void Handle_TransitionTo_WhenTargetIsMissing_PreservesIdentityAndMarksSourceNotEntered()
         {
-            var fsm = CreateFSMWithStates(10, 20);
+            var exitCalls = 0;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exitCalls++));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
             var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
                 fsm, new TestContext());
 
             Assert.DoesNotThrow(() => handle.TransitionTo(999));
 
-            Assert.That(handle.CurrentStateID, Is.EqualTo(999));
+            Assert.That(exitCalls, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
         }
 
@@ -328,7 +332,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.DoesNotThrow(() => handle.ResetFSMInstance());
 
-            Assert.That(handle.CurrentStateID, Is.EqualTo(IntegerFSM.AnyStateIdentifier));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
         }
 
