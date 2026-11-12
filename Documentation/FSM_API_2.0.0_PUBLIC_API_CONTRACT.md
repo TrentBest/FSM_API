@@ -1,6 +1,6 @@
 # FSM_API 2.0.0 — Public API and Documentation Contract
 
-**Status:** target contract for 2.0.0. This document describes the intended public surface; it does not claim that the facade or namespace migration is implemented yet.
+**Status:** the additive `FSM_API.FsmApi` namespace facade and its `Create`, `Interact`, and `Error` modules are implemented on `development`. The facade currently forwards to existing runtime types in `TheSingularityWorkshop.FSM_API`; a full migration of every public runtime type into the shorter namespace remains incomplete. Integer-backed Error parity, full string/integer behavioral parity, and CI verification of the current facade changes remain release gates.
 
 ## 1. Consumer-facing entry point
 
@@ -52,17 +52,19 @@ Owns the runtime interaction boundary:
 - Instance movement between compatible processing groups.
 - Reset, pause/resume where supported, and explicit instance/definition destruction.
 - Lifecycle and deferred-mutation behavior.
+- Integer-backed update, unregister, and definition-presence operations where exposed by the integer runtime.
 
 The same observable behavior must be available through both string-backed and integer-backed representations. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
 
 ### Error
 
 Owns the diagnostic and error-policy boundary:
-- Internal API diagnostics and subscriptions.
-- Instance- and definition-level error accounting.
+- String-backed internal API diagnostics and subscriptions (the current namespace facade forwards this existing system).
+- String-backed instance- and definition-level error accounting.
 - Configurable thresholds and explicit shutdown policy.
 - Error context sufficient to identify the definition, instance, state, processing group, and callback phase.
 - Deterministic behavior when callbacks both invalidate/destroy an instance and throw.
+- Integer-backed Error parity remains unimplemented and is a tracked 2.0 release gate.
 
 An invalid context is an execution eligibility gate, not an implicit destruction request. Error policy may explicitly schedule shutdown; validity alone must not.
 
@@ -118,7 +120,7 @@ The overall score is a weighted engineering estimate, not code coverage or a rel
 
 ## 7. Compatibility and migration
 
-The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to:
+The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to the additive `FSM_API` namespace facade. The facade currently returns runtime types in the established namespace, so consumers that need explicit type names may still need `TheSingularityWorkshop.FSM_API` imports. The intended call shape is:
 
 ```csharp
 using FSM_API;
