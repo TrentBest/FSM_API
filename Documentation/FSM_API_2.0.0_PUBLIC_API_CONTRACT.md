@@ -39,6 +39,7 @@ Owns the construction boundary:
 - String-authored definition compilation.
 - Deterministic name-to-ID mapping and reverse diagnostic mapping.
 - Creation of live handles bound to caller-owned contexts.
+- Successful handle construction initializes the caller-owned context's IsValid gate to true; callers may set it false afterward to suspend execution.
 - Explicit identity and compatibility validation.
 
 Creation must not silently start host scheduling. The host remains responsible for deciding when interaction/update work occurs.
