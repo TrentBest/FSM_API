@@ -374,7 +374,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
                 try
                 {
-                    currentState.Exit(context);
+                    if (owner != null) owner.ExitState(currentState); else currentState.Exit(context);
                 }
                 catch (Exception ex)
                 {
@@ -438,11 +438,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Forces an immediate transition between integer state identities.</summary>
         public void ForceTransition(int fromID, int toID, IStateContext context)
         {
+            ForceTransition(fromID, toID, context, null);
+        }
+
+        internal void ForceTransition(int fromID, int toID, IStateContext context, FSMHandle owner)
+        {
             if (TryGetState(fromID, out var fromState))
             {
                 try
                 {
-                    fromState.Exit(context);
+                    if (owner != null) owner.ExitState(fromState); else fromState.Exit(context);
                 }
                 catch (Exception ex)
                 {
