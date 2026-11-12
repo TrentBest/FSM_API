@@ -143,6 +143,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
         }
 
+        [Test]
+        public void CreateInstance_WhenInitialEnterUnregistersDefinition_DestroysInProgressHandle()
+        {
+            var exits = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(11, -1);
+            fsm.AddState(new IntegerFSMState(10,
+                _ => runtime.Unregister(11), null, _ => exits++));
+            runtime.Register(fsm);
+
+            var handle = runtime.CreateInstance(11, new TestContext());
+
+            Assert.That(runtime.Contains(11), Is.False);
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(exits, Is.EqualTo(1));
+        }
+
         private static IntegerFSM CreateFSM(int id)
         {
             var fsm = new IntegerFSM(id);
