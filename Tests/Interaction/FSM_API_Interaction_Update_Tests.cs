@@ -637,5 +637,86 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(observedMessage, Is.EqualTo("facade-test"));
         }
 
+
+        [Test]
+        public void ManualEvaluateConditions_StopsWhenGuardInvalidatesContext()
+        {
+            var guardCount = 0;
+            var exitCount = 0;
+            var suspendOnce = true;
+
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, _ => exitCount++)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", context =>
+                {
+                    guardCount++;
+                    if (suspendOnce)
+                    {
+                        suspendOnce = false;
+                        context.IsValid = false;
+                        return true;
+                    }
+                    return false;
+                })
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+
+            handle.EvaluateConditions();
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            context.IsValid = true;
+            handle.EvaluateConditions();
+
+            Assert.That(guardCount, Is.EqualTo(2));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+        }
+
+        [Test]
+        public void ForcedTransition_StopsAfterOnExitInvalidatesContext()
+        {
+            var targetEnterCount = 0;
+            var suspendOnce = true;
+
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, context =>
+                {
+                    if (suspendOnce)
+                    {
+                        suspendOnce = false;
+                        context.IsValid = false;
+                    }
+                })
+                .State("StateB", _ => targetEnterCount++, null, null)
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+
+            handle.TransitionTo("StateB");
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(targetEnterCount, Is.Zero);
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            context.IsValid = true;
+            handle.Update();
+
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(targetEnterCount, Is.Zero);
+        }
+
     }
 }
