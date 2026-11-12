@@ -13,32 +13,49 @@
 
 ## FSM_API 2.0.0 development progress
 
-**Estimated readiness: 56%** · Weighted engineering estimate · Updated 2026-11-12
+**Estimated readiness: 42%** · Weighted engineering estimate · Updated 2026-11-12
 
-This is a deliberately evidence-based estimate of the work required to deliver the first 2.0.0 release. It is not code coverage, a count of completed files, or a promise of release timing. Each workstream has a fixed weight; its assessed completion contributes that fraction to the overall estimate.
+The 2.0.0 scope is organized around the public **Create**, **Interact**, and **Error** modules. The overall score also accounts for cross-cutting parity, identity, verification, performance, Workshop-grade documentation, and release governance. It is not code coverage, file count, or a release date.
 
 | Workstream | Weight | Estimated completion | Weighted contribution |
 | :-- | --: | --: | --: |
-| Runtime and public API foundation | 20% | 90% | 18.00 points |
-| String/integer behavior and lifecycle parity | 25% | 55% | 13.75 points |
-| Identity, compiler bridge, and storage contract | 15% | 60% | 9.00 points |
-| Tests, CI, target frameworks, and package validation | 15% | 55% | 8.25 points |
-| Reproducible performance evidence | 10% | 10% | 1.00 point |
-| Documentation, examples, and migration guidance | 5% | 75% | 3.75 points |
-| Branch reconciliation and release governance | 10% | 20% | 2.00 points |
-| **Weighted total** | **100%** |  | **55.75 → 56%** |
+| Create module and public construction contract | 12% | 50% | 6.00 points |
+| Interact module and runtime lifecycle | 18% | 40% | 7.20 points |
+| Error module and diagnostic policy | 10% | 55% | 5.50 points |
+| String/integer behavioral parity | 15% | 45% | 6.75 points |
+| Identity, compiler bridge, and storage contract | 10% | 60% | 6.00 points |
+| Tests, CI, target frameworks, and package validation | 12% | 55% | 6.60 points |
+| Reproducible performance evidence | 8% | 10% | 0.80 points |
+| Workshop documentation and learning system | 10% | 20% | 2.00 points |
+| Branch reconciliation and release governance | 5% | 20% | 1.00 point |
+| **Weighted total** | **100%** |  | **41.85 → 42%** |
+
+### Public API target
+
+The 2.0 consumer entry point is intended to be:
+
+```csharp
+using FSM_API;
+
+FsmApi.Create.CreateFiniteStateMachine();
+FsmApi.Interact.Update("Update");
+```
+
+Here, `FSM_API` is the namespace and `FsmApi` is the public facade. The three module boundaries are Create, Interact, and Error. This is a target contract, not a claim that the namespace/facade migration is already implemented. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
 
 ### What moves the estimate
 
-- **Runtime/API:** both readable string-backed and integer-backed execution paths are present; remaining work is integration and contract validation.
-- **Parity/lifecycle:** callback ordering, transition semantics, invalidation, re-entrancy, mutation, and destruction must be demonstrated with a traceable cross-implementation matrix.
-- **Identity/storage:** deterministic compilation and name mappings exist; durable identity, serialization/versioning, edge cases, and hot-path guarantees remain to be closed.
-- **Verification/package:** regression coverage is substantial, but the latest PR validation [run #848](https://github.com/TrentBest/FSM_API/actions/runs/43166172644) reported **463 passed and 1 failed**. The failing invalid-context parity test must be reconciled before this gate can be considered green.
-- **Performance:** a reproducible, equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
-- **Documentation:** core README and readiness material exist, while migration, API reference, and implementation-linked living proof still need completion.
-- **Release governance:** branch history still requires careful preservation and reconciliation. The master branch remains the release line; development remains the integration line.
+- **Create:** definition construction, compilation, identity, and instance creation must converge on the new public facade.
+- **Interact:** update, transition, scheduling, lifecycle, mutation, and destruction semantics must be consistent across both representations.
+- **Error:** diagnostics, thresholds, exception paths, and explicit shutdown behavior must be coherent and testable.
+- **String/integer parity:** every supported string capability must have an equivalent integer-backed capability, demonstrated by equivalent observable traces—not merely by the presence of two implementations.
+- **Identity:** deterministic IDs, reverse diagnostic mappings, and storage/versioning boundaries must be explicit.
+- **Verification:** the latest known PR validation [run #848](https://github.com/TrentBest/FSM_API/actions/runs/43166172644) reported **463 passed and 1 failed**. The invalid-context parity failure must be reconciled before the gate is green.
+- **Performance:** a reproducible equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
+- **Workshop documentation:** existing material is treated as a substantial first draft. The 2.0 pass must elevate it into an implementation-linked learning and reference system with accurate API docs, executable examples, conceptual models, diagrams, operational truth, and maintenance rules.
+- **Release governance:** preserve unique branch work and reconcile history before reducing the repository to `master` and `development`.
 
-The SVG badge is a compact visual of this estimate. Update the score, bar, and table together when evidence changes; do not raise it merely because code was added or a single workflow passed. The detailed, evolving acceptance checklist is [FSM_API 2.0.0 Readiness](Documentation/FSM_API_2.0.0_READINESS.md). **100% means all release gates are evidenced and ready for owner review—not that publication is automatically authorized.**
+The SVG is a compact view of the module progress. Update the score, bars, and this table together when committed implementation and evidence change. 100% means all release gates are evidenced and ready for owner review; it does **not** authorize publication.
 
 ---
 
