@@ -329,7 +329,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     return InitialStateID;
                 }
 
-                ForceTransition(currentID, InitialStateID, context);
+                ForceTransition(currentID, InitialStateID, context, owner);
                 return InitialStateID;
             }
 
@@ -414,7 +414,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
                 try
                 {
-                    currentState.Exit(context);
+                    if (owner != null) owner.ExitState(currentState); else currentState.Exit(context);
                 }
                 catch (Exception ex)
                 {
@@ -457,6 +457,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     // Match the string-backed contract: an Exit failure is reported,
                     // but does not prevent the target state's Enter callback.
                 }
+            }
+
+            if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
+            {
+                return;
             }
 
             if (!TryGetState(toID, out var toState))
