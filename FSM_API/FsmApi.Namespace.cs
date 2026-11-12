@@ -58,7 +58,7 @@ namespace FSM_API
             }
 
             /// <summary>Compiles a string-backed definition into the integer-backed representation.</summary>
-            public static Legacy.FSMCompilationResult ToInteger(
+            public static Integer.FSMCompilationResult ToInteger(
                 Legacy.FSM definition,
                 int fsmID,
                 int processingGroupID = 0)
@@ -66,15 +66,19 @@ namespace FSM_API
                 return UnifiedApi.Transfer.ToInteger(definition, fsmID, processingGroupID);
             }
 
-            /// <summary>Reconstructs a string-backed definition from an integer-backed representation.</summary>
-            public static Legacy.FSM ToString(
-                Integer.FSM definition,
-                string fsmName,
-                string processingGroup,
-                IReadOnlyDictionary<int, string> stateIDToName)
+        }
+
+        /// <summary>Explicit conversion between string-backed and integer-backed definitions.</summary>
+        public static class Transfer
+        {
+            public static Integer.FSMCompilationResult ToInteger(Legacy.FSM definition, int fsmID, int processingGroupID = 0)
             {
-                return UnifiedApi.Transfer.ToString(
-                    definition, fsmName, processingGroup, stateIDToName);
+                return UnifiedApi.Transfer.ToInteger(definition, fsmID, processingGroupID);
+            }
+
+            public static Legacy.FSM ToString(Integer.FSM definition, string fsmName, string processingGroup, IReadOnlyDictionary<int, string> stateIDToName)
+            {
+                return UnifiedApi.Transfer.ToString(definition, fsmName, processingGroup, stateIDToName);
             }
         }
 
@@ -203,6 +207,21 @@ namespace FSM_API
             {
                 return LegacyApi.Interaction.GetFSMDefinition(fsmName, processingGroup);
             }
+
+            public static Integer.FSM GetFSMDefinition(int fsmID)
+            {
+                return Integer.FsmApi.Interaction.GetDefinition(fsmID);
+            }
+
+            public static IReadOnlyCollection<Integer.FSMHandleInt> GetInstances(int fsmID)
+            {
+                return Integer.FsmApi.Runtime.GetInstances(fsmID);
+            }
+
+            public static bool DestroyInstance(Integer.FSMHandleInt instance)
+            {
+                return Integer.FsmApi.Interaction.DestroyInstance(instance);
+            }
         }
 
         /// <summary>Diagnostic notifications and error-policy controls for the string-backed runtime.</summary>
@@ -268,6 +287,26 @@ namespace FSM_API
             public static void Reset()
             {
                 LegacyApi.Error.Reset();
+            }
+
+            public static Dictionary<Integer.FSMHandleInt, int> GetIntegerInstanceErrorCounts()
+            {
+                return Integer.FsmApi.Runtime.GetInstanceErrorCounts();
+            }
+
+            public static Dictionary<int, int> GetIntegerDefinitionErrorCounts()
+            {
+                return Integer.FsmApi.Runtime.GetDefinitionErrorCounts();
+            }
+
+            public static void ResetIntegerInstanceErrorCount(Integer.FSMHandleInt handle)
+            {
+                Integer.FsmApi.Runtime.ResetInstanceErrorCount(handle);
+            }
+
+            public static void ResetIntegerDefinitionErrorCount(int fsmID)
+            {
+                Integer.FsmApi.Runtime.ResetDefinitionErrorCount(fsmID);
             }
         }
     }
