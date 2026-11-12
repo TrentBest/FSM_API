@@ -550,5 +550,47 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.IsDestroyed, Is.False);
         }
 
+
+        [Test]
+        public void ManualHandleUpdate_HonorsInvalidationDuringStateUpdate()
+        {
+            var updateCount = 0;
+            var guardCount = 0;
+            var suspendOnce = true;
+
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, context =>
+                {
+                    updateCount++;
+                    if (suspendOnce)
+                    {
+                        suspendOnce = false;
+                        context.IsValid = false;
+                    }
+                }, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+
+            handle.Update(_testProcessingGroup);
+
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            context.IsValid = true;
+            handle.Update(_testProcessingGroup);
+
+            Assert.That(updateCount, Is.EqualTo(2));
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
     }
 }
