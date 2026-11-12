@@ -151,6 +151,18 @@ namespace FSM_API
             public static bool Contains(int fsmID)
                 => IntegerBacked.FsmApi.Interaction.Contains(fsmID);
 
+            /// <summary>Returns a registered integer-backed definition.</summary>
+            public static IntegerBacked.FSM GetFSMDefinition(int fsmID)
+                => IntegerBacked.FsmApi.Interaction.GetDefinition(fsmID);
+
+            /// <summary>Returns live instances of an integer-backed definition.</summary>
+            public static IReadOnlyCollection<IntegerBacked.FSMHandleInt> GetInstances(int fsmID)
+                => IntegerBacked.FsmApi.Runtime.GetInstances(fsmID);
+
+            /// <summary>Destroys one integer-backed instance without unregistering its definition.</summary>
+            public static bool DestroyInstance(IntegerBacked.FSMHandleInt instance)
+                => IntegerBacked.FsmApi.Interaction.DestroyInstance(instance);
+
             /// <summary>Unregisters an integer-backed definition and its instances.</summary>
             public static bool Unregister(int fsmID)
                 => IntegerBacked.FsmApi.Interaction.Unregister(fsmID);
