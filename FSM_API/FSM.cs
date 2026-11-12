@@ -733,6 +733,10 @@ namespace TheSingularityWorkshop.FSM_API
                 throw;
             }
 
+            if (owner != null)
+            {
+                owner.HasEnteredCurrentState = true;
+            }
             return owner == null || !owner.IsDestroyed;
         }
 
