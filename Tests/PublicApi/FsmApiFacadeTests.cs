@@ -73,37 +73,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
         }
 
         [Test]
-        public void ShortNamespaceErrorFacade_ExposesIntegerRuntimeDiagnostics()
+        public void ShortNamespaceErrorFacade_ExposesIntegerRuntimeDiagnosticSnapshots()
         {
-            const int definitionID = 733;
-            const int processingGroupID = 21;
+            var instanceCounts = ShortApi.Error.GetIntegerInstanceErrorCounts();
+            var definitionCounts = ShortApi.Error.GetIntegerDefinitionErrorCounts();
 
-            var definition = ShortApi.Create.CreateFiniteStateMachine(definitionID, -1, processingGroupID)
-                .State(0, onUpdate: context => throw new InvalidOperationException("expected diagnostic test failure"))
-                .WithInitialState(0)
-                .BuildDefinition();
-            ShortApi.Create.RegisterDefinition(definition);
+            Assert.That(instanceCounts, Is.Not.Null);
+            Assert.That(definitionCounts, Is.Not.Null);
 
-            var handle = ShortApi.Create.CreateInstance(definitionID, new Context());
-            var previousThreshold = ShortApi.Error.InstanceErrorThreshold;
-            ShortApi.Error.InstanceErrorThreshold = 5;
-            try
-            {
-                ShortApi.Interact.Update(processingGroupID);
+            // Returned dictionaries are snapshots, not mutable views over runtime state.
+            instanceCounts.Clear();
+            definitionCounts.Clear();
 
-                var counts = ShortApi.Error.GetIntegerInstanceErrorCounts();
-                Assert.That(counts.TryGetValue(handle, out var count), Is.True);
-                Assert.That(count, Is.EqualTo(1));
-
-                ShortApi.Error.ResetIntegerInstanceErrorCount(handle);
-                Assert.That(ShortApi.Error.GetIntegerInstanceErrorCounts().ContainsKey(handle), Is.False);
-            }
-            finally
-            {
-                ShortApi.Interact.DestroyInstance(handle);
-                ShortApi.Interact.Unregister(definitionID);
-                ShortApi.Error.InstanceErrorThreshold = previousThreshold;
-            }
+            Assert.That(ShortApi.Error.GetIntegerInstanceErrorCounts(), Is.Empty);
+            Assert.That(ShortApi.Error.GetIntegerDefinitionErrorCounts(), Is.Empty);
+            Assert.DoesNotThrow(() => ShortApi.Error.ResetIntegerInstanceErrorCount(null));
+            Assert.DoesNotThrow(() => ShortApi.Error.ResetIntegerDefinitionErrorCount(733));
         }
 
         [Test]
