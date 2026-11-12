@@ -51,11 +51,28 @@ namespace FSM_API
                 => TheSingularityWorkshop.FSM_API.FSM_API.Create.CreateProcessingGroup(processingGroup);
         }
 
+        /// <summary>Explicitly converts definitions between string and integer representations.</summary>
+        public static class Transfer
+        {
+            /// <summary>Compiles a string-backed definition into the integer-backed representation.</summary>
+            public static FSMCompilationResult ToInteger(FSM definition, int fsmID, int processingGroupID = 0)
+                => TheSingularityWorkshop.FSM_API.FSMCompiler.Compile(definition, fsmID, processingGroupID);
+
+            /// <summary>Reconstructs a string-backed definition using an explicit reverse state-name map.</summary>
+            public static FSM ToString(
+                IntegerBacked.FSM definition,
+                string fsmName,
+                string processingGroup,
+                IReadOnlyDictionary<int, string> stateIDToName)
+                => TheSingularityWorkshop.FSM_API.FSMCompiler.Decompile(
+                    definition, fsmName, processingGroup, stateIDToName);
+        }
+
         /// <summary>Runtime interaction and lifecycle operations.</summary>
         public static class Interact
         {
             /// <summary>Updates a string-backed processing group.</summary>
-            public static void Update(string processingGroup)
+            public static void Update(string processingGroup = "Update")
                 => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Update(processingGroup);
 
             /// <summary>Updates an integer-backed processing group.</summary>
@@ -65,6 +82,69 @@ namespace FSM_API
             /// <summary>Updates all integer-backed processing groups.</summary>
             public static void UpdateAllIntegerBacked()
                 => IntegerBacked.FsmApi.Interaction.UpdateAll();
+
+            /// <summary>Moves a string-backed instance to another compatible processing group.</summary>
+            public static void MoveInstance(FSMHandle instance, string processingGroup)
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.MoveInstance(instance, processingGroup);
+
+            /// <summary>Adds or replaces a state in a string-backed definition.</summary>
+            public static void AddStateToFSM(
+                string fsmName, string stateName,
+                Action<IStateContext> onEnter, Action<IStateContext> onUpdate,
+                Action<IStateContext> onExit, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddStateToFSM(
+                    fsmName, stateName, onEnter, onUpdate, onExit, processingGroup);
+
+            /// <summary>Adds a transition to a string-backed definition.</summary>
+            public static void AddTransition(
+                string fsmName, string fromState, string toState,
+                Func<IStateContext, bool> condition, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.AddTransition(
+                    fsmName, fromState, toState, condition, processingGroup);
+
+            /// <summary>Destroys a string-backed definition and its instances.</summary>
+            public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyFiniteStateMachine(fsmName, processingGroup);
+
+            /// <summary>Destroys a string-backed instance.</summary>
+            public static void DestroyInstance(FSMHandle instance)
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.DestroyInstance(instance);
+
+            /// <summary>Returns whether a string-backed definition exists.</summary>
+            public static bool Exists(string fsmName, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.Exists(fsmName, processingGroup);
+
+            /// <summary>Returns all string-backed definition names in a processing group.</summary>
+            public static IReadOnlyCollection<string> GetAllDefinitionNames(string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetAllDefinitionNames(processingGroup);
+
+            /// <summary>Returns all live instances of a string-backed definition.</summary>
+            public static IReadOnlyList<FSMHandle> GetInstances(string fsmName, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstances(fsmName, processingGroup);
+
+            /// <summary>Returns a string-backed instance for the supplied context.</summary>
+            public static FSMHandle GetInstance(string fsmName, IStateContext context, string processingGroup)
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetInstance(fsmName, context, processingGroup);
+
+            /// <summary>Returns a string-backed FSM definition.</summary>
+            public static FSM GetFSMDefinition(string fsmName, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.GetFSMDefinition(fsmName, processingGroup);
+
+            /// <summary>Removes a processing group.</summary>
+            public static void RemoveProcessingGroup(string processingGroup)
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveProcessingGroup(processingGroup);
+
+            /// <summary>Removes a state and redirects affected instances to the specified fallback state.</summary>
+            public static void RemoveStateFromFSM(
+                string fsmName, string stateName, string fallbackStateName, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveStateFromFSM(
+                    fsmName, stateName, fallbackStateName, processingGroup);
+
+            /// <summary>Removes a transition from a string-backed definition.</summary>
+            public static void RemoveTransition(
+                string fsmName, string fromState, string toState, string processingGroup = "Update")
+                => TheSingularityWorkshop.FSM_API.FSM_API.Interaction.RemoveTransition(
+                    fsmName, fromState, toState, processingGroup);
 
             /// <summary>Returns whether an integer-backed definition is registered.</summary>
             public static bool Contains(int fsmID)
