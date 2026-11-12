@@ -301,6 +301,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void EvaluateConditions_CanRecoverUnknownCurrentStateThroughAnyStateTransition()
+        {
+            var entered = false;
+            var fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(20, _ => entered = true, null, null));
+            fsm.AddAnyStateTransition(20, _ => true);
+
+            var result = fsm.EvaluateConditions(99, new TestContext());
+
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(entered, Is.True);
+        }
+
+        [Test]
         public void EnterInitial_InvokesInitialStateEnter()
         {
             var entered = false;
