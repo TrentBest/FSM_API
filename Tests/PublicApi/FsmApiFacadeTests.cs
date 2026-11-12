@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using PublicApi = FSM_API.FsmApi;
+using PublicApi = global::FSM_API.FsmApi;
 using TheSingularityWorkshop.FSM_API;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
