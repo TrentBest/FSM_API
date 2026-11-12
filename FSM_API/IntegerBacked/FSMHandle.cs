@@ -185,16 +185,6 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
-            // Preserve the requested identity even when the definition no longer
-            // contains that state. The handle remains unentered until a valid state
-            // can be entered by a later reset or transition.
-            if (!Definition.HasState(nextStateID))
-            {
-                CurrentStateID = nextStateID;
-                HasEnteredCurrentState = false;
-                return;
-            }
-
             try
             {
                 if (!Definition.ForceTransition(CurrentStateID, nextStateID, Context, this))
