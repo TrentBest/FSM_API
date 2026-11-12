@@ -568,6 +568,14 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
 
+            /// <summary>
+            /// Executes queued structural modifications at the current safe update boundary.
+            /// </summary>
+            /// <remarks>
+            /// This method is public for advanced integrations and deterministic tests that need
+            /// to explicitly drain deferred work. Normal application code should allow the
+            /// interaction update cycle to process the queue automatically.
+            /// </remarks>
             public static void ProcessDeferredModifications()
             {
                 //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
