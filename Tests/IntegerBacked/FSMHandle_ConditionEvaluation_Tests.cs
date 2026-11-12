@@ -3,6 +3,7 @@ using TheSingularityWorkshop.FSM_API;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
@@ -147,6 +148,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(entered, Is.False);
             Assert.That(handle.CurrentStateID, Is.EqualTo(10));
             Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
+        public void EvaluateConditions_WhenExitCallbackUnregistersDefinition_DoesNotInvokeExitTwice()
+        {
+            var exits = 0;
+            var targetEnters = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(31);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ =>
+            {
+                exits++;
+                runtime.Unregister(31);
+            }));
+            fsm.AddState(new IntegerFSMState(20, _ => targetEnters++, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(31, new TestContext());
+
+            Assert.DoesNotThrow(() => handle.EvaluateConditions());
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(exits, Is.EqualTo(1));
+            Assert.That(targetEnters, Is.Zero);
+            Assert.That(runtime.GetHandleCount(0), Is.Zero);
         }
 
         private static IntegerFSM CreateFSM()
