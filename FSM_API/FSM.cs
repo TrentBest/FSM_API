@@ -63,7 +63,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// This number tells the <see cref="FSM_API.Internal.TickAll(string)"/>
-        /// method how frequently to call the FSM's <see cref="Step"/> method
+        /// method how frequently to call the FSM's <see cref="Step(string, IStateContext, out string)"/> method
         /// within its assigned <see cref="ProcessingGroup"/>.
         /// </remarks>
         /// <value>
