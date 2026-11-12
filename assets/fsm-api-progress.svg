@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="34" viewBox="0 0 260 34" role="img" aria-labelledby="title desc">
+  <title id="title">FSM_API 2.0.0 estimated development progress: 56 percent</title>
+  <desc id="desc">Weighted engineering readiness estimate across runtime, parity, identity, verification, performance, documentation, and release preparation.</desc>
+  <defs><linearGradient id="progress" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+  <rect width="260" height="34" rx="7" fill="#171923"/>
+  <path d="M7 0h112v34H7a7 7 0 0 1-7-7V7a7 7 0 0 1 7-7Z" fill="#29243b"/>
+  <text x="12" y="21.5" fill="#f3f4f6" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">FSM_API 2.0.0</text>
+  <rect x="124" y="8" width="76" height="18" rx="4" fill="#3a3d4a"/>
+  <rect x="124" y="8" width="42.56" height="18" rx="4" fill="url(#progress)"/>
+  <text x="211" y="21.5" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">56%</text>
+</svg>
