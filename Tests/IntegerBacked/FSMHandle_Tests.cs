@@ -172,6 +172,24 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void TransitionTo_MissingTargetMatchesStringBackedLifecycle()
+        {
+            var exitCount = 0;
+            var fsm = new IntegerFSM(30);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exitCount++));
+            var handle = new IntegerFSMHandle(fsm, new TestContext());
+
+            handle.TransitionTo(404);
+
+            // String-backed TryForceTransition runs the source Exit before discovering
+            // that the target is absent. The current identity remains unchanged, but
+            // the state is no longer considered entered after its Exit callback ran.
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void ForcedTransition_StopsAfterOnExitInvalidatesContext()
         {
             var targetEnterCount = 0;
