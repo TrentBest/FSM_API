@@ -231,11 +231,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             transitioned = false;
             currentStateExited = false;
-            if (!TryGetState(currentID, out _))
-            {
-                return currentID;
-            }
-
+            // Any-State transitions remain applicable even if a live handle's current
+            // state was removed from this runtime-editable definition. In that case there
+            // is no source Exit callback, but a valid Any-State target can still recover
+            // the handle. Regular transitions naturally remain inapplicable without a
+            // matching source state.
             var anyStateTransitions = _anyStateTransitions.ToArray();
             for (var i = 0; i < anyStateTransitions.Length; i++)
             {
