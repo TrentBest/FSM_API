@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using PublicApi = FSM_API.FsmApi;
 using TheSingularityWorkshop.FSM_API;
@@ -69,6 +70,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             Assert.That(PublicApi.Interact.DestroyInstance(handle), Is.True);
             Assert.That(PublicApi.Interact.GetInstances(definitionID).Count, Is.Zero);
             Assert.That(PublicApi.Interact.Unregister(definitionID), Is.True);
+        }
+
+        [Test]
+        public void ShortNamespaceErrorFacade_ExposesIntegerRuntimeDiagnostics()
+        {
+            const int definitionID = 733;
+            const int processingGroupID = 21;
+
+            var definition = PublicApi.Create.CreateFiniteStateMachine(definitionID, -1, processingGroupID)
+                .State(0, onUpdate: context => throw new InvalidOperationException("expected diagnostic test failure"))
+                .WithInitialState(0)
+                .BuildDefinition();
+            PublicApi.Create.RegisterDefinition(definition);
+
+            var handle = PublicApi.Create.CreateInstance(definitionID, new Context());
+            try
+            {
+                PublicApi.Interact.Update(processingGroupID);
+
+                var counts = PublicApi.Error.GetIntegerInstanceErrorCounts();
+                Assert.That(counts.TryGetValue(handle, out var count), Is.True);
+                Assert.That(count, Is.EqualTo(1));
+
+                PublicApi.Error.ResetIntegerInstanceErrorCount(handle);
+                Assert.That(PublicApi.Error.GetIntegerInstanceErrorCounts().ContainsKey(handle), Is.False);
+            }
+            finally
+            {
+                PublicApi.Interact.DestroyInstance(handle);
+                PublicApi.Interact.Unregister(definitionID);
+            }
         }
 
         [Test]
