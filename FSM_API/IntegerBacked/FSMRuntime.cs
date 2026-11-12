@@ -41,14 +41,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             if (_definitions[definition.FSM_ID] != null)
             {
+                _definitions[definition.FSM_ID] = null;
                 _definitionErrorCounts.Remove(definition.FSM_ID);
-                for (var i = _handles.Count - 1; i >= 0; i--)
-                {
-                    if (_handles[i].FSM_ID == definition.FSM_ID)
-                    {
-                        RemoveHandleAt(i);
-                    }
-                }
+                RemoveDefinitionInstances(definition.FSM_ID);
             }
 
             _definitions[definition.FSM_ID] = definition;
@@ -159,14 +154,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _definitions[fsmID] = null;
             _processCounters[fsmID] = 0;
             _definitionErrorCounts.Remove(fsmID);
-
-            for (var i = _handles.Count - 1; i >= 0; i--)
-            {
-                if (_handles[i].FSM_ID == fsmID)
-                {
-                    RemoveHandleAt(i);
-                }
-            }
+            RemoveDefinitionInstances(fsmID);
 
             return true;
         }
@@ -327,6 +315,34 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                         RemoveInstance(handle);
                     }
                 }
+            }
+        }
+
+        private void RemoveDefinitionInstances(int fsmID)
+        {
+            // Detach every matching handle before invoking any Exit callback. Exit
+            // callbacks are user code and may re-enter this runtime; removing handles
+            // one at a time while iterating _handles lets nested removals invalidate
+            // the outer loop's indexes or leave siblings behind.
+            var removed = new List<FSMHandleInt>();
+            for (var i = _handles.Count - 1; i >= 0; i--)
+            {
+                var handle = _handles[i];
+                if (handle.FSM_ID != fsmID)
+                {
+                    continue;
+                }
+
+                _handles.RemoveAt(i);
+                handle.IsRegistered = false;
+                handle.IsPendingDestruction = false;
+                _instanceErrorCounts.Remove(handle);
+                removed.Add(handle);
+            }
+
+            for (var i = 0; i < removed.Count; i++)
+            {
+                removed[i].DestroyHandle();
             }
         }
 
