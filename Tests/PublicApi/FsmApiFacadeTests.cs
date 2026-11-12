@@ -41,6 +41,55 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             Assert.That(context.Updates, Is.EqualTo(1));
         }
 
+
+        [Test]
+        public void ShortNamespaceFacade_CreatesAndUpdatesIntegerBackedInstance()
+        {
+            const int definitionID = 731;
+            const int processingGroupID = 19;
+
+            PublicApi.Create.CreateFiniteStateMachine(definitionID, -1, processingGroupID)
+                .State(0, onUpdate: context => ((Context)context).Updates++)
+                .WithInitialState(0)
+                .BuildDefinition();
+
+            var context = new Context();
+            var handle = PublicApi.Create.CreateInstance(definitionID, context);
+
+            PublicApi.Interact.Update(processingGroupID);
+
+            Assert.That(handle, Is.Not.Null);
+            Assert.That(handle.IsValid, Is.True);
+            Assert.That(context.Updates, Is.EqualTo(1));
+            Assert.That(PublicApi.Interact.Contains(definitionID), Is.True);
+
+            Assert.That(PublicApi.Interact.Unregister(definitionID), Is.True);
+        }
+
+        [Test]
+        public void ShortNamespaceTransferFacade_CompilesAndDecompilesDefinitions()
+        {
+            const string definitionName = "PublicFacadeTransferTest";
+            const string group = "PublicFacadeTransferGroup";
+
+            PublicApi.Create.CreateFiniteStateMachine(definitionName, -1, group)
+                .State("Active", null, null, null)
+                .WithInitialState("Active")
+                .BuildDefinition();
+
+            var source = PublicApi.Interact.GetFSMDefinition(definitionName, group);
+            var compiled = PublicApi.Transfer.ToInteger(source, 732, 20);
+
+            Assert.That(compiled.Definition.FSM_ID, Is.EqualTo(732));
+            Assert.That(compiled.StateNameToID["Active"], Is.EqualTo(0));
+
+            var reconstructed = PublicApi.Transfer.ToString(
+                compiled.Definition, "PublicFacadeTransferRoundTrip", group, compiled.StateIDToName);
+
+            Assert.That(reconstructed.Name, Is.EqualTo("PublicFacadeTransferRoundTrip"));
+            Assert.That(reconstructed.InitialState, Is.EqualTo("Active"));
+        }
+
         [Test]
         public void ShortNamespaceErrorFacade_ForwardsDiagnosticNotifications()
         {
