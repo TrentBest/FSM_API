@@ -76,9 +76,31 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             var handle = new FSMHandleInt(definition, context, _nextHandleID++);
-            handle.Initialize();
+
+            // Track the handle before invoking user code. The initial Enter callback
+            // may re-enter this runtime and unregister or replace its own definition.
+            // Registering first ensures that those lifecycle operations can see and
+            // tear down the in-progress handle rather than leaving it orphaned.
             handle.IsRegistered = true;
             _handles.Add(handle);
+
+            try
+            {
+                handle.Initialize();
+            }
+            catch
+            {
+                // Initialization did not complete. Remove the partially-created
+                // handle from runtime ownership before preserving the original error.
+                var index = _handles.IndexOf(handle);
+                if (index >= 0)
+                {
+                    RemoveHandleAt(index);
+                }
+
+                throw;
+            }
+
             return handle;
         }
 
