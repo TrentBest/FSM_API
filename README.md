@@ -41,7 +41,7 @@ FsmApi.Create.CreateFiniteStateMachine();
 FsmApi.Interact.Update("Update");
 ```
 
-The `FSM_API` namespace facade is now implemented additively on `development`, with `Create`, `Interact`, and `Error` modules. It forwards to the existing string-backed runtime and exposes the currently supported integer-backed creation, transfer, and interaction entry points. Returned runtime types still live in the established `TheSingularityWorkshop.FSM_API` namespaces during this compatibility phase; a full type-namespace migration is not implied. The Error facade currently forwards the string-backed diagnostic system, so integer-backed diagnostic parity remains open. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
+The `FSM_API` namespace facade is now implemented additively on `development`, with `Create`, `Interact`, and `Error` modules. It forwards to the existing string-backed runtime and exposes the currently supported integer-backed creation, transfer, and interaction entry points. Returned runtime types still live in the established `TheSingularityWorkshop.FSM_API` namespaces during this compatibility phase; a full type-namespace migration is not implied. The Error facade forwards both the string-backed diagnostic system and the currently exposed integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
 
 ### What moves the estimate
 
@@ -50,7 +50,7 @@ The `FSM_API` namespace facade is now implemented additively on `development`, w
 - **Error:** diagnostics, thresholds, exception paths, and explicit shutdown behavior must be coherent and testable.
 - **String/integer parity:** every supported string capability must have an equivalent integer-backed capability, demonstrated by equivalent observable traces—not merely by the presence of two implementations.
 - **Identity:** deterministic IDs, reverse diagnostic mappings, and storage/versioning boundaries must be explicit.
-- **Verification:** the latest known PR validation [run #848](https://github.com/TrentBest/FSM_API/actions/runs/43166172644) reported **463 passed and 1 failed**. The invalid-context parity failure must be reconciled before the gate is green.
+- **Verification:** the latest current-development validation [run #926](https://github.com/TrentBest/FSM_API/actions/runs/43313725213) completed successfully with **480 passed, 0 failed, 0 skipped** on .NET 8. The package artifact and documentation artifact were generated, documentation links validated, and Codecov upload succeeded. The conditional Sith and NuGet publication jobs were skipped. This validates the current head only; it does not close the broader parity or release gates.
 - **Performance:** a reproducible equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
 - **Workshop documentation:** existing material is treated as a substantial first draft. The 2.0 pass must elevate it into an implementation-linked learning and reference system with accurate API docs, executable examples, conceptual models, diagrams, operational truth, and maintenance rules.
 - **Release governance:** preserve unique branch work and reconcile history before reducing the repository to `master` and `development`.
