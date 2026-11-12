@@ -935,6 +935,7 @@ namespace TheSingularityWorkshop.FSM_API
                         {
 
                            
+                            var exitStarted = false;
                             try
                             {
                                 if (!handle.HasEnteredCurrentState)
@@ -994,6 +995,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                                     if (result)
                                     {
+                                        exitStarted = true;
                                         bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
 
                                         // OnExit may suspend this context. Do not commit the
@@ -1012,6 +1014,14 @@ namespace TheSingularityWorkshop.FSM_API
                             }
                             catch (Exception ex)
                             {
+                                // An exit callback may invalidate the context and then throw.
+                                // The transition was not committed, but the state must be re-entered
+                                // before this still-registered handle resumes.
+                                if (exitStarted && handle.Context != null && !handle.Context.IsValid)
+                                {
+                                    handle.HasEnteredCurrentState = false;
+                                }
+
                                 Error.InvokeInstanceError(handle,
                                     $"Error during FSM instance '{handle.Name}' update in state '{handle.CurrentState}'.", // Added a descriptive message
                                     ex, processingGroup);
