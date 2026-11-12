@@ -78,12 +78,153 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             fsm.AddState(new IntegerFSMState(10, null, _ => updates++, null));
             var runtime = new IntegerFSMRuntime();
             runtime.Register(fsm);
-            var context = new TestContext { IsValid = false };
-            runtime.CreateInstance(7, context);
+            var context = new TestContext();
+            var handle = runtime.CreateInstance(7, context);
+            context.IsValid = false;
 
             runtime.UpdateAll();
 
             Assert.That(updates, Is.EqualTo(0));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+
+            context.IsValid = true;
+            runtime.UpdateAll();
+
+            Assert.That(updates, Is.EqualTo(1));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void UpdateAll_InvalidationDuringOnUpdateStopsTransitionAndResumesSameHandle()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            var guardCount = 0;
+            var exitCount = 0;
+            var suspendOnce = true;
+
+            var fsm = new IntegerFSM(17, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, _ => enterCount++, context =>
+            {
+                updateCount++;
+                if (suspendOnce)
+                {
+                    suspendOnce = false;
+                    context.IsValid = false;
+                }
+            }, _ => exitCount++));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ => { guardCount++; return true; });
+
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var context = new TestContext();
+            var handle = runtime.CreateInstance(17, context);
+
+            runtime.UpdateAll();
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+
+            context.IsValid = true;
+            runtime.UpdateAll();
+
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(2));
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void UpdateAll_InvalidationDuringTransitionGuardPreventsExitAndCommit()
+        {
+            var guardCount = 0;
+            var exitCount = 0;
+            var suspendOnce = true;
+
+            var fsm = new IntegerFSM(18, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => exitCount++));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, context =>
+            {
+                guardCount++;
+                if (suspendOnce)
+                {
+                    suspendOnce = false;
+                    context.IsValid = false;
+                    return true;
+                }
+                return false;
+            });
+
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var context = new TestContext();
+            var handle = runtime.CreateInstance(18, context);
+
+            runtime.UpdateAll();
+
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            context.IsValid = true;
+            runtime.UpdateAll();
+
+            Assert.That(guardCount, Is.EqualTo(2));
+            Assert.That(exitCount, Is.Zero);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void UpdateAll_InvalidationDuringOnExitDoesNotCommitAndReentersOnResume()
+        {
+            var enterCount = 0;
+            var exitCount = 0;
+            var suspendOnce = true;
+
+            var fsm = new IntegerFSM(19, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, _ => enterCount++, null, context =>
+            {
+                exitCount++;
+                if (suspendOnce)
+                {
+                    suspendOnce = false;
+                    context.IsValid = false;
+                }
+            }));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            fsm.AddTransition(10, 20, _ => true);
+
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var context = new TestContext();
+            var handle = runtime.CreateInstance(19, context);
+
+            runtime.UpdateAll();
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(handle.IsDestroyed, Is.False);
+
+            context.IsValid = true;
+            runtime.UpdateAll();
+
+            Assert.That(enterCount, Is.EqualTo(2));
+            Assert.That(exitCount, Is.EqualTo(2));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(handle.IsDestroyed, Is.False);
         }
 
         [Test]
