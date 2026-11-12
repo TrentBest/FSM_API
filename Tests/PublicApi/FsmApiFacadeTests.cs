@@ -48,10 +48,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             const int definitionID = 731;
             const int processingGroupID = 19;
 
-            PublicApi.Create.CreateFiniteStateMachine(definitionID, -1, processingGroupID)
+            var definition = PublicApi.Create.CreateFiniteStateMachine(definitionID, -1, processingGroupID)
                 .State(0, onUpdate: context => ((Context)context).Updates++)
                 .WithInitialState(0)
                 .BuildDefinition();
+            PublicApi.Create.RegisterDefinition(definition);
 
             var context = new Context();
             var handle = PublicApi.Create.CreateInstance(definitionID, context);
