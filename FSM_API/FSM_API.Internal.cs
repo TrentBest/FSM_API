@@ -943,6 +943,7 @@ namespace TheSingularityWorkshop.FSM_API
                         {
 
                            
+                            var exitStarted = false;
                             try
                             {
                                 if (!handle.HasEnteredCurrentState)
@@ -950,9 +951,23 @@ namespace TheSingularityWorkshop.FSM_API
                                    //1.0.13 fixed from always using the initial state to using the current state.
                                     bucket.Definition.GetState(handle.CurrentState).Enter(handle.Context);
                                     handle.HasEnteredCurrentState = true;
+
+                                    // OnEnter may suspend this context. The entry callback has
+                                    // completed, but no later callback may run in this tick.
+                                    if (!handle.Context.IsValid)
+                                    {
+                                        continue;
+                                    }
                                 }
-                                
+
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
+
+                                // OnUpdate may suspend the context. Do not evaluate guards
+                                // or transition callbacks after the execution gate closes.
+                                if (!handle.Context.IsValid)
+                                {
+                                    continue;
+                                }
 
                                 // GetAllTransitions returns Any-State transitions before state-specific
                                 // transitions. Recognize both the public sentinel and the builder's
@@ -977,9 +992,27 @@ namespace TheSingularityWorkshop.FSM_API
                                     }
 
                                     var result = transition.Condition.Invoke(handle.Context);
+
+                                    // Transition conditions are user callbacks too. If a guard
+                                    // closes the gate, stop evaluating this handle immediately.
+                                    if (!handle.Context.IsValid)
+                                    {
+                                        break;
+                                    }
+
                                     if (result)
                                     {
+                                        exitStarted = true;
                                         bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
+
+                                        // Do not commit a transition after OnExit suspends the
+                                        // context. Re-enter the current state when it resumes.
+                                        if (!handle.Context.IsValid)
+                                        {
+                                            handle.HasEnteredCurrentState = false;
+                                            break;
+                                        }
+
                                         handle.CurrentState = transition.To;
                                         handle.HasEnteredCurrentState = false;
                                         break;
@@ -988,6 +1021,13 @@ namespace TheSingularityWorkshop.FSM_API
                             }
                             catch (Exception ex)
                             {
+                                // OnExit may invalidate the context and then throw. The
+                                // transition was not committed; resume by re-entering this state.
+                                if (exitStarted && handle.Context != null && !handle.Context.IsValid)
+                                {
+                                    handle.HasEnteredCurrentState = false;
+                                }
+
                                 Error.InvokeInstanceError(handle,
                                     $"Error during FSM instance '{handle.Name}' update in state '{handle.CurrentState}'.", // Added a descriptive message
                                     ex, processingGroup);
