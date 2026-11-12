@@ -133,8 +133,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var stringTrace = new List<string>();
             var integerTrace = new List<string>();
-            var stringContext = new LifecycleContext(stringTrace) { IsValid = false };
-            var integerContext = new LifecycleContext(integerTrace) { IsValid = false };
+            var stringContext = new LifecycleContext(stringTrace);
+            var integerContext = new LifecycleContext(integerTrace);
 
             var stringDefinition = new StringFsm { Name = "StringInvalidContextParity" };
             stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
@@ -146,6 +146,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             var stringHandle = new StringFsmHandle(stringDefinition, stringContext);
             var integerHandle = new IntegerFsmHandle(integerDefinition, integerContext);
+            // Handle construction initializes context validity. Suspend both handles
+            // afterward so this test exercises the invalid-context execution gate.
+            stringContext.IsValid = false;
+            integerContext.IsValid = false;
             integerHandle.Initialize();
             stringHandle.Update();
             integerHandle.Update();
