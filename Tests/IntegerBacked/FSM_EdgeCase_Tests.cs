@@ -300,6 +300,23 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
+        public void Handle_Initialize_WhenEnterRemovesInitialState_DoesNotAdoptReplacementInitial()
+        {
+            IntegerFSM fsm = null;
+            fsm = new IntegerFSM(1);
+            fsm.AddState(new IntegerFSMState(10, _ => fsm.RemoveState(10), null, null));
+            fsm.AddState(new IntegerFSMState(20, null, null, null));
+            var handle = new TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle(
+                fsm, new TestContext());
+
+            handle.Initialize();
+
+            Assert.That(fsm.InitialStateID, Is.EqualTo(20));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(10));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+        }
+
+        [Test]
         public void Handle_ResetWithMissingInitialState_DoesNotMarkStateEntered()
         {
             var fsm = new IntegerFSM(1);
