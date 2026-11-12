@@ -63,7 +63,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
             Assert.That(handle.IsValid, Is.True);
             Assert.That(context.Updates, Is.EqualTo(1));
             Assert.That(PublicApi.Interact.Contains(definitionID), Is.True);
+            Assert.That(PublicApi.Interact.GetFSMDefinition(definitionID), Is.SameAs(definition));
+            Assert.That(PublicApi.Interact.GetInstances(definitionID).Count, Is.EqualTo(1));
 
+            Assert.That(PublicApi.Interact.DestroyInstance(handle), Is.True);
+            Assert.That(PublicApi.Interact.GetInstances(definitionID).Count, Is.Zero);
             Assert.That(PublicApi.Interact.Unregister(definitionID), Is.True);
         }
 
