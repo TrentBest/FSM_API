@@ -207,7 +207,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public int EvaluateConditions(int currentID, IStateContext context)
         {
-            return EvaluateConditions(currentID, context, out _);
+            return EvaluateConditions(currentID, context, out _, out _, null);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </summary>
         public int EvaluateConditions(int currentID, IStateContext context, out bool transitioned)
         {
-            return EvaluateConditions(currentID, context, out transitioned, out _);
+            return EvaluateConditions(currentID, context, out transitioned, out _, null);
         }
 
         /// <summary>
@@ -223,6 +223,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// without a target being entered.
         /// </summary>
         public int EvaluateConditions(int currentID, IStateContext context, out bool transitioned, out bool currentStateExited)
+        {
+            return EvaluateConditions(currentID, context, out transitioned, out currentStateExited, null);
+        }
+
+        internal int EvaluateConditions(int currentID, IStateContext context, out bool transitioned, out bool currentStateExited, FSMHandle owner)
         {
             transitioned = false;
             currentStateExited = false;
@@ -237,20 +242,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 var transition = anyStateTransitions[i];
                 if (!TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
+                    if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
                     continue;
                 }
 
-                // A guard is user code and may remove its own target state.
-                if (!TryGetState(transition.ToID, out _))
+                // Guards are user code and may unregister the owning definition.
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
+                if (!TryGetState(transition.ToID, out _)) continue;
+
+                ForceTransition(currentID, transition.ToID, context, owner);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
-                    continue;
+                    currentStateExited = true;
+                    return currentID;
                 }
 
-                ForceTransition(currentID, transition.ToID, context);
-
-                // The source Exit callback can mutate the definition and remove its
-                // own target. Match the string-backed handle: retain the source identity
-                // and leave entry bookkeeping false when the target was not entered.
                 if (!TryGetState(transition.ToID, out _))
                 {
                     currentStateExited = true;
@@ -267,19 +273,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 var transition = transitions[i];
                 if (transition.FromID != currentID || !TryGetState(transition.ToID, out _) || !EvaluateCondition(transition, currentID, context))
                 {
+                    if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
                     continue;
                 }
 
-                // A guard is user code and may remove its own target state.
-                if (!TryGetState(transition.ToID, out _))
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction)) return currentID;
+                if (!TryGetState(transition.ToID, out _)) continue;
+
+                ForceTransition(currentID, transition.ToID, context, owner);
+                if (owner != null && (owner.IsDestroyed || owner.IsPendingDestruction))
                 {
-                    continue;
+                    currentStateExited = true;
+                    return currentID;
                 }
 
-                ForceTransition(currentID, transition.ToID, context);
-
-                // The source Exit callback can mutate the definition and remove its
-                // own target. Preserve the source identity and report that Exit ran.
                 if (!TryGetState(transition.ToID, out _))
                 {
                     currentStateExited = true;
