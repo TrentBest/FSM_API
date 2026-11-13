@@ -153,7 +153,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 else
                 {
-                    FsmApi.Error.InvokeInternalApiError($"Integer FSMHandle {FSM_ID} failed during update.", failure);
+                    global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError($"Integer FSMHandle {FSM_ID} failed during update.", failure);
                 }
             }
         }
@@ -213,7 +213,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 else
                 {
-                    FsmApi.Error.InvokeInternalApiError($"Transition to integer state {nextStateID} failed for FSM handle {Id}.", ex);
+                    global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError($"Transition to integer state {nextStateID} failed for FSM handle {Id}.", ex);
                 }
                 throw;
             }
@@ -278,7 +278,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 catch (Exception ex)
                 {
-                    FsmApi.Error.InvokeInternalApiError(
+                    global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Error during teardown of integer FSM '{FSM_ID}' handle '{Id}' in state '{CurrentStateID}'.",
                         ex);
                 }
