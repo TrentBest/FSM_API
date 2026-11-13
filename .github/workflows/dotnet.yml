@@ -54,6 +54,8 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
+      # A Codecov outage/signature-verification failure must not suppress build artifacts or docs.
+      continue-on-error: true
 
     - name: Rename DLLs before upload
       run: |
