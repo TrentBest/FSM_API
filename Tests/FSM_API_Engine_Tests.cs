@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -33,18 +33,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             int updateCount = 0;
             string fsmName = "ThrottledFSM";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: processRate)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processRate: processRate)
                 .State("Idle",null,
                     onUpdate: (ctx) => updateCount++, null) // Increment counter every time Update actually runs
                 .BuildDefinition();
 
-            FSM_API.Create.CreateInstance(fsmName, new MockContext());
+            FsmApi.Create.CreateInstance(fsmName, new MockContext());
 
             // ACT
             // Simulate 10 frames of the engine
             for (int i = 0; i < 10; i++)
             {
-                FSM_API.Interaction.Update();
+                FsmApi.Interaction.Update();
             }
 
             // ASSERT
@@ -79,15 +79,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             var ctxB = new MockContext { Name = "Victim" };
 
             // Define FSM
-            FSM_API.Create.CreateFiniteStateMachine("ZombieTestFSM", processRate: -1, "Update")
+            FsmApi.Create.CreateFiniteStateMachine("ZombieTestFSM", processRate: -1, "Update")
                 .State("Active", null,
                     onUpdate: (ctx) =>
                     {
                         if (ctx == ctxA)
                         {
                             // A kills B
-                            var handleB = FSM_API.Interaction.GetInstance("ZombieTestFSM", ctxB, "Update");
-                            if (handleB != null) FSM_API.Interaction.DestroyInstance(handleB);
+                            var handleB = FsmApi.Interaction.GetInstance("ZombieTestFSM", ctxB, "Update");
+                            if (handleB != null) FsmApi.Interaction.DestroyInstance(handleB);
                         }
                         else if (ctx == ctxB)
                         {
@@ -98,11 +98,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
                 .BuildDefinition();
 
             // Create instances. Ensure A is processed before B (List order usually follows creation order)
-            FSM_API.Create.CreateInstance("ZombieTestFSM", ctxA);
-            FSM_API.Create.CreateInstance("ZombieTestFSM", ctxB);
+            FsmApi.Create.CreateInstance("ZombieTestFSM", ctxA);
+            FsmApi.Create.CreateInstance("ZombieTestFSM", ctxB);
 
             // ACT
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
 
             // ASSERT
             Assert.That(zombieUpdated, Is.False,
@@ -120,32 +120,32 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             string fsmName = "ReusableFSM";
             int updateCount = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processRate: -1, processingGroup: "Update")
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processRate: -1, processingGroup: "Update")
                 .State("Active", null, onUpdate: _ => updateCount++, null)
                 .BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance(fsmName, context);
+            var handle = FsmApi.Create.CreateInstance(fsmName, context);
 
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
             Assert.That(updateCount, Is.EqualTo(1));
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1));
 
             context.IsValid = false;
-            FSM_API.Interaction.Update();
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
+            FsmApi.Interaction.Update();
             handle.Update();
             handle.EvaluateConditions();
 
             Assert.That(updateCount, Is.EqualTo(1), "Scheduled and manual execution must skip an invalid context.");
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1),
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1),
                 "Invalidating must preserve the registered handle for reuse.");
             Assert.That(handle.IsValid, Is.False);
 
             context.IsValid = true;
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
 
             Assert.That(updateCount, Is.EqualTo(2), "Revalidating should resume the same handle.");
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
-            Assert.That(FSM_API.Interaction.GetInstance(fsmName, context, "Update"), Is.SameAs(handle));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            Assert.That(FsmApi.Interaction.GetInstance(fsmName, context, "Update"), Is.SameAs(handle));
         }
 
         [Test]
@@ -156,37 +156,37 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Engine
             int secondUpdates = 0;
             int firstExits = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine("SharedContextA", processRate: -1, processingGroup: "Update")
+            FsmApi.Create.CreateFiniteStateMachine("SharedContextA", processRate: -1, processingGroup: "Update")
                 .State("Active", null, onUpdate: _ => firstUpdates++, onExit: _ => firstExits++)
                 .BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("SharedContextB", processRate: -1, processingGroup: "Update")
+            FsmApi.Create.CreateFiniteStateMachine("SharedContextB", processRate: -1, processingGroup: "Update")
                 .State("Active", null, onUpdate: _ => secondUpdates++, onExit: null)
                 .BuildDefinition();
 
-            var firstHandle = FSM_API.Create.CreateInstance("SharedContextA", context);
-            var secondHandle = FSM_API.Create.CreateInstance("SharedContextB", context);
+            var firstHandle = FsmApi.Create.CreateInstance("SharedContextA", context);
+            var secondHandle = FsmApi.Create.CreateInstance("SharedContextB", context);
 
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
             Assert.That(firstUpdates, Is.EqualTo(1));
             Assert.That(secondUpdates, Is.EqualTo(1));
 
-            FSM_API.Interaction.DestroyInstance(firstHandle);
+            FsmApi.Interaction.DestroyInstance(firstHandle);
 
             Assert.That(context.IsValid, Is.True,
                 "Destroying an FSM handle must not invalidate the caller-owned shared context.");
             Assert.That(firstExits, Is.EqualTo(1),
                 "Explicit handle destruction should still execute the target state's exit callback.");
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1),
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1),
                 "Only the explicitly targeted handle should be unregistered.");
 
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
 
             Assert.That(firstUpdates, Is.EqualTo(1),
                 "The destroyed handle must no longer be scheduled.");
             Assert.That(secondUpdates, Is.EqualTo(2),
                 "A different live handle sharing the same context must continue processing.");
             Assert.That(context.IsValid, Is.True);
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(1));
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [SetUp]
         public void SetUp()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStatePrecedence";
             const string group = "AnyStatePrecedenceTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .State("C", _ => trace.Add("enter:C"), null, null)
@@ -35,7 +35,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .AnyTransition("C", _ => { trace.Add("guard:any:C"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.Update(group);
@@ -56,14 +56,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateOnly";
             const string group = "AnyStateOnlyTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .State("B", null, null, null)
                 .WithInitialState("A")
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.Update(group);
@@ -84,7 +84,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateNoMatch";
             const string group = "AnyStateNoMatchTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .State("B", null, null, null)
                 .State("C", null, null, null)
@@ -93,7 +93,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .Transition("A", "C", _ => { trace.Add("guard:regular"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.Update(group);
@@ -114,7 +114,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateInvalidTarget";
             const string group = "AnyStateInvalidTargetTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .State("B", null, null, null)
                 .WithInitialState("A")
@@ -122,7 +122,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.Update(group);
@@ -143,16 +143,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateScheduled";
             const string group = "AnyStateScheduledTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, group)
                 .State("A", _ => trace.Add("enter:A"), _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .WithInitialState("A")
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
 
-            FSM_API.Interaction.Update(group);
+            FsmApi.Interaction.Update(group);
 
             Assert.That(handle.CurrentState, Is.EqualTo("B"));
             Assert.That(trace, Does.Contain("guard:any:B"));
@@ -166,12 +166,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "ManualLifecycle";
             const string group = "ManualLifecycleTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", _ => trace.Add("enter:A"), _ => trace.Add("update:A"), _ => trace.Add("exit:A"))
                 .WithInitialState("A")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             handle.Update(group);
 
             Assert.That(handle.HasEnteredCurrentState, Is.True);
@@ -264,14 +264,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateManualEvaluation";
             const string group = "AnyStateManualEvaluationTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", _ => trace.Add("enter:A"), null, _ => trace.Add("exit:A"))
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .WithInitialState("A")
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.EvaluateConditions();
@@ -292,7 +292,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateManualPrecedence";
             const string group = "AnyStateManualPrecedenceTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, null, _ => trace.Add("exit:A"))
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .State("C", _ => trace.Add("enter:C"), null, null)
@@ -301,7 +301,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.EvaluateConditions();
@@ -316,7 +316,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateManualInvalidTarget";
             const string group = "AnyStateManualInvalidTargetTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, null, null)
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .WithInitialState("A")
@@ -324,7 +324,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return true; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.EvaluateConditions();
@@ -339,7 +339,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "AnyStateManualNoMatch";
             const string group = "AnyStateManualNoMatchTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, null, _ => trace.Add("exit:A"))
                 .State("B", _ => trace.Add("enter:B"), null, null)
                 .WithInitialState("A")
@@ -347,7 +347,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .Transition("A", "B", _ => { trace.Add("guard:regular"); return false; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             trace.Clear();
 
             handle.EvaluateConditions();
@@ -365,7 +365,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             const string fsmName = "StepTargetRemovedByExit";
             const string group = "StepTargetRemovedByExitTests";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, group)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, group)
                 .State("A", null, _ => trace.Add("update:A"), _ =>
                 {
                     trace.Add("exit:A");
@@ -376,7 +376,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 .AnyTransition("B", _ => { trace.Add("guard:any:B"); return allowTransition; })
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(fsmName, new Context(), group);
+            var handle = FsmApi.Create.CreateInstance(fsmName, new Context(), group);
             definition = handle.Definition;
             handle.Update(group); // Enter A and leave the transition guard false.
             trace.Clear();

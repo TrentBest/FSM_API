@@ -29,7 +29,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         {
             // Resets the API to ensure a clean state before each test run.
             // The 'true' parameter indicates a full reset, clearing all buckets.
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -165,10 +165,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         //public void WithProcessingGroup_ValidGroup_SetsProcessingGroup()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateProcessingGroup(ValidProcessingGroup);
+        //    FsmApi.Create.CreateProcessingGroup(ValidProcessingGroup);
         //    CreateFSMDefinition();
 
-        //    var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
+        //    var definition = FsmApi.Interaction.GetFSMDefinition(FsmName);
         //    // Assert
         //    // Verify that the processing group was correctly assigned to the FSM definition.
         //    Assert.That(definition.ProcessingGroup, Is.EqualTo(ValidProcessingGroup));
@@ -176,7 +176,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
         private static void CreateFSMDefinition()
         {
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // Act
             builder.WithProcessRate(rate);
             builder.BuildDefinition();
-            var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
+            var definition = FsmApi.Interaction.GetFSMDefinition(FsmName);
             // Assert
             Assert.That(definition.ProcessRate, Is.EqualTo(rate));
         }
@@ -216,7 +216,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         //public void WithProcessRate_NegativeRate_ThrowsArgumentOutOfRangeException()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup)
+        //    FsmApi.Create.CreateFiniteStateMachine(FsmName, processRate, processingGroup)
         //         .State(InitialStateName, null, null, null)
         //         .BuildDefinition();
 
@@ -238,7 +238,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             // Act
             builder.BuildDefinition();
-            var definition = FSM_API.Interaction.GetFSMDefinition(FsmName);
+            var definition = FsmApi.Interaction.GetFSMDefinition(FsmName);
             // Assert
             // Verify the core properties of the built FSM definition.
             Assert.That(definition, Is.Not.Null);
@@ -275,7 +275,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             builder.WithInitialState("Idle");
             builder.BuildDefinition();
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("TestFSM", "Update");
 
             // Assert
             Assert.That(fsm, Is.Not.Null);
@@ -310,7 +310,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             builder.Transition("StateA", "StateB", (ctx) => true);
             builder.BuildDefinition();
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("TestFSM", "Update");
 
             // Assert
             Assert.That(fsm, Is.Not.Null);
@@ -344,7 +344,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             builder.AnyTransition("StateB", (ctx) => true);
             builder.BuildDefinition();
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("TestFSM", "Update");
 
             // Assert
             Assert.That(fsm, Is.Not.Null);
@@ -387,7 +387,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.DoesNotThrow(() => builder.Build());
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("UnNamedFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("UnNamedFSM", "Update");
             Assert.That(fsm, Is.Not.Null);
             Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0));
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0));
@@ -400,9 +400,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void CreateFiniteStateMachine_WithManualRateAndNoStates_BuildsEmptyDefinition()
         {
             Assert.DoesNotThrow(() =>
-                FSM_API.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition());
+                FsmApi.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition());
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("Works", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("Works", "Update");
             Assert.That(fsm, Is.Not.Null);
             Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0));
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0));
@@ -421,7 +421,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             // The BuildDefinition method now gracefully handles an FSM with no states, returning a valid but empty FSM.
             // Therefore, we no longer expect an exception, but can assert on the resulting FSM properties.
             Assert.DoesNotThrow(() => builder.BuildDefinition(), "BuildDefinition should not throw an exception when no states are added.");
-            var fsm = FSM_API.Internal.GetFsmDefinition("TestFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("TestFSM", "Update");
             Assert.That(fsm, Is.Not.Null, "An empty definition should still be registered.");
             Assert.That(fsm.GetAllStates().Count, Is.EqualTo(0), "FSM should have no states.");
             Assert.That(fsm.GetAllTransitions().Count, Is.EqualTo(0), "FSM should have no transitions.");
@@ -441,7 +441,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             builder.WithProcessRate(customRate);
             builder.BuildDefinition();
 
-            var fsm = FSM_API.Internal.GetFsmDefinition("ProcessRateTestFSM", "Update");
+            var fsm = FsmApi.Internal.GetFsmDefinition("ProcessRateTestFSM", "Update");
 
             // Assert
             Assert.That(fsm, Is.Not.Null);
