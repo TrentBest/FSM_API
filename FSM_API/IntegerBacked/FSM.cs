@@ -552,7 +552,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
                     $"Error during Enter logic of integer state '{toID}' during forced transition from '{fromID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
-                if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
+
+                // The target identity is committed before Enter so that re-entrant
+                // teardown exits the state whose Enter callback is running. If Enter
+                // fails without destroying the handle, restore the source identity;
+                // the source has already exited and therefore is no longer entered.
+                if (owner != null && !owner.IsDestroyed && !owner.IsPendingDestruction)
+                {
+                    owner.CurrentStateID = fromID;
+                    owner.HasEnteredCurrentState = false;
+                }
+
                 throw;
             }
 
