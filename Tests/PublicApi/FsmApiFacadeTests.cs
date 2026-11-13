@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using ShortApi = global::FSM_API.FsmApi;
+using ShortApi = global::FsmApi.FsmApi;
 using TheSingularityWorkshop.FSM_API;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
@@ -18,7 +18,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
         [SetUp]
         public void SetUp()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.PublicApi
         public void ShortNamespaceErrorFacade_ForwardsDiagnosticNotifications()
         {
             string observedMessage = null;
-            TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler handler =
+            TheSingularityWorkshop.FSM_API.FsmApi.Error.InternalApiErrorEventHandler handler =
                 (message, exception) => observedMessage = message;
 
             ShortApi.Error.OnInternalApiError += handler;
