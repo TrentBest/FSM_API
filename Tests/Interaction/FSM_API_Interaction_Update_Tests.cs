@@ -808,6 +808,40 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         }
 
         [Test]
+        public void DestroyingDefinitionDuringManualGuardStopsRemainingCandidates()
+        {
+            var firstGuardCount = 0;
+            var secondGuardCount = 0;
+            var exitCount = 0;
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, _ => exitCount++)
+                .State("StateB", null, null, null)
+                .State("StateC", null, null, null)
+                .Transition("StateA", "StateB", _ =>
+                {
+                    firstGuardCount++;
+                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    return false;
+                })
+                .Transition("StateA", "StateC", _ =>
+                {
+                    secondGuardCount++;
+                    return true;
+                })
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            handle.EvaluateConditions();
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(firstGuardCount, Is.EqualTo(1));
+            Assert.That(secondGuardCount, Is.Zero);
+            Assert.That(exitCount, Is.EqualTo(1));
+        }
+
+        [Test]
         public void DestroyingDefinitionInsideExitDoesNotInvokeExitTwice()
         {
             var exitCount = 0;
