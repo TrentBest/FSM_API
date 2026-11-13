@@ -6,8 +6,10 @@ using System.Linq;
 
 namespace TheSingularityWorkshop.FSM_API
 {
+/// <summary>The authoritative FsmApi entry point for timer utilities.</summary>
 public static partial class FsmApi
     {
+        /// <summary>Hosts timer utilities alongside the FSM interaction surface.</summary>
 public static partial class Interaction
         {
             /// <summary>

@@ -7,6 +7,7 @@ namespace TheSingularityWorkshop.FSM_API
     /// </summary>
     public static partial class FsmApi
     {
+        /// <summary>Explicitly converts definitions between the independent string and integer runtimes.</summary>
         public static class Transfer
         {
             /// <summary>Compiles a string-backed definition to integer-backed form with a deterministic state-name mapping.</summary>
