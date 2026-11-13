@@ -898,5 +898,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(targetEnterCount, Is.Zero);
             Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         }
+        [Test]
+        public void DestroyingDefinitionDuringForcedTargetEnterExitsTargetNotSourceAgain()
+        {
+            var sourceExitCount = 0;
+            var targetEnterCount = 0;
+            var targetExitCount = 0;
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, _ => sourceExitCount++)
+                .State("StateB", _ =>
+                {
+                    targetEnterCount++;
+                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                }, null, _ => targetExitCount++)
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+
+            handle.TransitionTo("StateB");
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+            Assert.That(sourceExitCount, Is.EqualTo(1));
+            Assert.That(targetEnterCount, Is.EqualTo(1));
+            Assert.That(targetExitCount, Is.EqualTo(1));
+        }
+
     }
 }
