@@ -340,6 +340,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 _handles.RemoveAt(i);
                 handle.IsRegistered = false;
                 handle.IsPendingDestruction = false;
+                handle.ErrorReporter = null;
                 _instanceErrorCounts.Remove(handle);
                 removed.Add(handle);
             }
@@ -356,6 +357,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _handles.RemoveAt(index);
             handle.IsRegistered = false;
             handle.IsPendingDestruction = false;
+            handle.ErrorReporter = null;
             _instanceErrorCounts.Remove(handle);
             handle.DestroyHandle();
         }
