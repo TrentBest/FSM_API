@@ -16,6 +16,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     public class FSMHandle
     {
         private bool _isExecutingExitCallback;
+
+        // Runtime-owned handles share their owner's scoped error-accounting policy.
+        internal Action<Exception> ErrorReporter { get; set; }
         /// <summary>Unique identity of this running FSM instance.</summary>
         public int Id { get; internal set; }
 
@@ -143,7 +146,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Integer FSMHandle {FSM_ID} failed during update.", ex);
+                var failure = new InvalidOperationException($"Integer FSMHandle {FSM_ID} failed during update.", ex);
+                if (ErrorReporter != null)
+                {
+                    ErrorReporter(failure);
+                }
+                else
+                {
+                    FSM_API.Error.InvokeInternalApiError($"Integer FSMHandle {FSM_ID} failed during update.", failure);
+                }
             }
         }
 
@@ -196,7 +207,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                FSM_API.Error.InvokeInternalApiError($"Transition to integer state {nextStateID} failed for FSM handle {Id}.", ex);
+                if (ErrorReporter != null)
+                {
+                    ErrorReporter(ex);
+                }
+                else
+                {
+                    FSM_API.Error.InvokeInternalApiError($"Transition to integer state {nextStateID} failed for FSM handle {Id}.", ex);
+                }
                 throw;
             }
         }
