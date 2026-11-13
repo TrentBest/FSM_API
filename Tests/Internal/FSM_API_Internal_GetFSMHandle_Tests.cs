@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -29,8 +29,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
+            FsmApi.Internal.ResetAPI(true);
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: ProcessGroup).BuildDefinition();
         }
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // Arrange
             var context = new FSMTestContext();
-            var handle = FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+            var handle = FsmApi.Create.CreateInstance(FsmName, context, ProcessGroup);
 
             // Act
-            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, context, ProcessGroup);
+            var retrievedHandle = FsmApi.Internal.GetFSMHandle(FsmName, context, ProcessGroup);
 
             // Assert
             Assert.That(retrievedHandle, Is.Not.Null);
@@ -59,10 +59,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // Arrange
             var context = new FSMTestContext();
-            FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+            FsmApi.Create.CreateInstance(FsmName, context, ProcessGroup);
 
             // Act
-            var retrievedHandle = FSM_API.Internal.GetFSMHandle("NonExistentFSM", context, ProcessGroup);
+            var retrievedHandle = FsmApi.Internal.GetFSMHandle("NonExistentFSM", context, ProcessGroup);
 
             // Assert
             Assert.That(retrievedHandle, Is.Null);
@@ -76,10 +76,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             // Arrange
             var context = new FSMTestContext();
-            FSM_API.Create.CreateInstance(FsmName, context, ProcessGroup);
+            FsmApi.Create.CreateInstance(FsmName, context, ProcessGroup);
 
             // Act
-            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, context, "NonExistentGroup");
+            var retrievedHandle = FsmApi.Internal.GetFSMHandle(FsmName, context, "NonExistentGroup");
 
             // Assert
             Assert.That(retrievedHandle, Is.Null);
@@ -92,10 +92,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFSMHandle_ReturnsNullForNonExistentContext()
         {
             // Arrange
-            FSM_API.Create.CreateInstance(FsmName, new FSMTestContext(), ProcessGroup);
+            FsmApi.Create.CreateInstance(FsmName, new FSMTestContext(), ProcessGroup);
 
             // Act
-            var retrievedHandle = FSM_API.Internal.GetFSMHandle(FsmName, new FSMTestContext(), ProcessGroup);
+            var retrievedHandle = FsmApi.Internal.GetFSMHandle(FsmName, new FSMTestContext(), ProcessGroup);
 
             // Assert
             Assert.That(retrievedHandle, Is.Null);
@@ -108,9 +108,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFSMHandle_Test()
         {
             FSMTestContext context = new FSMTestContext();
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
-            FSM_API.Create.CreateInstance("TestFSM", context, "Update");
-            var handle = FSM_API.Internal.GetFSMHandle("TestFSM", context, "Update");
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
+            FsmApi.Create.CreateInstance("TestFSM", context, "Update");
+            var handle = FsmApi.Internal.GetFSMHandle("TestFSM", context, "Update");
             Assert.That(handle, Is.Not.Null, "GetFSMHandle should return null when no FSM is defined.");
         }
 
@@ -121,7 +121,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFSMHandle_InvalidFSM_Test()
         {
             FSMTestContext context = new FSMTestContext();
-            var handle = FSM_API.Internal.GetFSMHandle("InvalidFSM", context, "Update");
+            var handle = FsmApi.Internal.GetFSMHandle("InvalidFSM", context, "Update");
             Assert.That(handle, Is.Null, "GetFSMHandle should return null when the FSM is not defined.");
         }
 
@@ -131,8 +131,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void GetFSMHandle_InvalidContext_Test()
         {
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
-            var handle = FSM_API.Internal.GetFSMHandle("TestFSM", null, "Update");
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
+            var handle = FsmApi.Internal.GetFSMHandle("TestFSM", null, "Update");
             Assert.That(handle, Is.Null, "GetFSMHandle should return null when the context is null.");
         }
 
@@ -143,8 +143,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetFSMHandle_InvalidProcessingGroup_Test()
         {
             FSMTestContext context = new FSMTestContext();
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
-            var handle = FSM_API.Internal.GetFSMHandle("TestFSM", context, "InvalidGroup");
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", -1, "Update").BuildDefinition();
+            var handle = FsmApi.Internal.GetFSMHandle("TestFSM", context, "InvalidGroup");
             Assert.That(handle, Is.Null, "GetFSMHandle should return null when the processing group is invalid.");
         }
     }

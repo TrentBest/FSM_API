@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void GetProcessingGroupNames_Empty_Test()
         {
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames(), Is.Not.Null, "GetProcessingGroupNames should not return null.");
-            Assert.That(FSM_API.Internal.GetProcessingGroupNames(), Is.Empty, "GetProcessingGroup");
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames(), Is.Not.Null, "GetProcessingGroupNames should not return null.");
+            Assert.That(FsmApi.Internal.GetProcessingGroupNames(), Is.Empty, "GetProcessingGroup");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetProcessingGroupNames_ReturnsEmptyListWhenNoGroupsExist()
         {
             // Act
-            var names = FSM_API.Internal.GetProcessingGroupNames();
+            var names = FsmApi.Internal.GetProcessingGroupNames();
 
             // Assert
             Assert.That(names, Is.Empty);
@@ -59,11 +59,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void GetProcessingGroupNames_ReturnsCorrectNamesForExistingGroups()
         {
             // Arrange
-            FSM_API.Create.CreateProcessingGroup("GroupA");
-            FSM_API.Create.CreateProcessingGroup("GroupB");
+            FsmApi.Create.CreateProcessingGroup("GroupA");
+            FsmApi.Create.CreateProcessingGroup("GroupB");
 
             // Act
-            var names = FSM_API.Internal.GetProcessingGroupNames();
+            var names = FsmApi.Internal.GetProcessingGroupNames();
 
             // Assert
             Assert.That(names.Count(), Is.EqualTo(2));
