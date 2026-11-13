@@ -8,10 +8,10 @@ using Integer = TheSingularityWorkshop.FSM_API.IntegerBacked;
 namespace FSM_API
 {
     /// <summary>
-    /// The concise 2.0 consumer namespace facade. It exposes Create, Interact, and Error
-    /// while forwarding to the existing string-backed runtime and the integer-backed runtime.
-    /// Returned runtime types remain in the established TheSingularityWorkshop.FSM_API
-    /// namespaces during this additive compatibility phase.
+    /// The concise consumer namespace facade. It exposes Create, Interact, Transfer, and Error
+    /// while forwarding to the authoritative FsmApi implementation in the established library
+    /// namespace. Runtime data types remain in TheSingularityWorkshop.FSM_API; this facade does
+    /// not create a second registry or a separate runtime.
     /// </summary>
     public static class FsmApi
     {
