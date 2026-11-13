@@ -285,6 +285,35 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(exits, Is.EqualTo(1));
         }
 
+        [Test]
+        public void ForcedTransition_WhenTargetEnterUnregistersDefinition_ExitsTargetNotSourceAgain()
+        {
+            var sourceExits = 0;
+            var targetEnters = 0;
+            var targetExits = 0;
+            var runtime = new IntegerFSMRuntime();
+            var fsm = new IntegerFSM(16, -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, _ => sourceExits++));
+            fsm.AddState(new IntegerFSMState(20,
+                _ =>
+                {
+                    targetEnters++;
+                    runtime.Unregister(16);
+                },
+                null,
+                _ => targetExits++));
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(16, new TestContext());
+
+            handle.TransitionTo(20);
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(20));
+            Assert.That(sourceExits, Is.EqualTo(1));
+            Assert.That(targetEnters, Is.EqualTo(1));
+            Assert.That(targetExits, Is.EqualTo(1));
+        }
+
         private static IntegerFSM CreateFSM(int id)
         {
             var fsm = new IntegerFSM(id);
