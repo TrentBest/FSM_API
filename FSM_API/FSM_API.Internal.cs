@@ -950,6 +950,10 @@ namespace TheSingularityWorkshop.FSM_API
                                 {
                                    //1.0.13 fixed from always using the initial state to using the current state.
                                     bucket.Definition.GetState(handle.CurrentState).Enter(handle.Context);
+                                    if (handle.IsDestroyed)
+                                    {
+                                        continue;
+                                    }
                                     handle.HasEnteredCurrentState = true;
 
                                     // OnEnter may suspend this context. The entry callback has
@@ -961,6 +965,11 @@ namespace TheSingularityWorkshop.FSM_API
                                 }
 
                                 bucket.Definition.GetState(handle.CurrentState).Update(handle.Context);
+
+                                if (handle.IsDestroyed)
+                                {
+                                    continue;
+                                }
 
                                 // OnUpdate may suspend the context. Do not evaluate guards
                                 // or transition callbacks after the execution gate closes.
@@ -993,6 +1002,11 @@ namespace TheSingularityWorkshop.FSM_API
 
                                     var result = transition.Condition.Invoke(handle.Context);
 
+                                    if (handle.IsDestroyed)
+                                    {
+                                        break;
+                                    }
+
                                     // Transition conditions are user callbacks too. If a guard
                                     // closes the gate, stop evaluating this handle immediately.
                                     if (!handle.Context.IsValid)
@@ -1003,7 +1017,12 @@ namespace TheSingularityWorkshop.FSM_API
                                     if (result)
                                     {
                                         exitStarted = true;
-                                        bucket.Definition.GetState(handle.CurrentState).Exit(handle.Context);
+                                        handle.ExitState(bucket.Definition.GetState(handle.CurrentState));
+
+                                        if (handle.IsDestroyed)
+                                        {
+                                            break;
+                                        }
 
                                         // Do not commit a transition after OnExit suspends the
                                         // context. Re-enter the current state when it resumes.
