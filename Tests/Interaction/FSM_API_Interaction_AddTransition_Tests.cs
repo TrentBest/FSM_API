@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 using TheSingularityWorkshop.FSM_API.Tests.Internal;
 
@@ -27,7 +27,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -41,18 +41,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var processingGroup = "Update";
             var stateA = "StateA";
             var stateB = "StateB";
-            FSM_API.Create.CreateProcessingGroup(processingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
+            FsmApi.Create.CreateProcessingGroup(processingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
             .State(stateA, null, null, null)
             .State(stateB, null, null, null)
             .BuildDefinition();
 
-            Assert.That(FSM_API.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(0), "FSM should initially have no transitions.");
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(0), "FSM should initially have no transitions.");
             // ACT
-            FSM_API.Interaction.AddTransition(fsmName, stateA, stateB, TestCondition, processingGroup);
+            FsmApi.Interaction.AddTransition(fsmName, stateA, stateB, TestCondition, processingGroup);
 
             // ASSERT
-            Assert.That(FSM_API.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(1), "FSM should have one transition after adding one.");
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(1), "FSM should have one transition after adding one.");
         }
 
         private bool TestCondition(IStateContext context)

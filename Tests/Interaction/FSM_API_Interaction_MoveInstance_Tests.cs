@@ -11,7 +11,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         [Test]
@@ -25,25 +25,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             BuildCompatibleDefinition(fsmName, farGroup, processRate: 3);
 
             var context = new MoveTestContext();
-            var handle = FSM_API.Create.CreateInstance(fsmName, context, nearGroup);
+            var handle = FsmApi.Create.CreateInstance(fsmName, context, nearGroup);
 
-            FSM_API.Interaction.Update(nearGroup);
+            FsmApi.Interaction.Update(nearGroup);
 
             Assert.That(handle.CurrentState, Is.EqualTo("Ready"));
             Assert.That(handle.HasEnteredCurrentState, Is.True);
             Assert.That(handle.ProcessingGroup, Is.EqualTo(nearGroup));
 
-            FSM_API.Interaction.MoveInstance(handle, farGroup);
+            FsmApi.Interaction.MoveInstance(handle, farGroup);
 
             // Structural changes are intentionally deferred until the safe update boundary.
-            FSM_API.Internal.ProcessDeferredModifications();
+            FsmApi.Internal.ProcessDeferredModifications();
 
             Assert.That(handle.Context, Is.SameAs(context));
             Assert.That(handle.CurrentState, Is.EqualTo("Ready"));
             Assert.That(handle.HasEnteredCurrentState, Is.True);
             Assert.That(handle.ProcessingGroup, Is.EqualTo(farGroup));
-            Assert.That(FSM_API.Interaction.GetInstances(fsmName, nearGroup), Is.Empty);
-            Assert.That(FSM_API.Interaction.GetInstances(fsmName, farGroup), Has.Count.EqualTo(1));
+            Assert.That(FsmApi.Interaction.GetInstances(fsmName, nearGroup), Is.Empty);
+            Assert.That(FsmApi.Interaction.GetInstances(fsmName, farGroup), Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -54,17 +54,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             const string missingGroup = "LOD9";
 
             BuildCompatibleDefinition(fsmName, sourceGroup, processRate: 1);
-            var handle = FSM_API.Create.CreateInstance(
+            var handle = FsmApi.Create.CreateInstance(
                 fsmName,
                 new MoveTestContext(),
                 sourceGroup);
 
-            FSM_API.Interaction.MoveInstance(handle, missingGroup);
+            FsmApi.Interaction.MoveInstance(handle, missingGroup);
 
-            FSM_API.Internal.ProcessDeferredModifications();
+            FsmApi.Internal.ProcessDeferredModifications();
 
             Assert.That(handle.ProcessingGroup, Is.EqualTo(sourceGroup));
-            Assert.That(FSM_API.Interaction.GetInstances(fsmName, sourceGroup), Has.Count.EqualTo(1));
+            Assert.That(FsmApi.Interaction.GetInstances(fsmName, sourceGroup), Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -77,17 +77,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             BuildCompatibleDefinition(fsmName, sourceGroup, processRate: 1);
             BuildCompatibleDefinition(fsmName, targetGroup, processRate: 2);
 
-            var handle = FSM_API.Create.CreateInstance(
+            var handle = FsmApi.Create.CreateInstance(
                 fsmName,
                 new MoveTestContext(),
                 sourceGroup);
 
-            FSM_API.Interaction.MoveInstance(handle, targetGroup);
-            FSM_API.Internal.ProcessDeferredModifications();
+            FsmApi.Interaction.MoveInstance(handle, targetGroup);
+            FsmApi.Internal.ProcessDeferredModifications();
 
-            FSM_API.Interaction.DestroyInstance(handle);
+            FsmApi.Interaction.DestroyInstance(handle);
 
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0));
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0));
             Assert.That(handle.Context.IsValid, Is.True,
                 "Destroying a handle must not mutate the caller-owned context.");
             Assert.That(handle.IsDestroyed, Is.True,
@@ -96,7 +96,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         private static void BuildCompatibleDefinition(string name, string group, int processRate)
         {
-            FSM_API.Create.CreateFiniteStateMachine(
+            FsmApi.Create.CreateFiniteStateMachine(
                     name,
                     processRate: processRate,
                     processingGroup: group)

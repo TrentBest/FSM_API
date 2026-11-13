@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 using TheSingularityWorkshop.FSM_API.Tests.Internal;
 
@@ -27,7 +27,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,23 +38,23 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "PlayerFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
             List<FSMHandle> expectedHandles = new List<FSMHandle>
             {
-                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
-                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
-                FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext())
+                FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
+                FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext()),
+                FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext())
             };
 
             // Act
-            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+            IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(actualHandles, Is.EqualTo(expectedHandles), "Returned list should not be null.");
             Assert.That(actualHandles.Count, Is.EqualTo(expectedHandles.Count), "Expected count of instances does not match.");
             
             Assert.That(actualHandles, Is.EquivalentTo(expectedHandles), "Returned instances should match the expected handles.");
-            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect created instances.");
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect created instances.");
         }
 
         ///// <summary>
@@ -66,25 +66,25 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    // Arrange
         //    string fsmName = "EnemyAI";
         //    string customProcessingGroup = "EnemyUpdate";
-        //    FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
+        //    FsmApi.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
         //    List<FSMHandle> expectedHandles = new List<FSMHandle>
         //    {
-        //        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup),
-        //        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup)
+        //        FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup),
+        //        FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup)
         //    };
         //    // Create an instance in a different group to ensure isolation
-        //    FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "OtherGroup").BuildDefinition();
-        //    FSM_API.Create.CreateInstance("OtherFSM", new FSMTestContext(), "OtherGroup");
+        //    FsmApi.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "OtherGroup").BuildDefinition();
+        //    FsmApi.Create.CreateInstance("OtherFSM", new FSMTestContext(), "OtherGroup");
 
 
         //    // Act
-        //    IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName, customProcessingGroup);
+        //    IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName, customProcessingGroup);
 
         //    // Assert
         //    Assert.That(actualHandles, Is.True, "Returned list should not be null.");
         //    Assert.That(actualHandles.Count, Is.EqualTo(expectedHandles.Count), "Expected count of instances does not match.");
         //    Assert.That(expectedHandles, Is.EquivalentTo(actualHandles), "Returned instances should match the expected handles in the custom group.");
-        //    Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect all instances created across groups.");
+        //    Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(3), "Total FSM handle count should reflect all instances created across groups.");
         //}
 
 
@@ -96,11 +96,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //{
         //    // Arrange
         //    string fsmName = "DoorFSM";
-        //    FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-        //    FSMHandle expectedHandle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+        //    FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+        //    FSMHandle expectedHandle = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
         //    // Act
-        //    IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+        //    IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName);
 
         //    // Assert
         //    Assert.That(actualHandles, Is.True, "Returned list should not be null.");
@@ -116,15 +116,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //{
         //    // Arrange
         //    string fsmName = "EmptyFSM";
-        //    FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition(); // Define the FSM, but don't create instances
+        //    FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition(); // Define the FSM, but don't create instances
 
         //    // Act
-        //    IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+        //    IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName);
 
         //    // Assert
         //    Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
         //    Assert.That(actualHandles, Is.True, "Expected an empty list when FSM definition exists but has no instances.");
-        //    Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(0), "Total FSM handle count should still be zero.");
+        //    Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.EqualTo(0), "Total FSM handle count should still be zero.");
         //}
 
         /// <summary>
@@ -135,15 +135,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "ReadOnlyTestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            var fsmDefinition = FSM_API.Interaction.GetFSMDefinition(fsmName);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            var fsmDefinition = FsmApi.Interaction.GetFSMDefinition(fsmName);
             // Create some instances through your API, which GetInstances() will then retrieve.
-            FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new Tests.Internal.FSMTestContext());
 
             // Act
             // THIS IS WHERE YOU CALL YOUR API'S METHOD
-            IReadOnlyList<FSMHandle> handles = FSM_API.Interaction.GetInstances(fsmName);
+            IReadOnlyList<FSMHandle> handles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(handles, Is.Not.Null, "Returned collection should not be null.");
@@ -189,20 +189,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string fsmName = "EnemyAI";
             string customProcessingGroup = "EnemyUpdate";
-            FSM_API.Create.CreateProcessingGroup(customProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
+            FsmApi.Create.CreateProcessingGroup(customProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processingGroup: customProcessingGroup).BuildDefinition();
 
             List<FSMHandle> expectedHandles = new List<FSMHandle>
     {
-        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup),
-        FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup)
+        FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup),
+        FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), customProcessingGroup)
     };
             // Create an instance in a different group to ensure isolation
-            FSM_API.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "OtherGroup").BuildDefinition();
-            FSM_API.Create.CreateInstance("OtherFSM", new FSMTestContext(), "OtherGroup");
+            FsmApi.Create.CreateFiniteStateMachine("OtherFSM", processingGroup: "OtherGroup").BuildDefinition();
+            FsmApi.Create.CreateInstance("OtherFSM", new FSMTestContext(), "OtherGroup");
 
             // Act
-            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName, customProcessingGroup);
+            IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName, customProcessingGroup);
 
             // Assert
             Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
@@ -218,11 +218,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "DoorFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            FSMHandle expectedHandle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FSMHandle expectedHandle = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
             // Act
-            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+            IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
@@ -237,10 +237,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "EmptyFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition(); // Define the FSM, but don't create instances
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition(); // Define the FSM, but don't create instances
 
             // Act
-            IReadOnlyList<FSMHandle> actualHandles = FSM_API.Interaction.GetInstances(fsmName);
+            IReadOnlyList<FSMHandle> actualHandles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(actualHandles, Is.Not.Null, "Returned list should not be null.");
@@ -258,7 +258,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(nullFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(nullFsmName, validProcessingGroup),
                 "Expected ArgumentException for null FSM name.");
         }
 
@@ -273,7 +273,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(emptyFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(emptyFsmName, validProcessingGroup),
                 "Expected ArgumentException for empty FSM name.");
         }
 
@@ -288,7 +288,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string validProcessingGroup = "Update";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(whitespaceFsmName, validProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(whitespaceFsmName, validProcessingGroup),
                 "Expected ArgumentException for whitespace FSM name.");
         }
 
@@ -301,10 +301,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string validFsmName = "TestFSM";
             string nullProcessingGroup = string.Empty;
-            FSM_API.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition(); // Need a definition to avoid KeyNotFoundException first
+            FsmApi.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition(); // Need a definition to avoid KeyNotFoundException first
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(validFsmName, nullProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(validFsmName, nullProcessingGroup),
                 "Expected ArgumentException for null processing group.");
         }
 
@@ -317,10 +317,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string validFsmName = "TestFSM";
             string emptyProcessingGroup = "";
-            FSM_API.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition();
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(validFsmName, emptyProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(validFsmName, emptyProcessingGroup),
                 "Expected ArgumentException for empty processing group.");
         }
 
@@ -333,10 +333,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // Arrange
             string validFsmName = "TestFSM";
             string whitespaceProcessingGroup = "   ";
-            FSM_API.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(validFsmName).BuildDefinition();
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.GetInstances(validFsmName, whitespaceProcessingGroup),
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.GetInstances(validFsmName, whitespaceProcessingGroup),
                 "Expected ArgumentException for whitespace processing group.");
         }
 
@@ -350,10 +350,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string existingFsmName = "SomeFSM";
             string existingGroup = "Update";
             string nonExistentFsmName = "NonExistentFSM";
-            FSM_API.Create.CreateFiniteStateMachine(existingFsmName, processingGroup: existingGroup).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(existingFsmName, processingGroup: existingGroup).BuildDefinition();
 
             // Act & Assert
-            Assert.Throws<KeyNotFoundException>(() => FSM_API.Interaction.GetInstances(nonExistentFsmName, existingGroup),
+            Assert.Throws<KeyNotFoundException>(() => FsmApi.Interaction.GetInstances(nonExistentFsmName, existingGroup),
                 "Expected KeyNotFoundException when FSM definition is not found in the specified group.");
         }
 
@@ -369,7 +369,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             // No FSMs are defined, so this group won't exist
 
             // Act & Assert
-            Assert.Throws<KeyNotFoundException>(() => FSM_API.Interaction.GetInstances(fsmName, nonExistentGroup),
+            Assert.Throws<KeyNotFoundException>(() => FsmApi.Interaction.GetInstances(fsmName, nonExistentGroup),
                 "Expected KeyNotFoundException when the processing group itself does not exist.");
         }
 
@@ -382,11 +382,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            var handle = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            var handle = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
             // Act
-            var handles = FSM_API.Interaction.GetInstances(fsmName);
+            var handles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(handles.Count(), Is.EqualTo(1), "Expected one handle to be returned.");
@@ -401,13 +401,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Arrange
             string fsmName = "TestFSM";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
-            FSM_API.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateFiniteStateMachine(fsmName).BuildDefinition();
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
+            FsmApi.Create.CreateInstance(fsmName, new FSMTestContext());
 
             // Act
-            var handles = FSM_API.Interaction.GetInstances(fsmName);
+            var handles = FsmApi.Interaction.GetInstances(fsmName);
 
             // Assert
             Assert.That(handles.Count(), Is.EqualTo(3), "Expected three handles to be returned.");
@@ -425,18 +425,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             string groupA = "GroupA";
             string groupB = "GroupB";
 
-            FSM_API.Create.CreateFiniteStateMachine(fsmName1, processingGroup: groupA).BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine(fsmName2, processingGroup: groupB).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName1, processingGroup: groupA).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName2, processingGroup: groupB).BuildDefinition();
 
-            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
-            FSM_API.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
-            FSM_API.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FsmApi.Create.CreateInstance(fsmName1, new FSMTestContext(), groupA);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
+            FsmApi.Create.CreateInstance(fsmName2, new FSMTestContext(), groupB);
 
             // Act
-            var handlesInGroupA = FSM_API.Interaction.GetInstances(fsmName1, groupA);
-            var handlesInGroupB = FSM_API.Interaction.GetInstances(fsmName2, groupB);
+            var handlesInGroupA = FsmApi.Interaction.GetInstances(fsmName1, groupA);
+            var handlesInGroupB = FsmApi.Interaction.GetInstances(fsmName2, groupB);
 
             // Assert
             Assert.That(handlesInGroupA.Count(), Is.EqualTo(2), "Expected two FSM handles from 'GroupA' to be returned.");
