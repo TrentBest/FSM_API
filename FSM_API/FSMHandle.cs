@@ -162,6 +162,9 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public bool IsDestroyed { get; private set; } = false;
 
+        // Prevent teardown from invoking Exit recursively when an Exit callback destroys its own definition.
+        private bool _isExecutingExitCallback;
+
         /// <summary>
         /// Tracks whether the current state's entry action has run for this handle.
         /// This is distinct from <see cref="IsValid"/>: validity controls scheduler eligibility,
@@ -255,6 +258,12 @@ namespace TheSingularityWorkshop.FSM_API
                     if (currentState != null)
                     {
                         currentState.Enter(Context);
+                        // An Enter callback may destroy this definition and its handle.
+                        // Teardown owns the final lifecycle state; do not continue this update.
+                        if (IsDestroyed)
+                        {
+                            return;
+                        }
                         HasEnteredCurrentState = true;
                     }
                 }
@@ -359,6 +368,25 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
 
+        /// <summary>Invokes Exit while preventing same-handle reentrant teardown from invoking it twice.</summary>
+        internal void ExitState(FSMState state)
+        {
+            if (state == null || _isExecutingExitCallback)
+            {
+                return;
+            }
+
+            _isExecutingExitCallback = true;
+            try
+            {
+                state.Exit(Context);
+            }
+            finally
+            {
+                _isExecutingExitCallback = false;
+            }
+        }
+
         /// <summary>
         /// Performs instance teardown after the API removes this handle from its registered collection. 🚫
         /// </summary>
@@ -387,9 +415,9 @@ namespace TheSingularityWorkshop.FSM_API
                 // If the state object is found, call its Exit method.
                 // This handles cases where an instance's state might be
                 // a stale string name for a state that no longer exists in the definition.
-                if (currentStateObject != null)
+                if (currentStateObject != null && !_isExecutingExitCallback)
                 {
-                    currentStateObject.Exit(Context);
+                    ExitState(currentStateObject);
                 }
             }
 
