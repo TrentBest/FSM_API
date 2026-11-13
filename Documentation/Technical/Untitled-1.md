@@ -7,8 +7,8 @@ This document provides a detailed breakdown of the `Update_ShouldPrioritizeAnySt
  public void Update_ShouldPrioritizeAnyStateTransition()
  {
      // Arrange
-     FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-     FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+     FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+     FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
          .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
          .State("StateB", null, null, null) // Target for regular transition
          .State("StateC", null, null, null) // Target for any-state transition
@@ -20,10 +20,10 @@ This document provides a detailed breakdown of the `Update_ShouldPrioritizeAnySt
          .BuildDefinition();
 
      var ctx = new TestContext();
-     var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+     var handle = FsmApi.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
      // Initial update to put it in StateA and run OnEnter/OnUpdate
-     FSM_API.Interaction.Update(_testProcessingGroup);
+     FsmApi.Interaction.Update(_testProcessingGroup);
      Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
      Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
      Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
@@ -33,7 +33,7 @@ This document provides a detailed breakdown of the `Update_ShouldPrioritizeAnySt
      ctx.ShouldTransition = true; // Condition for StateA -> StateB
      ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
 
-     FSM_API.Interaction.Update(_testProcessingGroup);
+     FsmApi.Interaction.Update(_testProcessingGroup);
 
      // Assert: Verify that the Any-State transition took priority
      // FSM should have exited StateA and entered StateC
@@ -75,13 +75,13 @@ graph TD
 
 The test case is designed to verify that an `Any-State` transition takes precedence over a regular state-to-state transition, even when both conditions are true. The failure indicates that this priority is not being respected.
 
-The following sequence diagram traces the flow of execution within the `FSM_API.Interaction.Update()` and `FSM.Step()` methods, as defined in `FSM_API.Interaction.cs` and `FSM.cs`.
+The following sequence diagram traces the flow of execution within the `FsmApi.Interaction.Update()` and `FSM.Step()` methods, as defined in `FsmApi.Interaction.cs` and `FSM.cs`.
 
 ```mermaid
 sequenceDiagram
     participant Test as Test Method
-    participant API as FSM_API.Interaction.Update()
-    participant Internal as FSM_API.Internal.TickAll()
+    participant API as FsmApi.Interaction.Update()
+    participant Internal as FsmApi.Internal.TickAll()
     participant FSM as FSM.Step()
     participant StateA as FSMState: StateA
     
@@ -137,7 +137,7 @@ sequenceDiagram
 
 The diagram shows a crucial flaw in the FSM's `Step` method: `FSM.Step` first checks the `AnyState` transitions, and if one of them evaluates to true, it immediately exits the method. It never reaches the `OnUpdate` call for the current state.
 
-The test expects `ctx.OnUpdateCounter` to be `1`, because the test code runs `FSM_API.Interaction.Update()` once, then triggers the conditions and calls it again. The `OnUpdate` for `StateA` is expected to run once on the first update and once more on the second update, before the transition to `StateC`. However, the current implementation skips this second `OnUpdate` call entirely.
+The test expects `ctx.OnUpdateCounter` to be `1`, because the test code runs `FsmApi.Interaction.Update()` once, then triggers the conditions and calls it again. The `OnUpdate` for `StateA` is expected to run once on the first update and once more on the second update, before the transition to `StateC`. However, the current implementation skips this second `OnUpdate` call entirely.
 
 ## Proposed Fix
 

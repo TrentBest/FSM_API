@@ -59,7 +59,7 @@ Transition conditions (`Func<IStateContext, bool>`) are evaluated frequently, of
 
 ### 3\. **Smart Use of `processRate`**
 
-The `processRate` parameter (set via `FSMBuilder.WithProcessRate()` or `FSM_API.CreateFiniteStateMachine()`) controls how often an FSM instance's `onUpdate` and transition conditions are evaluated. This is your primary tool for managing CPU load.
+The `processRate` parameter (set via `FSMBuilder.WithProcessRate()` or `FsmApi.Create.CreateFiniteStateMachine()`) controls how often an FSM instance's `onUpdate` and transition conditions are evaluated. This is your primary tool for managing CPU load.
 
   * **`processRate = -1`:** The scheduler processes the instance on every call to `Interaction.Update(processingGroup)`. The host still controls the timing of those calls.
   * **`processRate = 1`:** The scheduler considers the instance on every update call for its processing group. This is the default for the runtime tick cadence described by this API.
@@ -71,7 +71,7 @@ The `processRate` parameter (set via `FSMBuilder.WithProcessRate()` or `FSM_API.
 
 ```csharp
 // Example: An ambient bird FSM only needs to update every 10 frames
-FSM_API.CreateFiniteStateMachine("AmbientBirdFSM", processRate: 10)
+FsmApi.Create.CreateFiniteStateMachine("AmbientBirdFSM", processRate: 10)
     .State("Flying", onUpdate: ctx => { /* ... */ })
     // ...
     .BuildDefinition();

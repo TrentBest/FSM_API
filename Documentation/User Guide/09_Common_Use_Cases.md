@@ -61,7 +61,7 @@ This is perhaps the most common application. FSMs provide a structured way to de
 **Conceptual C\# Example (Enemy AI):**
 
 ```csharp
-FSM_API.CreateFiniteStateMachine("EnemyPatrolAI", processingGroup: "AI_Update", processRate: 2) // Update every 2 frames
+FsmApi.Create.CreateFiniteStateMachine("EnemyPatrolAI", processingGroup: "AI_Update", processRate: 2) // Update every 2 frames
     .State("Patrol",
         onEnter: ctx => ((EnemyContext)ctx).StartPatrolRoute(),
         onUpdate: ctx => ((EnemyContext)ctx).AdvancePatrol(),
@@ -76,7 +76,7 @@ FSM_API.CreateFiniteStateMachine("EnemyPatrolAI", processingGroup: "AI_Update", 
     .BuildDefinition();
 
 // ... Later, in an EnemyController MonoBehaviour:
-// FSM_API.CreateInstance("EnemyPatrolAI", this);
+// FsmApi.Create.CreateInstance("EnemyPatrolAI", this);
 ```
 
 -----
@@ -96,7 +96,7 @@ FSMs are perfect for managing the states of interactive objects in your game wor
 **Conceptual C\# Example (Door Control):**
 
 ```csharp
-FSM_API.CreateFiniteStateMachine("DoorFSM")
+FsmApi.Create.CreateFiniteStateMachine("DoorFSM")
     .State("Closed",
         onEnter: ctx => ((DoorContext)ctx).SetDoorVisuals(false),
         onUpdate: ctx => { /* Maybe check for auto-unlock */ })
@@ -134,7 +134,7 @@ Complex UI elements often have intricate state logic that benefits greatly from 
 **Conceptual C\# Example (Menu Navigation):**
 
 ```csharp
-FSM_API.CreateFiniteStateMachine("MainMenuFlow", processingGroup: "UI_Input", processRate: 0) // Event-driven
+FsmApi.Create.CreateFiniteStateMachine("MainMenuFlow", processingGroup: "UI_Input", processRate: 0) // Event-driven
     .State("MainMenu",
         onEnter: ctx => ((UIManagerContext)ctx).ShowMainMenuPanel(),
         onExit: ctx => ((UIManagerContext)ctx).HideMainMenuPanel())
@@ -151,7 +151,7 @@ FSM_API.CreateFiniteStateMachine("MainMenuFlow", processingGroup: "UI_Input", pr
     .Transition("Credits", "MainMenu", ctx => ((UIManagerContext)ctx).CreditsBackButtonCLicked())
     .BuildDefinition();
 
-// FSM_API.Interaction.Step(myMenuFSMHandle) could be called on button clicks
+// FsmApi.Interaction.Step(myMenuFSMHandle) could be called on button clicks
 ```
 
 -----
@@ -174,7 +174,7 @@ For applications that process data through defined stages.
 **Conceptual C\# Example (Order Processing):**
 
 ```csharp
-FSM_API.CreateFiniteStateMachine("OrderWorkflow", processingGroup: "BackendProcessor", processRate: 5)
+FsmApi.Create.CreateFiniteStateMachine("OrderWorkflow", processingGroup: "BackendProcessor", processRate: 5)
     .State("Received", onUpdate: ctx => { /* Validate data */ })
     .State("Validated", onEnter: ctx => ((OrderContext)ctx).LogValidationSuccess())
     .State("Processing", onUpdate: ctx => { /* Perform payment/inventory checks */ })
@@ -204,7 +204,7 @@ Managing the lifecycle of a network connection.
   * **FSM\_API Advantage:**
       * Handles complexity: Network states can be tricky due to asynchronous operations and error conditions. FSMs simplify this.
       * Clear error paths: Define specific error states and how to recover or report them.
-      * Event-driven: Can use `FSM_API.Interaction.Step()` to advance FSMs based on network events (e.g., `OnConnected`, `OnDisconnected`).
+      * Event-driven: Can use `FsmApi.Interaction.Step()` to advance FSMs based on network events (e.g., `OnConnected`, `OnDisconnected`).
 
 -----
 

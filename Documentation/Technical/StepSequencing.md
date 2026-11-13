@@ -1,8 +1,8 @@
 ```mermaid
 sequenceDiagram
     participant Test as Test Method
-    participant API as FSM_API.Interaction.Update()
-    participant Internal as FSM_API.Internal.TickAll()
+    participant API as FsmApi.Interaction.Update()
+    participant Internal as FsmApi.Internal.TickAll()
     participant FSM as FSM.Step()
     participant StateA as FSMState: StateA
     
@@ -50,8 +50,8 @@ sequenceDiagram
             Internal-->>API: Return
         sequenceDiagram
     participant Test as Test Method
-    participant API as FSM_API.Interaction.Update()
-    participant Internal as FSM_API.Internal.TickAll()
+    participant API as FsmApi.Interaction.Update()
+    participant Internal as FsmApi.Internal.TickAll()
     participant FSM as FSM.Step()
     participant StateA as FSMState: StateA
     
@@ -68,8 +68,8 @@ sequenceDiagram
     
     Internal->>FSM: Call FSM.Step()sequenceDiagram
     participant Test as Test Method
-    participant API as FSM_API.Interaction.Update()
-    participant Internal as FSM_API.Internal.TickAll()
+    participant API as FsmApi.Interaction.Update()
+    participant Internal as FsmApi.Internal.TickAll()
     participant FSM as FSM.Step()
     participant StateA as FSMState: StateA
     
