@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Legacy = TheSingularityWorkshop.FSM_API;
-using LegacyApi = TheSingularityWorkshop.FSM_API.FSM_API;
+using LegacyApi = TheSingularityWorkshop.FSM_API.FsmApi;
 using UnifiedApi = TheSingularityWorkshop.FSM_API.FsmApi;
 using Integer = TheSingularityWorkshop.FSM_API.IntegerBacked;
 

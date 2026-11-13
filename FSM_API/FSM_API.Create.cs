@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheSingularityWorkshop.FSM_API
 {
-    public static partial class FSM_API
+    public static partial class FsmApi
     {
         /// <summary>
         /// Provides a centralized entry point for defining and creating instances of
@@ -79,11 +79,11 @@ namespace TheSingularityWorkshop.FSM_API
                     processRate = 0;
                 }
 
-                var buckets = FSM_API.Internal.GetOrCreateBucketProcessingGroup(processingGroup);
+                var buckets = FsmApi.Internal.GetOrCreateBucketProcessingGroup(processingGroup);
                 if (buckets.TryGetValue(fsmName, out var existingBucket))
                 {
                    
-                    return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition.Name : FSM_API.Internal.GetDefaultFSM().Name);
+                    return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition.Name : FsmApi.Internal.GetDefaultFSM().Name);
                 }
 
                 return new FSMBuilder(fsmName, processRate, processingGroup);
@@ -164,7 +164,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <summary>
             /// Ensures an FSM processing group exists within the API's internal management system.
             /// FSM instances registered under this group will be processed when the corresponding
-            /// <c>Tick</c> method (e.g., <see cref="FSM_API.Interaction.Update(string)"/>)
+            /// <c>Tick</c> method (e.g., <see cref="FsmApi.Interaction.Update(string)"/>)
             /// is called for that specific group.
             /// </summary>
             /// <remarks>
@@ -183,6 +183,26 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 Internal.GetOrCreateBucketProcessingGroup(processingGroup);
             }
-        }
+        
+            /// <summary>Begins building an integer-backed FSM definition.</summary>
+            public static IntegerBacked.FSMBuilderInt CreateFiniteStateMachine(
+                int fsmID, int processRate = 0, int processingGroupID = 0)
+            {
+                return IntegerBacked.FsmApi.Create.CreateFiniteStateMachine(fsmID, processRate, processingGroupID);
+            }
+
+            /// <summary>Registers a completed integer-backed definition.</summary>
+            public static IntegerBacked.FSM RegisterDefinition(IntegerBacked.FSM definition)
+            {
+                return IntegerBacked.FsmApi.Create.RegisterDefinition(definition);
+            }
+
+            /// <summary>Creates an integer-backed FSM instance.</summary>
+            public static IntegerBacked.FSMHandleInt CreateInstance(int fsmID, IStateContext context)
+            {
+                return IntegerBacked.FsmApi.Create.CreateInstance(fsmID, context);
+            }
+
+}
     }
 }

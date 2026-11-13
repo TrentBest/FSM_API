@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TheSingularityWorkshop.FSM_API
 {
-    public static partial class FSM_API
+    public static partial class FsmApi
     {
         /// <summary>
         /// Provides a centralized system for managing and reporting errors and warnings within the FSM API.
@@ -180,7 +180,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 InvokeInternalApiError(
-                    $"FSM Definition '{fsmDefinitionName}' in processing group '{processingGroup}' has had a failing instance removed. Definition failure count: {newDefinitionCount}/{DefinitionErrorThreshold}. (To adjust this threshold, modify FSM_API.Error.DefinitionErrorThreshold.)",
+                    $"FSM Definition '{fsmDefinitionName}' in processing group '{processingGroup}' has had a failing instance removed. Definition failure count: {newDefinitionCount}/{DefinitionErrorThreshold}. (To adjust this threshold, modify FsmApi.Error.DefinitionErrorThreshold.)",
                     null
                 );
 
