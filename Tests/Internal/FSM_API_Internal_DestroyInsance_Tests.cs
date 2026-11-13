@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,12 +38,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // ARRANGE
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
-            var instance = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            var instance = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
             // ACT
-            FSM_API.Internal.DestroyInstance(instance);
+            FsmApi.Internal.DestroyInstance(instance);
             // ASSERT
-            Assert.That(FSM_API.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should be empty after destroying the instance.");
+            Assert.That(FsmApi.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should be empty after destroying the instance.");
         }
 
         /// <summary>
@@ -55,14 +55,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // ARRANGE
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
-            var instance1 = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
-            var instance2 = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            var instance1 = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
+            var instance2 = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
             // ACT
-            FSM_API.Internal.DestroyInstance(instance1);
+            FsmApi.Internal.DestroyInstance(instance1);
             // ASSERT
-            Assert.That(FSM_API.Internal.GetAllFsmHandles().Count(), Is.EqualTo(1), "GetAllFsmHandles should contain one instance after destroying one.");
-            Assert.That(FSM_API.Internal.GetAllFsmHandles().First().Definition.Name, Is.EqualTo(fsmName), "The remaining instance should still be the same FSM.");
+            Assert.That(FsmApi.Internal.GetAllFsmHandles().Count(), Is.EqualTo(1), "GetAllFsmHandles should contain one instance after destroying one.");
+            Assert.That(FsmApi.Internal.GetAllFsmHandles().First().Definition.Name, Is.EqualTo(fsmName), "The remaining instance should still be the same FSM.");
         }
 
         /// <summary>
@@ -74,12 +74,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // ARRANGE
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
-            var instance = FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
-            FSM_API.Internal.DestroyInstance(instance); // Destroy the instance first
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            var instance = FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName);
+            FsmApi.Internal.DestroyInstance(instance); // Destroy the instance first
             // ACT & ASSERT
-            Assert.DoesNotThrow(() => FSM_API.Internal.DestroyInstance(instance), "Destroying an already destroyed instance should throw an exception.");
-            Assert.That(FSM_API.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should still be empty after attempting to destroy a non-existent instance.");
+            Assert.DoesNotThrow(() => FsmApi.Internal.DestroyInstance(instance), "Destroying an already destroyed instance should throw an exception.");
+            Assert.That(FsmApi.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should still be empty after attempting to destroy a non-existent instance.");
         }
 
         /// <summary>
@@ -91,19 +91,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // ARRANGE
             string fsmName = "TestFSM";
             string groupName = "Update";
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, groupName).BuildDefinition();
             var instances = new List<FSMHandle>();
             for (int i = 0; i < 5; i++)
             {
-                instances.Add(FSM_API.Create.CreateInstance(fsmName, new FSMTestContext(), groupName));
+                instances.Add(FsmApi.Create.CreateInstance(fsmName, new FSMTestContext(), groupName));
             }
             // ACT
             foreach (var instance in instances)
             {
-                FSM_API.Internal.DestroyInstance(instance);
+                FsmApi.Internal.DestroyInstance(instance);
             }
             // ASSERT
-            Assert.That(FSM_API.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should be empty after destroying all instances.");
+            Assert.That(FsmApi.Internal.GetAllFsmHandles(), Is.Empty, "GetAllFsmHandles should be empty after destroying all instances.");
         }
 
         /// <summary>
@@ -112,26 +112,26 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void DestroyInstance_WithMultipleFSMsAndProcessGroups_Test()
         {
-            FSM_API.Create.CreateProcessingGroup("Group1");
-            FSM_API.Create.CreateProcessingGroup("Group2");
+            FsmApi.Create.CreateProcessingGroup("Group1");
+            FsmApi.Create.CreateProcessingGroup("Group2");
             string fsmName = "FSM";
             FSMHandle handle = null;
-            foreach (var group in FSM_API.Internal.GetProcessingGroupNames())
+            foreach (var group in FsmApi.Internal.GetProcessingGroupNames())
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    FSM_API.Create.CreateFiniteStateMachine($"{fsmName}_{i}", -1, group).BuildDefinition();
+                    FsmApi.Create.CreateFiniteStateMachine($"{fsmName}_{i}", -1, group).BuildDefinition();
                     for (int j = 0; j < 100; j++)
                     {
-                        handle = FSM_API.Create.CreateInstance($"{fsmName}_{i}", new FSMTestContext(), group);
+                        handle = FsmApi.Create.CreateInstance($"{fsmName}_{i}", new FSMTestContext(), group);
                     }
                 }
             }
-            var allHandles = FSM_API.Internal.GetAllFsmHandles().Count();
+            var allHandles = FsmApi.Internal.GetAllFsmHandles().Count();
             // Act
-            FSM_API.Internal.DestroyInstance(handle);
+            FsmApi.Internal.DestroyInstance(handle);
 
-            var reducedHandles = FSM_API.Internal.GetAllFsmHandles().Count();
+            var reducedHandles = FsmApi.Internal.GetAllFsmHandles().Count();
 
             //Assert
             

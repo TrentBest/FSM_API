@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             // Arrange
             var expectedAverage = 0.0;
             // Act
-            var actualAverage = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+            var actualAverage = FsmApi.Internal.AverageFsmDefinitionsPerGroup;
             // Assert
             Assert.That(actualAverage, Is.EqualTo(expectedAverage));
         }
@@ -54,7 +54,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
                 Helper_CreateFSM($"TestFSM_{i}", "TestGroup");
             }
 
-            Assert.That(FSM_API.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(100.0));
+            Assert.That(FsmApi.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(100.0));
         }
         /// <summary>
         /// 
@@ -62,8 +62,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         [Test]
         public void AverageFSMDefinitionsPerGroup_ShouldReturnCorrectAverage_WhenMultipleGroupsExist()
         {
-            FSM_API.Create.CreateProcessingGroup("TestGroup1");
-            FSM_API.Create.CreateProcessingGroup("TestGroup2");
+            FsmApi.Create.CreateProcessingGroup("TestGroup1");
+            FsmApi.Create.CreateProcessingGroup("TestGroup2");
             for (int i = 0; i < 50; i++)
             {
                 Helper_CreateFSM($"TestFSM_Group1_{i}", "TestGroup1");
@@ -73,7 +73,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
             {
                 Helper_CreateFSM($"TestFSM_Group2_{i}", "TestGroup2");
             }
-            Assert.That(FSM_API.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(37.5));
+            Assert.That(FsmApi.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(37.5));
         }
         /// <summary>
         /// 
@@ -83,13 +83,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         {
             for (int i = 0; i < 100; i++)
             {
-                FSM_API.Create.CreateProcessingGroup($"TestGroup_{i}");
+                FsmApi.Create.CreateProcessingGroup($"TestGroup_{i}");
                 for (int p = 0; p < i; p++)
                 {
                     Helper_CreateFSM($"TestFSM_{p}_Group_{i}", $"TestGroup_{i}");
                 }
             }
-            Assert.That(FSM_API.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(49.5));
+            Assert.That(FsmApi.Internal.AverageFsmDefinitionsPerGroup, Is.EqualTo(49.5));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void AverageFsmDefinitionsPerGroup_ReturnsZeroWhenNoDefinitionsExist()
         {
             // Act
-            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+            var average = FsmApi.Internal.AverageFsmDefinitionsPerGroup;
 
             // Assert
             Assert.That(average, Is.EqualTo(0));
@@ -112,10 +112,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForSingleDefinition()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
 
             // Act
-            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+            var average = FsmApi.Internal.AverageFsmDefinitionsPerGroup;
 
             // Assert
             Assert.That(average, Is.EqualTo(1));
@@ -128,11 +128,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForMultipleDefinitionsInOneGroup()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2").BuildDefinition();
 
             // Act
-            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+            var average = FsmApi.Internal.AverageFsmDefinitionsPerGroup;
 
             // Assert
             Assert.That(average, Is.EqualTo(2));
@@ -145,12 +145,12 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
         public void AverageFsmDefinitionsPerGroup_ReturnsCorrectAverageForMultipleGroups()
         {
             // Arrange
-            FSM_API.Create.CreateFiniteStateMachine("FSM1", processingGroup: "GroupA").BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM2", processingGroup: "GroupB").BuildDefinition();
-            FSM_API.Create.CreateFiniteStateMachine("FSM3", processingGroup: "GroupB").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM1", processingGroup: "GroupA").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM2", processingGroup: "GroupB").BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("FSM3", processingGroup: "GroupB").BuildDefinition();
 
             // Act
-            var average = FSM_API.Internal.AverageFsmDefinitionsPerGroup;
+            var average = FsmApi.Internal.AverageFsmDefinitionsPerGroup;
 
             // Assert
             // Total definitions: 3
@@ -161,7 +161,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Internal
 
         private void Helper_CreateFSM(string fsmName, string processGroup)
         {
-            FSM_API.Create.CreateFiniteStateMachine(fsmName, 0, processGroup)
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, 0, processGroup)
                 .State("TestState", null, null, null)
                 .BuildDefinition();
         }

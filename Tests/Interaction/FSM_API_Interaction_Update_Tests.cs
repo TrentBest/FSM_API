@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using TheSingularityWorkshop.FSM_API;
 
-using static TheSingularityWorkshop.FSM_API.FSM_API.Internal;
+using static TheSingularityWorkshop.FSM_API.FsmApi.Internal;
 using TheSingularityWorkshop.FSM_API.Tests;
 
 
@@ -156,7 +156,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             // Reset the API state before each test to ensure test isolation.
             // This is a crucial step for unit testing static APIs.
-            FSM_API.Internal.ResetAPI();
+            FsmApi.Internal.ResetAPI();
         }
 
         /// <summary>
@@ -166,8 +166,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public void Update_ShouldHandleMultipleIndependentInstances()
         {
             // Arrange
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
@@ -176,13 +176,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
             // Create two completely separate contexts and handles
             var ctx1 = new TestContext();
-            var handle1 = FSM_API.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
+            var handle1 = FsmApi.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
 
             var ctx2 = new TestContext();
-            var handle2 = FSM_API.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
+            var handle2 = FsmApi.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
 
             // Act 1: Initial update
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             // Assertions for both instances after the first update
             // Both should have entered StateA once and updated once.
@@ -198,7 +198,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
             // Act 2: Trigger transition on only one instance
             ctx1.ShouldTransition = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             // Assertions after the second update
             // Instance 1 should have transitioned, while Instance 2 should have not.
@@ -220,8 +220,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldPrioritizeAnyStateTransition()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null) // Target for regular transition
         //        .State("StateC", null, null, null) // Target for any-state transition
@@ -233,10 +233,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //        .BuildDefinition();
 
         //    var ctx = new TestContext();
-        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+        //    var handle = FsmApi.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
         //    // Initial update to put it in StateA and run OnEnter/OnUpdate
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
         //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
         //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
@@ -246,7 +246,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
         //    ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
 
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
         //    // FSM should have exited StateA and entered StateC
@@ -263,18 +263,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [Test]
         public void Update_Succeeds()
         {
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
 
             Assert.That(handle.HasEnteredCurrentState, Is.False, "FSM should not have entered the initial state before the first update.");
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
             Assert.That(handle.CurrentState, Is.EqualTo("StateA"), "FSM should be in StateA after the first update.");
             Assert.That(handle.HasEnteredCurrentState, Is.True, "FSM should have entered StateA after the first update.");
         }
@@ -286,7 +286,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldHandleMultipleIndependentInstances()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null)
         //        .Transition("StateA", "StateB", TestStateActions.ShouldTransition)
@@ -295,13 +295,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Create two completely separate contexts and handles
         //    var ctx1 = new TestContext();
-        //    var handle1 = FSM_API.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
+        //    var handle1 = FsmApi.Create.CreateInstance(_testFsmName, ctx1, _testProcessingGroup);
 
         //    var ctx2 = new TestContext();
-        //    var handle2 = FSM_API.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
+        //    var handle2 = FsmApi.Create.CreateInstance(_testFsmName, ctx2, _testProcessingGroup);
 
         //    // Act 1: Initial update
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assertions for both instances after the first update
         //    // Both should have entered StateA once and updated once.
@@ -317,7 +317,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
 
         //    // Act 2: Trigger transition on only one instance
         //    ctx1.ShouldTransition = true;
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assertions after the second update
         //    // Instance 1 should have transitioned, while Instance 2 should have not.
@@ -340,7 +340,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //public void Update_ShouldPrioritizeAnyStateTransition()
         //{
         //    // Arrange
-        //    FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+        //    FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
         //        .State("StateA", TestStateActions.OnEnterStateA, TestStateActions.OnUpdateStateA, TestStateActions.OnExitStateA)
         //        .State("StateB", null, null, null) // Target for regular transition
         //        .State("StateC", null, null, null) // Target for any-state transition
@@ -352,10 +352,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //        .BuildDefinition();
 
         //    var ctx = new TestContext();
-        //    var handle = FSM_API.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
+        //    var handle = FsmApi.Create.CreateInstance(_testFsmName, ctx, _testProcessingGroup);
 
         //    // Initial update to put it in StateA and run OnEnter/OnUpdate
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
         //    Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         //    Assert.That(ctx.OnEnterCounter, Is.EqualTo(1));
         //    Assert.That(ctx.OnUpdateCounter, Is.EqualTo(1));
@@ -365,7 +365,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         //    ctx.ShouldTransition = true; // Condition for StateA -> StateB
         //    ctx.AnyStateShouldTransition = true; // Condition for Any State -> StateC
 
-        //    FSM_API.Interaction.Update(_testProcessingGroup);
+        //    FsmApi.Interaction.Update(_testProcessingGroup);
 
         //    // Assert: Verify that the Any-State transition took priority
         //    // FSM should have exited StateA and entered StateC
@@ -383,7 +383,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             var guardCount = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", _ => enterCount++, _ => updateCount++, null)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", _ => { guardCount++; return false; })
@@ -391,18 +391,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext { IsValid = false };
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
             // Successful handle construction initializes the caller-owned execution gate.
             Assert.That(context.IsValid, Is.True);
 
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
             Assert.That(enterCount, Is.EqualTo(1));
             Assert.That(updateCount, Is.EqualTo(1));
             Assert.That(guardCount, Is.EqualTo(1));
 
             context.IsValid = false;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(enterCount, Is.EqualTo(1));
             Assert.That(updateCount, Is.EqualTo(1));
@@ -412,7 +412,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.Context, Is.SameAs(context));
 
             context.IsValid = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(enterCount, Is.EqualTo(1));
             Assert.That(updateCount, Is.EqualTo(2));
@@ -428,7 +428,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var exitCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", null, context =>
                 {
                     updateCount++;
@@ -444,9 +444,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(context.IsValid, Is.False);
             Assert.That(updateCount, Is.EqualTo(1));
@@ -456,7 +456,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.IsDestroyed, Is.False);
 
             context.IsValid = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(updateCount, Is.EqualTo(2));
             Assert.That(guardCount, Is.EqualTo(1));
@@ -471,7 +471,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var exitCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", null, null, _ => exitCount++)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", context =>
@@ -489,9 +489,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(guardCount, Is.EqualTo(1));
             Assert.That(exitCount, Is.Zero);
@@ -499,7 +499,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.IsDestroyed, Is.False);
 
             context.IsValid = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(guardCount, Is.EqualTo(2));
             Assert.That(exitCount, Is.Zero);
@@ -514,7 +514,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var guardCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", _ => enterCount++, null, context =>
                 {
                     exitCount++;
@@ -530,9 +530,9 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(context.IsValid, Is.False);
             Assert.That(exitCount, Is.EqualTo(1));
@@ -541,7 +541,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.IsDestroyed, Is.False);
 
             context.IsValid = true;
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(enterCount, Is.EqualTo(2));
             Assert.That(exitCount, Is.EqualTo(2));
@@ -558,7 +558,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var guardCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, context =>
                 {
                     updateCount++;
@@ -574,7 +574,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
             handle.Update(_testProcessingGroup);
 
@@ -600,16 +600,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             const string name = "FacadeFSM";
 
-            global::FSM_API.FsmApi.Create.CreateFiniteStateMachine(name, -1, _testProcessingGroup)
+            global::FsmApi.FsmApi.Create.CreateFiniteStateMachine(name, -1, _testProcessingGroup)
                 .State("Ready", _ => enterCount++, _ => updateCount++, null)
                 .WithInitialState("Ready")
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = global::FSM_API.FsmApi.Create.CreateInstance(
+            var handle = global::FsmApi.FsmApi.Create.CreateInstance(
                 name, context, _testProcessingGroup);
 
-            global::FSM_API.FsmApi.Interact.Update(_testProcessingGroup);
+            global::FsmApi.FsmApi.Interact.Update(_testProcessingGroup);
 
             Assert.That(handle.CurrentState, Is.EqualTo("Ready"));
             Assert.That(enterCount, Is.EqualTo(1));
@@ -621,17 +621,17 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         public void FsmApiNamespaceFacade_ForwardsErrorNotifications()
         {
             string observedMessage = null;
-            global::TheSingularityWorkshop.FSM_API.FSM_API.Error.InternalApiErrorEventHandler handler =
+            global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InternalApiErrorEventHandler handler =
                 (message, exception) => observedMessage = message;
 
-            global::FSM_API.FsmApi.Error.OnInternalApiError += handler;
+            global::FsmApi.FsmApi.Error.OnInternalApiError += handler;
             try
             {
-                global::FSM_API.FsmApi.Error.InvokeInternalApiError("facade-test", null);
+                global::FsmApi.FsmApi.Error.InvokeInternalApiError("facade-test", null);
             }
             finally
             {
-                global::FSM_API.FsmApi.Error.OnInternalApiError -= handler;
+                global::FsmApi.FsmApi.Error.OnInternalApiError -= handler;
             }
 
             Assert.That(observedMessage, Is.EqualTo("facade-test"));
@@ -645,7 +645,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var exitCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, _ => exitCount++)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", context =>
@@ -663,7 +663,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
             handle.EvaluateConditions();
 
@@ -687,7 +687,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var targetEnterCount = 0;
             var suspendOnce = true;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, context =>
                 {
                     if (suspendOnce)
@@ -701,7 +701,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
             handle.TransitionTo("StateB");
 
@@ -725,7 +725,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var targetEnterCount = 0;
             var targetUpdateCount = 0;
 
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, null)
                 .State("StateB", context =>
                 {
@@ -736,7 +736,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
 
             handle.TransitionTo("StateB");
 
@@ -761,20 +761,20 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             var guardCount = 0;
             var exitCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", null, _ =>
                 {
                     updateCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                 }, _ => exitCount++)
                 .State("StateB", null, null, null)
                 .Transition("StateA", "StateB", _ => { guardCount++; return true; })
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(handle.IsDestroyed, Is.True);
             Assert.That(updateCount, Is.EqualTo(1));
@@ -788,18 +788,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var enterCount = 0;
             var updateCount = 0;
             var exitCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
                 .State("StateA", _ =>
                 {
                     enterCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                 }, _ => updateCount++, _ => exitCount++)
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
-            FSM_API.Interaction.Update(_testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            FsmApi.Interaction.Update(_testProcessingGroup);
 
             Assert.That(handle.IsDestroyed, Is.True);
             Assert.That(enterCount, Is.EqualTo(1));
@@ -813,15 +813,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var firstGuardCount = 0;
             var secondGuardCount = 0;
             var exitCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, _ => exitCount++)
                 .State("StateB", null, null, null)
                 .State("StateC", null, null, null)
                 .Transition("StateA", "StateB", _ =>
                 {
                     firstGuardCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                     return false;
                 })
                 .Transition("StateA", "StateC", _ =>
@@ -832,7 +832,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
             handle.EvaluateConditions();
 
             Assert.That(handle.IsDestroyed, Is.True);
@@ -846,15 +846,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             var firstGuardCount = 0;
             var secondGuardCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, null)
                 .State("StateB", null, null, null)
                 .State("StateC", null, null, null)
                 .Transition("StateA", "StateB", _ =>
                 {
                     firstGuardCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                     throw new InvalidOperationException("teardown during guard");
                 })
                 .Transition("StateA", "StateC", _ =>
@@ -865,7 +865,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
             handle.Update();
 
             Assert.That(handle.IsDestroyed, Is.True);
@@ -878,19 +878,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         {
             var exitCount = 0;
             var targetEnterCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, _ =>
                 {
                     exitCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                 })
                 .State("StateB", _ => targetEnterCount++, null, null)
                 .Transition("StateA", "StateB", _ => true)
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
             handle.EvaluateConditions();
 
             Assert.That(handle.IsDestroyed, Is.True);
@@ -904,18 +904,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var sourceExitCount = 0;
             var targetEnterCount = 0;
             var targetExitCount = 0;
-            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+            FsmApi.Create.CreateProcessingGroup(_testProcessingGroup);
+            FsmApi.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
                 .State("StateA", null, null, _ => sourceExitCount++)
                 .State("StateB", _ =>
                 {
                     targetEnterCount++;
-                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                    FsmApi.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
                 }, null, _ => targetExitCount++)
                 .WithInitialState("StateA")
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            var handle = FsmApi.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
 
             handle.TransitionTo("StateB");
 
