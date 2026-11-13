@@ -519,6 +519,12 @@ namespace TheSingularityWorkshop.FSM_API
                         ex
                     );
 
+                    // A callback can destroy this handle and then throw. Do not continue
+                    // evaluating later candidates after teardown has completed.
+                    if (instanceHandle != null && instanceHandle.IsDestroyed)
+                    {
+                        return;
+                    }
                     // A callback can invalidate and then throw. Never continue evaluating
                     // transitions after the execution gate has closed.
                     if (!ctx.IsValid)
@@ -618,6 +624,10 @@ namespace TheSingularityWorkshop.FSM_API
                             ex
                         );
 
+                        if (instanceHandle != null && instanceHandle.IsDestroyed)
+                        {
+                            return;
+                        }
                         if (!ctx.IsValid)
                         {
                             if (exitStarted)
