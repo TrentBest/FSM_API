@@ -21,7 +21,7 @@ The current benchmark suite asks two related questions.
 `FSM_StringPerformanceBaseline` builds a two-state FSM with two transitions and measures:
 
 ~~~csharp
-FSM_API.Interaction.Update(ProcessingGroup);
+FsmApi.Interaction.Update(ProcessingGroup);
 ~~~
 
 This is intentionally a real API operation rather than an isolated dictionary or string benchmark.

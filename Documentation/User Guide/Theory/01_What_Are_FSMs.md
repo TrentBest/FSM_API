@@ -95,9 +95,9 @@ using TheSingularityWorkshop.FSM_API;
 const string group = "TrafficLight";
 const string definition = "TrafficLightFSM";
 
-FSM_API.Create.CreateProcessingGroup(group);
+FsmApi.Create.CreateProcessingGroup(group);
 
-FSM_API.Create
+FsmApi.Create
     .CreateFiniteStateMachine(definition, processRate: 1, processingGroup: group)
     .State("Red")
     .State("Green")
@@ -109,11 +109,11 @@ FSM_API.Create
     .BuildDefinition();
 
 var trafficLight = new TrafficLightContext();
-FSMHandle handle = FSM_API.Create.CreateInstance(definition, trafficLight, group);
+FSMHandle handle = FsmApi.Create.CreateInstance(definition, trafficLight, group);
 
 // The host owns the timer and decides when this becomes true.
 trafficLight.TimerExpired = true;
-FSM_API.Interaction.Update(group);
+FsmApi.Interaction.Update(group);
 
 public sealed class TrafficLightContext : IStateContext
 {

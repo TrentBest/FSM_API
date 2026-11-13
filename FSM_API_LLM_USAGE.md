@@ -82,9 +82,9 @@ The verified creation pattern is:
 1. Define and build the FSM blueprint.
 2. Create a context object that implements `IStateContext`.
 3. Create a live instance from the registered definition and retain the returned `FSMHandle`.
-4. Call `FSM_API.Interaction.Update(processingGroup)` from the application's chosen update loop.
+4. Call `FsmApi.Interaction.Update(processingGroup)` from the application's chosen update loop.
 
-The factory is nested under `FSM_API.Create`. The common definition call is **`FSM_API.Create.CreateFiniteStateMachine(...)`**, not a guessed top-level `FSM_API.CreateFiniteStateMachine(...)` call.
+The factory is nested under `FsmApi.Create`. The common definition call is **`FsmApi.Create.CreateFiniteStateMachine(...)`**, not a guessed top-level `FsmApi.CreateFiniteStateMachine(...)` call.
 
 ```csharp
 using System;
@@ -103,7 +103,7 @@ public static class DoorMachine
 {
     public static FSMHandle Create(DoorContext context)
     {
-        FSM_API.Create.CreateFiniteStateMachine(
+        FsmApi.Create.CreateFiniteStateMachine(
                 "DoorFSM",
                 processRate: 1,
                 processingGroup: "Update")
@@ -123,28 +123,28 @@ public static class DoorMachine
             .BuildDefinition();
 
         // A definition must be registered before an instance is created.
-        return FSM_API.Create.CreateInstance("DoorFSM", context, "Update");
+        return FsmApi.Create.CreateInstance("DoorFSM", context, "Update");
     }
 }
 
 // The host owns the cadence and calls this from its application loop:
-// FSM_API.Interaction.Update("Update");
+// FsmApi.Interaction.Update("Update");
 ```
 
 This example illustrates the repository's fluent API shape; it is not a benchmark and does not establish universal process-rate timing. Confirm the intended `processRate` semantics in current source before explaining exact timing behavior.
 
 ### API calls verified in repository tests/source
 
-- `FSM_API.Create.CreateFiniteStateMachine(string fsmName = "UnNamedFSM", int processRate = 0, string processingGroup = "Update")`
+- `FsmApi.Create.CreateFiniteStateMachine(string fsmName = "UnNamedFSM", int processRate = 0, string processingGroup = "Update")`
 - `FSMBuilder.State(...)`
 - `FSMBuilder.WithInitialState(string stateName)`
 - `FSMBuilder.Transition(string fromState, string toState, Func<IStateContext, bool> condition)`
 - `FSMBuilder.BuildDefinition()`
-- `FSM_API.Create.CreateInstance(string fsmName, IStateContext ctx, string processingGroup = "Update")`
-- `FSM_API.Interaction.Update(string processingGroup)`
-- `FSM_API.Interaction.MoveInstance(FSMHandle instance, string processingGroup)` — queues a deferred move to a compatible group.
-- `FSM_API.Interaction.AddStateToFSM(...)` — runtime state addition/update; inspect its exact signature before generating a call.
-- `FSM_API.Interaction.GetInstance(fsmName, context, processingGroup)` — lookup for the specified definition/context/group combination.
+- `FsmApi.Create.CreateInstance(string fsmName, IStateContext ctx, string processingGroup = "Update")`
+- `FsmApi.Interaction.Update(string processingGroup)`
+- `FsmApi.Interaction.MoveInstance(FSMHandle instance, string processingGroup)` — queues a deferred move to a compatible group.
+- `FsmApi.Interaction.AddStateToFSM(...)` — runtime state addition/update; inspect its exact signature before generating a call.
+- `FsmApi.Interaction.GetInstance(fsmName, context, processingGroup)` — lookup for the specified definition/context/group combination.
 
 The exact `State` overloads and the full public surface should be read from the current `FSMBuilder` and `Interaction` source when needed. Do not invent overloads, aliases, event methods, reset methods, or namespace paths.
 
@@ -160,7 +160,7 @@ Safe guidance for generated code:
 - Keep the application-owned context reference separately from the handle.
 - Keep each returned handle if later lifecycle operations may be needed.
 - Use `IsValid = false` to suppress computation, not as a substitute for explicit instance destruction.
-- Explicit instance destruction uses `FSM_API.Interaction.DestroyInstance(handle)`; do not assume it disposes the context. No ownership transfer is implied by passing a context to `CreateInstance`.
+- Explicit instance destruction uses `FsmApi.Interaction.DestroyInstance(handle)`; do not assume it disposes the context. No ownership transfer is implied by passing a context to `CreateInstance`.
 - If a task depends on invalidation, shared contexts, destruction, exit callbacks, or handle enumeration, inspect the current implementation and relevant tests on the target branch. The current development source says shared-context validity gates all handles using that context.
 
 ## 05. States, transitions, and the execution model
@@ -173,7 +173,7 @@ Do not assume that the target state's entry callback runs immediately during the
 
 ### Processing groups and updates
 
-Definitions are associated with a processing group; the default is `"Update"`. The host chooses when to call `FSM_API.Interaction.Update("Update")` or update another group. A group is a way to organize update cohorts, not a promise that all public operations are thread-safe.
+Definitions are associated with a processing group; the default is `"Update"`. The host chooses when to call `FsmApi.Interaction.Update("Update")` or update another group. A group is a way to organize update cohorts, not a promise that all public operations are thread-safe.
 
 The current maintenance contract states:
 - The documented supported execution model is **main-thread operations with deferred mutation handling**.
@@ -185,7 +185,7 @@ The current maintenance contract states:
 
 ## 06. Common mistakes an LLM must avoid
 
-1. **Inventing API names.** Do not write `FSM_API.CreateFiniteStateMachine(...)` when the verified factory is `FSM_API.Create.CreateFiniteStateMachine(...)`.
+1. **Inventing API names.** Do not write `FsmApi.CreateFiniteStateMachine(...)` when the verified factory is `FsmApi.Create.CreateFiniteStateMachine(...)`.
 2. **Skipping registration.** Build/register the definition before calling `CreateInstance`.
 3. **Confusing definition and instance.** A definition is the reusable blueprint; a handle is one live instance.
 4. **Inventing context types or members.** The application defines its own context; it must implement the actual `IStateContext` contract.
@@ -247,9 +247,9 @@ Use these as starting points on the repository branch under discussion:
 
 - [Repository README](https://github.com/TrentBest/FSM_API/blob/development/README.md) — overview, quickstart, lifecycle illustration, support links.
 - [LLM maintenance/CI contract](https://github.com/TrentBest/FSM_API/blob/development/FSM_APILLM.md) — branch, CI, release, and evidence rules.
-- [Create API source](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Create.cs) — definition factory and instance creation.
+- [Create API source](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FsmApi.Create.cs) — definition factory and instance creation.
 - [Builder source](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSMBuilder.cs) — states, transitions, initial state, definition build.
-- [Interaction API source](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Interaction.cs) — update, lookup, mutation, and destruction APIs.
+- [Interaction API source](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FsmApi.Interaction.cs) — update, lookup, mutation, and destruction APIs.
 - [Context interface](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/IStateContext.cs) — actual context contract.
 - [Create-instance tests](https://github.com/TrentBest/FSM_API/blob/development/Tests/Create/FSM_API_Create_CreateInstance_Tests.cs) — definition-before-instance pattern, context requirements, processing groups.
 - [SimpleDemos](https://github.com/TrentBest/SimpleDemos) — application-level examples; verify against current API before copying.
