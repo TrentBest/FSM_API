@@ -28,7 +28,7 @@
         /// Gets or sets whether computation associated with this caller-owned context is currently permitted.
         /// When false, scheduled and manual stepping/condition evaluation are skipped. The handle remains
         /// registered and can resume if validity becomes true again. This property does not request handle
-        /// destruction, unregister instances, or transfer ownership of the context to FSM_API.
+        /// destruction, unregister instances, or transfer ownership of the context to FsmApi.
         /// <para>
         /// **For Non-Coders/Domain Experts:**
         /// This property tells the FSM if the "thing" it's controlling is still relevant or active.
