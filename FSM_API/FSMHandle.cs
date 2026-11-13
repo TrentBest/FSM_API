@@ -151,7 +151,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// This property mirrors <see cref="IStateContext.IsValid"/>; it is not an independent
         /// lifecycle flag. When false, the scheduler skips this handle but leaves it registered.
         /// Restoring a reusable context's validity allows the same handle to resume. Use
-        /// <see cref="FSM_API.Interaction.DestroyInstance(FSMHandle)"/> when the instance should
+        /// <see cref="FsmApi.Interaction.DestroyInstance(FSMHandle)"/> when the instance should
         /// be removed and torn down instead.
         /// </remarks>
         public bool IsValid => Context?.IsValid ?? false;
@@ -283,7 +283,7 @@ namespace TheSingularityWorkshop.FSM_API
             {
                 // If an exception occurs during the FSM's internal step, report it as a "fubar".
                 // This allows the FSM_API to track and potentially remove problematic instances.
-                FSM_API.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
+                FsmApi.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
             }
         }
 
@@ -333,7 +333,7 @@ namespace TheSingularityWorkshop.FSM_API
             catch (Exception ex)
             {
                 // Report any issues during a forced transition as a "fubar".
-                FSM_API.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
+                FsmApi.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
         }
@@ -469,7 +469,7 @@ namespace TheSingularityWorkshop.FSM_API
                 catch (Exception ex)
                 {
                     // A guard failure is isolated to that candidate; later transitions may still match.
-                    FSM_API.Error.InvokeInternalApiError(
+                    FsmApi.Error.InvokeInternalApiError(
                         $"Error evaluating manual transition condition from '{CurrentState}' to '{transition.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex);
                     if (IsDestroyed || !Context.IsValid)

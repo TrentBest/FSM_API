@@ -62,7 +62,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// "think" or "update" themselves.
         /// </summary>
         /// <remarks>
-        /// This number tells the <see cref="FSM_API.Internal.TickAll(string)"/>
+        /// This number tells the <see cref="FsmApi.Internal.TickAll(string)"/>
         /// method how frequently to call the FSM's <see cref="Step(string, IStateContext, out string)"/> method
         /// within its assigned <see cref="ProcessingGroup"/>.
         /// </remarks>
@@ -81,7 +81,7 @@ namespace TheSingularityWorkshop.FSM_API
         ///      <item><term><c>&gt;0</c></term><description>
         ///          The FSM will update **every Nth tick**, where N is this number.
         ///          For example, if it's 5, it updates every 5th time
-        ///          <see cref="FSM_API.Internal.TickAll(string)"/> is called.
+        ///          <see cref="FsmApi.Internal.TickAll(string)"/> is called.
         ///      </description></item>
         /// </list>
         /// </value>
@@ -94,7 +94,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// Processing groups help you organize your FSMs and control when
         /// they update. You can manually trigger all FSM instances within a
         /// specific <see cref="ProcessingGroup"/> to update by calling
-        /// <see cref="FSM_API.Interaction.Update(string)"/>.
+        /// <see cref="FsmApi.Interaction.Update(string)"/>.
         /// <para>
         /// Imagine you have a large system, like an "Arcade" FSM. You could
         /// give it its own update cycle, and within that cycle, it might
@@ -149,7 +149,7 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (s == null)
             {
-                FSM_API.Error.InvokeInternalApiError($"Attempted to add a null state to FSM '{Name}'.", new ArgumentNullException(nameof(s)));
+                FsmApi.Error.InvokeInternalApiError($"Attempted to add a null state to FSM '{Name}'.", new ArgumentNullException(nameof(s)));
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (cond == null)
             {
-                FSM_API.Error.InvokeInternalApiError($"Attempted to add a transition with null condition from '{from}' to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
+                FsmApi.Error.InvokeInternalApiError($"Attempted to add a transition with null condition from '{from}' to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
 
@@ -223,12 +223,12 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (cond == null)
             {
-                FSM_API.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with null condition to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
+                FsmApi.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with null condition to '{to}' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
             if (to == string.Empty)
             {
-                FSM_API.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with empty string 'to' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
+                FsmApi.Error.InvokeInternalApiError($"Attempted to add an Any-State transition with empty string 'to' in FSM '{Name}'.", new ArgumentNullException(nameof(cond)));
                 return;
             }
             // Remove existing any-state transition if it matches 'to' state for clean updates
@@ -254,7 +254,7 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (transition == null)
             {
-                FSM_API.Error.InvokeInternalApiError($"Attempted to add a null Any-State transition to  in FSM '{Name}'.", new ArgumentNullException(nameof(transition)));
+                FsmApi.Error.InvokeInternalApiError($"Attempted to add a null Any-State transition to  in FSM '{Name}'.", new ArgumentNullException(nameof(transition)));
                 return;
             }
             _anyStateTransitions.RemoveAll(t => t.To == transition.To);
@@ -341,7 +341,7 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (!_states.TryGetValue(InitialState, out var state))
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"Initial state '{InitialState}' not found for FSM '{Name}'. This indicates a corrupted FSM definition.",
                     new ArgumentException($"Initial state '{InitialState}' not found for FSM '{Name}'.", nameof(InitialState))
                 );
@@ -364,7 +364,7 @@ namespace TheSingularityWorkshop.FSM_API
         ///     <item><description>
         ///         **1. Run Current State's Update:** Execute the current state's
         ///         `Update` action. Exceptions are reported through
-        ///         <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        ///         <see cref="FsmApi.Error.InvokeInternalApiError(string, Exception)"/>.
         ///     </description></item>
         ///     <item><description>
         ///         **2. Check Any-State Transitions:** Evaluate global transitions in
@@ -401,7 +401,7 @@ namespace TheSingularityWorkshop.FSM_API
 
             if (!_states.TryGetValue(current, out var currentState))
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"FSM '{Name}' instance in processing group '{ProcessingGroup}' has an invalid current state '{current}'. Attempting to recover by transitioning to initial state '{InitialState}'.", new Exception()
                 );
                 // Attempt to recover by transitioning to the initial state. If the
@@ -425,7 +425,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"Error during Update logic of state '{current}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex
                 );
@@ -444,7 +444,7 @@ namespace TheSingularityWorkshop.FSM_API
                 // Check if the target state exists before evaluating condition
                 if (!_states.ContainsKey(t.To))
                 {
-                    FSM_API.Error.InvokeInternalApiError(
+                    FsmApi.Error.InvokeInternalApiError(
                         $"FSM '{Name}' Any-State transition defined to non-existent state '{t.To}'. Transition skipped for safety.",
                         new Exception()
                     );
@@ -479,7 +479,7 @@ namespace TheSingularityWorkshop.FSM_API
                         }
                         if (!ctx.IsValid)
                         {
-                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            var suspendedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                             if (suspendedHandle != null)
                             {
                                 suspendedHandle.HasEnteredCurrentState = false;
@@ -492,7 +492,7 @@ namespace TheSingularityWorkshop.FSM_API
                         // Do not commit a transition to a state that no longer exists.
                         if (!_states.ContainsKey(t.To))
                         {
-                            var invalidatedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            var invalidatedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                             if (invalidatedHandle != null)
                             {
                                 invalidatedHandle.HasEnteredCurrentState = false;
@@ -501,7 +501,7 @@ namespace TheSingularityWorkshop.FSM_API
                             return;
                         }
 
-                        var resolvedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                        var resolvedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                         if (resolvedHandle != null)
                         {
                             resolvedHandle.CurrentState = t.To; // Update the FSM handle's current state
@@ -514,7 +514,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 catch (Exception ex)
                 {
-                    FSM_API.Error.InvokeInternalApiError(
+                    FsmApi.Error.InvokeInternalApiError(
                         $"Error evaluating Any-State transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
                     );
@@ -531,7 +531,7 @@ namespace TheSingularityWorkshop.FSM_API
                     {
                         if (exitStarted)
                         {
-                            var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            var suspendedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                             if (suspendedHandle != null)
                             {
                                 suspendedHandle.HasEnteredCurrentState = false;
@@ -551,7 +551,7 @@ namespace TheSingularityWorkshop.FSM_API
                     // Check if the target state exists before evaluating condition
                     if (!_states.ContainsKey(t.To))
                     {
-                        FSM_API.Error.InvokeInternalApiError(
+                        FsmApi.Error.InvokeInternalApiError(
                             $"FSM '{Name}' regular transition defined from '{current}' to non-existent state '{t.To}'. Transition skipped for safety.",
                             new Exception()
                         );
@@ -585,7 +585,7 @@ namespace TheSingularityWorkshop.FSM_API
                             }
                             if (!ctx.IsValid)
                             {
-                                var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                var suspendedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                                 if (suspendedHandle != null)
                                 {
                                     suspendedHandle.HasEnteredCurrentState = false;
@@ -598,7 +598,7 @@ namespace TheSingularityWorkshop.FSM_API
                             // state identity rather than committing a stale target name.
                             if (!_states.ContainsKey(t.To))
                             {
-                                var invalidatedHandle = FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                var invalidatedHandle = FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                                 if (invalidatedHandle != null)
                                 {
                                     invalidatedHandle.HasEnteredCurrentState = false;
@@ -607,7 +607,7 @@ namespace TheSingularityWorkshop.FSM_API
                                 return;
                             }
 
-                            var resolvedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                            var resolvedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                             if (resolvedHandle != null)
                             {
                                 resolvedHandle.CurrentState = t.To; // Update the FSM handle's current state
@@ -619,7 +619,7 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                     catch (Exception ex)
                     {
-                        FSM_API.Error.InvokeInternalApiError(
+                        FsmApi.Error.InvokeInternalApiError(
                             $"Error evaluating regular transition condition from '{current}' to '{t.To}' in FSM '{Name}'. Exception: {ex.Message}",
                             ex
                         );
@@ -632,7 +632,7 @@ namespace TheSingularityWorkshop.FSM_API
                         {
                             if (exitStarted)
                             {
-                                var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
+                                var suspendedHandle = instanceHandle ?? FsmApi.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
                                 if (suspendedHandle != null)
                                 {
                                     suspendedHandle.HasEnteredCurrentState = false;
@@ -656,7 +656,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// or for fixing an FSM that's in a problematic state.
         /// <para>
         /// If there are errors during the state's `Exit` or `Enter` actions, they are
-        /// caught and reported using <see cref="FSM_API.Error.InvokeInternalApiError(string, Exception)"/>.
+        /// caught and reported using <see cref="FsmApi.Error.InvokeInternalApiError(string, Exception)"/>.
         /// </para>
         /// </remarks>
         /// <param name="from">
@@ -702,7 +702,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
                 catch (Exception ex)
                 {
-                    FSM_API.Error.InvokeInternalApiError(
+                    FsmApi.Error.InvokeInternalApiError(
                         $"Error during Exit logic of state '{from}' during forced transition to '{to}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex
                     );
@@ -721,7 +721,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
             else if (!string.IsNullOrEmpty(from))
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"Attempted to force transition from non-existent state '{from}' for FSM '{Name}'. Exiting original state skipped.",
                     null
                 );
@@ -734,7 +734,7 @@ namespace TheSingularityWorkshop.FSM_API
 
             if (!_states.TryGetValue(to, out var toState))
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"Target state '{to}' for forced transition does not exist in FSM '{Name}'. Forced transition failed.",
                     new ArgumentException($"Target state '{to}' for forced transition does not exist in FSM '{Name}'.", nameof(to))
                 );
@@ -757,7 +757,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                FSM_API.Error.InvokeInternalApiError(
+                FsmApi.Error.InvokeInternalApiError(
                     $"Error during Enter logic of state '{to}' during forced transition from '{from}' in FSM '{Name}'. Exception: {ex.Message}",
                     ex
                 );

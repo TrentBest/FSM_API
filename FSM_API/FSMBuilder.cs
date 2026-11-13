@@ -54,7 +54,7 @@ namespace TheSingularityWorkshop.FSM_API
     ///
     /// // Now, use the FSMBuilder to create your "PlayerFSM" blueprint.
     /// // We want it to update 60 times per second and be part of the "GameLoop" group.
-    /// FSM_API.Create.CreateFiniteStateMachine("PlayerFSM", 60, "GameLoop")
+    /// FsmApi.Create.CreateFiniteStateMachine("PlayerFSM", 60, "GameLoop")
     ///     // Define the "Idle" state: what happens when entering, during updates, and when exiting.
     ///     .State("Idle",
     ///         onEnter: (ctx) => Console.WriteLine($"{((PlayerContext)ctx).PlayerName} is now Idle."),
@@ -112,7 +112,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// You usually won't call this directly. Instead, you'll use a helper method like
-        /// <see cref="FSM_API.Create.CreateFiniteStateMachine(string, int, string)"/>, which then uses this behind the scenes.
+        /// <see cref="FsmApi.Create.CreateFiniteStateMachine(string, int, string)"/>, which then uses this behind the scenes.
         /// </remarks>
         /// <param name="fsmName">The unique name for your new FSM blueprint (e.g., "PlayerMovementFSM").</param>
         /// <param name="processRate">How often instances of this FSM should automatically update. See <see cref="FSM.ProcessRate"/> for details.</param>
@@ -348,7 +348,7 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         /// <remarks>
         /// After calling this, your FSM blueprint is complete and saved. You can then start
-        /// creating live instances of it using <see cref="FSM_API.Create.CreateInstance(string, IStateContext, string)"/>.
+        /// creating live instances of it using <see cref="FsmApi.Create.CreateInstance(string, IStateContext, string)"/>.
         /// <para>
         /// An empty builder is allowed: if no states are added, the registered definition has zero
         /// states and zero transitions and is inert. When states exist and no initial state was
@@ -396,8 +396,8 @@ namespace TheSingularityWorkshop.FSM_API
                 machine.AddTransition(t.From, t.To, t.Condition);
             }
 
-            // Register with FSM_API. This handles new registration or updating an existing one.
-            FSM_API.Internal.Register(
+            // Register with FsmApi. This handles new registration or updating an existing one.
+            FsmApi.Internal.Register(
                 _fsmName,
                 machine,
                 _processRate,
