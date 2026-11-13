@@ -783,6 +783,31 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         }
 
         [Test]
+        public void DestroyingDefinitionDuringEnterStopsUpdate()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            var exitCount = 0;
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", _ =>
+                {
+                    enterCount++;
+                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                }, _ => updateCount++, _ => exitCount++)
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.Zero);
+            Assert.That(exitCount, Is.EqualTo(1));
+        }
+
+        [Test]
         public void DestroyingDefinitionInsideExitDoesNotInvokeExitTwice()
         {
             var exitCount = 0;
