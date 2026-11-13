@@ -308,5 +308,41 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             runtime.UpdateAll();
             Assert.That(updates, Is.EqualTo(4));
         }
+
+        [Test]
+        public void HandleUpdate_ReportsDirectAndScheduledFailuresExactlyOnce()
+        {
+            var fsm = new IntegerFSM(71, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, null, _ => throw new System.InvalidOperationException("update failed"), null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(71, new TestContext());
+
+            handle.Update();
+            var afterDirectUpdate = runtime.GetInstanceErrorCounts();
+            Assert.That(afterDirectUpdate[handle], Is.EqualTo(1));
+
+            runtime.UpdateAll();
+            var afterScheduledUpdate = runtime.GetInstanceErrorCounts();
+            Assert.That(afterScheduledUpdate[handle], Is.EqualTo(2));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void TransitionTo_ReportsFailureToOwningRuntimeAndRethrows()
+        {
+            var fsm = new IntegerFSM(72, processRate: -1);
+            fsm.AddState(new IntegerFSMState(10, null, null, null));
+            fsm.AddState(new IntegerFSMState(20, _ => throw new System.InvalidOperationException("enter failed"), null, null));
+            var runtime = new IntegerFSMRuntime();
+            runtime.Register(fsm);
+            var handle = runtime.CreateInstance(72, new TestContext());
+
+            Assert.Throws<System.InvalidOperationException>(() => handle.TransitionTo(20));
+
+            var counts = runtime.GetInstanceErrorCounts();
+            Assert.That(counts[handle], Is.EqualTo(1));
+        }
+
     }
 }
