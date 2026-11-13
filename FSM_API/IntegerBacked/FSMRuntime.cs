@@ -76,6 +76,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             // does not execute user callbacks. Initial entry runs on the first update.
             // This keeps CreateInstance side-effect-free and makes both representations
             // expose the same observable lifecycle ordering.
+            handle.ErrorReporter = exception => RecordInstanceError(handle, exception);
             handle.IsRegistered = true;
             _handles.Add(handle);
 
@@ -258,14 +259,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     continue;
                 }
 
-                try
-                {
-                    handle.Update();
-                }
-                catch (Exception ex)
-                {
-                    RecordInstanceError(handle, ex);
-                }
+                handle.Update();
             }
         }
 
