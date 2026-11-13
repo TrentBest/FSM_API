@@ -312,36 +312,62 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void HandleUpdate_ReportsDirectAndScheduledFailuresExactlyOnce()
         {
-            var fsm = new IntegerFSM(71, processRate: -1);
-            fsm.AddState(new IntegerFSMState(10, null, _ => throw new System.InvalidOperationException("update failed"), null));
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(fsm);
-            var handle = runtime.CreateInstance(71, new TestContext());
+            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
+            FSM_API.Error.InstanceErrorThreshold = 5;
+            FSM_API.Error.DefinitionErrorThreshold = 3;
 
-            handle.Update();
-            var afterDirectUpdate = runtime.GetInstanceErrorCounts();
-            Assert.That(afterDirectUpdate[handle], Is.EqualTo(1));
+            try
+            {
+                var fsm = new IntegerFSM(71, processRate: -1);
+                fsm.AddState(new IntegerFSMState(10, null, _ => throw new System.InvalidOperationException("update failed"), null));
+                var runtime = new IntegerFSMRuntime();
+                runtime.Register(fsm);
+                var handle = runtime.CreateInstance(71, new TestContext());
 
-            runtime.UpdateAll();
-            var afterScheduledUpdate = runtime.GetInstanceErrorCounts();
-            Assert.That(afterScheduledUpdate[handle], Is.EqualTo(2));
-            Assert.That(handle.IsDestroyed, Is.False);
+                handle.Update();
+                var afterDirectUpdate = runtime.GetInstanceErrorCounts();
+                Assert.That(afterDirectUpdate[handle], Is.EqualTo(1));
+
+                runtime.UpdateAll();
+                var afterScheduledUpdate = runtime.GetInstanceErrorCounts();
+                Assert.That(afterScheduledUpdate[handle], Is.EqualTo(2));
+                Assert.That(handle.IsDestroyed, Is.False);
+            }
+            finally
+            {
+                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+            }
         }
 
         [Test]
         public void TransitionTo_ReportsFailureToOwningRuntimeAndRethrows()
         {
-            var fsm = new IntegerFSM(72, processRate: -1);
-            fsm.AddState(new IntegerFSMState(10, null, null, null));
-            fsm.AddState(new IntegerFSMState(20, _ => throw new System.InvalidOperationException("enter failed"), null, null));
-            var runtime = new IntegerFSMRuntime();
-            runtime.Register(fsm);
-            var handle = runtime.CreateInstance(72, new TestContext());
+            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
+            FSM_API.Error.InstanceErrorThreshold = 5;
+            FSM_API.Error.DefinitionErrorThreshold = 3;
 
-            Assert.Throws<System.InvalidOperationException>(() => handle.TransitionTo(20));
+            try
+            {
+                var fsm = new IntegerFSM(72, processRate: -1);
+                fsm.AddState(new IntegerFSMState(10, null, null, null));
+                fsm.AddState(new IntegerFSMState(20, _ => throw new System.InvalidOperationException("enter failed"), null, null));
+                var runtime = new IntegerFSMRuntime();
+                runtime.Register(fsm);
+                var handle = runtime.CreateInstance(72, new TestContext());
 
-            var counts = runtime.GetInstanceErrorCounts();
-            Assert.That(counts[handle], Is.EqualTo(1));
+                Assert.Throws<System.InvalidOperationException>(() => handle.TransitionTo(20));
+
+                var counts = runtime.GetInstanceErrorCounts();
+                Assert.That(counts[handle], Is.EqualTo(1));
+            }
+            finally
+            {
+                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+            }
         }
 
     }
