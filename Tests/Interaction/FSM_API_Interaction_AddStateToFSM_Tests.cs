@@ -26,7 +26,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
         /// <summary>
         /// 
@@ -34,16 +34,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [Test]
         public void AddStateToFSM_Succeeds_WhenFSMExists()
         {
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: GroupName)
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: GroupName)
                 .State(StateA, null, null, null)
                 .BuildDefinition();
 
-            Assert.That(FSM_API.Interaction.GetFSMDefinition(FsmName, GroupName).GetAllStates().Count, Is.EqualTo(1));
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(FsmName, GroupName).GetAllStates().Count, Is.EqualTo(1));
 
-            FSM_API.Interaction.AddStateToFSM(FsmName, StateB, null, null, null, GroupName);
+            FsmApi.Interaction.AddStateToFSM(FsmName, StateB, null, null, null, GroupName);
 
-            Assert.That(FSM_API.Interaction.GetFSMDefinition(FsmName, GroupName).GetAllStates().Count, Is.EqualTo(2));
-            Assert.That(FSM_API.Interaction.GetFSMDefinition(FsmName, GroupName).HasState(StateB), Is.True);
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(FsmName, GroupName).GetAllStates().Count, Is.EqualTo(2));
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(FsmName, GroupName).HasState(StateB), Is.True);
         }
        
 
@@ -56,11 +56,11 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
         [Test]
         public void AddStateToFSM_InvalidStateName_ThrowsArgumentException(string stateName)
         {
-            FSM_API.Create.CreateFiniteStateMachine(FsmName, processingGroup: GroupName)
+            FsmApi.Create.CreateFiniteStateMachine(FsmName, processingGroup: GroupName)
                 .State(StateA, null, null, null)
                 .BuildDefinition();
 
-            Assert.Throws<ArgumentException>(() => FSM_API.Interaction.AddStateToFSM(FsmName, stateName, null, null, null, GroupName));
+            Assert.Throws<ArgumentException>(() => FsmApi.Interaction.AddStateToFSM(FsmName, stateName, null, null, null, GroupName));
         }
 
        

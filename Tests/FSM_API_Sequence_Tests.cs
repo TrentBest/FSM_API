@@ -25,7 +25,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [SetUp]
         public void Setup()
         {
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -34,29 +34,29 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         [Test]
         public void FSM_Sequences_Correctly()
         {
-            FSM_API.Create.CreateProcessingGroup("TestGroup");
+            FsmApi.Create.CreateProcessingGroup("TestGroup");
 
-            FSM_API.Create.CreateFiniteStateMachine("TestFSM", -1, "TestGroup")
+            FsmApi.Create.CreateFiniteStateMachine("TestFSM", -1, "TestGroup")
                 .State("StateA", OnEnterStateA, OnUpdateStateA, OnExitStateA)
                 .State("StateB", OnEnterStateB, OnUpdateStateB, OnExistStateB)
                 .Transition("StateA", "StateB", ShouldTransitionToB)
                 .Transition("StateB", "StateA", ShouldTransitionToA)
                 .BuildDefinition();
 
-            var handle = FSM_API.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
+            var handle = FsmApi.Create.CreateInstance("TestFSM", new FSMTestContext(), "TestGroup");
 
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
 
             Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
-            FSM_API.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
+            FsmApi.Interaction.Update("TestGroup");
             Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
         }
 

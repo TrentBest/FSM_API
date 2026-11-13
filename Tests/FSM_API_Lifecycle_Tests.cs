@@ -31,7 +31,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             _ctx = new MockContext();
 
             // Ensure clean API state
-            FSM_API.Internal.ResetAPI(true);
+            FsmApi.Internal.ResetAPI(true);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests
         public void Verify_Correct_State_Methods_Are_Called_During_Transition()
         {
             // 1. Arrange: Setup two states with distinct logging signatures
-            FSM_API.Create.CreateFiniteStateMachine("LifeCycle", -1, "Update")
+            FsmApi.Create.CreateFiniteStateMachine("LifeCycle", -1, "Update")
                 .State("StateA",
                 (ctx) => _executionLog.Add("Enter_A"),
                 (ctx) => _executionLog.Add("Update_A"),
@@ -56,10 +56,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             .Transition("StateA", "StateB", (ctx) => true)
             .BuildDefinition();
 
-            FSM_API.Create.CreateInstance("LifeCycle", new MockContext(), "Update");
-            FSM_API.Interaction.Update();
+            FsmApi.Create.CreateInstance("LifeCycle", new MockContext(), "Update");
+            FsmApi.Interaction.Update();
 
-            FSM_API.Interaction.Update();
+            FsmApi.Interaction.Update();
 
             // 3. Assert: Verify the exact order to catch the "Initial State" glitch
             var expectedLog = new List<string>
