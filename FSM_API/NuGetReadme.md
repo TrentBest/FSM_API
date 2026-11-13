@@ -2,6 +2,8 @@
 
 # FSM_API — finite-state behavior you can see
 
+> **Version boundary:** this README documents the 2.0 development API. The currently published NuGet 1.x package still exposes the legacy `FSM_API` entry point; `FsmApi` becomes the supported entry point with the 2.0 release. This development update does not publish or change the package version.
+
 A state machine is easier to understand when its states, transitions, and lifecycle can be seen. FSM_API is a pure C# library for describing reusable finite-state behavior and running independent instances in any host application.
 
 [![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)

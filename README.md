@@ -41,7 +41,9 @@ FsmApi.Create.CreateFiniteStateMachine();
 FsmApi.Interact.Update("Update");
 ```
 
-The public entry point is `FsmApi`. The established library namespace contains the authoritative implementation and exposes `Create`, `Interaction`, `Error`, `Internal`, and explicit `Transfer` modules. The concise `FSM_API` namespace also exposes `FsmApi` for consumers who prefer `using FSM_API;`; its interaction module is named `Interact`. Both surfaces forward to the same string-backed and integer-backed runtimes. The two runtime registries remain independent; conversion occurs only through `FsmApi.Transfer`. The Error facade forwards both the string-backed diagnostic system and the currently exposed integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
+The public entry point is `FsmApi`. The established library namespace contains the authoritative implementation and exposes `Create`, `Interaction`, `Error`, `Internal`, and explicit `Transfer` modules. The concise `FSM_API` namespace also exposes `FsmApi` for consumers who prefer `using FSM_API;`; its interaction module is named `Interact`. Both surfaces forward to the same string-backed and integer-backed runtimes. The two runtime registries remain independent; conversion occurs only through `FsmApi.Transfer`. The Error facade forwards the shared string-backed diagnostic system and integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
+
+**Version boundary:** the `FsmApi` surface described here is the 2.0 development API. The currently published NuGet 1.x package remains on the legacy `FSM_API` entry point until an explicitly authorized 2.0 release. Examples in the 1.x sections below are retained as historical/current-package guidance.
 
 ### What moves the estimate
 
