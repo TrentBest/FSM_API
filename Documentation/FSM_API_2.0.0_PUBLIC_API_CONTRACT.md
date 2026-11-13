@@ -10,10 +10,11 @@ The concise 2.0.0 namespace is `FSM_API`. Consumers may import it once:
 using FSM_API;
 ```
 
-The concise `FSM_API.FsmApi` facade exposes three modules:
+The concise `FSM_API.FsmApi` facade exposes four modules:
 
 - `FsmApi.Create` — define FSMs, compile definitions, and create instances.
 - `FsmApi.Interact` — update, inspect, transition, move, reset, and explicitly destroy live FSMs.
+- `FsmApi.Transfer` — explicitly convert definitions between the independent string-backed and integer-backed representations.
 - `FsmApi.Error` — configure error policy and observe/report diagnostics.
 
 The canonical creation call is:
@@ -60,12 +61,14 @@ The same observable behavior must be available through both string-backed and in
 ### Error
 
 Owns the diagnostic and error-policy boundary:
-- String-backed internal API diagnostics and subscriptions (the current namespace facade forwards this existing system).
+- Shared internal API diagnostics and subscriptions for runtime failures.
+- String-backed instance- and definition-level error accounting.
+- Integer-backed instance- and definition-level diagnostic snapshots and reset operations.
 - String-backed instance- and definition-level error accounting.
 - Configurable thresholds and explicit shutdown policy.
 - Error context sufficient to identify the definition, instance, state, processing group, and callback phase.
 - Deterministic behavior when callbacks both invalidate/destroy an instance and throw.
-- Integer-backed Error parity remains unimplemented and is a tracked 2.0 release gate.
+- Integer-backed diagnostic snapshots, resets, and runtime error reporting are now exposed through the facade. Full threshold-policy and exception-path parity remains a tracked 2.0 release gate.
 
 An invalid context is an execution eligibility gate, not an implicit destruction request. Error policy may explicitly schedule shutdown; validity alone must not.
 

@@ -47,7 +47,7 @@ public sealed class LightSwitch : IStateContext
     public bool IsOn { get; set; }        // Set by FSM state actions.
 }
 
-FsmApi.CreateProcessingGroup("MainLoop");
+FsmApi.Create.CreateProcessingGroup("MainLoop");
 
 Func<IStateContext, bool> shouldTurnOn =
     context => context is LightSwitch light && light.RequestedOn;

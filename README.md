@@ -13,9 +13,9 @@
 
 ## FSM_API 2.0.0 development progress
 
-**Estimated readiness: 42%** · Weighted engineering estimate · Updated 2026-11-12
+**Estimated readiness: 42%** · Last weighted estimate (pre-migration) · Updated 2026-11-13
 
-The 2.0.0 scope is organized around the public **Create**, **Interact**, and **Error** modules. The overall score also accounts for cross-cutting parity, identity, verification, performance, Workshop-grade documentation, and release governance. It is not code coverage, file count, or a release date.
+The 2.0.0 scope is organized around the public **Create**, **Interact**, **Transfer**, and **Error** modules. The overall score also accounts for cross-cutting parity, identity, verification, performance, Workshop-grade documentation, and release governance. It is not code coverage, file count, or a release date.
 
 | Workstream | Weight | Estimated completion | Weighted contribution |
 | :-- | --: | --: | --: |
@@ -32,7 +32,7 @@ The 2.0.0 scope is organized around the public **Create**, **Interact**, and **E
 
 ### Public API target
 
-The 2.0 consumer entry point is intended to be:
+The concise 2.0 consumer entry point on `development` is:
 
 ```csharp
 using FSM_API;
@@ -45,8 +45,8 @@ The public entry point is `FsmApi`. The established library namespace contains t
 
 ### What moves the estimate
 
-- **Create:** definition construction, compilation, identity, and instance creation must converge on the new public facade.
-- **Interact:** update, transition, scheduling, lifecycle, mutation, and destruction semantics must be consistent across both representations.
+- **Create:** the original string-backed implementation is now the authoritative `FsmApi` entry point; integer-backed creation remains a distinct runtime surface. Full parity and identity guarantees remain open.
+- **Interact:** update, transition, scheduling, lifecycle, mutation, and destruction semantics still require complete cross-representation parity evidence.
 - **Error:** diagnostics, thresholds, exception paths, and explicit shutdown behavior must be coherent and testable.
 - **String/integer parity:** every supported string capability must have an equivalent integer-backed capability, demonstrated by equivalent observable traces—not merely by the presence of two implementations.
 - **Identity:** deterministic IDs, reverse diagnostic mappings, and storage/versioning boundaries must be explicit.
@@ -55,7 +55,7 @@ The public entry point is `FsmApi`. The established library namespace contains t
 - **Workshop documentation:** existing material is treated as a substantial first draft. The 2.0 pass must elevate it into an implementation-linked learning and reference system with accurate API docs, executable examples, conceptual models, diagrams, operational truth, and maintenance rules.
 - **Release governance:** preserve unique branch work and reconcile history before reducing the repository to `master` and `development`.
 
-The SVG is a compact view of the module progress. Update the score, bars, and this table together when committed implementation and evidence change. 100% means all release gates are evidenced and ready for owner review; it does **not** authorize publication.
+The 42% score and module percentages below are the last weighted estimate from before the FsmApi migration; they have not yet been recalculated and must not be read as a current measurement of this commit. The SVG is a compact view of that baseline estimate. Recalculate the score, bars, and table together when the remaining parity, performance, and Workshop documentation evidence is assessed. 100% means all release gates are evidenced and ready for owner review; it does **not** authorize publication.
 
 ---
 
