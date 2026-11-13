@@ -753,5 +753,59 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
         }
 
+
+
+        [Test]
+        public void DestroyingDefinitionDuringUpdateStopsRemainingCallbacks()
+        {
+            var updateCount = 0;
+            var guardCount = 0;
+            var exitCount = 0;
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", null, _ =>
+                {
+                    updateCount++;
+                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                }, _ => exitCount++)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(exitCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DestroyingDefinitionInsideExitDoesNotInvokeExitTwice()
+        {
+            var exitCount = 0;
+            var targetEnterCount = 0;
+            FSM_API.Create.CreateProcessingGroup(_testProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", null, null, _ =>
+                {
+                    exitCount++;
+                    FSM_API.Interaction.DestroyFiniteStateMachine(_testFsmName, _testProcessingGroup);
+                })
+                .State("StateB", _ => targetEnterCount++, null, null)
+                .Transition("StateA", "StateB", _ => true)
+                .WithInitialState("StateA")
+                .BuildDefinition();
+
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, new TestContext(), _testProcessingGroup);
+            handle.EvaluateConditions();
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(targetEnterCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+        }
     }
 }
