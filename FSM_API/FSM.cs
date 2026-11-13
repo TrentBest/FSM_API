@@ -687,7 +687,8 @@ namespace TheSingularityWorkshop.FSM_API
                 exitStarted = true;
                 try
                 {
-                    fromState.Exit(ctx);
+                    if (owner != null) owner.ExitState(fromState);
+                    else fromState.Exit(ctx);
                 }
                 catch (Exception ex)
                 {
