@@ -434,7 +434,7 @@ namespace TheSingularityWorkshop.FSM_API
 
             // State callbacks are user code. A callback may close the execution gate
             // without destroying the handle; stop this step at that callback boundary.
-            if (!ctx.IsValid)
+            if (!ctx.IsValid || (instanceHandle != null && instanceHandle.IsDestroyed))
             {
                 return;
             }
@@ -455,7 +455,7 @@ namespace TheSingularityWorkshop.FSM_API
                 try
                 {
                     var conditionMatched = t.Condition(ctx);
-                    if (!ctx.IsValid)
+                    if (!ctx.IsValid || (instanceHandle != null && instanceHandle.IsDestroyed))
                     {
                         return;
                     }
@@ -469,8 +469,14 @@ namespace TheSingularityWorkshop.FSM_API
                         }
 
                         exitStarted = true;
-                        currentState.Exit(ctx);
+                        if (instanceHandle != null) instanceHandle.ExitState(currentState);
+                        else currentState.Exit(ctx);
 
+                        if (instanceHandle != null && instanceHandle.IsDestroyed)
+                        {
+                            next = current;
+                            return;
+                        }
                         if (!ctx.IsValid)
                         {
                             var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
@@ -550,7 +556,7 @@ namespace TheSingularityWorkshop.FSM_API
                     try
                     {
                         var conditionMatched = t.Condition(ctx);
-                        if (!ctx.IsValid)
+                        if (!ctx.IsValid || (instanceHandle != null && instanceHandle.IsDestroyed))
                         {
                             return;
                         }
@@ -563,8 +569,14 @@ namespace TheSingularityWorkshop.FSM_API
                             }
 
                             exitStarted = true;
-                            currentState.Exit(ctx);
+                            if (instanceHandle != null) instanceHandle.ExitState(currentState);
+                            else currentState.Exit(ctx);
 
+                            if (instanceHandle != null && instanceHandle.IsDestroyed)
+                            {
+                                next = current;
+                                return;
+                            }
                             if (!ctx.IsValid)
                             {
                                 var suspendedHandle = instanceHandle ?? FSM_API.Internal.GetFSMHandle(Name, ctx, ProcessingGroup);
