@@ -2,11 +2,11 @@
 
 **Last reviewed:** 2026-11-13  
 **Branch:** `development`  
-**Current development commit:** `69d3027198e154502ecab58583a2320d6ac22523`
+**Current development commit:** `1bd82ae6be8448a08f2822bdb67f681bc772aa2e`
 
 ## Public API migration
 
-<badge>Implemented on development</badge>
+**Status: Implemented on development**
 
 - The original string-backed public implementation is now `TheSingularityWorkshop.FSM_API.FsmApi`.
 - Its partial implementation and timer surface are consolidated under `FsmApi`.
@@ -27,7 +27,7 @@ The latest completed full validation is [workflow run #979](https://github.com/T
 - Codecov upload: succeeded.
 - NuGet publication: skipped.
 
-The current commit only refines the XML documentation on the concise facade. Its validation run is tracked separately; do not treat the previous run as proof for that comment-only commit.
+The current head contains documentation-only updates since run #979. Its validation run is tracked separately; do not treat the previous run as proof for this latest documentation commit.
 
 ## Remaining 2.0 release gates
 
