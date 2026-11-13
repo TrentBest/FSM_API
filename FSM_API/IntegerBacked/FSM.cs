@@ -359,9 +359,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
-                    $"Error during Update logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
-                    ex);
+                // Route instance callback failures through the owning runtime when available so
+                // its per-instance and per-definition error counters remain authoritative.
+                if (owner != null && owner.ErrorReporter != null)
+                {
+                    owner.ErrorReporter(ex);
+                }
+                else
+                {
+                    TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
+                        $"Error during Update logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
+                        ex);
+                }
             }
 
             // A callback may unregister the definition and destroy this handle.
