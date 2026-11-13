@@ -533,6 +533,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return false;
             }
 
+            // Commit the target identity before invoking user code. A target Enter
+            // callback can unregister this definition, which tears down the handle
+            // synchronously; teardown must Exit the target being entered rather than
+            // invoke Exit on the source state a second time.
+            if (owner != null)
+            {
+                owner.CurrentStateID = toID;
+                owner.HasEnteredCurrentState = false;
+            }
+
             try
             {
                 toState.Enter(context);
