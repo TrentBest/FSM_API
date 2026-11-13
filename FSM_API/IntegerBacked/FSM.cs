@@ -333,7 +333,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (!TryGetState(currentID, out var currentState))
             {
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"FSM '{FSM_ID}' has invalid current state '{currentID}'. Attempting recovery to initial state '{InitialStateID}'.",
                     new InvalidOperationException($"Current state '{currentID}' does not exist in FSM '{FSM_ID}'."));
 
@@ -342,7 +342,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // also removed, report the broken definition without throwing from Step.
                 if (!TryGetState(InitialStateID, out _))
                 {
-                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Initial state '{InitialStateID}' does not exist in integer FSM '{FSM_ID}'. Recovery cannot enter a state.",
                         new InvalidOperationException($"Initial state '{InitialStateID}' does not exist in FSM '{FSM_ID}'."));
                     return InitialStateID;
@@ -359,7 +359,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"Error during Update logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
             }
@@ -398,7 +398,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 catch (Exception ex)
                 {
-                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     if (!context.IsValid)
@@ -448,7 +448,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 catch (Exception ex)
                 {
-                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Error during Exit logic of integer state '{currentID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     if (!context.IsValid)
@@ -499,7 +499,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 catch (Exception ex)
                 {
-                    TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                    TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Error during Exit logic of integer state '{fromID}' during forced transition to '{toID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                         ex);
                     // Match the string-backed contract: an Exit failure is reported,
@@ -526,7 +526,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             if (!TryGetState(toID, out var toState))
             {
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"Target state '{toID}' for forced transition does not exist in integer FSM '{FSM_ID}'. Forced transition failed.",
                     new ArgumentException($"Target state '{toID}' does not exist in FSM '{FSM_ID}.", nameof(toID)));
                 if (owner != null && exitStarted) owner.HasEnteredCurrentState = false;
@@ -549,7 +549,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"Error during Enter logic of integer state '{toID}' during forced transition from '{fromID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
 
@@ -581,7 +581,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             catch (Exception ex)
             {
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"Error evaluating integer transition condition from '{currentID}' to '{transition.ToID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
                 return false;
@@ -598,7 +598,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 // Match string-backed manual evaluation: isolate a failing guard to its
                 // candidate so later transitions can still be considered.
-                TheSingularityWorkshop.FSM_API.FSM_API.Error.InvokeInternalApiError(
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                     $"Error evaluating manual integer transition condition from '{currentID}' to '{transition.ToID}' in FSM '{FSM_ID}'. Exception: {ex.Message}",
                     ex);
                 return false;
