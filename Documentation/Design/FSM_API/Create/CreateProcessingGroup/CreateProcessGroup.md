@@ -2,7 +2,7 @@
  /// <summary>
  /// Ensures an FSM processing group exists within the API's internal management system.
  /// FSM instances registered under this group will be processed when the corresponding
- /// <c>Tick</c> method (e.g., <see cref="FSM_API.Interaction.Update(string)"/>)
+ /// <c>Tick</c> method (e.g., <see cref="FsmApi.Interaction.Update(string)"/>)
  /// is called for that specific group.
  /// </summary>
  /// <remarks>

@@ -39,7 +39,7 @@ The exact state-builder API is demonstrated in the [Getting Started with C# guid
 const string group = "PlayerSession";
 const string name = "GameStateManager";
 
-var builder = FSM_API.Create.CreateFiniteStateMachine(
+var builder = FsmApi.Create.CreateFiniteStateMachine(
     name,
     processRate: 1,
     processingGroup: group);
@@ -50,7 +50,7 @@ var builder = FSM_API.Create.CreateFiniteStateMachine(
 builder.BuildDefinition();
 
 // A runtime instance is a separate operation:
-var handle = FSM_API.Create.CreateInstance(name, playerContext, group);
+var handle = FsmApi.Create.CreateInstance(name, playerContext, group);
 ```
 
 The middle section is intentionally a placeholder: a useful definition must have its state structure and initial state configured before it is built.

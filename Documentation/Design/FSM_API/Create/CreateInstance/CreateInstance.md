@@ -40,8 +40,8 @@ An `FSMHandle` for the new instance. Use the handle to interact with that instan
 var firstDoor = new DoorContext { Name = "FrontDoor" };
 var secondDoor = new DoorContext { Name = "GarageDoor" };
 
-FSMHandle front = FSM_API.Create.CreateInstance("DoorFSM", firstDoor, "Doors");
-FSMHandle garage = FSM_API.Create.CreateInstance("DoorFSM", secondDoor, "Doors");
+FSMHandle front = FsmApi.Create.CreateInstance("DoorFSM", firstDoor, "Doors");
+FSMHandle garage = FsmApi.Create.CreateInstance("DoorFSM", secondDoor, "Doors");
 ```
 
 Both handles refer to the same named definition, but each instance is associated with its own context. The context objects remain application-owned; FSM_API does not require you to turn your domain model into a library-specific object graph.

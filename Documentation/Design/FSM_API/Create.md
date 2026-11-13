@@ -1,6 +1,6 @@
 # Create: turn a behavior design into a running FSM
 
-The `FSM_API.Create` methods form the entry point from an intended behavior to an executable state machine. The steps are deliberately separate: organize processing, describe a reusable definition, register that definition, then create an instance bound to application data.
+The `FsmApi.Create` methods form the entry point from an intended behavior to an executable state machine. The steps are deliberately separate: organize processing, describe a reusable definition, register that definition, then create an instance bound to application data.
 
 <p align="center">
   <a href="Visuals/Create_Journey.svg">
@@ -31,10 +31,10 @@ const string group = "Doors";
 const string definitionName = "DoorFSM";
 
 // Optional: FSM_API creates the group automatically when needed.
-FSM_API.Create.CreateProcessingGroup(group);
+FsmApi.Create.CreateProcessingGroup(group);
 
 // Define reusable behavior, then register it.
-FSM_API.Create
+FsmApi.Create
     .CreateFiniteStateMachine(definitionName, processRate: 1, processingGroup: group)
     .State("Closed")
     .State("Open")
@@ -45,11 +45,11 @@ FSM_API.Create
 
 // Create an instance bound to this door's application data.
 var door = new DoorContext();
-FSMHandle handle = FSM_API.Create.CreateInstance(definitionName, door, group);
+FSMHandle handle = FsmApi.Create.CreateInstance(definitionName, door, group);
 
 // Your application controls the input and update cadence.
 door.OpenRequested = true;
-FSM_API.Interaction.Update(group);
+FsmApi.Interaction.Update(group);
 
 // Context type can be declared after top-level statements.
 public sealed class DoorContext : IStateContext

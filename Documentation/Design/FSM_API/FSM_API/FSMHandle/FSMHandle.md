@@ -52,4 +52,4 @@ This distinction follows the implementation: `FSMHandle.IsValid` mirrors `Contex
 There are two different lifecycle operations:
 
 - **Suspend / reuse:** set `handle.Context.IsValid = false`. The scheduler skips the handle but retains it in the registered instance collection, preserving its current state. Set it back to `true` to resume that same handle when the context is safe to use.
-- **Destroy:** call `FSM_API.Interaction.DestroyInstance(handle)`. The API removes the handle from its registered collection and runs teardown; the internal `DestroyHandle()` path exits the current state and marks the context invalid. A destroyed handle is not a pooled inactive instance and should not be reused.
+- **Destroy:** call `FsmApi.Interaction.DestroyInstance(handle)`. The API removes the handle from its registered collection and runs teardown; the internal `DestroyHandle()` path exits the current state and marks the context invalid. A destroyed handle is not a pooled inactive instance and should not be reused.

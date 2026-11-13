@@ -139,7 +139,7 @@ using TheSingularityWorkshop.FSM_API;
 
 var door = new DoorContext { RequestOpen = true };
 
-FSM_API.Create.CreateFiniteStateMachine(
+FsmApi.Create.CreateFiniteStateMachine(
         "DoorFSM",
         processRate: 1,
         processingGroup: "Tutorial")
@@ -154,11 +154,11 @@ FSM_API.Create.CreateFiniteStateMachine(
         context => !((DoorContext)context).RequestOpen)
     .BuildDefinition();
 
-_ = FSM_API.Create.CreateInstance("DoorFSM", door, "Tutorial");
+_ = FsmApi.Create.CreateInstance("DoorFSM", door, "Tutorial");
 
 // The host application decides when the FSM is updated.
 for (var tick = 0; tick < 3; tick++)
-    FSM_API.Interaction.Update("Tutorial");
+    FsmApi.Interaction.Update("Tutorial");
 
 Console.WriteLine($"{door.Name} open: {door.IsOpen}");
 
@@ -200,7 +200,7 @@ Already have an application? You do not need to rebuild it around FSM_API.
 2. Implement `IStateContext` on an application-owned object or create a small adapter around an existing model. Provide `Name` and `IsValid`.
 3. Define the state machine during your existing startup/setup phase.
 4. Create an FSM instance for each object that needs the behavior.
-5. Call `FSM_API.Interaction.Update("YourProcessingGroup")` from the update point your application already controls.
+5. Call `FsmApi.Interaction.Update("YourProcessingGroup")` from the update point your application already controls.
 
 Your application continues to own its data, services, UI, networking, and main loop. FSM_API supplies the state/transition mechanism; it does not take over application scheduling or presentation.
 
@@ -254,7 +254,7 @@ The library project currently targets `net8.0`, `net6.0`, `netcoreapp3.1`, `nets
 
 ## 🔬 Internal Architecture (Advanced)
 
-For academic interest or advanced debugging, the `FSM_API.Internal` namespace exposes the engine's core machinery. 
+For academic interest or advanced debugging, the `FsmApi.Internal` namespace exposes the engine's core machinery. 
 
 > **Warning:** These methods are intended for internal use. Direct modification may bypass safety checks.
 

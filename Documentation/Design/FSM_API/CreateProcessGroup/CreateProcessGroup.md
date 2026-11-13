@@ -28,13 +28,13 @@ The sequence diagram below illustrates the steps involved when a developer calls
 sequenceDiagram
     participant Developer
     participant FSM_API
-    participant FSM_API.Internal
+    participant FsmApi.Internal
 
     Developer->>FSM_API: Call CreateProcessingGroup("MyGameGroup")
-    FSM_API->>FSM_API.Internal: ValidateGroupName("MyGameGroup")
-    FSM_API.Internal-->>FSM_API: Validation successful
-    FSM_API->>FSM_API.Internal: CreateNewProcessingGroup("MyGameGroup")
-    FSM_API.Internal-->>FSM_API: ProcessingGroup created
+    FSM_API->>FsmApi.Internal: ValidateGroupName("MyGameGroup")
+    FsmApi.Internal-->>FSM_API: Validation successful
+    FSM_API->>FsmApi.Internal: CreateNewProcessingGroup("MyGameGroup")
+    FsmApi.Internal-->>FSM_API: ProcessingGroup created
     FSM_API-->>Developer: Return success
 ```
 
@@ -70,7 +70,7 @@ This diagram highlights that the `Processing Group` is a central concept that "m
 // All subsequent FSMs and instances for this session will use this group name.
 
 string gameSessionName = "Player_123_Session";
-FSM_API.Create.CreateProcessingGroup(gameSessionName);
+FsmApi.Create.CreateProcessingGroup(gameSessionName);
 
 // The `gameSessionName` variable can now be used when creating FSMs
 // and instances to ensure they all belong to the same group.
