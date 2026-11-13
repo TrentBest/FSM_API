@@ -56,7 +56,7 @@ D)  A/B Testing: Dynamically switching between different FSM behaviors for exper
 
 ## 🔑 Accessing and Using the FSMModifier
 
-The FSMModifier is an internal class, so you can't create it directly. Instead, you access its functionality through a set of public, static helper methods on FSM_API.Interaction. These methods are designed to simplify common modification tasks like adding or removing states and transitions.
+The FSMModifier is an internal class, so you can't create it directly. Instead, you access its functionality through a set of public, static helper methods on FsmApi.Interaction. These methods are designed to simplify common modification tasks like adding or removing states and transitions.
 
 The FSMModifier uses a fluent API pattern where you first stage the changes you want to make and then apply them with a single ModifyDefinition() call. All changes are batched and applied sequentially when ModifyDefinition() is called, making the process safe and predictable.
 
@@ -70,7 +70,7 @@ The current application order is: process group/rate changes, remove states (red
 
 
 
-All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FSM_API.Interaction.
+All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FsmApi.Interaction.
 
 Staging Changes with With... and Without...
 
@@ -81,7 +81,7 @@ This method adds a new state to an existing FSM definition. If a state with the 
 C# Example:
 ```csharp
 
-FSM_API.Interaction.AddStateToFSM(
+FsmApi.Interaction.AddStateToFSM(
     "PlayerFSM",
     "SpecialAttack",
     onEnter: ctx => Console.WriteLine("Prepare special attack!"),
@@ -98,7 +98,7 @@ C# Example:
 ```csharp
 
 // Change the "Idle" state's behavior
-FSM_API.Interaction.ModifyState(
+FsmApi.Interaction.ModifyState(
     "PlayerFSM",
     "Idle",
     onEnter: ctx => Console.WriteLine("Entered a NEW and improved Idle state."),
@@ -114,7 +114,7 @@ This method stages a state for removal from the FSM definition.
 C# Example:
 ```csharp
 // Remove a state and transition all instances to "InitialState"
-FSM_API.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
+FsmApi.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
 ```
 
 When the removed state is the current state of an active handle, `ModifyDefinition()` first attempts the supplied fallback state. If that state exists in the definition and is not the state being removed, the handle transitions there using the normal transition behavior. If the fallback is blank, missing, or names the state being removed, the handle instead transitions to the FSM's `InitialState`. This is a safety net, not a substitute for designing a valid default state and its entry behavior.
@@ -130,7 +130,7 @@ This method adds a new transition rule between two states. If the transition alr
 C# Example:
 ```csharp
 // Add a new transition from "Idle" to "Sleeping"
-FSM_API.Interaction.AddTransition(
+FsmApi.Interaction.AddTransition(
     "PlayerFSM",
     "Idle",
     "Sleeping",
@@ -144,7 +144,7 @@ This method updates the condition of an existing transition between two states. 
 C# Example:
 ```csharp
 // Change the condition for the "Damaged" -> "CriticallyInjured" transition
-FSM_API.Interaction.ModifyTransition(
+FsmApi.Interaction.ModifyTransition(
     "PlayerFSM",
     "Damaged",
     "CriticallyInjured",
@@ -159,7 +159,7 @@ This method removes a specific transition rule. It requires the fromState and to
 C# Example:
 ```csharp
 // Remove the transition from "Running" to "Jumping"
-FSM_API.Interaction.RemoveTransition("PlayerFSM", "Running", "Jumping");
+FsmApi.Interaction.RemoveTransition("PlayerFSM", "Running", "Jumping");
 ```
 ## 🔄 Manipulating Live FSM Instances (FSMHandle)
 

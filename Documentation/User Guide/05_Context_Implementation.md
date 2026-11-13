@@ -209,7 +209,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
         // Example FSM Definition (often defined once in a central manager or at startup)
         if (!FSM_API.Exists("EnemyCombatFSM"))
         {
-            FSM_API.CreateFiniteStateMachine("EnemyCombatFSM", processingGroup: "Update")
+            FsmApi.Create.CreateFiniteStateMachine("EnemyCombatFSM", processingGroup: "Update")
                 .State("Patrol",
                     onEnter: ctx => ((EnemyAI)ctx).StartPatrol(),
                     onUpdate: ctx => ((EnemyAI)ctx).DoPatrol(),
@@ -234,7 +234,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
     void Start()
     {
         // Create an FSM instance and link *this* MonoBehaviour as its context.
-        myFSM = FSM_API.CreateInstance("EnemyCombatFSM", this);
+        myFSM = FsmApi.Create.CreateInstance("EnemyCombatFSM", this);
         Debug.Log($"[{Name}] FSM initialized to: {myFSM.CurrentState}");
     }
 

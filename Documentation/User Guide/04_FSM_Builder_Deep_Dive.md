@@ -50,7 +50,7 @@ The `FSMBuilder` is designed with a **fluent API** pattern, meaning most of its 
 
 **C# Example:**
 ```csharp
-FSM_API.CreateFiniteStateMachine("MyPlayerFSM")
+FsmApi.Create.CreateFiniteStateMachine("MyPlayerFSM")
     .State("Idle", onUpdate: ctx => Console.WriteLine("Player is idling..."))
     .State("Walking", onUpdate: ctx => Console.WriteLine("Player is walking..."))
     .WithInitialState("Idle")
@@ -63,14 +63,14 @@ Each call adds to the FSM's structure in a logical, flowing manner.
 
 -----
 
-## 🏁 Starting the Build: `FSM_API.CreateFiniteStateMachine()`
+## 🏁 Starting the Build: `FsmApi.Create.CreateFiniteStateMachine()`
 
-You begin defining any FSM blueprint by calling `FSM_API.CreateFiniteStateMachine()`. This factory method returns an `FSMBuilder` instance, ready for your configuration.
+You begin defining any FSM blueprint by calling `FsmApi.Create.CreateFiniteStateMachine()`. This factory method returns an `FSMBuilder` instance, ready for your configuration.
 
 **C\# Example:**
 
 ```csharp
-var fsmBuilder = FSM_API.CreateFiniteStateMachine(
+var fsmBuilder = FsmApi.Create.CreateFiniteStateMachine(
     fsmName: "EnemyAI",
     processRate: 1, // Optional: default update frequency for instances of this FSM
     processingGroup: "AI" // Optional: default processing group for instances
@@ -211,7 +211,7 @@ builder.AnyTransition("Dead", ctx => ((CharacterContext)ctx).CurrentHealth <= 0)
 
 ## ⏱ Controlling Update Rate: `.WithProcessRate()`
 
-While `FSM_API.CreateFiniteStateMachine()` allows you to set an initial `processRate`, you can also define or override it explicitly using `WithProcessRate()`. This method controls how frequently `onUpdate` methods are called and how often transitions are checked for *instances* created from this specific FSM definition.
+While `FsmApi.Create.CreateFiniteStateMachine()` allows you to set an initial `processRate`, you can also define or override it explicitly using `WithProcessRate()`. This method controls how frequently `onUpdate` methods are called and how often transitions are checked for *instances* created from this specific FSM definition.
 
 <a href="Visuals/Processing_Groups_And_Rates.svg" target="_blank"><img src="Visuals/Processing_Groups_And_Rates.svg" alt="Diagram showing host-driven processing-group ticks and how ProcessRate values 1, N greater than 1, and 0 affect automatic updates" width="100%" style="max-width: 100%; height: auto;"></a>
 
@@ -234,12 +234,12 @@ builder.WithProcessRate(5); // Instances of this FSM will update every 5 ticks o
 
 ## 🏷 Naming Your FSM Blueprint: `.WithName()`
 
-If you didn't provide a name in `FSM_API.CreateFiniteStateMachine()`, or if you wish to change the FSM definition's name before building it, use `WithName()`.
+If you didn't provide a name in `FsmApi.Create.CreateFiniteStateMachine()`, or if you wish to change the FSM definition's name before building it, use `WithName()`.
 
 **C\# Example:**
 
 ```csharp
-FSM_API.CreateFiniteStateMachine()
+FsmApi.Create.CreateFiniteStateMachine()
     .WithName("DynamicEnemyBehavior") // Setting the FSM's name
     .State(...)
     .BuildDefinition();
@@ -267,7 +267,7 @@ builder.WithProcessingGroup("GameLogic"); // Instances will default to the "Game
 
 ### How the host drives processing groups
 
-FSM_API core does not create engine-specific `Update`, `FixedUpdate`, or `LateUpdate` loops. The host chooses when to call `FSM_API.Interaction.Update(processingGroup)` and which named group to tick. Names such as `Gameplay`, `UI`, or `Physics` are conventions chosen by the application; a name like `FixedUpdate` has no special engine timing semantics inside the core library. See [Getting Started with FSM_API in pure C#](03_Getting_Started_CSharp.md) for a host-neutral example.
+FSM_API core does not create engine-specific `Update`, `FixedUpdate`, or `LateUpdate` loops. The host chooses when to call `FsmApi.Interaction.Update(processingGroup)` and which named group to tick. Names such as `Gameplay`, `UI`, or `Physics` are conventions chosen by the application; a name like `FixedUpdate` has no special engine timing semantics inside the core library. See [Getting Started with FSM_API in pure C#](03_Getting_Started_CSharp.md) for a host-neutral example.
 
 -----
 
@@ -276,7 +276,7 @@ FSM_API core does not create engine-specific `Update`, `FixedUpdate`, or `LateUp
 Calling `BuildDefinition()` registers the FSM definition with FSM_API. It does not return a definition object, and it does not make the definition immutable: the registered definition can be changed later through the runtime modification API.
 
 ```csharp
-FSM_API.Create.CreateFiniteStateMachine("PlayerFSM")
+FsmApi.Create.CreateFiniteStateMachine("PlayerFSM")
     .State("Idle", onEnter: null, onUpdate: null, onExit: null)
     .BuildDefinition();
 ```
@@ -287,7 +287,7 @@ FSM_API.Create.CreateFiniteStateMachine("PlayerFSM")
 new FSMBuilder().Build();
 ```
 
-An empty builder is allowed. That example registers an unnamed definition with zero states and zero transitions. It is inert—not a failure. Similarly, `FSM_API.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition();` registers an empty definition with manual processing rate `-1`. An FSM with no states has no state behavior to execute; when a populated FSM needs recovery, design its initial state deliberately.
+An empty builder is allowed. That example registers an unnamed definition with zero states and zero transitions. It is inert—not a failure. Similarly, `FsmApi.Create.CreateFiniteStateMachine("Works", -1, "Update").BuildDefinition();` registers an empty definition with manual processing rate `-1`. An FSM with no states has no state behavior to execute; when a populated FSM needs recovery, design its initial state deliberately.
 
 ### What the build call does
 

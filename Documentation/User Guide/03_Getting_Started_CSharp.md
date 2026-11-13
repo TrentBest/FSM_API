@@ -158,7 +158,7 @@ public class GameCharacterContext : IStateContext
 
 ## ✅ Step 2: Define and Create the FSM
 
-With your context ready, you can now define your FSM using `FsmApi.CreateFiniteStateMachine()` and its fluent builder pattern. Then, create an instance of that FSM, linking it to your `GameCharacterContext`.
+With your context ready, you can now define your FSM using `FsmApi.Create.CreateFiniteStateMachine()` and its fluent builder pattern. Then, create an instance of that FSM, linking it to your `GameCharacterContext`.
 
 ### 🎯 Example: `PureCSharpGameLoop.cs`
 
@@ -189,7 +189,7 @@ public class PureCSharpGameLoop
         // The FSM definition is reusable across multiple instances.
         if (!FSM_API.Exists("CharacterHealthFSM"))
         {
-            FsmApi.CreateFiniteStateMachine("CharacterHealthFSM", processRate: 1, processingGroup: "GameLogic")
+            FsmApi.Create.CreateFiniteStateMachine("CharacterHealthFSM", processRate: 1, processingGroup: "GameLogic")
                 .State("Healthy",
                     onEnter: ctx => ((GameCharacterContext)ctx).PlaySound("HappyTune"),
                     onUpdate: ctx => 
@@ -223,7 +223,7 @@ public class PureCSharpGameLoop
         }
 
         // Create a live FSM instance, associating it with our playerCharacter context.
-        characterHealthFSM = FsmApi.CreateInstance("CharacterHealthFSM", playerCharacter);
+        characterHealthFSM = FsmApi.Create.CreateInstance("CharacterHealthFSM", playerCharacter);
         Console.WriteLine($"FSM for {playerCharacter.Name} initialized to state: {characterHealthFSM.CurrentState}");
     }
 
@@ -312,7 +312,7 @@ To run this pure C\# FSM example:
 
   * FSM\_API works seamlessly outside of Unity and other game engines, providing a powerful FSM solution for any pure C\# application.
   * You define your application's data models or entities as classes that implement the **`IStateContext`** interface.
-  * FSM definition and instantiation logic remain consistent with Unity usage, using `FsmApi.CreateFiniteStateMachine()` and `FsmApi.CreateInstance()`.
+  * FSM definition and instantiation logic remain consistent with Unity usage, using `FsmApi.Create.CreateFiniteStateMachine()` and `FsmApi.Create.CreateInstance()`.
   * You gain explicit control over when FSMs process their logic by calling `FSM_API.Update("YourGroupName")` from your application's main loop or scheduler.
   * This makes FSM\_API an ideal choice for server-side logic, complex simulations, AI systems, backend services, or custom game engines where you need robust and decoupled state management.
 
