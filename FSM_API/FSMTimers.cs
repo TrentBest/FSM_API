@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace TheSingularityWorkshop.FSM_API
 {
-public static partial class FSM_API
+public static partial class FsmApi
     {
 public static partial class Interaction
         {
