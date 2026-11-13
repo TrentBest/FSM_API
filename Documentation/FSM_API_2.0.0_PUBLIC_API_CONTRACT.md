@@ -1,10 +1,10 @@
 # FSM_API 2.0.0 — Public API and Documentation Contract
 
-**Status:** the additive `FSM_API.FsmApi` namespace facade and its `Create`, `Interact`, and `Error` modules are implemented on `development`. The facade currently forwards to existing runtime types in `TheSingularityWorkshop.FSM_API`; a full migration of every public runtime type into the shorter namespace remains incomplete. Integer-backed Error parity, full string/integer behavioral parity, and CI verification of the current facade changes remain release gates.
+**Status:** `FsmApi` is the authoritative public entry-point type in `TheSingularityWorkshop.FSM_API`. The concise `FSM_API.FsmApi` consumer facade is also available and forwards to the same runtime. The original `FSM_API` implementation type has been renamed; the repository, package ID, and established namespaces remain unchanged. Integer-backed Error parity, full string/integer behavioral parity, and CI verification remain release gates.
 
 ## 1. Consumer-facing entry point
 
-The 2.0.0 public namespace is `FSM_API`. Consumers import it once:
+The concise 2.0.0 namespace is `FSM_API`. Consumers may import it once:
 
 ```csharp
 using FSM_API;
@@ -27,7 +27,7 @@ var builder = FsmApi.Create.CreateFiniteStateMachine(
     processingGroup: "Update");
 ```
 
-The desired public shape is intentionally not `FSM_API.Create...`. `FSM_API` is the namespace; `FsmApi` is the stable, readable facade type. The module names are nouns/verbs chosen to make call sites discoverable and consistent.
+The desired public shape is intentionally not `FSM_API.Create...`. `FSM_API` is the namespace; `FsmApi` is the stable, readable API type. In the established `TheSingularityWorkshop.FSM_API` namespace, the runtime interaction module is `Interaction`; the concise facade exposes it as `Interact`.
 
 ## 2. Module responsibilities
 
@@ -121,7 +121,7 @@ The overall score is a weighted engineering estimate, not code coverage or a rel
 
 ## 7. Compatibility and migration
 
-The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to the additive `FSM_API` namespace facade. The facade currently returns runtime types in the established namespace, so consumers that need explicit type names may also import `TheSingularityWorkshop.FSM_API`. Because that namespace contains the compatibility `FsmApi` type too, use an alias to keep the new facade unambiguous: The intended call shape is:
+The published 1.x package remains a separate compatibility line. Its namespace and call sites must not be silently rewritten in examples that claim to target 1.0.13. The 2.0 documentation must label version-specific examples clearly and provide a migration guide from the 1.x surface to the additive `FSM_API` namespace facade. The concise facade returns runtime types in the established namespace. Consumers using both namespaces can alias the concise entry point to keep it unambiguous. The intended call shape is:
 
 ```csharp
 using FsmApi = FSM_API.FsmApi;

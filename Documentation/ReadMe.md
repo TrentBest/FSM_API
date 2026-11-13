@@ -23,7 +23,7 @@ Complex behavior often collapses into scattered conditionals and implicit lifecy
 
 ## 🔺 03 How
 
-Describe the states and transition conditions with the builder API, create an instance with an IStateContext, then advance the chosen processing group through FSM_API.Interaction.Update(...). The host owns its main loop; FSM_API owns the state-machine execution semantics.
+Describe the states and transition conditions with the builder API, create an instance with an IStateContext, then advance the chosen processing group through FsmApi.Interaction.Update(...). The host owns its main loop; FSM_API owns the state-machine execution semantics.
 
 The animation below is a **conceptual model**, not a live debugger. It illustrates the relationship between the reusable definition, a running instance, and its context. The executable code and tests remain authoritative.
 

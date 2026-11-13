@@ -47,7 +47,7 @@ public sealed class LightSwitch : IStateContext
     public bool IsOn { get; set; }        // Set by FSM state actions.
 }
 
-FSM_API.CreateProcessingGroup("MainLoop");
+FsmApi.CreateProcessingGroup("MainLoop");
 
 Func<IStateContext, bool> shouldTurnOn =
     context => context is LightSwitch light && light.RequestedOn;
@@ -55,7 +55,7 @@ Func<IStateContext, bool> shouldTurnOn =
 Func<IStateContext, bool> shouldTurnOff =
     context => context is LightSwitch light && !light.RequestedOn;
 
-FSM_API.Create.CreateFiniteStateMachine(
+FsmApi.Create.CreateFiniteStateMachine(
         "LightSwitchFSM", processRate: 1, processingGroup: "MainLoop")
     .State("Off", onEnter: context =>
     {
@@ -71,10 +71,10 @@ FSM_API.Create.CreateFiniteStateMachine(
     .BuildDefinition();
 
 var kitchenLight = new LightSwitch();
-var handle = FSM_API.Create.CreateInstance(
+var handle = FsmApi.Create.CreateInstance(
     "LightSwitchFSM", kitchenLight, "MainLoop");
 
-FSM_API.Interaction.Update("MainLoop");
+FsmApi.Interaction.Update("MainLoop");
 ```
 
 The host decides when to call Update. Transition conditions determine whether an instance changes state; the application context remains yours to own and evolve.

@@ -41,7 +41,7 @@ FsmApi.Create.CreateFiniteStateMachine();
 FsmApi.Interact.Update("Update");
 ```
 
-The `FSM_API` namespace facade is now implemented additively on `development`, with `Create`, `Interact`, and `Error` modules. It forwards to the existing string-backed runtime and exposes the currently supported integer-backed creation, transfer, and interaction entry points. Returned runtime types still live in the established `TheSingularityWorkshop.FSM_API` namespaces during this compatibility phase; a full type-namespace migration is not implied. The Error facade forwards both the string-backed diagnostic system and the currently exposed integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
+The public entry point is `FsmApi`. The established library namespace contains the authoritative implementation and exposes `Create`, `Interaction`, `Error`, `Internal`, and explicit `Transfer` modules. The concise `FSM_API` namespace also exposes `FsmApi` for consumers who prefer `using FSM_API;`; its interaction module is named `Interact`. Both surfaces forward to the same string-backed and integer-backed runtimes. The two runtime registries remain independent; conversion occurs only through `FsmApi.Transfer`. The Error facade forwards both the string-backed diagnostic system and the currently exposed integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
 
 ### What moves the estimate
 
