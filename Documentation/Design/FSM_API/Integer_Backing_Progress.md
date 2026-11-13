@@ -17,7 +17,7 @@
 
 ## Current snapshot
 
-- **Source of the original implementation:** [`feature/fsm-api-2.0`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
+- **Source of the original implementation:** [`development`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
 - **Current integration target:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
 - **Integration snapshot:** the integer runtime and associated tests are present under [`FSM_API/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/FSM_API/IntegerBacked) and [`Tests/IntegerBacked`](https://github.com/TrentBest/FSM_API/tree/development/Tests/IntegerBacked). The deterministic string-to-integer compiler is in `FSM_API/IntegerBacked/FSMCompiler.cs`.
 - **Latest feature-branch validation:** [run 39102742225](https://github.com/TrentBest/FSM_API/actions/runs/39102742225), commit [`dd96646`](https://github.com/TrentBest/FSM_API/commit/dd96646a3718923bb87a48af695a0c5b6819db8e), 2026-10-18. **400 passed, 0 failed**. The NuGet publish job was skipped; no package was published.

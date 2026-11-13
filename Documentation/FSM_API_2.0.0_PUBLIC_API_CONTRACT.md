@@ -10,7 +10,7 @@ The concise 2.0.0 namespace is `FSM_API`. Consumers may import it once:
 using FSM_API;
 ```
 
-The public facade is `FsmApi`, with three deliberately named modules:
+The concise `FSM_API.FsmApi` facade exposes three modules:
 
 - `FsmApi.Create` — define FSMs, compile definitions, and create instances.
 - `FsmApi.Interact` — update, inspect, transition, move, reset, and explicitly destroy live FSMs.

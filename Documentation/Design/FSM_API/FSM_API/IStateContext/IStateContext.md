@@ -41,7 +41,7 @@ classDiagram
 
 ### The `IsValid` Property: Lifecycle Management
 
-The `IsValid` property is a computation gate, not an automatic destruction request. Scheduled ticks and manual stepping/condition evaluation skip computation when it is false; the handle remains registered and can resume when the same context becomes valid again. The caller owns the context object and its lifetime. Explicitly destroy a specific FSM handle when that instance should be removed; destroying one handle must not invalidate a context shared with other handles. This distinction is grounded in `FSM_API.Internal.TickAll`, `FSMHandle.Update`, `FSMHandle.EvaluateConditions`, and `FSM_API.Internal.DestroyInstance` on the development branch.
+The `IsValid` property is a computation gate, not an automatic destruction request. Scheduled ticks and manual stepping/condition evaluation skip computation when it is false; the handle remains registered and can resume when the same context becomes valid again. The caller owns the context object and its lifetime. Explicitly destroy a specific FSM handle when that instance should be removed; destroying one handle must not invalidate a context shared with other handles. This distinction is grounded in `FsmApi.Internal.TickAll`, `FSMHandle.Update`, `FSMHandle.EvaluateConditions`, and `FsmApi.Internal.DestroyInstance` on the development branch.
 
 #### Lifecycle Flow: A Flowchart
 
