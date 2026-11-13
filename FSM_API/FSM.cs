@@ -742,6 +742,15 @@ namespace TheSingularityWorkshop.FSM_API
                 return false;
             }
 
+            // Commit the target identity before invoking its Enter callback. User code may
+            // destroy the definition from Enter; teardown must then Exit the target being
+            // entered, not the source state whose Exit has already completed.
+            if (owner != null)
+            {
+                owner.CurrentState = to;
+                owner.HasEnteredCurrentState = false;
+            }
+
             try
             {
                 toState.Enter(ctx);
