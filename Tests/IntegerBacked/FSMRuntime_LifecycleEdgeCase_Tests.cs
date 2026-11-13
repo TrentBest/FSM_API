@@ -221,13 +221,13 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void UpdateAll_IsolatesRepeatedInstanceFailuresAndDefersTeardown()
         {
-            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
-            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
             var exits = 0;
             try
             {
-                FSM_API.Error.InstanceErrorThreshold = 2;
-                FSM_API.Error.DefinitionErrorThreshold = 10;
+                FsmApi.Error.InstanceErrorThreshold = 2;
+                FsmApi.Error.DefinitionErrorThreshold = 10;
                 var runtime = new IntegerFSMRuntime();
                 var fsm = new IntegerFSM(10, -1);
                 fsm.AddState(new IntegerFSMState(10, null, null, null));
@@ -254,8 +254,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
             finally
             {
-                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
-                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
             }
         }
 

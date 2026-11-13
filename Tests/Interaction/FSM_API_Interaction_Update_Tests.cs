@@ -600,16 +600,16 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             var updateCount = 0;
             const string name = "FacadeFSM";
 
-            global::FsmApi.FsmApi.Create.CreateFiniteStateMachine(name, -1, _testProcessingGroup)
+            global::FSM_API.FsmApi.Create.CreateFiniteStateMachine(name, -1, _testProcessingGroup)
                 .State("Ready", _ => enterCount++, _ => updateCount++, null)
                 .WithInitialState("Ready")
                 .BuildDefinition();
 
             var context = new TestContext();
-            var handle = global::FsmApi.FsmApi.Create.CreateInstance(
+            var handle = global::FSM_API.FsmApi.Create.CreateInstance(
                 name, context, _testProcessingGroup);
 
-            global::FsmApi.FsmApi.Interact.Update(_testProcessingGroup);
+            global::FSM_API.FsmApi.Interact.Update(_testProcessingGroup);
 
             Assert.That(handle.CurrentState, Is.EqualTo("Ready"));
             Assert.That(enterCount, Is.EqualTo(1));
@@ -624,14 +624,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InternalApiErrorEventHandler handler =
                 (message, exception) => observedMessage = message;
 
-            global::FsmApi.FsmApi.Error.OnInternalApiError += handler;
+            global::FSM_API.FsmApi.Error.OnInternalApiError += handler;
             try
             {
-                global::FsmApi.FsmApi.Error.InvokeInternalApiError("facade-test", null);
+                global::FSM_API.FsmApi.Error.InvokeInternalApiError("facade-test", null);
             }
             finally
             {
-                global::FsmApi.FsmApi.Error.OnInternalApiError -= handler;
+                global::FSM_API.FsmApi.Error.OnInternalApiError -= handler;
             }
 
             Assert.That(observedMessage, Is.EqualTo("facade-test"));

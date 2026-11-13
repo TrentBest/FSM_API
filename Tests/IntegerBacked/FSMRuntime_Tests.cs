@@ -312,10 +312,10 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         [Test]
         public void HandleUpdate_ReportsDirectAndScheduledFailuresExactlyOnce()
         {
-            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
-            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
-            FSM_API.Error.InstanceErrorThreshold = 5;
-            FSM_API.Error.DefinitionErrorThreshold = 3;
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
+            FsmApi.Error.InstanceErrorThreshold = 5;
+            FsmApi.Error.DefinitionErrorThreshold = 3;
 
             try
             {
@@ -336,18 +336,18 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
             finally
             {
-                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
-                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
             }
         }
 
         [Test]
         public void TransitionTo_ReportsFailureToOwningRuntimeAndRethrows()
         {
-            var previousInstanceThreshold = FSM_API.Error.InstanceErrorThreshold;
-            var previousDefinitionThreshold = FSM_API.Error.DefinitionErrorThreshold;
-            FSM_API.Error.InstanceErrorThreshold = 5;
-            FSM_API.Error.DefinitionErrorThreshold = 3;
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
+            FsmApi.Error.InstanceErrorThreshold = 5;
+            FsmApi.Error.DefinitionErrorThreshold = 3;
 
             try
             {
@@ -365,8 +365,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
             finally
             {
-                FSM_API.Error.InstanceErrorThreshold = previousInstanceThreshold;
-                FSM_API.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
             }
         }
 
