@@ -1,3 +1,4 @@
+using Api = TheSingularityWorkshop.FSM_API.FsmApi;
 using System;
 using System.Collections.Generic;
 
@@ -267,12 +268,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             var count = _instanceErrorCounts.TryGetValue(handle, out var current) ? current + 1 : 1;
             _instanceErrorCounts[handle] = count;
-            global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
+            Api.Error.InvokeInternalApiError(
                 $"Integer FSM instance '{handle.FSM_ID}' (handle {handle.Id}, context ID: {handle.Context?.GetHashCode() ?? 0}) " +
                 $"in processing group '{handle.Definition.ProcessingGroupID}' failed in state '{handle.CurrentStateID}'. " +
-                $"Count: {count}/{global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InstanceErrorThreshold}.", exception);
+                $"Count: {count}/{Api.Error.InstanceErrorThreshold}.", exception);
 
-            if (count < global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InstanceErrorThreshold || handle.IsPendingDestruction)
+            if (count < Api.Error.InstanceErrorThreshold || handle.IsPendingDestruction)
             {
                 return;
             }
@@ -282,14 +283,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             var definitionCount = _definitionErrorCounts.TryGetValue(handle.FSM_ID, out var previous) ? previous + 1 : 1;
             _definitionErrorCounts[handle.FSM_ID] = definitionCount;
-            global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
+            Api.Error.InvokeInternalApiError(
                 $"Integer FSM definition '{handle.FSM_ID}' recorded a failing instance removal. " +
-                $"Definition failure count: {definitionCount}/{global::TheSingularityWorkshop.FSM_API.FsmApi.Error.DefinitionErrorThreshold}.", null);
+                $"Definition failure count: {definitionCount}/{Api.Error.DefinitionErrorThreshold}.", null);
 
-            if (definitionCount >= global::TheSingularityWorkshop.FSM_API.FsmApi.Error.DefinitionErrorThreshold && !_pendingUnregisterIDs.Contains(handle.FSM_ID))
+            if (definitionCount >= Api.Error.DefinitionErrorThreshold && !_pendingUnregisterIDs.Contains(handle.FSM_ID))
             {
                 _pendingUnregisterIDs.Add(handle.FSM_ID);
-                global::TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
+                Api.Error.InvokeInternalApiError(
                     $"Integer FSM definition '{handle.FSM_ID}' reached its definition error threshold. " +
                     "Unregistration is scheduled for the end of this update tick.", null);
             }
