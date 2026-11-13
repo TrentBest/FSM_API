@@ -2,7 +2,6 @@
 
 **Last reviewed:** 2026-11-13  
 **Branch:** `development`  
-**Current development commit:** `1bd82ae6be8448a08f2822bdb67f681bc772aa2e`
 
 ## Public API migration
 
@@ -17,7 +16,7 @@
 
 ## Validation
 
-The latest completed full validation is [workflow run #979](https://github.com/TrentBest/FSM_API/actions/runs/43530428269), on commit `0271cd487941437d739a4354dbbdf4e0addaa89d`.
+The latest completed full validation is [workflow run #981](https://github.com/TrentBest/FSM_API/actions/runs/43530428269), on commit `1bd82ae6be8448a08f2822bdb67f681bc772aa2e`.
 
 - .NET 8 build: passed.
 - Tests: 489 passed, 0 failed, 0 skipped.
@@ -27,7 +26,7 @@ The latest completed full validation is [workflow run #979](https://github.com/T
 - Codecov upload: succeeded.
 - NuGet publication: skipped.
 
-The current head contains documentation-only updates since run #979. Its validation run is tracked separately; do not treat the previous run as proof for this latest documentation commit.
+The current head contains documentation-only updates since run #981. Its validation run is tracked separately; do not treat the previous run as proof for this latest documentation commit.
 
 ## Remaining 2.0 release gates
 
