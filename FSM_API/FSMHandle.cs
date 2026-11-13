@@ -472,14 +472,14 @@ namespace TheSingularityWorkshop.FSM_API
                     FSM_API.Error.InvokeInternalApiError(
                         $"Error evaluating manual transition condition from '{CurrentState}' to '{transition.To}' in FSM '{Name}'. Exception: {ex.Message}",
                         ex);
-                    if (!Context.IsValid)
+                    if (IsDestroyed || !Context.IsValid)
                     {
                         return;
                     }
                     continue;
                 }
 
-                if (!Context.IsValid)
+                if (IsDestroyed || !Context.IsValid)
                 {
                     return;
                 }
