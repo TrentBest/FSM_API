@@ -1,7 +1,7 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-13  
-**Branch:** `development`  
+**Last reviewed:** 2026-11-14  
+**Branch:** `development`
 
 ## Public API migration
 
@@ -16,17 +16,23 @@
 
 ## Validation
 
-The latest completed full validation is [workflow run #981](https://github.com/TrentBest/FSM_API/actions/runs/43530428269), on commit `1bd82ae6be8448a08f2822bdb67f681bc772aa2e`.
+The latest verified full development validation is [workflow run #984](https://github.com/TrentBest/FSM_API/actions/runs/43531045693), on exact commit `67c2f28b2d9687aac1dc5a93202812cd6863bfca`.
 
-- .NET 8 build: passed.
-- Tests: 489 passed, 0 failed, 0 skipped.
-- NuGet package build artifact: generated successfully.
-- DocFX documentation generation: passed.
-- Local documentation links: validated.
-- Codecov upload: succeeded.
-- NuGet publication: skipped.
+- `build_test_and_package`: completed successfully.
+  - Dependency restore: passed.
+  - .NET 8 build and test step: passed.
+  - NuGet package artifact generation: passed.
+  - Codecov upload: passed.
+  - DLL and NuGet artifact uploads: passed.
+- `build_documentation`: completed successfully.
+  - Local documentation link validation: passed.
+  - DocFX generation: passed.
+  - Documentation artifact upload: passed.
+- `publish_nuget`: skipped; no publication was performed.
+- `sith_branch_policy`: skipped on this ordinary development validation; this run is not evidence of Sith compliance.
+- The commit's Codecov patch status is successful.
 
-The current head contains documentation-only updates since run #981. Its validation run is tracked separately; do not treat the previous run as proof for this latest documentation commit.
+This records workflow/job outcomes, not an independently verified test-case count. Use the workflow's test output for exact pass/fail totals.
 
 ## Remaining 2.0 release gates
 
@@ -36,6 +42,12 @@ The current head contains documentation-only updates since run #981. Its validat
 4. Produce reproducible performance benchmarks with equivalent workloads and historical comparisons.
 5. Finish implementation-linked Workshop documentation, API reference, examples, and visual explanations.
 6. Review all evidence and obtain explicit owner authorization before release or NuGet publication.
+
+## Branch and publication gate
+
+The live branch inventory checked on 2026-11-14 contains 19 branches: `master`, `development`, and 17 additional branches. The canonical two-branch policy is therefore not currently satisfied. No surplus branch has been deleted as part of this review.
+
+The ordinary development run above skipped the Sith policy job, so it must not be interpreted as a successful branch-policy check. Publication must remain blocked until a fresh live inventory proves that exactly `master` and `development` exist and the explicit owner authorization requirement is independently met.
 
 ## Release boundary
 
