@@ -248,5 +248,84 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 IntegerFsmTimers.RemoveIntTimer(intTimerID);
             }
         }
+
+        [TestCase(-1, 4)]
+        [TestCase(0, 0)]
+        [TestCase(2, 2)]
+        public void RuntimeScheduler_ProcessRateCadence_MatchesStringBackedImplementation(int processRate, int expectedUpdates)
+        {
+            FsmApi.Internal.ResetAPI(true);
+
+            var stringTrace = new List<string>();
+            var integerTrace = new List<string>();
+            var stringContext = new LifecycleContext(stringTrace);
+            var integerContext = new LifecycleContext(integerTrace);
+
+            const string processingGroup = "SchedulerParity";
+            const int processingGroupID = 23;
+            const string fsmName = "StringSchedulerParity";
+            const int fsmID = 23009;
+
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, processRate, processingGroup)
+                .State("A", null, _ => stringTrace.Add("Update"), null)
+                .BuildDefinition();
+            var stringHandle = FsmApi.Create.CreateInstance(fsmName, stringContext, processingGroup);
+
+            var integerDefinition = new IntegerFsm(fsmID, processRate);
+            integerDefinition.AddState(new IntegerFsmState(0, null, _ => integerTrace.Add("Update"), null));
+            var integerRuntime = new FSMRuntime();
+            integerRuntime.Register(integerDefinition, processingGroupID);
+            var integerHandle = integerRuntime.CreateInstance(fsmID, integerContext);
+
+            for (var tick = 0; tick < 4; tick++)
+            {
+                FsmApi.Interaction.Update(processingGroup);
+                integerRuntime.Update(processingGroupID);
+            }
+
+            Assert.That(stringTrace.Count, Is.EqualTo(expectedUpdates), "String-backed update cadence changed.");
+            Assert.That(integerTrace.Count, Is.EqualTo(expectedUpdates), "Integer-backed update cadence must match.");
+            Assert.That(integerTrace, Is.EqualTo(stringTrace));
+            Assert.That(stringHandle.IsDestroyed, Is.False);
+            Assert.That(integerHandle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void RuntimeScheduler_ProcessingGroupIsolation_MatchesStringBackedImplementation()
+        {
+            FsmApi.Internal.ResetAPI(true);
+
+            var stringGroupAUpdates = 0;
+            var stringGroupBUpdates = 0;
+            var integerGroupAUpdates = 0;
+            var integerGroupBUpdates = 0;
+
+            FsmApi.Create.CreateFiniteStateMachine("StringGroupA", -1, "GroupA")
+                .State("A", null, _ => stringGroupAUpdates++, null).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("StringGroupB", -1, "GroupB")
+                .State("A", null, _ => stringGroupBUpdates++, null).BuildDefinition();
+            FsmApi.Create.CreateInstance("StringGroupA", new LifecycleContext(new List<string>()), "GroupA");
+            FsmApi.Create.CreateInstance("StringGroupB", new LifecycleContext(new List<string>()), "GroupB");
+
+            var integerRuntime = new FSMRuntime();
+            var integerA = new IntegerFsm(23010, -1);
+            integerA.AddState(new IntegerFsmState(0, null, _ => integerGroupAUpdates++, null));
+            var integerB = new IntegerFsm(23011, -1);
+            integerB.AddState(new IntegerFsmState(0, null, _ => integerGroupBUpdates++, null));
+            integerRuntime.Register(integerA, 10);
+            integerRuntime.Register(integerB, 11);
+            integerRuntime.CreateInstance(23010, new LifecycleContext(new List<string>()));
+            integerRuntime.CreateInstance(23011, new LifecycleContext(new List<string>()));
+
+            FsmApi.Interaction.Update("GroupA");
+            integerRuntime.Update(10);
+            FsmApi.Interaction.Update("GroupB");
+            integerRuntime.Update(11);
+
+            Assert.That(stringGroupAUpdates, Is.EqualTo(1));
+            Assert.That(integerGroupAUpdates, Is.EqualTo(stringGroupAUpdates));
+            Assert.That(stringGroupBUpdates, Is.EqualTo(1));
+            Assert.That(integerGroupBUpdates, Is.EqualTo(stringGroupBUpdates));
+        }
     }
 }
