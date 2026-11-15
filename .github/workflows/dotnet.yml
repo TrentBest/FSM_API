@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '10.0.x'
         
     - name: Cache NuGet packages
       uses: actions/cache@v5
@@ -35,10 +35,10 @@ jobs:
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
 
-    - name: Build and Test for .NET 8.0
+    - name: Build and Test for .NET 10.0
       run: |
         dotnet build FSM_API.sln --no-restore --configuration Release
-        dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
+        dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net10.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
       
     - name: Pack NuGet Package
       run: |
@@ -60,7 +60,7 @@ jobs:
     - name: Rename DLLs before upload
       run: |
         mkdir publish
-        cp FSM_API/bin/Release/net8.0/FSM_API.dll publish/FSM_API_net8.dll
+        cp FSM_API/bin/Release/net10.0/FSM_API.dll publish/FSM_API_net10.dll
         cp FSM_API/bin/Release/net6.0/FSM_API.dll publish/FSM_API_net6.dll
         cp FSM_API/bin/Release/net47/FSM_API.dll publish/FSM_API_net47.dll
         cp FSM_API/bin/Release/netcoreapp3.1/FSM_API.dll publish/FSM_API_netcoreapp3.1.dll
