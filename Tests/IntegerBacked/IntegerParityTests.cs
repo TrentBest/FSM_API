@@ -327,5 +327,45 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(stringGroupBUpdates, Is.EqualTo(1));
             Assert.That(integerGroupBUpdates, Is.EqualTo(stringGroupBUpdates));
         }
+
+        [Test]
+        public void RuntimeScheduler_IndependentDefinitionCounters_MatchStringBackedImplementation()
+        {
+            FsmApi.Internal.ResetAPI(true);
+
+            var stringRateTwo = 0;
+            var stringRateThree = 0;
+            var integerRateTwo = 0;
+            var integerRateThree = 0;
+
+            FsmApi.Create.CreateFiniteStateMachine("StringRateTwo", 2, "IndependentCounters")
+                .State("A", null, _ => stringRateTwo++, null).BuildDefinition();
+            FsmApi.Create.CreateFiniteStateMachine("StringRateThree", 3, "IndependentCounters")
+                .State("A", null, _ => stringRateThree++, null).BuildDefinition();
+            FsmApi.Create.CreateInstance("StringRateTwo", new LifecycleContext(new List<string>()), "IndependentCounters");
+            FsmApi.Create.CreateInstance("StringRateThree", new LifecycleContext(new List<string>()), "IndependentCounters");
+
+            var integerRuntime = new FSMRuntime();
+            var integerRateTwoDefinition = new IntegerFsm(23012, 2);
+            integerRateTwoDefinition.AddState(new IntegerFsmState(0, null, _ => integerRateTwo++, null));
+            var integerRateThreeDefinition = new IntegerFsm(23013, 3);
+            integerRateThreeDefinition.AddState(new IntegerFsmState(0, null, _ => integerRateThree++, null));
+            integerRuntime.Register(integerRateTwoDefinition, 12);
+            integerRuntime.Register(integerRateThreeDefinition, 12);
+            integerRuntime.CreateInstance(23012, new LifecycleContext(new List<string>()));
+            integerRuntime.CreateInstance(23013, new LifecycleContext(new List<string>()));
+
+            for (var tick = 0; tick < 6; tick++)
+            {
+                FsmApi.Interaction.Update("IndependentCounters");
+                integerRuntime.Update(12);
+            }
+
+            Assert.That(stringRateTwo, Is.EqualTo(3));
+            Assert.That(integerRateTwo, Is.EqualTo(stringRateTwo));
+            Assert.That(stringRateThree, Is.EqualTo(2));
+            Assert.That(integerRateThree, Is.EqualTo(stringRateThree));
+        }
+
     }
 }
