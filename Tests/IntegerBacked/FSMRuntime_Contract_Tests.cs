@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -85,7 +86,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var runtime = new IntegerFSMRuntime();
             var fsm = CreateFSM(fsmID);
 
-            Assert.That(() => runtime.Register(fsm), Throws.ArgumentOutOfRangeException);
+            Assert.That(() => runtime.Register(fsm), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
