@@ -119,7 +119,7 @@ The benchmark source is the authoritative description of what the result means.
 
 ## Reproducing it
 
-The benchmark project targets .NET 8 and references FSM_API 1.0.13.
+The benchmark project targets .NET 10 and references the currently published FSM_API 1.0.13 package.
 
 Run:
 
