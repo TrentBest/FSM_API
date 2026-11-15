@@ -22,13 +22,15 @@
     "feature/fsm-api-2.0-registry",
     "feature/fsm-api-2.0-work",
     "feature/integer-backed-runtime",
+    "feature/net10-validation-lane",
     "fix/context-validity-execution-gate",
+    "fix/integer-array-capacity-boundary",
     "fix/manual-any-state-evaluation",
     "master"
   ],
-  "branch_count": 19,
+  "branch_count": 21,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-14T11:28:21Z",
-  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/43590160191",
-  "triggering_commit": "284203157ede75108b3c91fe491ee946f4b17595"
+  "evaluated_at": "2026-11-15T11:57:19Z",
+  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/43711381082",
+  "triggering_commit": "4887d894ec9446295dd2ee38105c7792abcdc2b2"
 }
