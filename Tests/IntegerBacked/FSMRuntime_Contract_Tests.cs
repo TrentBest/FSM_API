@@ -67,6 +67,39 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(runtime.GetHandleCount(7), Is.Zero);
         }
 
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void AddState_RejectsIDsBeyondSupportedArrayBoundary(int stateID)
+        {
+            var fsm = new IntegerFSM(0);
+
+            Assert.That(
+                () => fsm.AddState(new IntegerFSMState(stateID, null, null, null)),
+                Throws.ArgumentOutOfRangeException);
+        }
+
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void Register_RejectsIDsBeyondSupportedArrayBoundary(int fsmID)
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateFSM(fsmID);
+
+            Assert.That(() => runtime.Register(fsm), Throws.ArgumentOutOfRangeException);
+        }
+
+        [Test]
+        public void AddState_PreservesSparseIDsWithinSupportedBoundary()
+        {
+            var fsm = new IntegerFSM(0);
+            fsm.AddState(new IntegerFSMState(3, null, null, null));
+            fsm.AddState(new IntegerFSMState(17, null, null, null));
+
+            Assert.That(fsm.HasState(3), Is.True);
+            Assert.That(fsm.HasState(17), Is.True);
+            Assert.That(fsm.HasState(4), Is.False);
+        }
+
         private static IntegerFSM CreateFSM(int id)
         {
             var fsm = new IntegerFSM(id);
