@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '10.0.x'
         
     - name: Cache NuGet packages
       uses: actions/cache@v5
@@ -35,10 +35,10 @@ jobs:
     - name: Restore Solution Dependencies
       run: dotnet restore FSM_API.sln
 
-    - name: Build and Test for .NET 8.0
+    - name: Build and Test for .NET 10.0
       run: |
         dotnet build FSM_API.sln --no-restore --configuration Release
-        dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net8.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
+        dotnet test Tests/FSM_API.Tests.csproj --no-build --configuration Release --framework net10.0 --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=testresults.trx"
       
     - name: Pack NuGet Package
       run: |
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
           
       - name: Validate local documentation links
         run: python3 scripts/validate_doc_links.py
