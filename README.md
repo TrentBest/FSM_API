@@ -52,7 +52,7 @@ The public entry point is `FsmApi`. The established library namespace contains t
 - **Error:** diagnostics, thresholds, exception paths, and explicit shutdown behavior must be coherent and testable.
 - **String/integer parity:** every supported string capability must have an equivalent integer-backed capability, demonstrated by equivalent observable traces—not merely by the presence of two implementations.
 - **Identity:** deterministic IDs, reverse diagnostic mappings, and storage/versioning boundaries must be explicit.
-- **Verification:** the latest current-development validation [run #926](https://github.com/TrentBest/FSM_API/actions/runs/43313725213) completed successfully with **480 passed, 0 failed, 0 skipped** on .NET 8. The package artifact and documentation artifact were generated, documentation links validated, and Codecov upload succeeded. The conditional Sith and NuGet publication jobs were skipped. This validates the current head only; it does not close the broader parity or release gates.
+- **Verification:** the latest current-development validation [run #992](https://github.com/TrentBest/FSM_API/actions/runs/43697312085) completed successfully with **489 passed, 0 failed, 0 skipped** on .NET 10. The package artifact and documentation artifact were generated, documentation links validated, and Codecov upload succeeded. The conditional Sith and NuGet publication jobs were skipped. This validates the current head only; it does not close the broader parity or release gates.
 - **Performance:** a reproducible equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
 - **Workshop documentation:** existing material is treated as a substantial first draft. The 2.0 pass must elevate it into an implementation-linked learning and reference system with accurate API docs, executable examples, conceptual models, diagrams, operational truth, and maintenance rules.
 - **Release governance:** preserve unique branch work and reconcile history before reducing the repository to `master` and `development`.
@@ -122,7 +122,7 @@ This tutorial uses the published **TheSingularityWorkshop.FSM_API 1.0.13** packa
 
 ### 1. Create a project
 
-In Visual Studio, choose **Create a new project → Console App**, select C#, and target **.NET 8**.
+In Visual Studio, choose **Create a new project → Console App**, select C#, and target **.NET 10**.
 
 ### 2. Open the terminal
 
@@ -239,7 +239,7 @@ dotnet build FSM_API.sln -c Release
 dotnet test FSM_API.sln -c Release
 ```
 
-The library project currently targets `net8.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`. Confirm the relevant SDK/reference packs are installed when building all target frameworks.
+The library project currently targets `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`. Confirm the relevant SDK/reference packs are installed when building all target frameworks.
 
 ---
 
