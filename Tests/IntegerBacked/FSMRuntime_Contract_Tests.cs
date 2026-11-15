@@ -75,7 +75,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.That(
                 () => fsm.AddState(new IntegerFSMState(stateID, null, null, null)),
-                Throws.ArgumentOutOfRangeException);
+                Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
