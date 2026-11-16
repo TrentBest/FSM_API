@@ -248,5 +248,55 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 IntegerFsmTimers.RemoveIntTimer(intTimerID);
             }
         }
+
+        [Test]
+        public void RuntimeReregisteringDefinition_RebindsLiveInstancesWithoutDestroyingThem()
+        {
+            var trace = new List<string>();
+            var context = new LifecycleContext(trace);
+            var runtime = new FSMRuntime();
+
+            var originalDefinition = new IntegerFsm(23014, -1);
+            originalDefinition.AddState(new IntegerFsmState(
+                0,
+                _ => trace.Add("original.enter"),
+                _ => trace.Add("original.update"),
+                _ => trace.Add("original.exit")));
+
+            runtime.Register(originalDefinition, 14);
+            var handle = runtime.CreateInstance(23014, context);
+
+            runtime.Update(14);
+            Assert.That(trace, Is.EqualTo(new[] { "original.enter", "original.update" }));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+
+            var replacementDefinition = new IntegerFsm(23014, -1);
+            replacementDefinition.AddState(new IntegerFsmState(
+                0,
+                _ => trace.Add("replacement.enter"),
+                _ => trace.Add("replacement.update"),
+                _ => trace.Add("replacement.exit")));
+
+            runtime.Register(replacementDefinition, 14);
+
+            Assert.That(handle.IsDestroyed, Is.False, "Replacing a definition must not destroy its live handle.");
+            Assert.That(handle.IsRegistered, Is.True);
+            Assert.That(handle.Context, Is.SameAs(context), "The caller-owned context reference must be preserved.");
+            Assert.That(handle.Definition, Is.SameAs(replacementDefinition));
+            Assert.That(handle.CurrentStateID, Is.EqualTo(0));
+            Assert.That(runtime.GetInstances(23014), Does.Contain(handle));
+
+            runtime.Update(14);
+
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "original.enter",
+                "original.update",
+                "replacement.update"
+            }), "Subsequent updates must use the replacement definition without replaying entry or exit.");
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(context.IsValid, Is.True);
+        }
+
     }
 }
