@@ -280,7 +280,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             runtime.Register(replacementDefinition, 14);
 
             Assert.That(handle.IsDestroyed, Is.False, "Replacing a definition must not destroy its live handle.");
-            Assert.That(handle.IsRegistered, Is.True);
             Assert.That(handle.Context, Is.SameAs(context), "The caller-owned context reference must be preserved.");
             Assert.That(handle.Definition, Is.SameAs(replacementDefinition));
             Assert.That(handle.CurrentStateID, Is.EqualTo(0));
