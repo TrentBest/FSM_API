@@ -297,5 +297,58 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(context.IsValid, Is.True);
         }
 
+        [Test]
+        public void RuntimeDefinitionReplacement_MissingCurrentStateRecoversAndEntersExactlyOnce()
+        {
+            var trace = new List<string>();
+            var context = new LifecycleContext(trace);
+            var runtime = new FSMRuntime();
+
+            var originalDefinition = new IntegerFsm(23015, -1);
+            originalDefinition.AddState(new IntegerFsmState(
+                0,
+                _ => trace.Add("original.enter"),
+                _ => trace.Add("original.update"),
+                _ => trace.Add("original.exit")));
+
+            runtime.Register(originalDefinition, 15);
+            var handle = runtime.CreateInstance(23015, context);
+            runtime.Update(15);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(0));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+
+            var replacementDefinition = new IntegerFsm(23015, -1);
+            replacementDefinition.AddState(new IntegerFsmState(
+                5,
+                _ => trace.Add("replacement.enter"),
+                _ => trace.Add("replacement.update"),
+                _ => trace.Add("replacement.exit")));
+
+            runtime.Register(replacementDefinition, 15);
+            runtime.Update(15);
+
+            Assert.That(handle.CurrentStateID, Is.EqualTo(5));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(context.IsValid, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "original.enter",
+                "original.update"
+            }), "Recovery should not invoke callbacks for a state absent from the replacement.");
+
+            runtime.Update(15);
+
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "original.enter",
+                "original.update",
+                "replacement.enter",
+                "replacement.update"
+            }), "The replacement initial state must enter exactly once before its first update.");
+        }
+
     }
 }
