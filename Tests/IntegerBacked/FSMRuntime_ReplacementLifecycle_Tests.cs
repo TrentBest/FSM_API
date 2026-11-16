@@ -19,14 +19,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         }
 
         [Test]
-        public void Register_ReplacementMarksRemovedHandlesUnregistered()
+        public void Register_ReplacementPreservesLiveHandlesAndCallerOwnedContexts()
         {
             var exits = 0;
+            var context = new TestContext();
             var runtime = new IntegerFSMRuntime();
             var definition = new IntegerFSM(7, -1);
             definition.AddState(new IntegerFSMState(0, null, null, _ => exits++));
             runtime.Register(definition);
-            IntegerFSMHandleInt handle = runtime.CreateInstance(7, new TestContext());
+            IntegerFSMHandleInt handle = runtime.CreateInstance(7, context);
 
             Assert.That(GetRegistrationFlag(handle), Is.True);
 
@@ -34,11 +35,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             replacement.AddState(new IntegerFSMState(0, null, null, null));
             runtime.Register(replacement);
 
-            Assert.That(runtime.GetHandleCount(0), Is.Zero);
-            Assert.That(GetRegistrationFlag(handle), Is.False,
-                "Replacing a definition removes its handles, so their registration flag must be cleared too.");
-            Assert.That(handle.IsDestroyed, Is.True);
-            Assert.That(exits, Is.EqualTo(1), "Replacement must tear down the old definition's live instance exactly once.");
+            Assert.That(runtime.GetHandleCount(0), Is.EqualTo(1));
+            Assert.That(GetRegistrationFlag(handle), Is.True,
+                "Replacing a definition must leave the existing handle registered.");
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(handle.Definition, Is.SameAs(replacement));
+            Assert.That(handle.Context, Is.SameAs(context),
+                "The runtime must preserve the caller-owned context reference.");
+            Assert.That(exits, Is.Zero,
+                "Definition replacement must not trigger instance teardown or invoke Exit.");
         }
 
         private static bool GetRegistrationFlag(IntegerFSMHandleInt handle)
