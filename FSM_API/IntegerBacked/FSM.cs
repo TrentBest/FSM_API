@@ -348,7 +348,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     return InitialStateID;
                 }
 
-                return ForceTransition(currentID, InitialStateID, context, owner)
+                if (owner != null)
+                {
+                    // The previous state no longer exists in this replacement
+                    // definition, so there is no valid source Exit callback to run.
+                    // Commit recovery and let the normal handle lifecycle enter the
+                    // replacement's initial state on the next update exactly once.
+                    owner.CurrentStateID = InitialStateID;
+                    owner.HasEnteredCurrentState = false;
+                    return InitialStateID;
+                }
+
+                return ForceTransition(currentID, InitialStateID, context, null)
                     ? InitialStateID
                     : currentID;
             }
