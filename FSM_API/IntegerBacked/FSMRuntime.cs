@@ -42,9 +42,19 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             if (_definitions[definition.FSM_ID] != null)
             {
-                _definitions[definition.FSM_ID] = null;
+                // Re-registration replaces the blueprint, not its live instances.
+                // Keep caller-owned contexts and handle identities intact, while
+                // rebinding each handle so subsequent steps use the new definition.
+                for (var i = 0; i < _handles.Count; i++)
+                {
+                    var handle = _handles[i];
+                    if (handle.FSM_ID == definition.FSM_ID)
+                    {
+                        handle.Definition = definition;
+                    }
+                }
+
                 _definitionErrorCounts.Remove(definition.FSM_ID);
-                RemoveDefinitionInstances(definition.FSM_ID);
             }
 
             _definitions[definition.FSM_ID] = definition;
