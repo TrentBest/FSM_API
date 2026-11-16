@@ -24,7 +24,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         public int Id { get; internal set; }
 
         /// <summary>The integer-backed FSM blueprint controlled by this handle.</summary>
-        public readonly FSM Definition;
+        public FSM Definition { get; internal set; }
 
         /// <summary>The blueprint identity.</summary>
         public int FSM_ID => Definition.FSM_ID;
