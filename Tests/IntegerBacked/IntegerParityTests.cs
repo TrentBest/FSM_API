@@ -88,6 +88,60 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
 
         [Test]
+        public void ContextInvalidationAfterEntry_SuspendsAndResumesWithoutReentry_InBothImplementations()
+        {
+            var stringTrace = new List<string>();
+            var integerTrace = new List<string>();
+            var stringContext = new LifecycleContext(stringTrace);
+            var integerContext = new LifecycleContext(integerTrace);
+
+            var stringDefinition = new StringFsm { Name = "StringContextResumeParity", ProcessRate = -1 };
+            stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
+                "A", _ => stringTrace.Add("A.Enter"), _ => stringTrace.Add("A.Update"), _ => stringTrace.Add("A.Exit")));
+
+            var integerDefinition = new IntegerFsm(23017, -1);
+            integerDefinition.AddState(new IntegerFsmState(
+                0, _ => integerTrace.Add("A.Enter"), _ => integerTrace.Add("A.Update"), _ => integerTrace.Add("A.Exit")));
+
+            var stringHandle = new StringFsmHandle(stringDefinition, stringContext);
+            var runtime = new FSMRuntime();
+            runtime.Register(integerDefinition, 18);
+            var integerHandle = runtime.CreateInstance(23017, integerContext);
+
+            stringHandle.Update();
+            runtime.Update(18);
+            Assert.That(stringTrace, Is.EqualTo(new[] { "A.Enter", "A.Update" }));
+            Assert.That(integerTrace, Is.EqualTo(stringTrace));
+            Assert.That(stringHandle.HasEnteredCurrentState, Is.True);
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.True);
+
+            stringContext.IsValid = false;
+            integerContext.IsValid = false;
+            stringHandle.Update();
+            runtime.Update(18);
+
+            Assert.That(stringTrace, Is.EqualTo(new[] { "A.Enter", "A.Update" }),
+                "An invalid context must suspend callbacks without changing lifecycle state.");
+            Assert.That(integerTrace, Is.EqualTo(stringTrace));
+            Assert.That(stringHandle.IsDestroyed, Is.False);
+            Assert.That(integerHandle.IsDestroyed, Is.False);
+            Assert.That(runtime.GetInstances(23017), Does.Contain(integerHandle));
+            Assert.That(stringHandle.HasEnteredCurrentState, Is.True);
+            Assert.That(integerHandle.HasEnteredCurrentState, Is.True);
+
+            stringContext.IsValid = true;
+            integerContext.IsValid = true;
+            stringHandle.Update();
+            runtime.Update(18);
+
+            Assert.That(stringTrace, Is.EqualTo(new[] { "A.Enter", "A.Update", "A.Update" }));
+            Assert.That(integerTrace, Is.EqualTo(stringTrace),
+                "Resuming a valid context must continue the existing state without replaying Enter.");
+            Assert.That(stringHandle.IsDestroyed, Is.False);
+            Assert.That(integerHandle.IsDestroyed, Is.False);
+        }
+
+        [Test]
         public void AnyStateTransition_PriorityAndCallbackTrace_MatchStringBackedImplementation()
         {
             var stringTrace = new List<string>();
