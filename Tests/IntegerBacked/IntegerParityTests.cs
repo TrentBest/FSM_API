@@ -350,5 +350,55 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }), "The replacement initial state must enter exactly once before its first update.");
         }
 
+
+        [Test]
+        public void RuntimeDefinitionReplacement_MovesLiveInstancesToReplacementProcessingGroup()
+        {
+            var trace = new List<string>();
+            var context = new LifecycleContext(trace);
+            var runtime = new FSMRuntime();
+
+            var originalDefinition = new IntegerFsm(23016, -1);
+            originalDefinition.AddState(new IntegerFsmState(
+                0,
+                _ => trace.Add("original.enter"),
+                _ => trace.Add("original.update"),
+                null));
+
+            runtime.Register(originalDefinition, 16);
+            var handle = runtime.CreateInstance(23016, context);
+            runtime.Update(16);
+
+            Assert.That(trace, Is.EqualTo(new[] { "original.enter", "original.update" }));
+            Assert.That(runtime.GetHandleCount(16), Is.EqualTo(1));
+
+            var replacementDefinition = new IntegerFsm(23016, -1);
+            replacementDefinition.AddState(new IntegerFsmState(
+                0,
+                _ => trace.Add("replacement.enter"),
+                _ => trace.Add("replacement.update"),
+                null));
+
+            runtime.Register(replacementDefinition, 17);
+
+            Assert.That(handle.Definition, Is.SameAs(replacementDefinition));
+            Assert.That(runtime.GetHandleCount(16), Is.Zero);
+            Assert.That(runtime.GetHandleCount(17), Is.EqualTo(1));
+
+            runtime.Update(16);
+            Assert.That(trace, Is.EqualTo(new[] { "original.enter", "original.update" }),
+                "The old processing group must no longer schedule the rebound handle.");
+
+            runtime.Update(17);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "original.enter",
+                "original.update",
+                "replacement.update"
+            }), "The replacement group must schedule the existing handle without replaying entry.");
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(handle.Context, Is.SameAs(context));
+        }
+
     }
 }
