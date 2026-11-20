@@ -95,7 +95,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var stringContext = new LifecycleContext(stringTrace);
             var integerContext = new LifecycleContext(integerTrace);
 
-            var stringDefinition = new StringFsm { Name = "StringContextResumeParity", ProcessRate = -1 };
+            var stringDefinition = new StringFsm { Name = "StringContextResumeParity" };
             stringDefinition.AddState(new TheSingularityWorkshop.FSM_API.FSMState(
                 "A", _ => stringTrace.Add("A.Enter"), _ => stringTrace.Add("A.Update"), _ => stringTrace.Add("A.Exit")));
 
