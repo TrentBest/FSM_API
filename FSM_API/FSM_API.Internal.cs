@@ -1336,6 +1336,7 @@ namespace TheSingularityWorkshop.FSM_API
                     try
                     {
                         ProcessDeferredModifications();
+                        ApplyPendingRegistrations();
                     }
                     finally
                     {
