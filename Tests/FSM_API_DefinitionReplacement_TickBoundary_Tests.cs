@@ -502,5 +502,53 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(firstHandle.Definition, Is.SameAs(replacement));
         }
 
+        [Test]
+        public void AutomaticStringThresholdTeardown_RemovesOldHandlesThenPublishesQueuedReplacement()
+        {
+            const string name = "StringAutomaticTeardownReplacement";
+            const string group = "StringAutomaticTeardownGroup";
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
+            FsmApi.Error.InstanceErrorThreshold = 1;
+            FsmApi.Error.DefinitionErrorThreshold = 1;
+
+            try
+            {
+                var replacementRequested = false;
+                FSM replacement = null;
+                FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                    .State("A", null, context =>
+                    {
+                        if (context.Name == "failing")
+                        {
+                            throw new InvalidOperationException("Expected threshold-triggering failure.");
+                        }
+
+                        if (!replacementRequested)
+                        {
+                            replacementRequested = true;
+                            replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                                .State("A", null, null, null)
+                                .BuildDefinition();
+                        }
+                    }, null)
+                    .BuildDefinition();
+
+                var failingHandle = FsmApi.Create.CreateInstance(name, new TestContext { Name = "failing" }, group);
+                var replacingHandle = FsmApi.Create.CreateInstance(name, new TestContext { Name = "replacing" }, group);
+
+                FsmApi.Interaction.Update(group);
+
+                Assert.That(failingHandle.IsDestroyed, Is.True);
+                Assert.That(replacingHandle.IsDestroyed, Is.True);
+                Assert.That(FsmApi.Internal.GetFsmDefinition(name, group), Is.SameAs(replacement));
+            }
+            finally
+            {
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+            }
+        }
+
     }
 }
