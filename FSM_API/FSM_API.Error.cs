@@ -194,7 +194,7 @@ namespace TheSingularityWorkshop.FSM_API
                         try
                         {
                             // The actual destruction attempt
-                            Internal.DestroyFiniteStateMachine(fsmDefinitionName, processingGroup, false);
+                            Interaction.DestroyFiniteStateMachineAutomatic(fsmDefinitionName, processingGroup);
                         }
                         catch (Exception ex)
                         {
