@@ -247,6 +247,7 @@ namespace FSM_API
         /// <summary>Diagnostic notifications and error-policy controls for the string-backed runtime.</summary>
         public static class Error
         {
+            /// <summary>Gets or sets the number of instance failures allowed before automatic removal.</summary>
             public static int InstanceErrorThreshold
             {
                 get => LegacyApi.Error.InstanceErrorThreshold;
