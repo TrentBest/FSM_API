@@ -1,0 +1,60 @@
+name: Publish FSM_API showcase to GitHub Pages
+
+on:
+  push:
+    branches:
+      - fix/integer-definition-reregistration
+    paths:
+      - "Documentation/**"
+      - "FSM_API/**"
+      - "index.md"
+      - "docfx.json"
+      - "scripts/validate_doc_links.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out showcase candidate
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Validate documentation links
+        run: python3 scripts/validate_doc_links.py
+
+      - name: Install DocFX
+        run: dotnet tool install --global docfx
+
+      - name: Build documentation and showcase
+        run: docfx build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
