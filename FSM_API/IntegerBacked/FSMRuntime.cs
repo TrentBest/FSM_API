@@ -133,9 +133,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
         public bool Unregister(int fsmID)
         {
+            var pendingRegistrationRemoved = RemovePendingRegistration(fsmID);
             if (!TryGetDefinition(fsmID, out _))
             {
-                return false;
+                return pendingRegistrationRemoved;
             }
 
             _definitions[fsmID] = null;
@@ -337,6 +338,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             _pendingRegistrations.Add(new PendingRegistration(definition, processingGroupID));
+        }
+
+        private bool RemovePendingRegistration(int fsmID)
+        {
+            for (var i = _pendingRegistrations.Count - 1; i >= 0; i--)
+            {
+                if (_pendingRegistrations[i].Definition.FSM_ID == fsmID)
+                {
+                    _pendingRegistrations.RemoveAt(i);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void ApplyPendingRegistrations()
