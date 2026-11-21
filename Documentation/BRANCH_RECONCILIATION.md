@@ -385,3 +385,18 @@ The current candidate already contains the newer context execution-gate implemen
 The harvested tests were adapted to the current `FsmApi` facade rather than restoring the old `FSM_API.Create/Interaction` call surface. Candidate CI [run #1077](https://github.com/TrentBest/FSM_API/actions/runs/44893233940) passed with **538 tests, 0 failures, 0 skipped, 0 build warnings, and 0 build errors**; documentation link validation and DocFX generation also passed. NuGet publication was skipped.
 
 **Disposition:** the unique regression intent from #33 is now represented on the active candidate. Keep the old branch and PR record until the full #42 integration is accepted and the consolidated batch-cleanup review is complete. No branch is deleted or newly marked ready for deletion by this note.
+
+
+## Follow-up audit — manual Any-State and .NET 10 branches
+
+### PR #23 — `fix/manual-any-state-evaluation`
+
+Compared the branch with the active candidate. Its changes affect `FSM_API/FSM.cs`, `FSM_API/FSMHandle.cs`, and `Tests/FSM_API_AnyStateTransition_Tests.cs`. The current candidate already contains the complete manual Any-State behavior and regression set: Any-State precedence, canonical and legacy markers, invalid destinations, no-match behavior, guard exceptions, target removal by guards and Exit callbacks, and lifecycle-state updates. The current implementation uses the newer `TryForceTransition` path and stops after a partially completed transition rather than adopting the old branch wholesale.
+
+**Disposition:** functional and test intent is represented on the active candidate. PR #23 remains open/draft and its branch remains present; defer any closure or deletion decision until #42 is accepted and the batch cleanup is reviewed.
+
+### PR #39 — `feature/net10-validation-lane`
+
+Compared the branch's two unique files with the active candidate. The candidate's workflow now builds the solution, tests on `net10.0`, and copies the `net10.0` assembly artifact (the old branch still copied a `net8.0` path despite setting up .NET 10). The candidate test project also no longer generates unnecessary XML documentation for the test assembly.
+
+**Disposition:** the useful .NET 10 validation work is superseded by the newer candidate workflow and the stale artifact path is corrected. PR #39 remains open/draft and the branch remains present; defer cleanup until #42 is accepted and the owner approves the consolidated batch.
