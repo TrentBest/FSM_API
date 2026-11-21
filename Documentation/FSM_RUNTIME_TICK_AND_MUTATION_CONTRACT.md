@@ -20,7 +20,7 @@ At the replacement commit boundary:
 - Handle identity, caller-owned context reference, destruction state, and current state identity are preserved.
 - No old-state Exit or Destroy callback is synthesized merely because the blueprint was replaced.
 - If the replacement no longer contains a handle's current state, the handle is marked as not having entered its current state. Normal recovery then selects the replacement's valid initial state and runs its Enter callback through the ordinary update lifecycle. If the replacement has no valid initial state, the handle enters a suspended waiting state rather than repeating the same failed recovery on every tick; a later valid replacement clears that suspension.
-- The replacement definition's processing group and process rate govern subsequent scheduling.
+- The replacement definition's processing group and process rate govern subsequent scheduling. Rebuilding a string-backed definition preserves the caller's requested group and process rate rather than silently reverting to builder defaults.
 - The definition-level error count and scheduler counter are reset for the replacement.
 
 When several replacements for the same identity are requested in one tick, the last request wins. The pending replacement is not visible through definition lookup until the boundary commit. Code that needs the new definition must wait until the current tick has returned.
