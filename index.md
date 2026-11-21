@@ -4,7 +4,7 @@
 
 **A framework-independent finite-state-machine runtime for .NET.** Define behavior once, bind it to application-owned objects, and let your host decide when the machine advances.
 
-<badge>2.0 development preview</badge>
+**Development preview · candidate branch · not a NuGet release**
 
 This site is built from the active 2.0 integration candidate. It demonstrates the intended public API and documents the implementation under review. It is **not** a released package: NuGet remains on 1.x until the 2.0 verification and release gates are complete.
 
