@@ -599,7 +599,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 .State(0, null, _ => throw new InvalidOperationException("integer callback failure"), null)
                 .WithInitialState(0)
                 .BuildDefinition();
-            integerRuntime.Register(integerDefinition);
+            integerRuntime.Register(integerDefinition, integerGroupID);
             var integerHandle = integerRuntime.CreateInstance(integerID, new Context());
 
             // First failure increments both counters but remains below the instance threshold.
