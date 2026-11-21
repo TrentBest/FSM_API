@@ -301,5 +301,31 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }));
         }
 
+        [Test]
+        public void DirectHandleUpdate_UsesTheRuntimeBoundaryForCallbackRegistration()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var replacement = new IntegerFSM(49, -1);
+            replacement.AddState(new IntegerFSMState(0, null, null, null));
+            var requested = false;
+            var original = new IntegerFSM(49, -1);
+            original.AddState(new IntegerFSMState(0, null, _ =>
+            {
+                if (!requested)
+                {
+                    requested = true;
+                    runtime.Register(replacement, 18);
+                }
+            }, null));
+
+            runtime.Register(original, 18);
+            var handle = runtime.CreateInstance(49, new TestContext());
+
+            handle.Update();
+
+            Assert.That(handle.Definition, Is.SameAs(replacement),
+                "A public single-handle update must also defer callback registration until its operation completes.");
+        }
+
     }
 }
