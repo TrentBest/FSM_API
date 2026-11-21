@@ -4,7 +4,7 @@
 
 ## 1. The tick is a consistency boundary
 
-A call to `FSMRuntime.Update(processingGroupID)` or `UpdateAll()` is one logical tick. Every definition and handle selected for that tick must execute against a stable runtime definition set.
+A call to `FSMRuntime.Update(processingGroupID)` or `UpdateAll()` is one logical tick. A direct public `FSMHandle.Update()` call is wrapped in a single-handle runtime scope with the same deferred-registration finalization; it does not schedule sibling handles. Every definition and handle selected for that tick must execute against a stable runtime definition set.
 
 User callbacks are arbitrary application code. They may register or replace definitions, create or remove handles, unregister definitions, invalidate contexts, throw exceptions, or attempt to re-enter the scheduler. These operations must not cause one tick to observe a mixture of old and replacement definitions.
 
@@ -19,7 +19,7 @@ At the replacement commit boundary:
 - Every still-registered handle with the matching FSM identity is rebound to the replacement definition.
 - Handle identity, caller-owned context reference, destruction state, and current state identity are preserved.
 - No old-state Exit or Destroy callback is synthesized merely because the blueprint was replaced.
-- If the replacement no longer contains a handle's current state, the handle is marked as not having entered its current state. Normal recovery then selects the replacement's valid initial state and runs its Enter callback through the ordinary update lifecycle.
+- If the replacement no longer contains a handle's current state, the handle is marked as not having entered its current state. Normal recovery then selects the replacement's valid initial state and runs its Enter callback through the ordinary update lifecycle. If the replacement has no valid initial state, the handle enters a suspended waiting state rather than repeating the same failed recovery on every tick; a later valid replacement clears that suspension.
 - The replacement definition's processing group and process rate govern subsequent scheduling.
 - The definition-level error count and scheduler counter are reset for the replacement.
 
