@@ -651,7 +651,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             while (newLength < requiredLength)
             {
-                newLength = newLength > (MaximumSupportedArrayIndex + 1) / 2
+                newLength = newLength >= (MaximumSupportedArrayIndex + 1) / 2
                     ? MaximumSupportedArrayIndex + 1
                     : newLength * 2;
             }
