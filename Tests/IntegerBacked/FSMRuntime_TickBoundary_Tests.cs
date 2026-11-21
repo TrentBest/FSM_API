@@ -543,5 +543,56 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
         }
 
+        [Test]
+        public void InitializeCalledFromAnotherHandleCallback_IsRejectedUntilItsScheduledTurn()
+        {
+            var trace = new List<string>();
+            var runtime = new IntegerFSMRuntime();
+            IntegerFSMHandle sibling = null;
+            var nestedInitializeRejected = false;
+
+            var firstDefinition = new IntegerFSM(58, -1);
+            firstDefinition.AddState(new IntegerFSMState(
+                0,
+                _ => trace.Add("first.enter"),
+                _ =>
+                {
+                    trace.Add("first.update");
+                    try
+                    {
+                        sibling.Initialize();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        nestedInitializeRejected = true;
+                    }
+                },
+                null));
+
+            var siblingDefinition = new IntegerFSM(59, -1);
+            siblingDefinition.AddState(new IntegerFSMState(
+                0,
+                _ => trace.Add("sibling.enter"),
+                _ => trace.Add("sibling.update"),
+                null));
+
+            runtime.Register(firstDefinition, 25);
+            runtime.Register(siblingDefinition, 25);
+            runtime.CreateInstance(58, new TestContext());
+            sibling = runtime.CreateInstance(59, new TestContext());
+
+            runtime.Update(25);
+
+            Assert.That(nestedInitializeRejected, Is.True,
+                "Initialize must use the same runtime operation scope as other public handle operations.");
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "first.enter",
+                "first.update",
+                "sibling.enter",
+                "sibling.update"
+            }), "The sibling's Enter callback must run only when the scheduler reaches that handle.");
+        }
+
     }
 }
