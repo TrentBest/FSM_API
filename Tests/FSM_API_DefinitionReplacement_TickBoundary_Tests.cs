@@ -59,6 +59,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             Assert.That(first.Definition, Is.SameAs(replacement));
             Assert.That(second.Definition, Is.SameAs(replacement));
+            Assert.That(replacement.ProcessingGroup, Is.EqualTo(group));
+            Assert.That(replacement.ProcessRate, Is.EqualTo(-1));
             Assert.That(trace, Is.EqualTo(new[]
             {
                 "old.enter", "old.update",
@@ -103,6 +105,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             handle.Update();
 
             Assert.That(handle.Definition, Is.SameAs(replacement));
+            Assert.That(replacement.ProcessingGroup, Is.EqualTo(group));
+            Assert.That(replacement.ProcessRate, Is.EqualTo(-1));
             Assert.That(handle.IsDestroyed, Is.False);
         }
 
