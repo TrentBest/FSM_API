@@ -454,5 +454,45 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             }
         }
 
+        [Test]
+        public void HandleCreatedDuringCallback_IsExcludedFromCurrentTickAndReboundAtBoundary()
+        {
+            var trace = new List<string>();
+            var runtime = new IntegerFSMRuntime();
+            var created = false;
+            FSMHandleInt createdHandle = null;
+            var replacement = new IntegerFSM(56, -1);
+            replacement.AddState(new IntegerFSMState(0, null, _ => trace.Add("new.update"), null));
+
+            var original = new IntegerFSM(56, -1);
+            original.AddState(new IntegerFSMState(0, null, _ =>
+            {
+                trace.Add("old.update");
+                if (created)
+                {
+                    return;
+                }
+
+                created = true;
+                createdHandle = runtime.CreateInstance(56, new TestContext());
+                runtime.Register(replacement, 23);
+            }, null));
+
+            runtime.Register(original, 23);
+            var firstHandle = runtime.CreateInstance(56, new TestContext());
+
+            runtime.Update(23);
+
+            Assert.That(createdHandle, Is.Not.Null);
+            Assert.That(createdHandle.Definition, Is.SameAs(replacement));
+            Assert.That(trace, Is.EqualTo(new[] { "old.update" }),
+                "The callback-created handle must not be processed from the tick-start snapshot.");
+
+            runtime.Update(23);
+
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "new.update", "new.update" }));
+            Assert.That(firstHandle.Definition, Is.SameAs(replacement));
+        }
+
     }
 }
