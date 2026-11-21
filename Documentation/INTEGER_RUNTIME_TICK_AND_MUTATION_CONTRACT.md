@@ -37,7 +37,7 @@ This rule avoids recursive scheduler traversal, duplicate processing of the same
 
 Tick finalization runs from a `finally` path. Pending lifecycle work is processed before queued registrations are committed. Therefore a callback failure does not strand an otherwise valid registration request.
 
-A registration queued by a lifecycle callback during finalization joins the same boundary commit. An unregister requested during a tick retains its explicit teardown semantics; it is processed before pending replacements are applied. If the same identity is both unregistered and then registered during the tick, the final registered definition is the queued replacement, with no removed handles silently resurrected.
+A registration queued by a lifecycle callback during finalization joins the same boundary commit. An unregister requested during a tick retains its explicit teardown semantics and cancels any earlier queued registration for the same identity. If the identity is unregistered and then registered later in the same tick, that later registration remains queued and becomes active at the boundary; removed handles are never silently resurrected. If registration is requested first and unregistration later, the unregister wins.
 
 Context invalidation remains an execution eligibility gate, not a destruction request. Explicit removal/unregistration and error-threshold teardown remain distinct lifecycle operations.
 
