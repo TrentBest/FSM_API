@@ -1,7 +1,8 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-15  
-**Branch:** `development`
+**Last reviewed:** 2026-11-21  
+**Candidate branch:** `fix/integer-definition-reregistration`  
+**Candidate PR:** [#42](https://github.com/TrentBest/FSM_API/pull/42) — open, draft, targeting `development`
 
 ## Public API migration
 
@@ -14,24 +15,25 @@
 - Integer-backed execution remains a separate runtime with its own registry and identity model.
 - The repository name, NuGet package ID, and established namespaces have not been renamed.
 
-## Validation
+## Candidate validation — 2026-11-21
 
-The latest verified full development validation is [.NET workflow run #992](https://github.com/TrentBest/FSM_API/actions/runs/43697312085), on exact commit `4298f7eb002129b09c2e1bc4e1defd0f0f6c7d35`.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `7f8f8fd0aa584685ceac99bdb30a0c63a0eafd05`, based on `development` with **90 commits ahead and 0 behind**. The PR remains open and draft.
 
-- `build_test_and_package`: completed successfully.
-  - Dependency restore: passed.
-  - .NET 10 build and test step: passed (**489 passed, 0 failed, 0 skipped**).
-  - NuGet package artifact generation: passed.
-  - DLL and NuGet artifact uploads: passed.
-- `build_documentation`: completed successfully.
-  - Local documentation link validation: passed.
-  - DocFX generation: passed.
-  - Documentation artifact upload: passed.
+Latest full candidate workflow: [run #1069](https://github.com/TrentBest/FSM_API/actions/runs/44891965031).
+
+- Dependency restore: passed.
+- Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
+- .NET 10 test suite: **533 passed, 0 failed, 0 skipped**.
+- NuGet package artifact: generated and uploaded.
+- DLL artifacts: generated and uploaded.
+- Documentation link validation: passed.
+- DocFX generation and documentation artifact upload: passed.
 - `publish_nuget`: skipped; no publication was performed.
-- `sith_branch_policy`: skipped on this ordinary development validation; this run is not evidence of Sith compliance.
-- The commit's Codecov patch status is successful.
+- `sith_branch_policy`: skipped because this was a pull-request run, not an authorized publication dispatch.
 
-This records workflow/job outcomes and the exact test totals reported by the successful .NET 10 test step.
+The build emitted **327 warnings** (predominantly missing XML documentation, CS1591; plus CS1573 parameter documentation warnings). They do not fail CI, but they are a public API/documentation quality issue to reduce before release. The Codecov upload completed; the latest processed patch-coverage report must still be checked separately because the upload step is configured to continue on error and does not enforce the coverage threshold.
+
+The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
 
 ## Remaining 2.0 release gates
 
@@ -44,9 +46,9 @@ This records workflow/job outcomes and the exact test totals reported by the suc
 
 ## Branch and publication gate
 
-The live branch inventory checked on 2026-11-15 contains 22 branches: `master`, `development`, and 20 additional branches. The canonical two-branch policy is therefore not currently satisfied. A separate Sith Policy workflow reported success, but the direct branch inventory contradicts that result; treat branch compliance as unverified/non-compliant until the discrepancy is resolved. No surplus branch has been deleted as part of this review.
+The live GitHub branch inventory checked on 2026-11-21 contains **23 branches**: `master`, `development`, and 21 additional branches. The canonical two-branch policy is therefore not satisfied. The current candidate workflow skipped its Sith branch-policy job because it was a pull-request run. No surplus branch has been deleted as part of this review.
 
-The .NET 10 validation run above skipped its embedded Sith policy job, so it is not evidence of branch compliance. Publication must remain blocked until a fresh live inventory proves that exactly `master` and `development` exist and the explicit owner authorization requirement is independently met.
+Publication must remain blocked until unique branch work is reconciled, a fresh live inventory proves that exactly `master` and `development` exist, and explicit owner authorization is independently provided. PRs #40 and #41 have had their relevant changes ported into #42, but their source branches remain present and must not be deleted until the reconciliation is reviewed and the owner approves batch cleanup.
 
 ## Release boundary
 
