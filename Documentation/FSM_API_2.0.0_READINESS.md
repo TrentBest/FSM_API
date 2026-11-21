@@ -17,9 +17,9 @@
 
 ## Candidate validation — 2026-11-21
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `f59733fff6df41350c6b5cf9d8be7e00b9737517`, based on `development` with **101 commits ahead and 0 behind**. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `ff3be254928f5c9d34bfc89d7ec06e911408aa4e`, based on `development` with **104 commits ahead and 0 behind**. The PR remains open and draft.
 
-Latest full candidate workflow: [run #1077](https://github.com/TrentBest/FSM_API/actions/runs/44893233940).
+Latest full candidate workflow: [run #1078](https://github.com/TrentBest/FSM_API/actions/runs/44893426913).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
@@ -32,7 +32,7 @@ Latest full candidate workflow: [run #1077](https://github.com/TrentBest/FSM_API
 - `publish_nuget`: skipped; no publication was performed.
 - `sith_branch_policy`: skipped because this was a pull-request run, not an authorized publication dispatch.
 
-The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Runs #1074 and #1077 confirm zero build warnings. Codecov upload completed, but the latest processed patch-coverage report must still be checked separately because the upload step is configured to continue on error and does not enforce the coverage threshold.
+The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Runs #1074 and #1077 confirm zero build warnings. Codecov's latest processed patch check on the same code/test snapshot reports **88.64% diff coverage against a 68.10% target** (check passed). Forty-one changed lines remain unhit, so the passing threshold should not be mistaken for complete branch coverage. The upload step continues on error and does not make coverage a hard workflow gate.
 
 The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
 
