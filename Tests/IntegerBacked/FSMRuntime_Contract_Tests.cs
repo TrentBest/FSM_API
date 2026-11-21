@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -65,6 +66,55 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var runtime = new IntegerFSMRuntime();
 
             Assert.That(runtime.GetHandleCount(7), Is.Zero);
+        }
+
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void AddState_RejectsIDsBeyondSupportedArrayBoundary(int stateID)
+        {
+            var fsm = new IntegerFSM(0);
+
+            Assert.That(
+                () => fsm.AddState(new IntegerFSMState(stateID, null, null, null)),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void Register_RejectsIDsBeyondSupportedArrayBoundary(int fsmID)
+        {
+            var runtime = new IntegerFSMRuntime();
+            var fsm = CreateFSM(fsmID);
+
+            Assert.That(() => runtime.Register(fsm), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void AddState_PreservesSparseIDsWithinSupportedBoundary()
+        {
+            var fsm = new IntegerFSM(0);
+            fsm.AddState(new IntegerFSMState(3, null, null, null));
+            fsm.AddState(new IntegerFSMState(17, null, null, null));
+
+            Assert.That(fsm.HasState(3), Is.True);
+            Assert.That(fsm.HasState(17), Is.True);
+            Assert.That(fsm.HasState(4), Is.False);
+        }
+
+        [Test]
+        public void CapacityGrowth_AcceptsTheMaximumSupportedStateAndDefinitionIDs()
+        {
+            var maximumID = IntegerFSM.MaximumSupportedArrayIndex;
+            var definition = new IntegerFSM(0);
+            definition.AddState(new IntegerFSMState(maximumID, null, null, null));
+
+            Assert.That(definition.HasState(maximumID), Is.True);
+
+            var runtime = new IntegerFSMRuntime();
+            var maximumDefinition = CreateFSM(maximumID);
+            runtime.Register(maximumDefinition);
+
+            Assert.That(runtime.Contains(maximumID), Is.True);
         }
 
         private static IntegerFSM CreateFSM(int id)
