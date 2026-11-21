@@ -22,7 +22,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private readonly Dictionary<int, int> _definitionErrorCounts = new Dictionary<int, int>();
         private readonly List<FSMHandleInt> _pendingRemovalHandles = new List<FSMHandleInt>();
         private readonly List<int> _pendingUnregisterIDs = new List<int>();
-        private readonly List<FSM> _pendingRegistrations = new List<FSM>();
+        private readonly List<PendingRegistration> _pendingRegistrations = new List<PendingRegistration>();
         private bool _isUpdating;
         private int _nextHandleID;
 
@@ -39,18 +39,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
             }
 
-            definition.ProcessingGroupID = processingGroupID;
-
             // A tick is evaluated against one stable set of definitions. Registration
             // from user callbacks is committed only after every handle in that tick
             // has completed, so no handle can observe a half-old/half-new blueprint.
             if (_isUpdating)
             {
-                QueueRegistration(definition);
+                QueueRegistration(definition, processingGroupID);
                 return;
             }
 
-            ApplyRegistration(definition);
+            ApplyRegistration(definition, processingGroupID);
         }
 
         /// <summary>Returns whether an FSM definition is registered.</summary>
@@ -244,6 +242,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _definitionErrorCounts.Remove(fsmID);
         }
 
+        private struct PendingRegistration
+        {
+            public readonly FSM Definition;
+            public readonly int ProcessingGroupID;
+
+            public PendingRegistration(FSM definition, int processingGroupID)
+            {
+                Definition = definition;
+                ProcessingGroupID = processingGroupID;
+            }
+        }
+
         private void EnsureNotReentrantUpdate()
         {
             if (_isUpdating)
@@ -269,19 +279,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
         }
 
-        private void QueueRegistration(FSM definition)
+        private void QueueRegistration(FSM definition, int processingGroupID)
         {
             for (var i = 0; i < _pendingRegistrations.Count; i++)
             {
-                if (_pendingRegistrations[i].FSM_ID == definition.FSM_ID)
+                if (_pendingRegistrations[i].Definition.FSM_ID == definition.FSM_ID)
                 {
-                    // Last registration for an identity in this tick wins.
-                    _pendingRegistrations[i] = definition;
+                    // Last registration for an identity in this tick wins. Do not
+                    // mutate the active definition's group before the boundary.
+                    _pendingRegistrations[i] = new PendingRegistration(definition, processingGroupID);
                     return;
                 }
             }
 
-            _pendingRegistrations.Add(definition);
+            _pendingRegistrations.Add(new PendingRegistration(definition, processingGroupID));
         }
 
         private void ApplyPendingRegistrations()
@@ -295,12 +306,13 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _pendingRegistrations.Clear();
             for (var i = 0; i < registrations.Length; i++)
             {
-                ApplyRegistration(registrations[i]);
+                ApplyRegistration(registrations[i].Definition, registrations[i].ProcessingGroupID);
             }
         }
 
-        private void ApplyRegistration(FSM definition)
+        private void ApplyRegistration(FSM definition, int processingGroupID)
         {
+            definition.ProcessingGroupID = processingGroupID;
             EnsureDefinitionCapacity(definition.FSM_ID + 1);
 
             if (_definitions[definition.FSM_ID] != null)
@@ -313,6 +325,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     if (handle.FSM_ID == definition.FSM_ID)
                     {
                         handle.Definition = definition;
+                        handle.IsWaitingForValidDefinition = false;
                         if (!definition.HasState(handle.CurrentStateID))
                         {
                             handle.HasEnteredCurrentState = false;
