@@ -229,6 +229,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         
         }
 
+        /// <summary>Gets the number of registered handles assigned to a processing group.</summary>
+        /// <param name="processingGroupID">The integer identity of the processing group.</param>
+        /// <returns>The number of live registered handles in the group.</returns>
         public int GetHandleCount(int processingGroupID)
         {
             var count = 0;
