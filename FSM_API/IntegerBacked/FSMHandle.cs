@@ -20,6 +20,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
         // Runtime-owned handles share their owner's scoped error-accounting policy.
         internal Action<Exception> ErrorReporter { get; set; }
+        internal Action<Action> UpdateScope { get; set; }
         /// <summary>Unique identity of this running FSM instance.</summary>
         public int Id { get; internal set; }
 
@@ -100,6 +101,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// Normal execution uses integer identities throughout the path from the handle to the FSM.
         /// </remarks>
         public void Update()
+        {
+            if (UpdateScope != null)
+            {
+                UpdateScope(UpdateCore);
+                return;
+            }
+
+            UpdateCore();
+        }
+
+        private void UpdateCore()
         {
             if (IsDestroyed || IsPendingDestruction || IsWaitingForValidDefinition || Context == null || !Context.IsValid)
             {
@@ -268,6 +280,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
             IsDestroyed = true;
             IsPendingDestruction = false;
+            UpdateScope = null;
             HasEnteredCurrentState = false;
 
             // If teardown was triggered from this handle's own Exit callback, that
