@@ -72,7 +72,19 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Initialize()
         {
-            if (IsDestroyed || IsPendingDestruction || HasEnteredCurrentState || Context == null || !Context.IsValid)
+            if (UpdateScope != null)
+            {
+                UpdateScope(InitializeCore);
+                return;
+            }
+
+            InitializeCore();
+        }
+
+        private void InitializeCore()
+        {
+            if (IsDestroyed || IsPendingDestruction || IsWaitingForValidDefinition ||
+                HasEnteredCurrentState || Context == null || !Context.IsValid)
             {
                 return;
             }
