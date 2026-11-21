@@ -333,16 +333,15 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var runtime = new IntegerFSMRuntime();
             var nestedUpdateRejected = false;
             var siblingUpdateCount = 0;
-            var sibling = new IntegerFSM(50, -1);
+            var sibling = new IntegerFSM(51, -1);
             sibling.AddState(new IntegerFSMState(0, null, _ => siblingUpdateCount++, null));
 
-            var first = new IntegerFSM(51, -1);
+            var first = new IntegerFSM(50, -1);
             first.AddState(new IntegerFSMState(0, null, _ =>
             {
                 try
                 {
-                    runtime.GetInstances(50).GetEnumerator().MoveNext();
-                    foreach (var siblingHandle in runtime.GetInstances(50))
+                    foreach (var siblingHandle in runtime.GetInstances(51))
                     {
                         siblingHandle.Update();
                     }
@@ -355,8 +354,8 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             runtime.Register(first, 19);
             runtime.Register(sibling, 19);
-            runtime.CreateInstance(51, new TestContext());
             runtime.CreateInstance(50, new TestContext());
+            runtime.CreateInstance(51, new TestContext());
 
             runtime.Update(19);
 
