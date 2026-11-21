@@ -57,6 +57,11 @@ The implementation must preserve these invariants:
 | New handle created during callback | Not processed from the current tick snapshot |
 | Current state absent after replacement | No invalid old-state Exit; recover through the replacement initial state lifecycle |
 | Invalid context | Handle is suspended, not implicitly destroyed |
+| Process-rate cadence (`-1`, `0`, positive rate) | Integer-backed update counts and callback traces match the string-backed runtime |
+| Independent definition counters | Each definition advances according to its own process rate in both representations |
+| Processing-group isolation | Updating one group does not execute handles assigned to another group in either representation |
+
+The integer-backed direct-indexed storage boundary is `0..1,048,575` inclusive for both FSM definition IDs and state IDs. IDs outside this range are rejected before capacity growth; in-range sparse IDs are supported.
 
 The NUnit suites `FSMRuntime_TickBoundary_Tests` and `FSM_API_DefinitionReplacement_TickBoundary_Tests` are the executable specifications for integer-backed and string-backed replacement, respectively. The broader lifecycle suite remains responsible for context ownership, explicit teardown, processing-group movement, and cross-representation observable parity.
 
