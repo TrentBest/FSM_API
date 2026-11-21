@@ -837,6 +837,7 @@ namespace TheSingularityWorkshop.FSM_API
                     if (_pendingRegistrations.TryGetValue(key, out var previous))
                     {
                         previous.IsActive = false;
+                        _pendingRegistrationOrder.Remove(previous);
                     }
 
                     var pending = new PendingRegistration(fsmName, fsm, processRate, processingGroup);
