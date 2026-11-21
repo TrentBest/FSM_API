@@ -460,5 +460,47 @@ namespace TheSingularityWorkshop.FSM_API.Tests
                 "A replacement requested by Exit must be registered only after the old definition and its handles are torn down.");
         }
 
+        [Test]
+        public void StringHandleCreatedDuringCallback_IsExcludedUntilNextTickAndRebound()
+        {
+            const string name = "StringCallbackCreatedHandle";
+            const string group = "StringCallbackCreatedGroup";
+            var trace = new List<string>();
+            var created = false;
+            FSMHandle createdHandle = null;
+            FSM replacement = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ =>
+                {
+                    trace.Add("old.update");
+                    if (created)
+                    {
+                        return;
+                    }
+
+                    created = true;
+                    createdHandle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+                    replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                        .State("A", null, _ => trace.Add("new.update"), null)
+                        .BuildDefinition();
+                }, null)
+                .BuildDefinition();
+
+            var firstHandle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(createdHandle, Is.Not.Null);
+            Assert.That(createdHandle.Definition, Is.SameAs(replacement));
+            Assert.That(trace, Is.EqualTo(new[] { "old.update" }),
+                "The callback-created string handle must not be processed from the tick-start snapshot.");
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "new.update", "new.update" }));
+            Assert.That(firstHandle.Definition, Is.SameAs(replacement));
+        }
+
     }
 }
