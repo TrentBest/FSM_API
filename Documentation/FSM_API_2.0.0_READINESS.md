@@ -17,13 +17,13 @@
 
 ## Candidate validation — 2026-11-21
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `efbca3cc5d6ecbf461c24dc3c17716ecbc7ced9`, based on `development` with **98 commits ahead and 0 behind**. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `f59733fff6df41350c6b5cf9d8be7e00b9737517`, based on `development` with **101 commits ahead and 0 behind**. The PR remains open and draft.
 
-Latest full candidate workflow: [run #1074](https://github.com/TrentBest/FSM_API/actions/runs/44892483288).
+Latest full candidate workflow: [run #1077](https://github.com/TrentBest/FSM_API/actions/runs/44893233940).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
-- .NET 10 test suite: **533 passed, 0 failed, 0 skipped**.
+- .NET 10 test suite: **538 passed, 0 failed, 0 skipped**.
 - Build diagnostics after the documentation cleanup: **0 warnings, 0 errors**.
 - NuGet package artifact: generated and uploaded.
 - DLL artifacts: generated and uploaded.
@@ -32,7 +32,7 @@ Latest full candidate workflow: [run #1074](https://github.com/TrentBest/FSM_API
 - `publish_nuget`: skipped; no publication was performed.
 - `sith_branch_policy`: skipped because this was a pull-request run, not an authorized publication dispatch.
 
-The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Run #1074 confirms zero build warnings. Codecov upload completed, but the latest processed patch-coverage report must still be checked separately because the upload step is configured to continue on error and does not enforce the coverage threshold.
+The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Runs #1074 and #1077 confirm zero build warnings. Codecov upload completed, but the latest processed patch-coverage report must still be checked separately because the upload step is configured to continue on error and does not enforce the coverage threshold.
 
 The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
 
