@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
@@ -572,6 +573,68 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(stringRateThree, Is.EqualTo(2));
             Assert.That(integerRateThree, Is.EqualTo(stringRateThree));
         }
+
+
+        [Test]
+        public void ErrorThresholdTeardown_MatchesStringBackedImplementation()
+        {
+            FsmApi.Internal.ResetAPI(true);
+            FsmApi.Error.Reset();
+            FsmApi.Error.InstanceErrorThreshold = 2;
+            FsmApi.Error.DefinitionErrorThreshold = 1;
+
+            const string stringName = "StringErrorParity";
+            const string stringGroup = "StringErrorParityGroup";
+            const int integerID = 23091;
+            const int integerGroupID = 91;
+
+            FsmApi.Create.CreateFiniteStateMachine(stringName, -1, stringGroup)
+                .State("A", null, _ => throw new InvalidOperationException("string callback failure"), null)
+                .WithInitialState("A")
+                .BuildDefinition();
+            var stringHandle = FsmApi.Create.CreateInstance(stringName, new Context(), stringGroup);
+
+            var integerRuntime = new FSMRuntime();
+            var integerDefinition = new FSMBuilderInt(integerID, processRate: -1, processingGroupID: integerGroupID)
+                .State(0, null, _ => throw new InvalidOperationException("integer callback failure"), null)
+                .WithInitialState(0)
+                .BuildDefinition();
+            integerRuntime.Register(integerDefinition);
+            var integerHandle = integerRuntime.CreateInstance(integerID, new Context());
+
+            // First failure increments both counters but remains below the instance threshold.
+            FsmApi.Interaction.Update(stringGroup);
+            integerRuntime.Update(integerGroupID);
+
+            Assert.That(FsmApi.Interaction.Exists(stringName, stringGroup), Is.True);
+            Assert.That(FsmApi.Interaction.GetInstances(stringName, stringGroup).Count, Is.EqualTo(1));
+            Assert.That(FsmApi.Error.GetErrorCounts().ContainsKey(stringHandle: null), Is.False);
+            Assert.That(integerRuntime.Contains(integerID), Is.True);
+            Assert.That(integerRuntime.GetInstances(integerID).Count, Is.EqualTo(1));
+            Assert.That(integerRuntime.GetInstanceErrorCounts().ContainsKey(integerHandle), Is.True);
+            Assert.That(integerRuntime.GetDefinitionErrorCounts().ContainsKey(integerID), Is.False);
+
+            // The second failure reaches the same instance threshold in both runtimes.
+            // Each runtime removes the failed handle and, with definition threshold 1,
+            // unregisters its definition at the end of that tick.
+            FsmApi.Interaction.Update(stringGroup);
+            integerRuntime.Update(integerGroupID);
+
+            Assert.That(stringHandle.IsDestroyed, Is.True);
+            Assert.That(integerHandle.IsDestroyed, Is.True);
+            Assert.That(FsmApi.Interaction.Exists(stringName, stringGroup), Is.False);
+            Assert.That(FsmApi.Interaction.GetInstances(stringName, stringGroup).Count, Is.Zero);
+            Assert.That(integerRuntime.Contains(integerID), Is.False);
+            Assert.That(integerRuntime.GetInstances(integerID).Count, Is.Zero);
+            Assert.That(FsmApi.Error.GetErrorCounts().Count, Is.Zero);
+            Assert.That(FsmApi.Error.GetDefinitionErrorCounts().Count, Is.Zero);
+            Assert.That(integerRuntime.GetInstanceErrorCounts().Count, Is.Zero);
+            Assert.That(integerRuntime.GetDefinitionErrorCounts().Count, Is.Zero);
+
+            FsmApi.Error.Reset();
+            FsmApi.Internal.ResetAPI(true);
+        }
+
 
     }
 }
