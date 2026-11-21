@@ -494,5 +494,53 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(firstHandle.Definition, Is.SameAs(replacement));
         }
 
+        [Test]
+        public void AutomaticThresholdTeardown_RemovesOldHandlesThenAppliesQueuedReplacement()
+        {
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
+            FsmApi.Error.InstanceErrorThreshold = 1;
+            FsmApi.Error.DefinitionErrorThreshold = 1;
+
+            try
+            {
+                var runtime = new IntegerFSMRuntime();
+                var replacement = new IntegerFSM(57, -1);
+                replacement.AddState(new IntegerFSMState(0, null, null, null));
+                var replacementRequested = false;
+                var original = new IntegerFSM(57, -1);
+                original.AddState(new IntegerFSMState(0, null, context =>
+                {
+                    if (context.Name == "failing")
+                    {
+                        throw new InvalidOperationException("Expected threshold-triggering failure.");
+                    }
+
+                    if (!replacementRequested)
+                    {
+                        replacementRequested = true;
+                        runtime.Register(replacement, 24);
+                    }
+                }, null));
+
+                runtime.Register(original, 24);
+                var failingHandle = runtime.CreateInstance(57, new TestContext { Name = "failing" });
+                var replacingHandle = runtime.CreateInstance(57, new TestContext { Name = "replacing" });
+
+                runtime.Update(24);
+
+                Assert.That(failingHandle.IsDestroyed, Is.True);
+                Assert.That(replacingHandle.IsDestroyed, Is.True);
+                Assert.That(runtime.Contains(57), Is.True);
+                Assert.That(runtime.GetHandleCount(24), Is.Zero,
+                    "Automatic teardown must remove old handles before the queued replacement is published.");
+            }
+            finally
+            {
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+            }
+        }
+
     }
 }
