@@ -41,6 +41,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Indicates whether the current state has been entered.</summary>
         public bool HasEnteredCurrentState { get; internal set; }
 
+        /// <summary>Indicates that the current definition has no usable state and updates are suspended until replacement.</summary>
+        internal bool IsWaitingForValidDefinition { get; set; }
+
         /// <summary>Indicates whether this handle has completed teardown.</summary>
         public bool IsDestroyed { get; private set; }
 
@@ -98,7 +101,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </remarks>
         public void Update()
         {
-            if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
+            if (IsDestroyed || IsPendingDestruction || IsWaitingForValidDefinition || Context == null || !Context.IsValid)
             {
                 return;
             }
