@@ -133,7 +133,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
         public bool Unregister(int fsmID)
         {
-            var pendingRegistrationRemoved = RemovePendingRegistration(fsmID);
+            return UnregisterDefinition(fsmID, true);
+        }
+
+        private bool UnregisterDefinition(int fsmID, bool cancelPendingRegistration)
+        {
+            var pendingRegistrationRemoved = cancelPendingRegistration && RemovePendingRegistration(fsmID);
             if (!TryGetDefinition(fsmID, out _))
             {
                 return pendingRegistrationRemoved;
@@ -477,7 +482,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 _pendingUnregisterIDs.Clear();
                 for (var i = 0; i < definitions.Length; i++)
                 {
-                    Unregister(definitions[i]);
+                    // Automatic error-threshold teardown removes the failing instances,
+                    // but a replacement explicitly requested by a callback may still be
+                    // committed afterward. Explicit Unregister calls cancel earlier requests.
+                    UnregisterDefinition(definitions[i], false);
                 }
             }
 
