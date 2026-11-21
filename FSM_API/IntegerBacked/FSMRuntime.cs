@@ -24,6 +24,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private readonly List<int> _pendingUnregisterIDs = new List<int>();
         private readonly List<PendingRegistration> _pendingRegistrations = new List<PendingRegistration>();
         private bool _isUpdating;
+        private bool _isExecutingHandleUpdate;
         private int _nextHandleID;
 
         /// <summary>Registers an integer-backed FSM definition for a processing group.</summary>
@@ -269,7 +270,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (_isUpdating)
             {
-                update();
+                if (_isExecutingHandleUpdate)
+                {
+                    throw new InvalidOperationException(
+                        "A handle cannot be updated recursively from another handle callback in the same runtime tick.");
+                }
+
+                _isExecutingHandleUpdate = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isExecutingHandleUpdate = false;
+                }
                 return;
             }
 
@@ -277,7 +292,15 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _isUpdating = true;
             try
             {
-                update();
+                _isExecutingHandleUpdate = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isExecutingHandleUpdate = false;
+                }
             }
             finally
             {
