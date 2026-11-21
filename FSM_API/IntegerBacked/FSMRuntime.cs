@@ -25,6 +25,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private readonly List<PendingRegistration> _pendingRegistrations = new List<PendingRegistration>();
         private bool _isUpdating;
         private bool _isExecutingHandleUpdate;
+        private bool _isFinalizingTick;
         private int _nextHandleID;
 
         /// <summary>Registers an integer-backed FSM definition for a processing group.</summary>
@@ -276,10 +277,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             if (_isUpdating)
             {
-                if (_isExecutingHandleUpdate)
+                if (_isExecutingHandleUpdate || _isFinalizingTick)
                 {
                     throw new InvalidOperationException(
-                        "A handle cannot be updated recursively from another handle callback in the same runtime tick.");
+                        "A handle cannot be updated re-entrantly from a runtime callback or while the tick is being finalized.");
                 }
 
                 _isExecutingHandleUpdate = true;
@@ -316,15 +317,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
         private void CompleteTick()
         {
+            _isFinalizingTick = true;
             try
             {
                 // Keep the runtime in its updating phase while lifecycle callbacks run.
-                // Any registration they request joins the same boundary commit.
+                // Any registration they request joins the same boundary commit. Nested
+                // handle updates are rejected during this phase to avoid an extra pass.
                 ProcessPendingLifecycleChanges();
                 ApplyPendingRegistrations();
             }
             finally
             {
+                _isFinalizingTick = false;
                 _isUpdating = false;
             }
         }
