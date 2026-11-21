@@ -406,7 +406,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             {
                 var runtime = new IntegerFSMRuntime();
                 var nestedUpdateRejected = false;
-                TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt siblingHandle = null;
+                TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt failingHandle = null;
                 var definition = new IntegerFSM(55, -1);
                 definition.AddState(new IntegerFSMState(
                     0,
@@ -420,14 +420,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                     },
                     _ =>
                     {
-                        if (siblingHandle == null)
+                        if (failingHandle == null)
                         {
                             return;
                         }
 
                         try
                         {
-                            siblingHandle.Update();
+                            failingHandle.Update();
                         }
                         catch (InvalidOperationException)
                         {
@@ -436,13 +436,14 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                     }));
 
                 runtime.Register(definition, 22);
-                runtime.CreateInstance(55, new TestContext { Name = "failing" });
-                siblingHandle = runtime.CreateInstance(55, new TestContext { Name = "sibling" });
+                failingHandle = runtime.CreateInstance(55, new TestContext { Name = "failing" });
+                var siblingHandle = runtime.CreateInstance(55, new TestContext { Name = "sibling" });
 
                 runtime.Update(22);
 
                 Assert.That(nestedUpdateRejected, Is.True,
                     "Teardown callbacks during tick finalization must not start another handle update.");
+                Assert.That(failingHandle.IsDestroyed, Is.True);
                 Assert.That(siblingHandle.IsDestroyed, Is.True);
                 Assert.That(runtime.Contains(55), Is.False);
             }
