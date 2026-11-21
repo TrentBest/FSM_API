@@ -901,14 +901,17 @@ namespace TheSingularityWorkshop.FSM_API
                 return Tuple.Create(processingGroup, fsmName);
             }
 
-            private static void CancelPendingRegistration(string fsmName, string processingGroup)
+            internal static bool CancelPendingRegistration(string fsmName, string processingGroup)
             {
                 var key = GetRegistrationKey(fsmName, processingGroup);
                 if (_pendingRegistrations.TryGetValue(key, out var pending))
                 {
                     pending.IsActive = false;
                     _pendingRegistrations.Remove(key);
+                    return true;
                 }
+
+                return false;
             }
 
             /// <summary>
