@@ -53,7 +53,7 @@ Owns the runtime interaction boundary:
 - Explicit transition requests.
 - Instance movement between compatible processing groups.
 - Reset, pause/resume where supported, and explicit instance/definition destruction.
-- Lifecycle and deferred-mutation behavior. The integer-backed runtime commits callback-requested definition replacement at the end-of-tick boundary and rejects nested scheduler updates. Equivalent string-backed replacement semantics remain an open 2.0 parity requirement tracked in [issue #37](https://github.com/TrentBest/FSM_API/issues/37). See [the integer runtime tick and mutation contract](INTEGER_RUNTIME_TICK_AND_MUTATION_CONTRACT.md).
+- Lifecycle and deferred-mutation behavior. Both string-backed and integer-backed runtimes commit callback-requested definition replacement at the end-of-tick boundary and reject nested scheduler/handle updates. See [the shared runtime tick and mutation contract](FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md).
 - Integer-backed update, unregister, and definition-presence operations where exposed by the integer runtime.
 
 The same observable behavior must be available through both string-backed and integer-backed representations. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
