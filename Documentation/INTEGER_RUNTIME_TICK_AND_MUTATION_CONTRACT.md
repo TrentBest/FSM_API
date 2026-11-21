@@ -29,7 +29,7 @@ When several replacements for the same identity are requested in one tick, the l
 
 A callback may call `Register`; that request is deferred. This applies uniformly to requests made from Enter, Update, transition-condition, Exit, and teardown callbacks.
 
-A callback must not recursively invoke `Update` or `UpdateAll` on the same runtime. A nested scheduler call is rejected with `InvalidOperationException`; it does not start a nested tick. Hosts that need another tick must request it after the current update call returns.
+A callback must not recursively invoke `Update` or `UpdateAll` on the same runtime. A nested scheduler call is rejected with `InvalidOperationException`; it does not start a nested tick. A handle also cannot be recursively updated from another handle callback in the same runtime tick; the nested call is rejected so a sibling cannot run early and then run again at its scheduled position. Hosts that need another tick must request it after the current update call returns.
 
 This rule avoids recursive scheduler traversal, duplicate processing of the same handle, and ambiguous ordering between nested and outer snapshots.
 
