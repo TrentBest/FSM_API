@@ -5,6 +5,7 @@ using TheSingularityWorkshop.FSM_API;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFSMHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandle;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 {
@@ -460,7 +461,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             var trace = new List<string>();
             var runtime = new IntegerFSMRuntime();
             var created = false;
-            FSMHandleInt createdHandle = null;
+            IntegerFSMHandle createdHandle = null;
             var replacement = new IntegerFSM(56, -1);
             replacement.AddState(new IntegerFSMState(0, null, _ => trace.Add("new.update"), null));
 
