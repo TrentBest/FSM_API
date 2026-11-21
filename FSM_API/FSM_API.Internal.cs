@@ -605,19 +605,30 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     throw new InvalidOperationException("Deferred FSM modifications cannot be processed from inside an active update callback.");
                 }
-
-                //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
-                while (_deferredModifications.Count > 0)
+                if (_isProcessingDeferred)
                 {
-                    var action = _deferredModifications.Dequeue();
-                    try
+                    throw new InvalidOperationException("Deferred FSM modifications cannot be processed recursively.");
+                }
+
+                _isProcessingDeferred = true;
+                try
+                {
+                    while (_deferredModifications.Count > 0)
                     {
-                        action.Invoke();
+                        var action = _deferredModifications.Dequeue();
+                        try
+                        {
+                            action.Invoke();
+                        }
+                        catch (Exception ex)
+                        {
+                            Error.InvokeInternalApiError("Error during deferred API modification.", ex);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Error.InvokeInternalApiError("Error during deferred API modification.", ex);
-                    }
+                }
+                finally
+                {
+                    _isProcessingDeferred = false;
                 }
             }
 
@@ -680,6 +691,7 @@ namespace TheSingularityWorkshop.FSM_API
                     _pendingRegistrations.Clear();
                     _deferredModifications.Clear();
                     _isFinalizingTick = false;
+                    _isProcessingDeferred = false;
                     _isTicking = false;
                 }
             }
@@ -1265,6 +1277,7 @@ namespace TheSingularityWorkshop.FSM_API
                 new Dictionary<string, PendingRegistration>();
             private static bool _isTicking;
             private static bool _isFinalizingTick;
+            private static bool _isProcessingDeferred;
 
             internal static void ExecuteManualHandleUpdate(Action update)
             {
