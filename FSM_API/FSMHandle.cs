@@ -332,6 +332,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </exception>
         public void TransitionTo(string nextStateName)
         {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => void TransitionToCore(nextStateName));
+                return;
+            }
+
+            void TransitionToCore(nextStateName);
+        }
+
+        private void TransitionToCore(string nextStateName)
+        {
             if (string.IsNullOrWhiteSpace(nextStateName))
             {
                 throw new ArgumentException("Target state name cannot be null or empty.", nameof(nextStateName));
@@ -357,6 +368,7 @@ namespace TheSingularityWorkshop.FSM_API
                 FsmApi.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
+        
         }
 
 
@@ -375,6 +387,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void ResetFSMInstance()
         {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => void ResetFSMInstanceCore());
+                return;
+            }
+
+            void ResetFSMInstanceCore();
+        }
+
+        private void ResetFSMInstanceCore()
+        {
             if (IsDestroyed || Context == null || !Context.IsValid)
             {
                 return;
@@ -386,6 +409,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
             CurrentState = Definition.InitialState;
             HasEnteredCurrentState = Definition.HasState(CurrentState);
+        
         }
 
 
@@ -464,6 +488,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </para>
         /// </remarks>
         public void EvaluateConditions()
+        {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => void EvaluateConditionsCore());
+                return;
+            }
+
+            void EvaluateConditionsCore();
+        }
+
+        private void EvaluateConditionsCore()
         {
             // Manual evaluation follows the same precedence as scheduled stepping:
             // Any-State transitions first, then transitions originating in CurrentState.
@@ -547,6 +582,7 @@ namespace TheSingularityWorkshop.FSM_API
                 HasEnteredCurrentState = true;
                 return; // One transition per evaluation; Any-State candidates are ordered first.
             }
+        
         }
     }
 }
