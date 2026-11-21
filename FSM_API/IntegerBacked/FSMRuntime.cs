@@ -91,6 +91,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when the handle was registered with this runtime.</returns>
         public bool RemoveInstance(FSMHandleInt handle)
         {
+            if (_isUpdating)
+            {
+                return RemoveInstanceCore(handle);
+            }
+
+            var removed = false;
+            ExecuteHandleUpdate(() => removed = RemoveInstanceCore(handle));
+            return removed;
+        }
+
+        private bool RemoveInstanceCore(FSMHandleInt handle)
+        {
             if (handle == null)
             {
                 return false;
@@ -134,7 +146,14 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
         public bool Unregister(int fsmID)
         {
-            return UnregisterDefinition(fsmID, true);
+            if (_isUpdating)
+            {
+                return UnregisterDefinition(fsmID, true);
+            }
+
+            var unregistered = false;
+            ExecuteHandleUpdate(() => unregistered = UnregisterDefinition(fsmID, true));
+            return unregistered;
         }
 
         private bool UnregisterDefinition(int fsmID, bool cancelPendingRegistration)
@@ -207,9 +226,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 CompleteTick();
             }
+        
         }
 
-        /// <summary>Returns the number of live handles in a processing group.</summary>
         public int GetHandleCount(int processingGroupID)
         {
             var count = 0;
@@ -280,7 +299,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 if (_isExecutingHandleUpdate || _isFinalizingTick)
                 {
                     throw new InvalidOperationException(
-                        "A handle cannot be updated re-entrantly from a runtime callback or while the tick is being finalized.");
+                        "A handle operation cannot be invoked re-entrantly from a runtime callback or while the tick is being finalized.");
                 }
 
                 _isExecutingHandleUpdate = true;
