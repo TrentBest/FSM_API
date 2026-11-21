@@ -53,7 +53,7 @@ Owns the runtime interaction boundary:
 - Explicit transition requests.
 - Instance movement between compatible processing groups.
 - Reset, pause/resume where supported, and explicit instance/definition destruction.
-- Lifecycle and deferred-mutation behavior.
+- Lifecycle and deferred-mutation behavior. Definition replacement requested from callbacks is committed at the end-of-tick boundary; nested scheduler updates are rejected. See [the integer runtime tick and mutation contract](INTEGER_RUNTIME_TICK_AND_MUTATION_CONTRACT.md).
 - Integer-backed update, unregister, and definition-presence operations where exposed by the integer runtime.
 
 The same observable behavior must be available through both string-backed and integer-backed representations. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
