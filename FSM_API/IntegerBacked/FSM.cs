@@ -345,6 +345,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
                         $"Initial state '{InitialStateID}' does not exist in integer FSM '{FSM_ID}'. Recovery cannot enter a state.",
                         new InvalidOperationException($"Initial state '{InitialStateID}' does not exist in FSM '{FSM_ID}'."));
+                    if (owner != null)
+                    {
+                        owner.HasEnteredCurrentState = false;
+                        owner.IsWaitingForValidDefinition = true;
+                    }
                     return InitialStateID;
                 }
 
@@ -356,6 +361,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                     // replacement's initial state on the next update exactly once.
                     owner.CurrentStateID = InitialStateID;
                     owner.HasEnteredCurrentState = false;
+                    owner.IsWaitingForValidDefinition = false;
                     return InitialStateID;
                 }
 
