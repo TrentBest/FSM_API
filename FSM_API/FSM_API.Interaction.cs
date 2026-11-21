@@ -246,9 +246,31 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new ArgumentException("Processing group cannot be null or empty.", nameof(processingGroup));
                 }
 
-                // Keep all definition teardown paths on the same mutation boundary so
-                // queued registrations are cancelled in call order and Exit callbacks
-                // cannot publish a replacement halfway through teardown.
+                if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
+                {
+                    if (Internal.CancelPendingRegistration(fsmName, processingGroup))
+                    {
+                        return;
+                    }
+
+                    Error.InvokeInternalApiError($"Attempted to destroy FSM '{fsmName}' from non-existent processing group '{processingGroup}'.", null);
+                    return;
+                }
+
+                if (!categoryBuckets.ContainsKey(fsmName) &&
+                    Internal.CancelPendingRegistration(fsmName, processingGroup))
+                {
+                    return;
+                }
+
+                if (!categoryBuckets.ContainsKey(fsmName))
+                {
+                    Error.InvokeInternalApiError($"Attempted to destroy non-existent FSM '{fsmName}' in processing group '{processingGroup}'.", null);
+                    return;
+                }
+
+                // Route actual teardown through the runtime boundary so Exit callbacks
+                // cannot publish a replacement halfway through destruction.
                 Internal.DestroyFiniteStateMachine(fsmName, processingGroup);
             }
 
