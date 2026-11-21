@@ -184,6 +184,17 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
             public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup)
             {
+                if (!_isTicking)
+                {
+                    ExecuteManualHandleUpdate(() => DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup));
+                    return;
+                }
+
+                DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup);
+            }
+
+            private static void DestroyFiniteStateMachineCore(string fsmDefinitionName, string processingGroup)
+            {
                 CancelPendingRegistration(fsmDefinitionName, processingGroup);
                 // Input validation.
                 if (string.IsNullOrWhiteSpace(fsmDefinitionName))
@@ -242,6 +253,17 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             /// <param name="handle">The FSMHandle instance to destroy.</param>
             public static void DestroyInstance(FSMHandle handle)
+            {
+                if (!_isTicking)
+                {
+                    ExecuteManualHandleUpdate(() => DestroyInstanceCore(handle));
+                    return;
+                }
+
+                DestroyInstanceCore(handle);
+            }
+
+            private static void DestroyInstanceCore(FSMHandle handle)
             {
                 if (handle == null)
                 {
@@ -611,6 +633,14 @@ namespace TheSingularityWorkshop.FSM_API
             /// </param>
             public static void ResetAPI(bool hardReset = false)
             {
+                if (_isTicking)
+                {
+                    throw new InvalidOperationException("The FSM API cannot be reset from inside an active runtime tick.");
+                }
+
+                _pendingRegistrations.Clear();
+                _deferredModifications.Clear();
+                _isFinalizingTick = false;
                 if (hardReset)
                 {
                     // A hard reset removes every registered handle, so mark each handle as
