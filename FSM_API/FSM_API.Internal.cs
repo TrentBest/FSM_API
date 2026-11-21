@@ -1273,7 +1273,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             private static readonly Queue<Action> _deferredModifications = new Queue<Action>();
 
-            private static readonly Dictionary<string, PendingRegistration> _pendingRegistrations =
+            private static readonly Dictionary<Tuple<string, string>, PendingRegistration> _pendingRegistrations =
                 new Dictionary<string, PendingRegistration>();
             private static bool _isTicking;
             private static bool _isFinalizingTick;
