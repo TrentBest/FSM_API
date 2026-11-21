@@ -179,6 +179,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// </summary>
         public void EvaluateConditions()
         {
+            if (UpdateScope != null)
+            {
+                UpdateScope(() => EvaluateConditionsCore());
+                return;
+            }
+
+            EvaluateConditionsCore();
+        }
+
+        private void EvaluateConditionsCore()
+        {
             // Match the string-backed handle: an invalid caller-owned context suspends
             // evaluation without changing state or lifecycle bookkeeping.
             if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
@@ -202,10 +213,22 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             {
                 HasEnteredCurrentState = true;
             }
+        
         }
 
         /// <summary>Forces an immediate transition to an integer state identity.</summary>
         public void TransitionTo(int nextStateID)
+        {
+            if (UpdateScope != null)
+            {
+                UpdateScope(() => TransitionToCore(nextStateID));
+                return;
+            }
+
+            TransitionToCore(nextStateID);
+        }
+
+        private void TransitionToCore(int nextStateID)
         {
             if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
             {
@@ -233,10 +256,22 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 }
                 throw;
             }
+        
         }
 
         /// <summary>Resets this instance to the blueprint's initial state.</summary>
         public void ResetFSMInstance()
+        {
+            if (UpdateScope != null)
+            {
+                UpdateScope(() => ResetFSMInstanceCore());
+                return;
+            }
+
+            ResetFSMInstanceCore();
+        }
+
+        private void ResetFSMInstanceCore()
         {
             if (IsDestroyed || IsPendingDestruction || Context == null || !Context.IsValid)
             {
@@ -249,6 +284,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
             CurrentStateID = Definition.InitialStateID;
             HasEnteredCurrentState = true;
+        
         }
 
         /// <summary>Invokes this handle's Exit callback while preventing same-handle reentrant duplication.</summary>
