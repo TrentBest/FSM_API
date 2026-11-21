@@ -327,3 +327,44 @@ Branch cleanup readiness is not the same as 2.0 publication authorization. The l
 ### Owner action
 
 Perform one batch deletion of the 16 exact refs above, then refresh the live branch API and verify that only `TrentBest/FSM_API:master` and `TrentBest/FSM_API:development` remain. Do not publish NuGet as part of branch cleanup.
+
+
+## Superseding live inventory — 2026-11-21
+
+**This section supersedes the 2026-10-29 “Final owner cleanup recommendation” above. Do not use that historical 16-branch deletion list as the current cleanup instruction.**
+
+A fresh GitHub branch API inventory on 2026-11-21 returned **23 branches**, not 18. The two enduring refs are `master` and `development`; the 21 additional refs are:
+
+- `AddingUnitTests`
+- `HireMeFSMDemo`
+- `RefactoringToHashBacking`
+- `Splitting-FSM_API-class-into-multiple-partial-classes`
+- `TargetingStarcraft2DotNet`
+- `TickCountingSystem`
+- `WindowsFormsEditor`
+- `benchmark-contract-docs`
+- `docs/benchmarking`
+- `docs/readme-standard`
+- `feature/fsm-api-2.0`
+- `feature/fsm-api-2.0-next`
+- `feature/fsm-api-2.0-registry`
+- `feature/fsm-api-2.0-work`
+- `feature/integer-backed-runtime`
+- `feature/net10-validation-lane`
+- `fix/context-validity-execution-gate`
+- `fix/integer-array-capacity-boundary`
+- `fix/integer-definition-reregistration`
+- `fix/manual-any-state-evaluation`
+- `test/integer-scheduler-parity`
+
+### Current integration evidence
+
+- PR [#42](https://github.com/TrentBest/FSM_API/pull/42) is the active integration candidate, still open and draft, targeting `development`.
+- Its current audited head at this inventory was `7f8f8fd0aa584685ceac99bdb30a0c63a0eafd05`, 90 commits ahead and 0 behind `development`.
+- PR #40's sparse-ID boundary changes and PR #41's scheduler-parity tests have been ported into #42. Their original branches `fix/integer-array-capacity-boundary` and `test/integer-scheduler-parity` remain present; do not delete them until #42 has completed review and its integration disposition is accepted.
+- The #42 candidate's .NET workflow run [#1069](https://github.com/TrentBest/FSM_API/actions/runs/44891965031) completed build/test/package and documentation jobs successfully: 533 tests passed, 0 failed, 0 skipped; DocFX and documentation artifact generation passed. The package was an artifact only; NuGet publication was skipped.
+- The subsequent readiness-document update is being validated separately. A pull-request workflow does not execute the live Sith publication gate.
+
+### Current disposition
+
+**NOT READY FOR MANUAL BRANCH DELETION.** The old 16-branch list is stale because seven additional refs are now present, and several of those refs contain the active integration candidate or unreviewed work. No branch is marked ready for deletion by this inventory. Continue reconciling each unique branch against the active candidate, record exact commit/file/test dispositions, and only then publish one consolidated owner deletion list. Do not merge, publish, or delete as part of this ledger update.
