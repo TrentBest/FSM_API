@@ -184,6 +184,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
             public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup)
             {
+                CancelPendingRegistration(fsmDefinitionName, processingGroup);
                 // Input validation.
                 if (string.IsNullOrWhiteSpace(fsmDefinitionName))
                 {
@@ -578,6 +579,11 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             public static void ProcessDeferredModifications()
             {
+                if (_isTicking && !_isFinalizingTick)
+                {
+                    throw new InvalidOperationException("Deferred FSM modifications cannot be processed from inside an active update callback.");
+                }
+
                 //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
                 while (_deferredModifications.Count > 0)
                 {
@@ -754,14 +760,13 @@ namespace TheSingularityWorkshop.FSM_API
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="fsm"/> is null.</exception>
             internal static void Register(
                 string fsmName,
-                FSM fsm, // This 'fsm' parameter is non-nullable by signature, and checked. Correct.
+                FSM fsm,
                 int processRate, string processingGroup = "Update")
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
                     throw new ArgumentException("FSM name cannot be null or empty during registration.", nameof(fsmName));
                 }
-                // Correct: null check for non-nullable parameter.
                 if (fsm == null)
                 {
                     throw new ArgumentNullException(nameof(fsm), "FSM definition cannot be null during registration.");
@@ -771,25 +776,62 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new ArgumentException("Processing group cannot be null or empty during registration.", nameof(processingGroup));
                 }
 
+                if (_isTicking)
+                {
+                    var key = GetRegistrationKey(fsmName, processingGroup);
+                    if (_pendingRegistrations.TryGetValue(key, out var previous))
+                    {
+                        previous.IsActive = false;
+                    }
+
+                    var pending = new PendingRegistration();
+                    _pendingRegistrations[key] = pending;
+                    QueueDeferredModification(() =>
+                    {
+                        if (!pending.IsActive)
+                        {
+                            return;
+                        }
+
+                        if (_pendingRegistrations.TryGetValue(key, out var current) && ReferenceEquals(current, pending))
+                        {
+                            _pendingRegistrations.Remove(key);
+                        }
+
+                        RegisterNow(fsmName, fsm, processRate, processingGroup);
+                    });
+                    return;
+                }
+
+                RegisterNow(fsmName, fsm, processRate, processingGroup);
+            }
+
+            private static void RegisterNow(string fsmName, FSM fsm, int processRate, string processingGroup)
+            {
                 var buckets = GetOrCreateBucketProcessingGroup(processingGroup);
-                // Correct. TryGetValue makes 'existingBucket' non-null if true.
                 if (buckets.TryGetValue(fsmName, out var existingBucket))
                 {
-                    // FSM already exists, update its definition and process rate.
-                    // Existing instances will automatically use the new definition on their next tick.
-                    // Nullability: existingBucket.Definition is FSM?
-                    // We're assigning a non-nullable 'fsm' to it, which is fine.
                     existingBucket.Definition = fsm;
                     existingBucket.ProcessRate = processRate;
-                    existingBucket.Counter = processRate > 0 ? processRate : 0; // Reset counter for new rate
+                    existingBucket.Counter = processRate > 0 ? processRate : 0;
+
+                    for (var i = 0; i < existingBucket.Instances.Count; i++)
+                    {
+                        var handle = existingBucket.Instances[i];
+                        handle.Definition = fsm;
+                        handle.IsWaitingForValidDefinition = false;
+                        if (!fsm.HasState(handle.CurrentState))
+                        {
+                            handle.HasEnteredCurrentState = false;
+                        }
+                    }
+
                     Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' definition updated at runtime.", new Exception());
                 }
                 else
                 {
-                    // New FSM definition
                     buckets[fsmName] = new FsmBucket
                     {
-                        // Nullability: 'fsm' is non-nullable here, assigning to FsmBucket.Definition (FSM?) is fine.
                         Definition = fsm,
                         ProcessRate = processRate,
                         Counter = processRate > 0 ? processRate : 0,
@@ -798,8 +840,25 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+            private sealed class PendingRegistration
+            {
+                public bool IsActive = true;
+            }
 
+            private static string GetRegistrationKey(string fsmName, string processingGroup)
+            {
+                return processingGroup + "\0" + fsmName;
+            }
 
+            private static void CancelPendingRegistration(string fsmName, string processingGroup)
+            {
+                var key = GetRegistrationKey(fsmName, processingGroup);
+                if (_pendingRegistrations.TryGetValue(key, out var pending))
+                {
+                    pending.IsActive = false;
+                    _pendingRegistrations.Remove(key);
+                }
+            }
 
             /// <summary>
             /// Internally associates an FSM bucket with a specific processing group.
@@ -888,6 +947,33 @@ namespace TheSingularityWorkshop.FSM_API
             /// to automatic removal if error thresholds are exceeded.
             /// </remarks>
             internal static void TickAll(string processingGroup)
+            {
+                if (_isTicking)
+                {
+                    throw new InvalidOperationException("The string-backed FSM scheduler cannot be updated re-entrantly.");
+                }
+
+                _isTicking = true;
+                try
+                {
+                    TickAllCore(processingGroup);
+                }
+                finally
+                {
+                    _isFinalizingTick = true;
+                    try
+                    {
+                        ProcessDeferredModifications();
+                    }
+                    finally
+                    {
+                        _isFinalizingTick = false;
+                        _isTicking = false;
+                    }
+                }
+            }
+
+            private static void TickAllCore(string processingGroup)
             {
                 if (string.IsNullOrWhiteSpace(processingGroup))
                 {
@@ -1114,6 +1200,42 @@ namespace TheSingularityWorkshop.FSM_API
             /// The queue itself is static and initialized, thus never null.
             /// </remarks>
             private static readonly Queue<Action> _deferredModifications = new Queue<Action>();
+
+            private static readonly Dictionary<string, PendingRegistration> _pendingRegistrations =
+                new Dictionary<string, PendingRegistration>();
+            private static bool _isTicking;
+            private static bool _isFinalizingTick;
+
+            internal static void ExecuteManualHandleUpdate(Action update)
+            {
+                if (update == null)
+                {
+                    throw new ArgumentNullException(nameof(update));
+                }
+                if (_isTicking)
+                {
+                    throw new InvalidOperationException("A string-backed FSM handle cannot be updated re-entrantly during a runtime tick.");
+                }
+
+                _isTicking = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isFinalizingTick = true;
+                    try
+                    {
+                        ProcessDeferredModifications();
+                    }
+                    finally
+                    {
+                        _isFinalizingTick = false;
+                        _isTicking = false;
+                    }
+                }
+            }
 
             /// <summary>
             /// Stores all FSM definitions and their instances, organized by
