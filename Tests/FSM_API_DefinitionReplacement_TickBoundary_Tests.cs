@@ -186,7 +186,6 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             var replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
                 .State("B", _ => trace.Add("new.enter"), _ => trace.Add("new.update"), null)
                 .BuildDefinition();
-            FsmApi.Internal.Register(name, replacement, -1, group);
 
             FsmApi.Interaction.Update(group);
             Assert.That(handle.CurrentState, Is.EqualTo("B"));
