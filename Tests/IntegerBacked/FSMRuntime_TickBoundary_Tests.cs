@@ -364,5 +364,35 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 "The sibling must execute once from the tick-start snapshot, not recursively and again later.");
         }
 
+        [Test]
+        public void UnregisterAfterQueuedReplacement_CancelsReplacementAndDestroysExistingInstances()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var replacement = new IntegerFSM(52, -1);
+            replacement.AddState(new IntegerFSMState(0, null, null, null));
+            var requested = false;
+            var original = new IntegerFSM(52, -1);
+            original.AddState(new IntegerFSMState(0, null, _ =>
+            {
+                if (requested)
+                {
+                    return;
+                }
+
+                requested = true;
+                runtime.Register(replacement, 20);
+                Assert.That(runtime.Unregister(52), Is.True);
+            }, null));
+
+            runtime.Register(original, 20);
+            var handle = runtime.CreateInstance(52, new TestContext());
+
+            runtime.Update(20);
+
+            Assert.That(handle.IsDestroyed, Is.True);
+            Assert.That(runtime.Contains(52), Is.False,
+                "An unregister later in the same callback sequence must cancel an earlier queued replacement.");
+        }
+
     }
 }
