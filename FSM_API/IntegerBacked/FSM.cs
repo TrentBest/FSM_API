@@ -14,6 +14,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
     /// </remarks>
     public class FSM
     {
+        /// <summary>Largest supported FSM or state array index in the integer-backed runtime.</summary>
+        /// <remarks>This bounds direct-indexed arrays to 1,048,576 entries and prevents overflow or unbounded sparse-ID allocations.</remarks>
+        public const int MaximumSupportedArrayIndex = 1_048_575;
+
         /// <summary>Unique integer identity of this FSM blueprint.</summary>
         public int FSM_ID { get; }
 
@@ -51,9 +55,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(state));
             }
 
-            if (state.StateID < 0 || state.StateID == AnyStateIdentifier)
+            if (state.StateID < 0 || state.StateID > MaximumSupportedArrayIndex || state.StateID == AnyStateIdentifier)
             {
-                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(state), "State IDs must be within the supported non-negative array-index range.");
             }
 
             EnsureStateCapacity(state.StateID + 1);
@@ -657,10 +661,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            if (requiredLength > MaximumSupportedArrayIndex + 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(requiredLength), "State array capacity exceeds the supported integer-backed limit.");
+            }
+
             var newLength = _states.Length == 0 ? 4 : _states.Length;
             while (newLength < requiredLength)
             {
-                newLength *= 2;
+                newLength = newLength >= (MaximumSupportedArrayIndex + 1) / 2
+                    ? MaximumSupportedArrayIndex + 1
+                    : newLength * 2;
             }
 
             Array.Resize(ref _states, newLength);
