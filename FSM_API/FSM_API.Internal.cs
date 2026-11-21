@@ -877,6 +877,7 @@ namespace TheSingularityWorkshop.FSM_API
                         }
                     }
 
+                    Error.ResetDefinitionErrorCount(fsmName);
                     Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' definition updated at runtime.", new Exception());
                 }
                 else
