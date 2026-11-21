@@ -455,8 +455,6 @@ namespace TheSingularityWorkshop.FSM_API
                 
                 var sw = Stopwatch.StartNew();
                 Internal.TickAll(processingGroup);
-               
-                Internal.ProcessDeferredModifications();
                 sw.Stop();
                 if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
                 {
