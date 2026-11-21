@@ -608,7 +608,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
 
             Assert.That(FsmApi.Interaction.Exists(stringName, stringGroup), Is.True);
             Assert.That(FsmApi.Interaction.GetInstances(stringName, stringGroup).Count, Is.EqualTo(1));
-            Assert.That(FsmApi.Error.GetErrorCounts().ContainsKey(stringHandle: null), Is.False);
+            Assert.That(FsmApi.Error.GetErrorCounts().ContainsKey(stringHandle), Is.True);
             Assert.That(integerRuntime.Contains(integerID), Is.True);
             Assert.That(integerRuntime.GetInstances(integerID).Count, Is.EqualTo(1));
             Assert.That(integerRuntime.GetInstanceErrorCounts().ContainsKey(integerHandle), Is.True);
