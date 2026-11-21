@@ -17,13 +17,13 @@
 
 ## Candidate validation — 2026-11-21
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `ff3be254928f5c9d34bfc89d7ec06e911408aa4e`, based on `development` with **104 commits ahead and 0 behind**. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `9aa8345c57e19e2ace5dc235a0045d51f4755034`, based on `development` with **109 commits ahead and 0 behind**. The PR remains open and draft.
 
-Latest full candidate workflow: [run #1078](https://github.com/TrentBest/FSM_API/actions/runs/44893426913).
+Latest full candidate workflow: [run #1084](https://github.com/TrentBest/FSM_API/actions/runs/44894528903).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
-- .NET 10 test suite: **538 passed, 0 failed, 0 skipped**.
+- .NET 10 test suite: **539 passed, 0 failed, 0 skipped**.
 - Build diagnostics after the documentation cleanup: **0 warnings, 0 errors**.
 - NuGet package artifact: generated and uploaded.
 - DLL artifacts: generated and uploaded.
@@ -39,7 +39,7 @@ The project file still declares package version `1.0.13`. The generated package 
 ## Remaining 2.0 release gates
 
 1. Complete the full source/API review of the 98-commit integration candidate; the passing CI run is not a substitute for reviewing the complete diff.
-2. Complete string/integer behavioral parity across lifecycle, transitions, invalidation, mutation, exceptions, destruction, and error thresholds/policy. Existing tests establish useful parity slices, not complete parity.
+2. Complete string/integer behavioral parity across lifecycle, transitions, invalidation, mutation, exceptions, destruction, and error thresholds/policy. A first direct cross-runtime test now verifies repeated callback failures, instance-threshold removal, definition-threshold unregistration, and error-counter cleanup; multi-handle/threshold interactions and diagnostic-event semantics still need review.
 3. Specify deterministic identity, reverse mapping, persistence, and versioning contracts, including the integer direct-array boundary.
 4. Produce reproducible 2.0 performance evidence. The companion [FSM_API_Benchmark PR #1](https://github.com/TrentBest/FSM_API_Benchmark/pull/1) contains a broad benchmark suite but is still a draft targeting that repository's `development`, and its project currently references the published FSM_API 1.0.13 package. It does not yet provide equivalent string-backed-versus-integer-backed measurements for this candidate. Align the suite with the exact 2.0 source/package and record environment/provenance before making performance claims.
 5. Verify the intended compatibility matrix with clean consumer restores/tests. The library currently builds `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`; the automated test project currently runs on .NET 10 only. Confirm older .NET Framework/.NET Core consumers through the appropriate `netstandard2.0` asset and explicitly decide whether the direct `net47` target is sufficient for the intended legacy reach.
