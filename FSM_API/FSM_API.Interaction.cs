@@ -237,6 +237,16 @@ namespace TheSingularityWorkshop.FSM_API
             /// </exception>
             public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = "Update")
             {
+                DestroyFiniteStateMachineCore(fsmName, processingGroup, true);
+            }
+
+            internal static void DestroyFiniteStateMachineAutomatic(string fsmName, string processingGroup)
+            {
+                DestroyFiniteStateMachineCore(fsmName, processingGroup, false);
+            }
+
+            private static void DestroyFiniteStateMachineCore(string fsmName, string processingGroup, bool cancelPendingRegistration)
+            {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
                     throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
@@ -248,7 +258,7 @@ namespace TheSingularityWorkshop.FSM_API
 
                 if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
                 {
-                    if (Internal.CancelPendingRegistration(fsmName, processingGroup))
+                    if (cancelPendingRegistration && Internal.CancelPendingRegistration(fsmName, processingGroup))
                     {
                         return;
                     }
@@ -258,6 +268,7 @@ namespace TheSingularityWorkshop.FSM_API
                 }
 
                 if (!categoryBuckets.ContainsKey(fsmName) &&
+                    cancelPendingRegistration &&
                     Internal.CancelPendingRegistration(fsmName, processingGroup))
                 {
                     return;
@@ -269,9 +280,9 @@ namespace TheSingularityWorkshop.FSM_API
                     return;
                 }
 
-                // Route actual teardown through the runtime boundary so Exit callbacks
-                // cannot publish a replacement halfway through destruction.
-                Internal.DestroyFiniteStateMachine(fsmName, processingGroup);
+                // Explicit teardown cancels earlier queued replacements; automatic
+                // threshold teardown leaves them queued for the post-lifecycle commit.
+                Internal.DestroyFiniteStateMachine(fsmName, processingGroup, cancelPendingRegistration);
             }
 
 
