@@ -394,5 +394,64 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 "An unregister later in the same callback sequence must cancel an earlier queued replacement.");
         }
 
+        [Test]
+        public void HandleUpdatesFromAutomaticTeardownCallbacks_AreRejectedDuringFinalization()
+        {
+            var previousInstanceThreshold = FsmApi.Error.InstanceErrorThreshold;
+            var previousDefinitionThreshold = FsmApi.Error.DefinitionErrorThreshold;
+            FsmApi.Error.InstanceErrorThreshold = 1;
+            FsmApi.Error.DefinitionErrorThreshold = 1;
+
+            try
+            {
+                var runtime = new IntegerFSMRuntime();
+                var nestedUpdateRejected = false;
+                TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt siblingHandle = null;
+                var definition = new IntegerFSM(55, -1);
+                definition.AddState(new IntegerFSMState(
+                    0,
+                    null,
+                    context =>
+                    {
+                        if (context.Name == "failing")
+                        {
+                            throw new InvalidOperationException("Expected threshold-triggering failure.");
+                        }
+                    },
+                    _ =>
+                    {
+                        if (siblingHandle == null)
+                        {
+                            return;
+                        }
+
+                        try
+                        {
+                            siblingHandle.Update();
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            nestedUpdateRejected = true;
+                        }
+                    }));
+
+                runtime.Register(definition, 22);
+                runtime.CreateInstance(55, new TestContext { Name = "failing" });
+                siblingHandle = runtime.CreateInstance(55, new TestContext { Name = "sibling" });
+
+                runtime.Update(22);
+
+                Assert.That(nestedUpdateRejected, Is.True,
+                    "Teardown callbacks during tick finalization must not start another handle update.");
+                Assert.That(siblingHandle.IsDestroyed, Is.True);
+                Assert.That(runtime.Contains(55), Is.False);
+            }
+            finally
+            {
+                FsmApi.Error.InstanceErrorThreshold = previousInstanceThreshold;
+                FsmApi.Error.DefinitionErrorThreshold = previousDefinitionThreshold;
+            }
+        }
+
     }
 }
