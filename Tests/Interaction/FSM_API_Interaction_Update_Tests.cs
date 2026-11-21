@@ -926,5 +926,165 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(targetExitCount, Is.EqualTo(1));
         }
 
+
+[Test]
+        public void ContextInvalidatedDuringOnEnter_StopsRemainingWorkForThatTick()
+        {
+            var updateCount = 0;
+            var guardCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", ctx => ctx.IsValid = false, _ => updateCount++, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(updateCount, Is.Zero);
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(guardCount, Is.EqualTo(1));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+        }
+
+[Test]
+        public void ContextInvalidatedDuringOnExit_DoesNotCommitManualTransition()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            var exitCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, 0, _testProcessingGroup)
+                .State("StateA", _ => enterCount++, _ => updateCount++, ctx => { exitCount++; if (exitCount == 1) ctx.IsValid = false; })
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => true)
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            handle.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            handle.Update(_testProcessingGroup);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+            Assert.That(enterCount, Is.EqualTo(2));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+[Test]
+        public void ContextInvalidatedThenThrownByOnUpdate_StopsTransitionEvaluation()
+        {
+            var guardCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", null, ctx =>
+                {
+                    ctx.IsValid = false;
+                    throw new InvalidOperationException("update failed after invalidation");
+                }, null)
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => { guardCount++; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(guardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
+
+[Test]
+        public void ContextInvalidatedThenThrownByTransitionGuard_StopsFurtherTransitions()
+        {
+            var laterGuardCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", null, null, null)
+                .State("StateB", null, null, null)
+                .State("StateC", null, null, null)
+                .AnyTransition("StateB", ctx =>
+                {
+                    ctx.IsValid = false;
+                    throw new InvalidOperationException("guard failed after invalidation");
+                })
+                .AnyTransition("StateC", _ => { laterGuardCount++; return true; })
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(laterGuardCount, Is.Zero);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+        }
+
+[Test]
+        public void ContextInvalidatedThenThrownByOnExit_RequiresReentryBeforeResuming()
+        {
+            var enterCount = 0;
+            var updateCount = 0;
+            var exitCount = 0;
+            FSM_API.Create.CreateFiniteStateMachine(_testFsmName, -1, _testProcessingGroup)
+                .State("StateA", _ => enterCount++, _ => updateCount++, ctx =>
+                {
+                    exitCount++;
+                    if (exitCount == 1)
+                    {
+                        ctx.IsValid = false;
+                        throw new InvalidOperationException("exit failed after invalidation");
+                    }
+                })
+                .State("StateB", null, null, null)
+                .Transition("StateA", "StateB", _ => true)
+                .BuildDefinition();
+
+            var context = new TestContext();
+            var handle = FSM_API.Create.CreateInstance(_testFsmName, context, _testProcessingGroup);
+            FSM_API.Interaction.Update(_testProcessingGroup);
+
+            Assert.That(context.IsValid, Is.False);
+            Assert.That(handle.CurrentState, Is.EqualTo("StateA"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(enterCount, Is.EqualTo(1));
+            Assert.That(updateCount, Is.EqualTo(1));
+            Assert.That(exitCount, Is.EqualTo(1));
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(FSM_API.Internal.TotalFsmHandleCount, Is.EqualTo(1));
+
+            context.IsValid = true;
+            // The failed exit is retried only after the state is re-entered.
+            // The second exit succeeds, proving the transition can then commit.
+            FSM_API.Interaction.Update(_testProcessingGroup);
+            Assert.That(enterCount, Is.EqualTo(2));
+            Assert.That(updateCount, Is.EqualTo(2));
+            Assert.That(exitCount, Is.EqualTo(2));
+            Assert.That(handle.CurrentState, Is.EqualTo("StateB"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
     }
 }
