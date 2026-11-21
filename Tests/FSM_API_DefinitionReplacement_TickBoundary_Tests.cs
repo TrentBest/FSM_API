@@ -200,5 +200,216 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(handle.HasEnteredCurrentState, Is.True);
             Assert.That(trace, Is.EqualTo(new[] { "old.update", "new.enter", "new.update" }));
         }
+        [Test]
+        public void RegisterFromScheduledUpdate_IsDeferredUntilEveryStringHandleCompletesTheTick()
+        {
+            const string name = "StringUpdateReplacementBoundary";
+            const string group = "StringUpdateReplacementGroup";
+            var trace = new List<string>();
+            var requested = false;
+            FSM replacement = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ =>
+                {
+                    trace.Add("old.update");
+                    if (!requested)
+                    {
+                        requested = true;
+                        replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                            .State("A", null, _ => trace.Add("new.update"), null)
+                            .BuildDefinition();
+                    }
+                }, null)
+                .BuildDefinition();
+
+            var first = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            var second = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(first.Definition, Is.SameAs(replacement));
+            Assert.That(second.Definition, Is.SameAs(replacement));
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "old.update" }));
+
+            FsmApi.Interaction.Update(group);
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "old.update", "new.update", "new.update" }));
+        }
+
+        [Test]
+        public void RegisterFromTransitionCondition_IsDeferredUntilStringTickBoundary()
+        {
+            const string name = "StringTransitionReplacementBoundary";
+            const string group = "StringTransitionReplacementGroup";
+            var trace = new List<string>();
+            var requested = false;
+            FSM replacement = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ => trace.Add("old.update"), null)
+                .Transition("A", "A", _ =>
+                {
+                    if (!requested)
+                    {
+                        requested = true;
+                        replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                            .State("A", null, _ => trace.Add("new.update"), null)
+                            .BuildDefinition();
+                    }
+                    return false;
+                })
+                .BuildDefinition();
+
+            var first = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            var second = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(first.Definition, Is.SameAs(replacement));
+            Assert.That(second.Definition, Is.SameAs(replacement));
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "old.update" }));
+
+            FsmApi.Interaction.Update(group);
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "old.update", "new.update", "new.update" }));
+        }
+
+        [Test]
+        public void MultipleStringRegistrationsFromOneCallback_LastRequestWins()
+        {
+            const string name = "StringMultipleReplacementBoundary";
+            const string group = "StringMultipleReplacementGroup";
+            var requested = false;
+            FSM lastReplacement = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ =>
+                {
+                    if (requested)
+                    {
+                        return;
+                    }
+
+                    requested = true;
+                    FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                        .State("A", null, null, null)
+                        .BuildDefinition();
+                    lastReplacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                        .State("A", null, null, null)
+                        .BuildDefinition();
+                }, null)
+                .BuildDefinition();
+
+            var handle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(handle.Definition, Is.SameAs(lastReplacement));
+        }
+
+        [Test]
+        public void RegistrationRequestedBeforeStringCallbackFailure_IsCommittedAtTickBoundary()
+        {
+            const string name = "StringCallbackFailureReplacement";
+            const string group = "StringCallbackFailureGroup";
+            var requested = false;
+            FSM replacement = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ =>
+                {
+                    if (requested)
+                    {
+                        return;
+                    }
+
+                    requested = true;
+                    replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                        .State("A", null, null, null)
+                        .BuildDefinition();
+                    throw new InvalidOperationException("Expected callback failure.");
+                }, null)
+                .BuildDefinition();
+
+            var handle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(handle.Definition, Is.SameAs(replacement));
+            Assert.That(handle.IsDestroyed, Is.False);
+        }
+
+        [Test]
+        public void NestedStringSiblingHandleUpdate_IsRejectedAndSiblingRunsOnce()
+        {
+            const string name = "StringNestedSiblingBoundary";
+            const string group = "StringNestedSiblingGroup";
+            var nestedUpdateRejected = false;
+            var siblingUpdateCount = 0;
+            FSMHandle siblingHandle = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, context =>
+                {
+                    if (context.Name == "first")
+                    {
+                        try
+                        {
+                            siblingHandle.Update();
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            nestedUpdateRejected = true;
+                        }
+                    }
+                    else if (context.Name == "second")
+                    {
+                        siblingUpdateCount++;
+                    }
+                }, null)
+                .BuildDefinition();
+
+            FsmApi.Create.CreateInstance(name, new TestContext { Name = "first" }, group);
+            siblingHandle = FsmApi.Create.CreateInstance(name, new TestContext { Name = "second" }, group);
+
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(nestedUpdateRejected, Is.True);
+            Assert.That(siblingUpdateCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void InvalidStringReplacement_SuspendsUntilAValidDefinitionArrives()
+        {
+            const string name = "StringInvalidReplacementBoundary";
+            const string group = "StringInvalidReplacementGroup";
+            var trace = new List<string>();
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, _ => trace.Add("old.update"), null)
+                .BuildDefinition();
+
+            var handle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            FsmApi.Interaction.Update(group);
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group).BuildDefinition();
+            FsmApi.Interaction.Update(group);
+            FsmApi.Interaction.Update(group);
+
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "old.update" }));
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("B", _ => trace.Add("new.enter"), _ => trace.Add("new.update"), null)
+                .BuildDefinition();
+
+            FsmApi.Interaction.Update(group);
+            Assert.That(handle.CurrentState, Is.EqualTo("B"));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+
+            FsmApi.Interaction.Update(group);
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[] { "old.update", "new.enter", "new.update" }));
+        }
+
     }
 }
