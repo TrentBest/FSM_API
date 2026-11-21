@@ -368,3 +368,20 @@ A fresh GitHub branch API inventory on 2026-11-21 returned **23 branches**, not 
 ### Current disposition
 
 **NOT READY FOR MANUAL BRANCH DELETION.** The old 16-branch list is stale because seven additional refs are now present, and several of those refs contain the active integration candidate or unreviewed work. No branch is marked ready for deletion by this inventory. Continue reconciling each unique branch against the active candidate, record exact commit/file/test dispositions, and only then publish one consolidated owner deletion list. Do not merge, publish, or delete as part of this ledger update.
+
+
+## Follow-up audit — context-validity branch #33
+
+The closed, unmerged PR [#33](https://github.com/TrentBest/FSM_API/pull/33) was re-audited against the active #42 candidate. Its source branch `fix/context-validity-execution-gate` still exists. A compare at the time of review showed 17 branch-only commits and a four-file diff relative to the candidate; this does not mean the old source should be merged wholesale.
+
+The current candidate already contains the newer context execution-gate implementation in `FSM_API/FSM.cs`, `FSM_API/FSMHandle.cs`, and `FSM_API/FSM_API.Internal.cs`. The test suite already had equivalent coverage for suspension/resumption, invalidation during update/guard/exit, and manual operations. Five additional callback-boundary cases from #33 were missing and have now been ported to `Tests/Interaction/FSM_API_Interaction_Update_Tests.cs`:
+
+- Invalidation during `OnEnter` stops the remainder of that tick.
+- Invalidation during `OnExit` prevents a manual transition from committing.
+- Invalidation followed by an exception in `OnUpdate` stops transition evaluation.
+- Invalidation followed by an exception in a transition guard stops later candidates.
+- Invalidation followed by an exception in `OnExit` preserves the current state and requires re-entry before resuming.
+
+The harvested tests were adapted to the current `FsmApi` facade rather than restoring the old `FSM_API.Create/Interaction` call surface. Candidate CI [run #1077](https://github.com/TrentBest/FSM_API/actions/runs/44893233940) passed with **538 tests, 0 failures, 0 skipped, 0 build warnings, and 0 build errors**; documentation link validation and DocFX generation also passed. NuGet publication was skipped.
+
+**Disposition:** the unique regression intent from #33 is now represented on the active candidate. Keep the old branch and PR record until the full #42 integration is accepted and the consolidated batch-cleanup review is complete. No branch is deleted or newly marked ready for deletion by this note.
