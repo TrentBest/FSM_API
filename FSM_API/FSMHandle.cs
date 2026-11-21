@@ -173,6 +173,9 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public bool HasEnteredCurrentState { get; internal set; } = false;
 
+        internal bool IsWaitingForValidDefinition { get; set; }
+        internal Action<Action> RuntimeScope { get; set; }
+
 
         /// <summary>
         /// Sets up a new FSM handle, linking it to an FSM blueprint and its specific data.
@@ -241,25 +244,47 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Update(string processGroup = "Update")
         {
-            // Manual stepping must honor IsValid just like scheduled ticks. A caller-owned
-            // context may be temporarily unavailable; that suspends computation, not lifecycle.
-            if (IsDestroyed || Context == null || !Context.IsValid)
+            if (RuntimeScope != null)
             {
+                RuntimeScope(() => UpdateCore(processGroup));
+                return;
+            }
+
+            UpdateCore(processGroup);
+        }
+
+        private void UpdateCore(string processGroup)
+        {
+            if (IsDestroyed || IsWaitingForValidDefinition || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
+            if (!Definition.HasState(CurrentState))
+            {
+                if (!Definition.HasState(Definition.InitialState))
+                {
+                    IsWaitingForValidDefinition = true;
+                    HasEnteredCurrentState = false;
+                    FsmApi.Error.InvokeInternalApiError(
+                        $"FSM '{Definition.Name}' has no valid current or initial state after definition replacement.",
+                        new InvalidOperationException("The replacement definition has no usable initial state."));
+                    return;
+                }
+
+                CurrentState = Definition.InitialState;
+                HasEnteredCurrentState = false;
                 return;
             }
 
             try
             {
-                // Manual updates must honor the same first-entry lifecycle as scheduled ticks.
-                // A transition marks the target as not yet entered; the next update will enter it.
                 if (!HasEnteredCurrentState)
                 {
                     var currentState = Definition.GetState(CurrentState);
                     if (currentState != null)
                     {
                         currentState.Enter(Context);
-                        // An Enter callback may destroy this definition and its handle.
-                        // Teardown owns the final lifecycle state; do not continue this update.
                         if (IsDestroyed)
                         {
                             return;
@@ -268,8 +293,6 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                 }
 
-                // OnEnter is user code and may suspend the caller-owned context.
-                // Do not run Update or transition guards after the gate closes.
                 if (!Context.IsValid)
                 {
                     return;
@@ -281,8 +304,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                // If an exception occurs during the FSM's internal step, report it as a "fubar".
-                // This allows the FSM_API to track and potentially remove problematic instances.
                 FsmApi.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
             }
         }
@@ -406,6 +427,8 @@ namespace TheSingularityWorkshop.FSM_API
             // Mark the handle first so re-entrant callbacks and a scheduler snapshot cannot
             // execute it again after explicit teardown begins.
             IsDestroyed = true;
+            RuntimeScope = null;
+            IsWaitingForValidDefinition = false;
 
             if (Definition != null && !string.IsNullOrEmpty(CurrentState))
             {
