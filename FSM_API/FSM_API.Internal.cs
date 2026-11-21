@@ -182,6 +182,7 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             /// <param name="fsmDefinitionName">The unique name of the FSM definition to destroy.</param>
             /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
+            /// <param name="cancelPendingRegistration">When <see langword="true"/>, cancels a queued registration for the same identity before destruction.</param>
             public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup, bool cancelPendingRegistration = true)
             {
                 if (!_isTicking)
