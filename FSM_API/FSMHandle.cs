@@ -334,11 +334,11 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (RuntimeScope != null)
             {
-                RuntimeScope(() => void TransitionToCore(nextStateName));
+                RuntimeScope(() => TransitionToCore(nextStateName));
                 return;
             }
 
-            void TransitionToCore(nextStateName);
+             TransitionToCore(nextStateName);
         }
 
         private void TransitionToCore(string nextStateName)
@@ -389,11 +389,11 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (RuntimeScope != null)
             {
-                RuntimeScope(() => void ResetFSMInstanceCore());
+                RuntimeScope(() => ResetFSMInstanceCore());
                 return;
             }
 
-            void ResetFSMInstanceCore();
+             ResetFSMInstanceCore();
         }
 
         private void ResetFSMInstanceCore()
@@ -491,11 +491,11 @@ namespace TheSingularityWorkshop.FSM_API
         {
             if (RuntimeScope != null)
             {
-                RuntimeScope(() => void EvaluateConditionsCore());
+                RuntimeScope(() => EvaluateConditionsCore());
                 return;
             }
 
-            void EvaluateConditionsCore();
+             EvaluateConditionsCore();
         }
 
         private void EvaluateConditionsCore()
