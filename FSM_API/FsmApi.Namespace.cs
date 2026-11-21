@@ -254,6 +254,7 @@ namespace FSM_API
                 set => LegacyApi.Error.InstanceErrorThreshold = value;
             }
 
+            /// <summary>Gets or sets the number of instance removals allowed before automatic definition unregistration.</summary>
             public static int DefinitionErrorThreshold
             {
                 get => LegacyApi.Error.DefinitionErrorThreshold;
