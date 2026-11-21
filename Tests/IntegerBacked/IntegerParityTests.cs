@@ -623,7 +623,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(stringHandle.IsDestroyed, Is.True);
             Assert.That(integerHandle.IsDestroyed, Is.True);
             Assert.That(FsmApi.Interaction.Exists(stringName, stringGroup), Is.False);
-            Assert.That(FsmApi.Interaction.GetInstances(stringName, stringGroup).Count, Is.Zero);
+            Assert.That(FsmApi.Internal.TotalFsmHandleCount, Is.Zero);
             Assert.That(integerRuntime.Contains(integerID), Is.False);
             Assert.That(integerRuntime.GetInstances(integerID).Count, Is.Zero);
             Assert.That(FsmApi.Error.GetErrorCounts().Count, Is.Zero);
