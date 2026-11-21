@@ -60,7 +60,15 @@ The implementation must preserve these invariants:
 
 The NUnit suite `FSMRuntime_TickBoundary_Tests` is the executable specification for callback-originated replacement and re-entrant scheduling. The broader lifecycle suite remains responsible for context ownership, explicit teardown, processing-group movement, and string/integer observable parity.
 
-## 6. Non-goals and concurrency
+## 6. Cross-representation parity status
+
+This document specifies the integer-backed runtime contract. It does **not** claim that string-backed definition replacement currently has equivalent behavior.
+
+The current string-backed `FsmApi.Internal.Register` updates the bucket's definition immediately and does not rebind each existing `FSMHandle.Definition`. The scheduled string tick reads callbacks from the bucket definition while the handle can retain its previous definition reference. That is a separate consistency and parity gap, not evidence that the integer implementation should retain the same behavior.
+
+The string-backed implementation must be brought to an equivalent tick-boundary replacement contract, with matching lifecycle and re-entrancy tests, before this capability can be marked complete in the 2.0 parity matrix. This follow-up is tracked under [FSM_API 2.0 correctness and parity issue #37](https://github.com/TrentBest/FSM_API/issues/37).
+
+## 7. Non-goals and concurrency
 
 This contract governs synchronous callback re-entrancy within one runtime instance. It does not make `FSMRuntime` thread-safe and does not authorize concurrent calls from multiple threads. Hosts must serialize runtime interaction unless a future explicit concurrency contract is designed and validated.
 
