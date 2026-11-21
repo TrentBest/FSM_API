@@ -1027,8 +1027,29 @@ namespace TheSingularityWorkshop.FSM_API
                         // The same handle can resume when its context becomes valid again.
                         if (handle != null && !handle.IsDestroyed && handle.Context != null && handle.Context.IsValid)
                         {
+                            if (handle.IsWaitingForValidDefinition)
+                            {
+                                continue;
+                            }
 
-                           
+                            if (!bucket.Definition.HasState(handle.CurrentState))
+                            {
+                                if (!bucket.Definition.HasState(bucket.Definition.InitialState))
+                                {
+                                    handle.IsWaitingForValidDefinition = true;
+                                    handle.HasEnteredCurrentState = false;
+                                    Error.InvokeInternalApiError(
+                                        $"FSM '{bucket.Definition.Name}' has no valid current or initial state after definition replacement.",
+                                        new InvalidOperationException("The replacement definition has no usable initial state."));
+                                    continue;
+                                }
+
+                                handle.CurrentState = bucket.Definition.InitialState;
+                                handle.HasEnteredCurrentState = false;
+                                handle.IsWaitingForValidDefinition = false;
+                                continue;
+                            }
+
                             var exitStarted = false;
                             try
                             {
