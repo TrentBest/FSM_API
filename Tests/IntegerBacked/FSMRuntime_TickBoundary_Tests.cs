@@ -198,5 +198,108 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
                 "The tick-finalization path must commit queued registrations even when a callback fails.");
             Assert.That(handle.IsDestroyed, Is.False);
         }
+        [Test]
+        public void MultipleRegistrationsForSameIdentity_LastRequestWins()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var firstReplacement = new IntegerFSM(46, -1);
+            firstReplacement.AddState(new IntegerFSMState(0, null, null, null));
+            var lastReplacement = new IntegerFSM(46, -1);
+            lastReplacement.AddState(new IntegerFSMState(0, null, null, null));
+            var requested = false;
+            var original = new IntegerFSM(46, -1);
+            original.AddState(new IntegerFSMState(0, null, _ =>
+            {
+                if (requested)
+                {
+                    return;
+                }
+
+                requested = true;
+                runtime.Register(firstReplacement, 14);
+                runtime.Register(lastReplacement, 15);
+            }, null));
+
+            runtime.Register(original, 13);
+            var handle = runtime.CreateInstance(46, new TestContext());
+            runtime.Update(13);
+
+            Assert.That(handle.Definition, Is.SameAs(lastReplacement));
+            Assert.That(runtime.GetHandleCount(14), Is.Zero);
+            Assert.That(runtime.GetHandleCount(15), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void RegisteringSameDefinitionDuringTick_DefersProcessingGroupMutation()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var groupCountDuringCallback = -1;
+            var definition = new IntegerFSM(47, -1);
+            definition.AddState(new IntegerFSMState(0, null, _ =>
+            {
+                if (groupCountDuringCallback >= 0)
+                {
+                    return;
+                }
+
+                runtime.Register(definition, 99);
+                groupCountDuringCallback = runtime.GetHandleCount(16);
+            }, null));
+
+            runtime.Register(definition, 16);
+            runtime.CreateInstance(47, new TestContext());
+            runtime.CreateInstance(47, new TestContext());
+
+            runtime.Update(16);
+
+            Assert.That(groupCountDuringCallback, Is.EqualTo(2),
+                "The active definition's processing group must not mutate midway through its tick.");
+            Assert.That(runtime.GetHandleCount(16), Is.Zero);
+            Assert.That(runtime.GetHandleCount(99), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ReplacementWithoutInitialState_SuspendsUntilAValidReplacementArrives()
+        {
+            var trace = new List<string>();
+            var runtime = new IntegerFSMRuntime();
+            var original = new IntegerFSM(48, -1);
+            original.AddState(new IntegerFSMState(0, null, _ => trace.Add("original.update"), null));
+            runtime.Register(original, 17);
+            var handle = runtime.CreateInstance(48, new TestContext());
+            runtime.Update(17);
+
+            var invalidReplacement = new IntegerFSM(48, -1);
+            runtime.Register(invalidReplacement, 17);
+            runtime.Update(17);
+            runtime.Update(17);
+
+            Assert.That(handle.IsDestroyed, Is.False);
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+            Assert.That(trace, Is.EqualTo(new[] { "original.update" }),
+                "An unusable replacement must suspend the handle instead of repeatedly running invalid recovery.");
+
+            var validReplacement = new IntegerFSM(48, -1);
+            validReplacement.AddState(new IntegerFSMState(
+                5,
+                _ => trace.Add("replacement.enter"),
+                _ => trace.Add("replacement.update"),
+                null));
+            runtime.Register(validReplacement, 17);
+
+            runtime.Update(17);
+            Assert.That(handle.CurrentStateID, Is.EqualTo(5));
+            Assert.That(handle.HasEnteredCurrentState, Is.False);
+
+            runtime.Update(17);
+            Assert.That(handle.HasEnteredCurrentState, Is.True);
+            Assert.That(trace, Is.EqualTo(new[]
+            {
+                "original.update",
+                "replacement.enter",
+                "replacement.update"
+            }));
+        }
+
     }
 }
