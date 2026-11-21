@@ -79,13 +79,9 @@ namespace TheSingularityWorkshop.FSM_API
                     processRate = 0;
                 }
 
-                var buckets = FsmApi.Internal.GetOrCreateBucketProcessingGroup(processingGroup);
-                if (buckets.TryGetValue(fsmName, out var existingBucket))
-                {
-                   
-                    return new FSMBuilder(existingBucket.Definition != null ? existingBucket.Definition.Name : FsmApi.Internal.GetDefaultFSM().Name);
-                }
-
+                // A builder for an existing identity is a replacement candidate, not a
+                // request to inherit default scheduling metadata. Preserve the caller's
+                // requested process rate and processing group for the eventual registration.
                 return new FSMBuilder(fsmName, processRate, processingGroup);
             }
 
