@@ -182,20 +182,23 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             /// <param name="fsmDefinitionName">The unique name of the FSM definition to destroy.</param>
             /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
-            public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup)
+            public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup, bool cancelPendingRegistration = true)
             {
                 if (!_isTicking)
                 {
-                    ExecuteManualHandleUpdate(() => DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup));
+                    ExecuteManualHandleUpdate(() => DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup, cancelPendingRegistration));
                     return;
                 }
 
-                DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup);
+                DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup, cancelPendingRegistration);
             }
 
-            private static void DestroyFiniteStateMachineCore(string fsmDefinitionName, string processingGroup)
+            private static void DestroyFiniteStateMachineCore(string fsmDefinitionName, string processingGroup, bool cancelPendingRegistration)
             {
-                CancelPendingRegistration(fsmDefinitionName, processingGroup);
+                if (cancelPendingRegistration)
+                {
+                    CancelPendingRegistration(fsmDefinitionName, processingGroup);
+                }
                 // Input validation.
                 if (string.IsNullOrWhiteSpace(fsmDefinitionName))
                 {
@@ -653,6 +656,7 @@ namespace TheSingularityWorkshop.FSM_API
                 try
                 {
                     _pendingRegistrations.Clear();
+                    _pendingRegistrationOrder.Clear();
                     _deferredModifications.Clear();
     if (hardReset)
                     {
@@ -835,26 +839,38 @@ namespace TheSingularityWorkshop.FSM_API
                         previous.IsActive = false;
                     }
 
-                    var pending = new PendingRegistration();
+                    var pending = new PendingRegistration(fsmName, fsm, processRate, processingGroup);
                     _pendingRegistrations[key] = pending;
-                    QueueDeferredModification(() =>
-                    {
-                        if (!pending.IsActive)
-                        {
-                            return;
-                        }
-
-                        if (_pendingRegistrations.TryGetValue(key, out var current) && ReferenceEquals(current, pending))
-                        {
-                            _pendingRegistrations.Remove(key);
-                        }
-
-                        RegisterNow(fsmName, fsm, processRate, processingGroup);
-                    });
+                    _pendingRegistrationOrder.Add(pending);
                     return;
                 }
 
                 RegisterNow(fsmName, fsm, processRate, processingGroup);
+            }
+
+            private static void ApplyPendingRegistrations()
+            {
+                while (_pendingRegistrationOrder.Count > 0)
+                {
+                    var batch = _pendingRegistrationOrder.ToArray();
+                    _pendingRegistrationOrder.Clear();
+                    _pendingRegistrations.Clear();
+
+                    for (var i = 0; i < batch.Length; i++)
+                    {
+                        var pending = batch[i];
+                        if (!pending.IsActive)
+                        {
+                            continue;
+                        }
+
+                        RegisterNow(
+                            pending.FsmName,
+                            pending.Definition,
+                            pending.ProcessRate,
+                            pending.ProcessingGroup);
+                    }
+                }
             }
 
             private static void RegisterNow(string fsmName, FSM fsm, int processRate, string processingGroup)
@@ -894,7 +910,19 @@ namespace TheSingularityWorkshop.FSM_API
 
             private sealed class PendingRegistration
             {
+                public readonly string FsmName;
+                public readonly FSM Definition;
+                public readonly int ProcessRate;
+                public readonly string ProcessingGroup;
                 public bool IsActive = true;
+
+                public PendingRegistration(string fsmName, FSM definition, int processRate, string processingGroup)
+                {
+                    FsmName = fsmName;
+                    Definition = definition;
+                    ProcessRate = processRate;
+                    ProcessingGroup = processingGroup;
+                }
             }
 
             private static Tuple<string, string> GetRegistrationKey(string fsmName, string processingGroup)
@@ -909,6 +937,7 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     pending.IsActive = false;
                     _pendingRegistrations.Remove(key);
+                    _pendingRegistrationOrder.Remove(pending);
                     return true;
                 }
 
@@ -1019,6 +1048,7 @@ namespace TheSingularityWorkshop.FSM_API
                     try
                     {
                         ProcessDeferredModifications();
+                        ApplyPendingRegistrations();
                     }
                     finally
                     {
@@ -1282,6 +1312,7 @@ namespace TheSingularityWorkshop.FSM_API
             private static bool _isTicking;
             private static bool _isFinalizingTick;
             private static bool _isProcessingDeferred;
+            private static readonly List<PendingRegistration> _pendingRegistrationOrder = new List<PendingRegistration>();
 
             internal static void ExecuteManualHandleUpdate(Action update)
             {
