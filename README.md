@@ -30,6 +30,10 @@ The 2.0.0 scope is organized around the public **Create**, **Interact**, **Trans
 | Branch reconciliation and release governance | 5% | 20% | 1.00 point |
 | **Weighted total** | **100%** |  | **41.85 → 42%** |
 
+### Runtime mutation and tick semantics
+
+Definition replacement requested from an FSM callback is deferred until the current runtime tick has completed. This prevents sibling handles from observing different definitions in one tick and makes re-entrant scheduler behavior explicit. See the [integer runtime tick and mutation contract](Documentation/INTEGER_RUNTIME_TICK_AND_MUTATION_CONTRACT.md) and the [2.0 public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
+
 ### Public API target
 
 The concise 2.0 consumer entry point on `development` is:
