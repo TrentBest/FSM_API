@@ -94,6 +94,7 @@ Tests should use equivalent inputs and assert equivalent traces. A test that mer
 
 - Authored names remain available for readable construction, diagnostics, and tooling.
 - Integer identifiers used for execution must be deterministic within their declared identity scope.
+- The integer-backed direct-indexed storage contract supports IDs from `0` through `FSM.MaximumSupportedArrayIndex` (`1,048,575`), inclusive. Both FSM definition IDs and state IDs outside this range are rejected before capacity growth; sparse IDs within the range remain supported. This is an explicit storage/resource boundary, not a promise that allocating every possible slot is appropriate for every host.
 - `GetHashCode()` is not a persistent identity or cross-process identifier.
 - The contract must distinguish runtime-local IDs from IDs intended for serialization, storage, or wire protocols.
 - Forward and reverse mappings must be explicit, immutable to consumers, and versioned wherever persisted data depends on them.
