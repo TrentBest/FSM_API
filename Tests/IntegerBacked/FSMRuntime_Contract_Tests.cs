@@ -101,6 +101,22 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(fsm.HasState(4), Is.False);
         }
 
+        [Test]
+        public void CapacityGrowth_AcceptsTheMaximumSupportedStateAndDefinitionIDs()
+        {
+            var maximumID = IntegerFSM.MaximumSupportedArrayIndex;
+            var definition = new IntegerFSM(0);
+            definition.AddState(new IntegerFSMState(maximumID, null, null, null));
+
+            Assert.That(definition.HasState(maximumID), Is.True);
+
+            var runtime = new IntegerFSMRuntime();
+            var maximumDefinition = CreateFSM(maximumID);
+            runtime.Register(maximumDefinition);
+
+            Assert.That(runtime.Contains(maximumID), Is.True);
+        }
+
         private static IntegerFSM CreateFSM(int id)
         {
             var fsm = new IntegerFSM(id);
