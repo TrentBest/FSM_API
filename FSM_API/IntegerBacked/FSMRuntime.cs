@@ -78,6 +78,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             // This keeps CreateInstance side-effect-free and makes both representations
             // expose the same observable lifecycle ordering.
             handle.ErrorReporter = exception => RecordInstanceError(handle, exception);
+            handle.UpdateScope = ExecuteHandleUpdate;
             handle.IsRegistered = true;
             _handles.Add(handle);
 
@@ -261,6 +262,26 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new InvalidOperationException(
                     "FSMRuntime.Update cannot be called re-entrantly from an update callback. " +
                     "The current tick must complete before another tick can begin.");
+            }
+        }
+
+        private void ExecuteHandleUpdate(Action update)
+        {
+            if (_isUpdating)
+            {
+                update();
+                return;
+            }
+
+            EnsureNotReentrantUpdate();
+            _isUpdating = true;
+            try
+            {
+                update();
+            }
+            finally
+            {
+                CompleteTick();
             }
         }
 
