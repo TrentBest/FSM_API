@@ -854,11 +854,24 @@ namespace TheSingularityWorkshop.FSM_API
                 {
                     var batch = _pendingRegistrationOrder.ToArray();
                     _pendingRegistrationOrder.Clear();
-                    _pendingRegistrations.Clear();
 
                     for (var i = 0; i < batch.Length; i++)
                     {
                         var pending = batch[i];
+                        if (!pending.IsActive)
+                        {
+                            continue;
+                        }
+
+                        var key = GetRegistrationKey(pending.FsmName, pending.ProcessingGroup);
+                        if (_pendingRegistrations.TryGetValue(key, out var current) &&
+                            ReferenceEquals(current, pending))
+                        {
+                            _pendingRegistrations.Remove(key);
+                        }
+
+                        // Another callback in this same commit batch may have explicitly
+                        // unregistered this identity after the batch was captured.
                         if (!pending.IsActive)
                         {
                             continue;
