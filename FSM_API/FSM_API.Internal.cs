@@ -896,9 +896,9 @@ namespace TheSingularityWorkshop.FSM_API
                 public bool IsActive = true;
             }
 
-            private static string GetRegistrationKey(string fsmName, string processingGroup)
+            private static Tuple<string, string> GetRegistrationKey(string fsmName, string processingGroup)
             {
-                return processingGroup + "\0" + fsmName;
+                return Tuple.Create(processingGroup, fsmName);
             }
 
             private static void CancelPendingRegistration(string fsmName, string processingGroup)
@@ -1274,7 +1274,7 @@ namespace TheSingularityWorkshop.FSM_API
             private static readonly Queue<Action> _deferredModifications = new Queue<Action>();
 
             private static readonly Dictionary<Tuple<string, string>, PendingRegistration> _pendingRegistrations =
-                new Dictionary<string, PendingRegistration>();
+                new Dictionary<Tuple<string, string>, PendingRegistration>();
             private static bool _isTicking;
             private static bool _isFinalizingTick;
             private static bool _isProcessingDeferred;
