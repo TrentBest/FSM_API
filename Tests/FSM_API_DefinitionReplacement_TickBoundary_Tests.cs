@@ -411,5 +411,54 @@ namespace TheSingularityWorkshop.FSM_API.Tests
             Assert.That(trace, Is.EqualTo(new[] { "old.update", "new.enter", "new.update" }));
         }
 
+        [Test]
+        public void RegistrationFromExternalDestroyExit_IsDeferredUntilTeardownCompletes()
+        {
+            const string name = "StringExternalDestroyExitBoundary";
+            const string group = "StringExternalDestroyGroup";
+            var replacementRequested = false;
+            var nestedUpdateRejected = false;
+            FSM replacement = null;
+            FSMHandle secondHandle = null;
+
+            FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                .State("A", null, null, _ =>
+                {
+                    if (secondHandle != null)
+                    {
+                        try
+                        {
+                            secondHandle.Update();
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            nestedUpdateRejected = true;
+                        }
+                    }
+
+                    if (!replacementRequested)
+                    {
+                        replacementRequested = true;
+                        replacement = FsmApi.Create.CreateFiniteStateMachine(name, -1, group)
+                            .State("B", null, null, null)
+                            .BuildDefinition();
+                    }
+                })
+                .BuildDefinition();
+
+            var firstHandle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            secondHandle = FsmApi.Create.CreateInstance(name, new TestContext(), group);
+            FsmApi.Interaction.Update(group);
+
+            FsmApi.Interaction.DestroyFiniteStateMachine(name, group);
+
+            Assert.That(firstHandle.IsDestroyed, Is.True);
+            Assert.That(secondHandle.IsDestroyed, Is.True);
+            Assert.That(nestedUpdateRejected, Is.True,
+                "An Exit callback during external teardown must not start another handle update.");
+            Assert.That(FsmApi.Internal.GetFsmDefinition(name, group), Is.SameAs(replacement),
+                "A replacement requested by Exit must be registered only after the old definition and its handles are torn down.");
+        }
+
     }
 }
