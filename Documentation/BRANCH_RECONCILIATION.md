@@ -327,3 +327,76 @@ Branch cleanup readiness is not the same as 2.0 publication authorization. The l
 ### Owner action
 
 Perform one batch deletion of the 16 exact refs above, then refresh the live branch API and verify that only `TrentBest/FSM_API:master` and `TrentBest/FSM_API:development` remain. Do not publish NuGet as part of branch cleanup.
+
+
+## Superseding live inventory — 2026-11-21
+
+**This section supersedes the 2026-10-29 “Final owner cleanup recommendation” above. Do not use that historical 16-branch deletion list as the current cleanup instruction.**
+
+A fresh GitHub branch API inventory on 2026-11-21 returned **23 branches**, not 18. The two enduring refs are `master` and `development`; the 21 additional refs are:
+
+- `AddingUnitTests`
+- `HireMeFSMDemo`
+- `RefactoringToHashBacking`
+- `Splitting-FSM_API-class-into-multiple-partial-classes`
+- `TargetingStarcraft2DotNet`
+- `TickCountingSystem`
+- `WindowsFormsEditor`
+- `benchmark-contract-docs`
+- `docs/benchmarking`
+- `docs/readme-standard`
+- `feature/fsm-api-2.0`
+- `feature/fsm-api-2.0-next`
+- `feature/fsm-api-2.0-registry`
+- `feature/fsm-api-2.0-work`
+- `feature/integer-backed-runtime`
+- `feature/net10-validation-lane`
+- `fix/context-validity-execution-gate`
+- `fix/integer-array-capacity-boundary`
+- `fix/integer-definition-reregistration`
+- `fix/manual-any-state-evaluation`
+- `test/integer-scheduler-parity`
+
+### Current integration evidence
+
+- PR [#42](https://github.com/TrentBest/FSM_API/pull/42) is the active integration candidate, still open and draft, targeting `development`.
+- Its current audited head at this inventory was `7f8f8fd0aa584685ceac99bdb30a0c63a0eafd05`, 90 commits ahead and 0 behind `development`.
+- PR #40's sparse-ID boundary changes and PR #41's scheduler-parity tests have been ported into #42. Their original branches `fix/integer-array-capacity-boundary` and `test/integer-scheduler-parity` remain present; do not delete them until #42 has completed review and its integration disposition is accepted.
+- The #42 candidate's .NET workflow run [#1069](https://github.com/TrentBest/FSM_API/actions/runs/44891965031) completed build/test/package and documentation jobs successfully: 533 tests passed, 0 failed, 0 skipped; DocFX and documentation artifact generation passed. The package was an artifact only; NuGet publication was skipped.
+- The subsequent readiness-document update is being validated separately. A pull-request workflow does not execute the live Sith publication gate.
+
+### Current disposition
+
+**NOT READY FOR MANUAL BRANCH DELETION.** The old 16-branch list is stale because seven additional refs are now present, and several of those refs contain the active integration candidate or unreviewed work. No branch is marked ready for deletion by this inventory. Continue reconciling each unique branch against the active candidate, record exact commit/file/test dispositions, and only then publish one consolidated owner deletion list. Do not merge, publish, or delete as part of this ledger update.
+
+
+## Follow-up audit — context-validity branch #33
+
+The closed, unmerged PR [#33](https://github.com/TrentBest/FSM_API/pull/33) was re-audited against the active #42 candidate. Its source branch `fix/context-validity-execution-gate` still exists. A compare at the time of review showed 17 branch-only commits and a four-file diff relative to the candidate; this does not mean the old source should be merged wholesale.
+
+The current candidate already contains the newer context execution-gate implementation in `FSM_API/FSM.cs`, `FSM_API/FSMHandle.cs`, and `FSM_API/FSM_API.Internal.cs`. The test suite already had equivalent coverage for suspension/resumption, invalidation during update/guard/exit, and manual operations. Five additional callback-boundary cases from #33 were missing and have now been ported to `Tests/Interaction/FSM_API_Interaction_Update_Tests.cs`:
+
+- Invalidation during `OnEnter` stops the remainder of that tick.
+- Invalidation during `OnExit` prevents a manual transition from committing.
+- Invalidation followed by an exception in `OnUpdate` stops transition evaluation.
+- Invalidation followed by an exception in a transition guard stops later candidates.
+- Invalidation followed by an exception in `OnExit` preserves the current state and requires re-entry before resuming.
+
+The harvested tests were adapted to the current `FsmApi` facade rather than restoring the old `FSM_API.Create/Interaction` call surface. Candidate CI [run #1077](https://github.com/TrentBest/FSM_API/actions/runs/44893233940) passed with **538 tests, 0 failures, 0 skipped, 0 build warnings, and 0 build errors**; documentation link validation and DocFX generation also passed. NuGet publication was skipped.
+
+**Disposition:** the unique regression intent from #33 is now represented on the active candidate. Keep the old branch and PR record until the full #42 integration is accepted and the consolidated batch-cleanup review is complete. No branch is deleted or newly marked ready for deletion by this note.
+
+
+## Follow-up audit — manual Any-State and .NET 10 branches
+
+### PR #23 — `fix/manual-any-state-evaluation`
+
+Compared the branch with the active candidate. Its changes affect `FSM_API/FSM.cs`, `FSM_API/FSMHandle.cs`, and `Tests/FSM_API_AnyStateTransition_Tests.cs`. The current candidate already contains the complete manual Any-State behavior and regression set: Any-State precedence, canonical and legacy markers, invalid destinations, no-match behavior, guard exceptions, target removal by guards and Exit callbacks, and lifecycle-state updates. The current implementation uses the newer `TryForceTransition` path and stops after a partially completed transition rather than adopting the old branch wholesale.
+
+**Disposition:** functional and test intent is represented on the active candidate. PR #23 remains open/draft and its branch remains present; defer any closure or deletion decision until #42 is accepted and the batch cleanup is reviewed.
+
+### PR #39 — `feature/net10-validation-lane`
+
+Compared the branch's two unique files with the active candidate. The candidate's workflow now builds the solution, tests on `net10.0`, and copies the `net10.0` assembly artifact (the old branch still copied a `net8.0` path despite setting up .NET 10). The candidate test project also no longer generates unnecessary XML documentation for the test assembly.
+
+**Disposition:** the useful .NET 10 validation work is superseded by the newer candidate workflow and the stale artifact path is corrected. PR #39 remains open/draft and the branch remains present; defer cleanup until #42 is accepted and the owner approves the consolidated batch.

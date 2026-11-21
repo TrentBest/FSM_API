@@ -247,18 +247,21 @@ namespace FSM_API
         /// <summary>Diagnostic notifications and error-policy controls for the string-backed runtime.</summary>
         public static class Error
         {
+            /// <summary>Gets or sets the number of instance failures allowed before automatic removal.</summary>
             public static int InstanceErrorThreshold
             {
                 get => LegacyApi.Error.InstanceErrorThreshold;
                 set => LegacyApi.Error.InstanceErrorThreshold = value;
             }
 
+            /// <summary>Gets or sets the number of instance removals allowed before automatic definition unregistration.</summary>
             public static int DefinitionErrorThreshold
             {
                 get => LegacyApi.Error.DefinitionErrorThreshold;
                 set => LegacyApi.Error.DefinitionErrorThreshold = value;
             }
 
+            /// <summary>Receives diagnostic notifications raised by the string-backed runtime.</summary>
             public static event LegacyApi.Error.InternalApiErrorEventHandler OnInternalApiError
             {
                 add => LegacyApi.Error.OnInternalApiError += value;

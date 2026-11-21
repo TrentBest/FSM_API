@@ -237,6 +237,16 @@ namespace TheSingularityWorkshop.FSM_API
             /// </exception>
             public static void DestroyFiniteStateMachine(string fsmName, string processingGroup = "Update")
             {
+                DestroyFiniteStateMachineCore(fsmName, processingGroup, true);
+            }
+
+            internal static void DestroyFiniteStateMachineAutomatic(string fsmName, string processingGroup)
+            {
+                DestroyFiniteStateMachineCore(fsmName, processingGroup, false);
+            }
+
+            private static void DestroyFiniteStateMachineCore(string fsmName, string processingGroup, bool cancelPendingRegistration)
+            {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
                     throw new ArgumentException("FSM name cannot be null or empty.", nameof(fsmName));
@@ -248,28 +258,31 @@ namespace TheSingularityWorkshop.FSM_API
 
                 if (!Internal.GetBuckets().TryGetValue(processingGroup, out var categoryBuckets))
                 {
+                    if (cancelPendingRegistration && Internal.CancelPendingRegistration(fsmName, processingGroup))
+                    {
+                        return;
+                    }
+
                     Error.InvokeInternalApiError($"Attempted to destroy FSM '{fsmName}' from non-existent processing group '{processingGroup}'.", null);
                     return;
                 }
 
-                if (!categoryBuckets.TryGetValue(fsmName, out var bucket))
+                if (!categoryBuckets.ContainsKey(fsmName) &&
+                    cancelPendingRegistration &&
+                    Internal.CancelPendingRegistration(fsmName, processingGroup))
+                {
+                    return;
+                }
+
+                if (!categoryBuckets.ContainsKey(fsmName))
                 {
                     Error.InvokeInternalApiError($"Attempted to destroy non-existent FSM '{fsmName}' in processing group '{processingGroup}'.", null);
                     return;
                 }
 
-                // Call DestroyHandle on all instances before clearing
-                foreach (var instance in bucket.Instances)
-                {
-                    instance.DestroyHandle(); // Call DestroyHandle to trigger OnExit logic
-                    Error.GetErrorCounts().Remove(instance);
-                }
-                bucket.Instances.Clear();
-
-                // Clean up the definition's error count
-                Error.GetDefinitionErrorCounts().Remove(fsmName);
-
-                categoryBuckets.Remove(fsmName);
+                // Explicit teardown cancels earlier queued replacements; automatic
+                // threshold teardown leaves them queued for the post-lifecycle commit.
+                Internal.DestroyFiniteStateMachine(fsmName, processingGroup, cancelPendingRegistration);
             }
 
 
@@ -475,8 +488,6 @@ namespace TheSingularityWorkshop.FSM_API
                 
                 var sw = Stopwatch.StartNew();
                 Internal.TickAll(processingGroup);
-               
-                Internal.ProcessDeferredModifications();
                 sw.Stop();
                 if (sw.ElapsedMilliseconds > Internal.TickPerformanceWarningThresholdMs)
                 {

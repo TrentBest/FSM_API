@@ -22,6 +22,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private readonly Dictionary<int, int> _definitionErrorCounts = new Dictionary<int, int>();
         private readonly List<FSMHandleInt> _pendingRemovalHandles = new List<FSMHandleInt>();
         private readonly List<int> _pendingUnregisterIDs = new List<int>();
+        private readonly List<PendingRegistration> _pendingRegistrations = new List<PendingRegistration>();
+        private bool _isUpdating;
+        private bool _isExecutingHandleUpdate;
+        private bool _isFinalizingTick;
         private int _nextHandleID;
 
         /// <summary>Registers an integer-backed FSM definition for a processing group.</summary>
@@ -32,23 +36,21 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (definition.FSM_ID < 0)
+            if (definition.FSM_ID < 0 || definition.FSM_ID > FSM.MaximumSupportedArrayIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be within the supported non-negative array-index range.");
             }
 
-            definition.ProcessingGroupID = processingGroupID;
-            EnsureDefinitionCapacity(definition.FSM_ID + 1);
-
-            if (_definitions[definition.FSM_ID] != null)
+            // A tick is evaluated against one stable set of definitions. Registration
+            // from user callbacks is committed only after every handle in that tick
+            // has completed, so no handle can observe a half-old/half-new blueprint.
+            if (_isUpdating)
             {
-                _definitions[definition.FSM_ID] = null;
-                _definitionErrorCounts.Remove(definition.FSM_ID);
-                RemoveDefinitionInstances(definition.FSM_ID);
+                QueueRegistration(definition, processingGroupID);
+                return;
             }
 
-            _definitions[definition.FSM_ID] = definition;
-            _processCounters[definition.FSM_ID] = 0;
+            ApplyRegistration(definition, processingGroupID);
         }
 
         /// <summary>Returns whether an FSM definition is registered.</summary>
@@ -78,6 +80,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             // This keeps CreateInstance side-effect-free and makes both representations
             // expose the same observable lifecycle ordering.
             handle.ErrorReporter = exception => RecordInstanceError(handle, exception);
+            handle.UpdateScope = ExecuteHandleUpdate;
             handle.IsRegistered = true;
             _handles.Add(handle);
 
@@ -87,6 +90,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Removes a live integer handle from this runtime.</summary>
         /// <returns><c>true</c> when the handle was registered with this runtime.</returns>
         public bool RemoveInstance(FSMHandleInt handle)
+        {
+            if (_isUpdating)
+            {
+                return RemoveInstanceCore(handle);
+            }
+
+            var removed = false;
+            ExecuteHandleUpdate(() => removed = RemoveInstanceCore(handle));
+            return removed;
+        }
+
+        private bool RemoveInstanceCore(FSMHandleInt handle)
         {
             if (handle == null)
             {
@@ -131,9 +146,22 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <returns><c>true</c> when a definition was registered under the supplied ID.</returns>
         public bool Unregister(int fsmID)
         {
+            if (_isUpdating)
+            {
+                return UnregisterDefinition(fsmID, true);
+            }
+
+            var unregistered = false;
+            ExecuteHandleUpdate(() => unregistered = UnregisterDefinition(fsmID, true));
+            return unregistered;
+        }
+
+        private bool UnregisterDefinition(int fsmID, bool cancelPendingRegistration)
+        {
+            var pendingRegistrationRemoved = cancelPendingRegistration && RemovePendingRegistration(fsmID);
             if (!TryGetDefinition(fsmID, out _))
             {
-                return false;
+                return pendingRegistrationRemoved;
             }
 
             _definitions[fsmID] = null;
@@ -147,44 +175,63 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Updates eligible live instances in the specified processing group.</summary>
         public void Update(int processingGroupID)
         {
-            // Snapshot the handles at the start of the tick. Handles created by callbacks are
-            // registered immediately but are not eligible to update until the next tick.
-            var handlesAtTickStart = _handles.ToArray();
-            var definitionCountAtTickStart = _definitions.Length;
-
-            for (var i = 0; i < definitionCountAtTickStart; i++)
+            EnsureNotReentrantUpdate();
+            _isUpdating = true;
+            try
             {
-                var definition = _definitions[i];
-                if (definition == null || definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
+                // Snapshot both scheduling inputs at tick start. Registrations requested
+                // by callbacks remain pending, and newly created handles are not eligible
+                // until the next tick.
+                var handlesAtTickStart = _handles.ToArray();
+                var definitionCountAtTickStart = _definitions.Length;
+
+                for (var i = 0; i < definitionCountAtTickStart; i++)
                 {
-                    continue;
-                }
+                    var definition = _definitions[i];
+                    if (definition == null || definition.ProcessingGroupID != processingGroupID || !ShouldProcess(definition))
+                    {
+                        continue;
+                    }
 
-                UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
-            }
-
-            ProcessPendingLifecycleChanges();
-        }
-
-        /// <summary>Updates eligible live instances regardless of processing group.</summary>
-        public void UpdateAll()
-        {
-            var handlesAtTickStart = _handles.ToArray();
-            var definitionCountAtTickStart = _definitions.Length;
-
-            for (var i = 0; i < definitionCountAtTickStart; i++)
-            {
-                var definition = _definitions[i];
-                if (definition != null && ShouldProcess(definition))
-                {
                     UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
                 }
             }
-
-            ProcessPendingLifecycleChanges();
+            finally
+            {
+                CompleteTick();
+            }
         }
 
-        /// <summary>Returns the number of live handles in a processing group.</summary>
+        /// <summary>Updates eligible live instances regardless of processing group.</summary>
+        /// <remarks>Definition registrations requested during callbacks are committed after the complete tick.</remarks>
+        public void UpdateAll()
+        {
+            EnsureNotReentrantUpdate();
+            _isUpdating = true;
+            try
+            {
+                var handlesAtTickStart = _handles.ToArray();
+                var definitionCountAtTickStart = _definitions.Length;
+
+                for (var i = 0; i < definitionCountAtTickStart; i++)
+                {
+                    var definition = _definitions[i];
+                    if (definition != null && ShouldProcess(definition))
+                    {
+                        UpdateDefinitionInstances(definition.FSM_ID, handlesAtTickStart);
+                    }
+                }
+            }
+            finally
+            {
+                CompleteTick();
+            }
+        
+        }
+
+        /// <summary>Gets the number of registered handles assigned to a processing group.</summary>
+        /// <param name="processingGroupID">The integer identity of the processing group.</param>
+        /// <returns>The number of live registered handles in the group.</returns>
         public int GetHandleCount(int processingGroupID)
         {
             var count = 0;
@@ -224,6 +271,163 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         public void ResetDefinitionErrorCount(int fsmID)
         {
             _definitionErrorCounts.Remove(fsmID);
+        }
+
+        private struct PendingRegistration
+        {
+            public readonly FSM Definition;
+            public readonly int ProcessingGroupID;
+
+            public PendingRegistration(FSM definition, int processingGroupID)
+            {
+                Definition = definition;
+                ProcessingGroupID = processingGroupID;
+            }
+        }
+
+        private void EnsureNotReentrantUpdate()
+        {
+            if (_isUpdating)
+            {
+                throw new InvalidOperationException(
+                    "FSMRuntime.Update cannot be called re-entrantly from an update callback. " +
+                    "The current tick must complete before another tick can begin.");
+            }
+        }
+
+        private void ExecuteHandleUpdate(Action update)
+        {
+            if (_isUpdating)
+            {
+                if (_isExecutingHandleUpdate || _isFinalizingTick)
+                {
+                    throw new InvalidOperationException(
+                        "A handle operation cannot be invoked re-entrantly from a runtime callback or while the tick is being finalized.");
+                }
+
+                _isExecutingHandleUpdate = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isExecutingHandleUpdate = false;
+                }
+                return;
+            }
+
+            EnsureNotReentrantUpdate();
+            _isUpdating = true;
+            try
+            {
+                _isExecutingHandleUpdate = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isExecutingHandleUpdate = false;
+                }
+            }
+            finally
+            {
+                CompleteTick();
+            }
+        }
+
+        private void CompleteTick()
+        {
+            _isFinalizingTick = true;
+            try
+            {
+                // Keep the runtime in its updating phase while lifecycle callbacks run.
+                // Any registration they request joins the same boundary commit. Nested
+                // handle updates are rejected during this phase to avoid an extra pass.
+                ProcessPendingLifecycleChanges();
+                ApplyPendingRegistrations();
+            }
+            finally
+            {
+                _isFinalizingTick = false;
+                _isUpdating = false;
+            }
+        }
+
+        private void QueueRegistration(FSM definition, int processingGroupID)
+        {
+            for (var i = 0; i < _pendingRegistrations.Count; i++)
+            {
+                if (_pendingRegistrations[i].Definition.FSM_ID == definition.FSM_ID)
+                {
+                    // Last registration for an identity in this tick wins. Do not
+                    // mutate the active definition's group before the boundary.
+                    _pendingRegistrations[i] = new PendingRegistration(definition, processingGroupID);
+                    return;
+                }
+            }
+
+            _pendingRegistrations.Add(new PendingRegistration(definition, processingGroupID));
+        }
+
+        private bool RemovePendingRegistration(int fsmID)
+        {
+            for (var i = _pendingRegistrations.Count - 1; i >= 0; i--)
+            {
+                if (_pendingRegistrations[i].Definition.FSM_ID == fsmID)
+                {
+                    _pendingRegistrations.RemoveAt(i);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ApplyPendingRegistrations()
+        {
+            if (_pendingRegistrations.Count == 0)
+            {
+                return;
+            }
+
+            var registrations = _pendingRegistrations.ToArray();
+            _pendingRegistrations.Clear();
+            for (var i = 0; i < registrations.Length; i++)
+            {
+                ApplyRegistration(registrations[i].Definition, registrations[i].ProcessingGroupID);
+            }
+        }
+
+        private void ApplyRegistration(FSM definition, int processingGroupID)
+        {
+            definition.ProcessingGroupID = processingGroupID;
+            EnsureDefinitionCapacity(definition.FSM_ID + 1);
+
+            if (_definitions[definition.FSM_ID] != null)
+            {
+                // Re-registration replaces the blueprint, not its live instances.
+                // Rebinding happens atomically at the tick boundary.
+                for (var i = 0; i < _handles.Count; i++)
+                {
+                    var handle = _handles[i];
+                    if (handle.FSM_ID == definition.FSM_ID)
+                    {
+                        handle.Definition = definition;
+                        handle.IsWaitingForValidDefinition = false;
+                        if (!definition.HasState(handle.CurrentStateID))
+                        {
+                            handle.HasEnteredCurrentState = false;
+                        }
+                    }
+                }
+
+                _definitionErrorCounts.Remove(definition.FSM_ID);
+            }
+
+            _definitions[definition.FSM_ID] = definition;
+            _processCounters[definition.FSM_ID] = 0;
         }
 
         private bool ShouldProcess(FSM definition)
@@ -304,7 +508,10 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 _pendingUnregisterIDs.Clear();
                 for (var i = 0; i < definitions.Length; i++)
                 {
-                    Unregister(definitions[i]);
+                    // Automatic error-threshold teardown removes the failing instances,
+                    // but a replacement explicitly requested by a callback may still be
+                    // committed afterward. Explicit Unregister calls cancel earlier requests.
+                    UnregisterDefinition(definitions[i], false);
                 }
             }
 
@@ -382,10 +589,17 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return;
             }
 
+            if (requiredLength > FSM.MaximumSupportedArrayIndex + 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(requiredLength), "Definition array capacity exceeds the supported integer-backed limit.");
+            }
+
             var newLength = _definitions.Length == 0 ? 4 : _definitions.Length;
             while (newLength < requiredLength)
             {
-                newLength *= 2;
+                newLength = newLength >= (FSM.MaximumSupportedArrayIndex + 1) / 2
+                    ? FSM.MaximumSupportedArrayIndex + 1
+                    : newLength * 2;
             }
 
             Array.Resize(ref _definitions, newLength);

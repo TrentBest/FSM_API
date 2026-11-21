@@ -182,8 +182,24 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             /// <param name="fsmDefinitionName">The unique name of the FSM definition to destroy.</param>
             /// <param name="processingGroup">The name of the processing group where the FSM is registered.</param>
-            public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup)
+            /// <param name="cancelPendingRegistration">When <see langword="true"/>, cancels a queued registration for the same identity before destruction.</param>
+            public static void DestroyFiniteStateMachine(string fsmDefinitionName, string processingGroup, bool cancelPendingRegistration = true)
             {
+                if (!_isTicking)
+                {
+                    ExecuteManualHandleUpdate(() => DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup, cancelPendingRegistration));
+                    return;
+                }
+
+                DestroyFiniteStateMachineCore(fsmDefinitionName, processingGroup, cancelPendingRegistration);
+            }
+
+            private static void DestroyFiniteStateMachineCore(string fsmDefinitionName, string processingGroup, bool cancelPendingRegistration)
+            {
+                if (cancelPendingRegistration)
+                {
+                    CancelPendingRegistration(fsmDefinitionName, processingGroup);
+                }
                 // Input validation.
                 if (string.IsNullOrWhiteSpace(fsmDefinitionName))
                 {
@@ -241,6 +257,17 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             /// <param name="handle">The FSMHandle instance to destroy.</param>
             public static void DestroyInstance(FSMHandle handle)
+            {
+                if (!_isTicking)
+                {
+                    ExecuteManualHandleUpdate(() => DestroyInstanceCore(handle));
+                    return;
+                }
+
+                DestroyInstanceCore(handle);
+            }
+
+            private static void DestroyInstanceCore(FSMHandle handle)
             {
                 if (handle == null)
                 {
@@ -578,18 +605,34 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             public static void ProcessDeferredModifications()
             {
-                //Console.WriteLine($"DeferredModifications:  {_deferredModifications.Count}");
-                while (_deferredModifications.Count > 0)
+                if (_isTicking && !_isFinalizingTick)
                 {
-                    var action = _deferredModifications.Dequeue();
-                    try
+                    throw new InvalidOperationException("Deferred FSM modifications cannot be processed from inside an active update callback.");
+                }
+                if (_isProcessingDeferred)
+                {
+                    throw new InvalidOperationException("Deferred FSM modifications cannot be processed recursively.");
+                }
+
+                _isProcessingDeferred = true;
+                try
+                {
+                    while (_deferredModifications.Count > 0)
                     {
-                        action.Invoke();
+                        var action = _deferredModifications.Dequeue();
+                        try
+                        {
+                            action.Invoke();
+                        }
+                        catch (Exception ex)
+                        {
+                            Error.InvokeInternalApiError("Error during deferred API modification.", ex);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Error.InvokeInternalApiError("Error during deferred API modification.", ex);
-                    }
+                }
+                finally
+                {
+                    _isProcessingDeferred = false;
                 }
             }
 
@@ -605,39 +648,58 @@ namespace TheSingularityWorkshop.FSM_API
             /// </param>
             public static void ResetAPI(bool hardReset = false)
             {
-                if (hardReset)
+                if (_isTicking)
                 {
-                    // A hard reset removes every registered handle, so mark each handle as
-                    // destroyed before dropping the registry. Contexts remain caller-owned.
-                    foreach (var instance in GetAllFsmHandles().ToList())
-                    {
-                        instance.DestroyHandle();
-                    }
-
-                    _buckets.Clear();
-                    Error.Reset();
+                    throw new InvalidOperationException("The FSM API cannot be reset from inside an active runtime tick.");
                 }
-                else
+
+                _isTicking = true;
+                try
                 {
-                    foreach (var processGroup in _buckets)
+                    _pendingRegistrations.Clear();
+                    _pendingRegistrationOrder.Clear();
+                    _deferredModifications.Clear();
+    if (hardReset)
                     {
-                        foreach (var fsmBucket in processGroup.Value)
+                        // A hard reset removes every registered handle, so mark each handle as
+                        // destroyed before dropping the registry. Contexts remain caller-owned.
+                        foreach (var instance in GetAllFsmHandles().ToList())
                         {
-                            foreach (var instance in fsmBucket.Value.Instances)
-                            {
-                                instance.DestroyHandle();
-                            }
-                            fsmBucket.Value.Instances.Clear();
+                            instance.DestroyHandle();
                         }
-                        processGroup.Value.Clear();
+    
+                        _buckets.Clear();
+                        Error.Reset();
                     }
-                    _buckets.Clear();
-
+                    else
+                    {
+                        foreach (var processGroup in _buckets)
+                        {
+                            foreach (var fsmBucket in processGroup.Value)
+                            {
+                                foreach (var instance in fsmBucket.Value.Instances)
+                                {
+                                    instance.DestroyHandle();
+                                }
+                                fsmBucket.Value.Instances.Clear();
+                            }
+                            processGroup.Value.Clear();
+                        }
+                        _buckets.Clear();
+    
+                    }
+                    _processingGroupTickCounts.Clear();
+    
                 }
-                _processingGroupTickCounts.Clear();
+                finally
+                {
+                    _pendingRegistrations.Clear();
+                    _deferredModifications.Clear();
+                    _isFinalizingTick = false;
+                    _isProcessingDeferred = false;
+                    _isTicking = false;
+                }
             }
-
-
 
             /// <summary>
             /// Gets the internal default FSM definition.
@@ -754,14 +816,13 @@ namespace TheSingularityWorkshop.FSM_API
             /// <exception cref="ArgumentNullException">Thrown if <paramref name="fsm"/> is null.</exception>
             internal static void Register(
                 string fsmName,
-                FSM fsm, // This 'fsm' parameter is non-nullable by signature, and checked. Correct.
+                FSM fsm,
                 int processRate, string processingGroup = "Update")
             {
                 if (string.IsNullOrWhiteSpace(fsmName))
                 {
                     throw new ArgumentException("FSM name cannot be null or empty during registration.", nameof(fsmName));
                 }
-                // Correct: null check for non-nullable parameter.
                 if (fsm == null)
                 {
                     throw new ArgumentNullException(nameof(fsm), "FSM definition cannot be null during registration.");
@@ -771,25 +832,89 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new ArgumentException("Processing group cannot be null or empty during registration.", nameof(processingGroup));
                 }
 
+                if (_isTicking)
+                {
+                    var key = GetRegistrationKey(fsmName, processingGroup);
+                    if (_pendingRegistrations.TryGetValue(key, out var previous))
+                    {
+                        previous.IsActive = false;
+                        _pendingRegistrationOrder.Remove(previous);
+                    }
+
+                    var pending = new PendingRegistration(fsmName, fsm, processRate, processingGroup);
+                    _pendingRegistrations[key] = pending;
+                    _pendingRegistrationOrder.Add(pending);
+                    return;
+                }
+
+                RegisterNow(fsmName, fsm, processRate, processingGroup);
+            }
+
+            private static void ApplyPendingRegistrations()
+            {
+                while (_pendingRegistrationOrder.Count > 0)
+                {
+                    var batch = _pendingRegistrationOrder.ToArray();
+                    _pendingRegistrationOrder.Clear();
+
+                    for (var i = 0; i < batch.Length; i++)
+                    {
+                        var pending = batch[i];
+                        if (!pending.IsActive)
+                        {
+                            continue;
+                        }
+
+                        var key = GetRegistrationKey(pending.FsmName, pending.ProcessingGroup);
+                        if (_pendingRegistrations.TryGetValue(key, out var current) &&
+                            ReferenceEquals(current, pending))
+                        {
+                            _pendingRegistrations.Remove(key);
+                        }
+
+                        // Another callback in this same commit batch may have explicitly
+                        // unregistered this identity after the batch was captured.
+                        if (!pending.IsActive)
+                        {
+                            continue;
+                        }
+
+                        RegisterNow(
+                            pending.FsmName,
+                            pending.Definition,
+                            pending.ProcessRate,
+                            pending.ProcessingGroup);
+                    }
+                }
+            }
+
+            private static void RegisterNow(string fsmName, FSM fsm, int processRate, string processingGroup)
+            {
                 var buckets = GetOrCreateBucketProcessingGroup(processingGroup);
-                // Correct. TryGetValue makes 'existingBucket' non-null if true.
                 if (buckets.TryGetValue(fsmName, out var existingBucket))
                 {
-                    // FSM already exists, update its definition and process rate.
-                    // Existing instances will automatically use the new definition on their next tick.
-                    // Nullability: existingBucket.Definition is FSM?
-                    // We're assigning a non-nullable 'fsm' to it, which is fine.
                     existingBucket.Definition = fsm;
                     existingBucket.ProcessRate = processRate;
-                    existingBucket.Counter = processRate > 0 ? processRate : 0; // Reset counter for new rate
+                    existingBucket.Counter = processRate > 0 ? processRate : 0;
+
+                    for (var i = 0; i < existingBucket.Instances.Count; i++)
+                    {
+                        var handle = existingBucket.Instances[i];
+                        handle.Definition = fsm;
+                        handle.IsWaitingForValidDefinition = false;
+                        if (!fsm.HasState(handle.CurrentState))
+                        {
+                            handle.HasEnteredCurrentState = false;
+                        }
+                    }
+
+                    Error.ResetDefinitionErrorCount(fsmName);
                     Error.InvokeInternalApiError($"FSM '{fsmName}' in processing group '{processingGroup}' definition updated at runtime.", new Exception());
                 }
                 else
                 {
-                    // New FSM definition
                     buckets[fsmName] = new FsmBucket
                     {
-                        // Nullability: 'fsm' is non-nullable here, assigning to FsmBucket.Definition (FSM?) is fine.
                         Definition = fsm,
                         ProcessRate = processRate,
                         Counter = processRate > 0 ? processRate : 0,
@@ -798,8 +923,41 @@ namespace TheSingularityWorkshop.FSM_API
                 }
             }
 
+            private sealed class PendingRegistration
+            {
+                public readonly string FsmName;
+                public readonly FSM Definition;
+                public readonly int ProcessRate;
+                public readonly string ProcessingGroup;
+                public bool IsActive = true;
 
+                public PendingRegistration(string fsmName, FSM definition, int processRate, string processingGroup)
+                {
+                    FsmName = fsmName;
+                    Definition = definition;
+                    ProcessRate = processRate;
+                    ProcessingGroup = processingGroup;
+                }
+            }
 
+            private static Tuple<string, string> GetRegistrationKey(string fsmName, string processingGroup)
+            {
+                return Tuple.Create(processingGroup, fsmName);
+            }
+
+            internal static bool CancelPendingRegistration(string fsmName, string processingGroup)
+            {
+                var key = GetRegistrationKey(fsmName, processingGroup);
+                if (_pendingRegistrations.TryGetValue(key, out var pending))
+                {
+                    pending.IsActive = false;
+                    _pendingRegistrations.Remove(key);
+                    _pendingRegistrationOrder.Remove(pending);
+                    return true;
+                }
+
+                return false;
+            }
 
             /// <summary>
             /// Internally associates an FSM bucket with a specific processing group.
@@ -889,6 +1047,34 @@ namespace TheSingularityWorkshop.FSM_API
             /// </remarks>
             internal static void TickAll(string processingGroup)
             {
+                if (_isTicking)
+                {
+                    throw new InvalidOperationException("The string-backed FSM scheduler cannot be updated re-entrantly.");
+                }
+
+                _isTicking = true;
+                try
+                {
+                    TickAllCore(processingGroup);
+                }
+                finally
+                {
+                    _isFinalizingTick = true;
+                    try
+                    {
+                        ProcessDeferredModifications();
+                        ApplyPendingRegistrations();
+                    }
+                    finally
+                    {
+                        _isFinalizingTick = false;
+                        _isTicking = false;
+                    }
+                }
+            }
+
+            private static void TickAllCore(string processingGroup)
+            {
                 if (string.IsNullOrWhiteSpace(processingGroup))
                 {
                     // Correct: passing null for Exception?
@@ -941,8 +1127,29 @@ namespace TheSingularityWorkshop.FSM_API
                         // The same handle can resume when its context becomes valid again.
                         if (handle != null && !handle.IsDestroyed && handle.Context != null && handle.Context.IsValid)
                         {
+                            if (handle.IsWaitingForValidDefinition)
+                            {
+                                continue;
+                            }
 
-                           
+                            if (!bucket.Definition.HasState(handle.CurrentState))
+                            {
+                                if (!bucket.Definition.HasState(bucket.Definition.InitialState))
+                                {
+                                    handle.IsWaitingForValidDefinition = true;
+                                    handle.HasEnteredCurrentState = false;
+                                    Error.InvokeInternalApiError(
+                                        $"FSM '{bucket.Definition.Name}' has no valid current or initial state after definition replacement.",
+                                        new InvalidOperationException("The replacement definition has no usable initial state."));
+                                    continue;
+                                }
+
+                                handle.CurrentState = bucket.Definition.InitialState;
+                                handle.HasEnteredCurrentState = false;
+                                handle.IsWaitingForValidDefinition = false;
+                                continue;
+                            }
+
                             var exitStarted = false;
                             try
                             {
@@ -1114,6 +1321,45 @@ namespace TheSingularityWorkshop.FSM_API
             /// The queue itself is static and initialized, thus never null.
             /// </remarks>
             private static readonly Queue<Action> _deferredModifications = new Queue<Action>();
+
+            private static readonly Dictionary<Tuple<string, string>, PendingRegistration> _pendingRegistrations =
+                new Dictionary<Tuple<string, string>, PendingRegistration>();
+            private static bool _isTicking;
+            private static bool _isFinalizingTick;
+            private static bool _isProcessingDeferred;
+            private static readonly List<PendingRegistration> _pendingRegistrationOrder = new List<PendingRegistration>();
+
+            internal static void ExecuteManualHandleUpdate(Action update)
+            {
+                if (update == null)
+                {
+                    throw new ArgumentNullException(nameof(update));
+                }
+                if (_isTicking)
+                {
+                    throw new InvalidOperationException("A string-backed FSM handle cannot be updated re-entrantly during a runtime tick.");
+                }
+
+                _isTicking = true;
+                try
+                {
+                    update();
+                }
+                finally
+                {
+                    _isFinalizingTick = true;
+                    try
+                    {
+                        ProcessDeferredModifications();
+                        ApplyPendingRegistrations();
+                    }
+                    finally
+                    {
+                        _isFinalizingTick = false;
+                        _isTicking = false;
+                    }
+                }
+            }
 
             /// <summary>
             /// Stores all FSM definitions and their instances, organized by

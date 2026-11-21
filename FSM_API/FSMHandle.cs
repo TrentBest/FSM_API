@@ -173,6 +173,9 @@ namespace TheSingularityWorkshop.FSM_API
         /// </summary>
         public bool HasEnteredCurrentState { get; internal set; } = false;
 
+        internal bool IsWaitingForValidDefinition { get; set; }
+        internal Action<Action> RuntimeScope { get; set; }
+
 
         /// <summary>
         /// Sets up a new FSM handle, linking it to an FSM blueprint and its specific data.
@@ -241,25 +244,47 @@ namespace TheSingularityWorkshop.FSM_API
         /// </param>
         public void Update(string processGroup = "Update")
         {
-            // Manual stepping must honor IsValid just like scheduled ticks. A caller-owned
-            // context may be temporarily unavailable; that suspends computation, not lifecycle.
-            if (IsDestroyed || Context == null || !Context.IsValid)
+            if (RuntimeScope != null)
             {
+                RuntimeScope(() => UpdateCore(processGroup));
+                return;
+            }
+
+            UpdateCore(processGroup);
+        }
+
+        private void UpdateCore(string processGroup)
+        {
+            if (IsDestroyed || IsWaitingForValidDefinition || Context == null || !Context.IsValid)
+            {
+                return;
+            }
+
+            if (!Definition.HasState(CurrentState))
+            {
+                if (!Definition.HasState(Definition.InitialState))
+                {
+                    IsWaitingForValidDefinition = true;
+                    HasEnteredCurrentState = false;
+                    FsmApi.Error.InvokeInternalApiError(
+                        $"FSM '{Definition.Name}' has no valid current or initial state after definition replacement.",
+                        new InvalidOperationException("The replacement definition has no usable initial state."));
+                    return;
+                }
+
+                CurrentState = Definition.InitialState;
+                HasEnteredCurrentState = false;
                 return;
             }
 
             try
             {
-                // Manual updates must honor the same first-entry lifecycle as scheduled ticks.
-                // A transition marks the target as not yet entered; the next update will enter it.
                 if (!HasEnteredCurrentState)
                 {
                     var currentState = Definition.GetState(CurrentState);
                     if (currentState != null)
                     {
                         currentState.Enter(Context);
-                        // An Enter callback may destroy this definition and its handle.
-                        // Teardown owns the final lifecycle state; do not continue this update.
                         if (IsDestroyed)
                         {
                             return;
@@ -268,8 +293,6 @@ namespace TheSingularityWorkshop.FSM_API
                     }
                 }
 
-                // OnEnter is user code and may suspend the caller-owned context.
-                // Do not run Update or transition guards after the gate closes.
                 if (!Context.IsValid)
                 {
                     return;
@@ -281,8 +304,6 @@ namespace TheSingularityWorkshop.FSM_API
             }
             catch (Exception ex)
             {
-                // If an exception occurs during the FSM's internal step, report it as a "fubar".
-                // This allows the FSM_API to track and potentially remove problematic instances.
                 FsmApi.Error.InvokeInstanceError(this, $"FSMHandle:  {Name} has crashed:  {ex.Message}", ex, processGroup);
             }
         }
@@ -311,6 +332,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </exception>
         public void TransitionTo(string nextStateName)
         {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => TransitionToCore(nextStateName));
+                return;
+            }
+
+             TransitionToCore(nextStateName);
+        }
+
+        private void TransitionToCore(string nextStateName)
+        {
             if (string.IsNullOrWhiteSpace(nextStateName))
             {
                 throw new ArgumentException("Target state name cannot be null or empty.", nameof(nextStateName));
@@ -336,6 +368,7 @@ namespace TheSingularityWorkshop.FSM_API
                 FsmApi.Error.InvokeInstanceError(this, $"Transition to:  {nextStateName} failed.", ex);
                 throw; // Re-throw the exception as this is a direct user-invoked method.
             }
+        
         }
 
 
@@ -354,6 +387,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </remarks>
         public void ResetFSMInstance()
         {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => ResetFSMInstanceCore());
+                return;
+            }
+
+             ResetFSMInstanceCore();
+        }
+
+        private void ResetFSMInstanceCore()
+        {
             if (IsDestroyed || Context == null || !Context.IsValid)
             {
                 return;
@@ -365,6 +409,7 @@ namespace TheSingularityWorkshop.FSM_API
             }
             CurrentState = Definition.InitialState;
             HasEnteredCurrentState = Definition.HasState(CurrentState);
+        
         }
 
 
@@ -406,6 +451,8 @@ namespace TheSingularityWorkshop.FSM_API
             // Mark the handle first so re-entrant callbacks and a scheduler snapshot cannot
             // execute it again after explicit teardown begins.
             IsDestroyed = true;
+            RuntimeScope = null;
+            IsWaitingForValidDefinition = false;
 
             if (Definition != null && !string.IsNullOrEmpty(CurrentState))
             {
@@ -441,6 +488,17 @@ namespace TheSingularityWorkshop.FSM_API
         /// </para>
         /// </remarks>
         public void EvaluateConditions()
+        {
+            if (RuntimeScope != null)
+            {
+                RuntimeScope(() => EvaluateConditionsCore());
+                return;
+            }
+
+             EvaluateConditionsCore();
+        }
+
+        private void EvaluateConditionsCore()
         {
             // Manual evaluation follows the same precedence as scheduled stepping:
             // Any-State transitions first, then transitions originating in CurrentState.
@@ -524,6 +582,7 @@ namespace TheSingularityWorkshop.FSM_API
                 HasEnteredCurrentState = true;
                 return; // One transition per evaluation; Any-State candidates are ordered first.
             }
+        
         }
     }
 }
