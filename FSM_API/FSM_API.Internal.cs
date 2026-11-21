@@ -638,42 +638,51 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new InvalidOperationException("The FSM API cannot be reset from inside an active runtime tick.");
                 }
 
-                _pendingRegistrations.Clear();
-                _deferredModifications.Clear();
-                _isFinalizingTick = false;
-                if (hardReset)
+                _isTicking = true;
+                try
                 {
-                    // A hard reset removes every registered handle, so mark each handle as
-                    // destroyed before dropping the registry. Contexts remain caller-owned.
-                    foreach (var instance in GetAllFsmHandles().ToList())
+                    _pendingRegistrations.Clear();
+                    _deferredModifications.Clear();
+    if (hardReset)
                     {
-                        instance.DestroyHandle();
-                    }
-
-                    _buckets.Clear();
-                    Error.Reset();
-                }
-                else
-                {
-                    foreach (var processGroup in _buckets)
-                    {
-                        foreach (var fsmBucket in processGroup.Value)
+                        // A hard reset removes every registered handle, so mark each handle as
+                        // destroyed before dropping the registry. Contexts remain caller-owned.
+                        foreach (var instance in GetAllFsmHandles().ToList())
                         {
-                            foreach (var instance in fsmBucket.Value.Instances)
-                            {
-                                instance.DestroyHandle();
-                            }
-                            fsmBucket.Value.Instances.Clear();
+                            instance.DestroyHandle();
                         }
-                        processGroup.Value.Clear();
+    
+                        _buckets.Clear();
+                        Error.Reset();
                     }
-                    _buckets.Clear();
-
+                    else
+                    {
+                        foreach (var processGroup in _buckets)
+                        {
+                            foreach (var fsmBucket in processGroup.Value)
+                            {
+                                foreach (var instance in fsmBucket.Value.Instances)
+                                {
+                                    instance.DestroyHandle();
+                                }
+                                fsmBucket.Value.Instances.Clear();
+                            }
+                            processGroup.Value.Clear();
+                        }
+                        _buckets.Clear();
+    
+                    }
+                    _processingGroupTickCounts.Clear();
+    
                 }
-                _processingGroupTickCounts.Clear();
+                finally
+                {
+                    _pendingRegistrations.Clear();
+                    _deferredModifications.Clear();
+                    _isFinalizingTick = false;
+                    _isTicking = false;
+                }
             }
-
-
 
             /// <summary>
             /// Gets the internal default FSM definition.
