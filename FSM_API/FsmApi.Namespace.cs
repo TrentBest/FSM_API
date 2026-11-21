@@ -261,6 +261,7 @@ namespace FSM_API
                 set => LegacyApi.Error.DefinitionErrorThreshold = value;
             }
 
+            /// <summary>Receives diagnostic notifications raised by the string-backed runtime.</summary>
             public static event LegacyApi.Error.InternalApiErrorEventHandler OnInternalApiError
             {
                 add => LegacyApi.Error.OnInternalApiError += value;
