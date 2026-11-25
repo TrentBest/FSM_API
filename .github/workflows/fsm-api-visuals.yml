@@ -23,6 +23,8 @@ jobs:
       - name: Check out FSM_API
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned commit SHA
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Check out GUI.SVG source
@@ -41,7 +43,7 @@ jobs:
         run: dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release
 
       - name: Commit changed generated visuals
-        if: github.event_name == 'push' && github.ref == 'refs/heads/development'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/development') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -50,7 +52,7 @@ jobs:
             echo "Generated SVGs are already current."
           else
             git commit -m "docs: regenerate FSM_API living visuals"
-            git push origin "HEAD:${{ github.ref_name }}"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}"
           fi
 
       - name: Upload generated visuals
