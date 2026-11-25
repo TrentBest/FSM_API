@@ -41,6 +41,11 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be within the supported non-negative array-index range.");
             }
 
+            if (processingGroupID < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(processingGroupID), "Processing-group IDs must be non-negative.");
+            }
+
             // A tick is evaluated against one stable set of definitions. Registration
             // from user callbacks is committed only after every handle in that tick
             // has completed, so no handle can observe a half-old/half-new blueprint.
