@@ -1,7 +1,7 @@
 using TheSingularityWorkshop.Workshop.Gui;
 using TheSingularityWorkshop.Workshop.Gui.Svg;
 
-var outputDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../Documentation/Visuals"));
+var outputDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Documentation/Visuals"));
 Directory.CreateDirectory(outputDirectory);
 
 Write("fsm-api-ownership.svg", BuildOwnership(), 1280, 720);
