@@ -458,6 +458,15 @@ This snapshot supersedes the 2026-11-21 inventory above. A fresh live GitHub bra
 
 ### Current disposition
 
-**NOT READY FOR MANUAL BRANCH DELETION.** The live inventory is 24, not two. The 2.0 implementation candidate and documentation/GUI.SVG candidate still need their integration/review boundary resolved, and the updated Pages/visual workflows need current execution evidence. No branch has been merged or deleted by this audit. No change was made to `master`, and no NuGet package was published.
+**NOT READY FOR MANUAL BRANCH DELETION.** The live inventory is 24, not two. The 2.0 implementation candidate and documentation/GUI.SVG candidate still need their integration/review boundary resolved. The Pages build has now passed on the candidate PR; live deployment and the pinned GUI generator path remain pending until the documentation branch is integrated and the workflow runs on development. No branch has been merged or deleted by this audit. No change was made to `master`, and no NuGet package was published.
 
 The final owner recommendation must be one consolidated batch containing exact branch names, exact heads, preserved artifacts/tests, PR disposition, and the evidence that makes each deletion safe. Until then, keep all 22 noncanonical refs intact.
+
+
+### Follow-up validation — 2026-11-25
+
+- Pages workflow PR validation [run #13](https://github.com/TrentBest/FSM_API/actions/runs/45570155654) completed successfully. The build checked out the candidate, installed .NET, validated local documentation links, installed DocFX, generated the documentation, and uploaded the `github-pages` artifact (artifact ID `15001223652`, 25,087,356 bytes). The deploy job was **skipped**, as intended for a pull-request event.
+- On this candidate branch, the optional GUI.SVG generator checkout was skipped because `Documentation/Visuals/FsmApiVisuals.csproj` is not present in this source snapshot. The documentation candidate contains that project and the pinned GUI source; once those docs are integrated, the same Pages build will execute GUI.SVG before DocFX.
+- The matching .NET workflow [run #1099](https://github.com/TrentBest/FSM_API/actions/runs/45570154833) completed successfully: **553 passed, 0 failed, 0 skipped**, with **0 build warnings and 0 build errors**. Documentation link validation and DocFX generation passed. Package and DLL artifacts were generated; `publish_nuget` was skipped and no package was published. The Sith publication gate was skipped because this was a PR run.
+- The dedicated GUI.SVG generation workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) passed before the GUI source was pinned. The newly pinned generator workflow has not yet completed a run; it is scoped to `development` so it becomes the canonical generator after the documentation candidate is integrated.
+- These are build/artifact validations only. **No GitHub Pages deployment is claimed**, and no branch was merged or deleted.
