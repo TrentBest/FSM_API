@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <!-- Clone TheSingularityWorkshop.GUI beside FSM_API to run this generator. -->
+  <!-- The workflow checks out TheSingularityWorkshop.GUI into this repository root. -->
   <ItemGroup>
     <ProjectReference Include="../../TheSingularityWorkshop.GUI/src/Core/TheSingularityWorkshop.GUI.Core.csproj" />
-    <ProjectReference Include="../../../TheSingularityWorkshop.GUI/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj" />
+    <ProjectReference Include="../../TheSingularityWorkshop.GUI/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj" />
   </ItemGroup>
 </Project>
