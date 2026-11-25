@@ -11,12 +11,12 @@ public static class VisualSequences
     public static void WriteAll(string outputDirectory)
     {
         Directory.CreateDirectory(outputDirectory);
-        Write("fsm-api-add-state.svg", BuildAddState(), 1280, 720);
-        Write("fsm-api-state-transition.svg", BuildTransition(), 1280, 720);
-        Write("fsm-api-tick-atomic-mutation.svg", BuildTickMutation(), 1280, 720);
+        Write(outputDirectory, "fsm-api-add-state.svg", BuildAddState(), 1280, 720);
+        Write(outputDirectory, "fsm-api-state-transition.svg", BuildTransition(), 1280, 720);
+        Write(outputDirectory, "fsm-api-tick-atomic-mutation.svg", BuildTickMutation(), 1280, 720);
     }
 
-    private static void Write(string name, GuiNode scene, int width, int height)
+    private static void Write(string outputDirectory, string name, GuiNode scene, int width, int height)
     {
         var svg = new SvgGuiRenderer().Render(scene, width, height);
         File.WriteAllText(Path.Combine(outputDirectory, name), svg);
