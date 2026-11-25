@@ -24,7 +24,7 @@ FSM_API separates three things that applications often accidentally tangle toget
 
 Your application also owns the clock. It decides when to call Update; FSM_API does not start a background loop or take over the host's main loop.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     A["Application / Host"] -->|"owns data and update loop"| B["IStateContext"]
     A -->|"calls Update when ready"| C["FsmApi.Interact"]
@@ -35,15 +35,15 @@ flowchart TD
     F --> G["State callbacks and transitions"]
     H["FsmApi.Transfer"] -. "explicit conversion" .-> I["Integer-backed definition"]
     E -. "source representation" .-> H
-\`\`\`
+```
 
-The context is not copied into an FSM-owned model. The handle keeps the caller's context reference; callbacks operate on that object. Setting \`IsValid = false\` suspends execution without implicitly destroying the instance.
+The context is not copied into an FSM-owned model. The handle keeps the caller's context reference; callbacks operate on that object. Setting `IsValid = false` suspends execution without implicitly destroying the instance.
 
 ## Try the 2.0 API shape
 
-The concise consumer facade is \`FSM_API.FsmApi\`. Runtime data types, including \`IStateContext\`, remain in the established \`TheSingularityWorkshop.FSM_API\` namespace.
+The concise consumer facade is `FSM_API.FsmApi`. Runtime data types, including `IStateContext`, remain in the established `TheSingularityWorkshop.FSM_API` namespace.
 
-\`\`\`csharp
+```csharp
 using TheSingularityWorkshop.FSM_API;
 using FsmApi = FSM_API.FsmApi;
 
@@ -77,9 +77,9 @@ public sealed class DoorContext : IStateContext
     public bool RequestOpen { get; set; }
     public bool IsOpen { get; set; }
 }
-\`\`\`
+```
 
-**What to notice:** the definition describes behavior; the context carries application data; the host explicitly advances the processing group. With a process rate of \`-1\`, the definition is eligible on each host update call. FSM_API does not start a background loop or take ownership of the application.
+**What to notice:** the definition describes behavior; the context carries application data; the host explicitly advances the processing group. With a process rate of `-1`, the definition is eligible on each host update call. FSM_API does not start a background loop or take ownership of the application.
 
 ## Two representations, one behavioral contract
 
@@ -89,12 +89,12 @@ public sealed class DoorContext : IStateContext
 | --- | --- |
 | Readable definition and state names | Integer definition and state identities |
 | Named processing groups | Integer processing-group identities |
-| \`FsmApi.Interact.Update("Update")\` | \`FsmApi.Interact.Update(7)\` |
-| \`FSMHandle\` | \`FSMHandleInt\` |
+| `FsmApi.Interact.Update("Update")` | `FsmApi.Interact.Update(7)` |
+| `FSMHandle` | `FSMHandleInt` |
 
 The facade exposes overloads for both creation paths:
 
-\`\`\`csharp
+```csharp
 // String-backed definition
 var named = FsmApi.Create.CreateFiniteStateMachine(
     "Worker", processRate: -1, processingGroup: "Update");
@@ -102,15 +102,15 @@ var named = FsmApi.Create.CreateFiniteStateMachine(
 // Integer-backed definition
 var indexed = FsmApi.Create.CreateFiniteStateMachine(
     42, processRate: -1, processingGroupID: 7);
-\`\`\`
+```
 
-Conversion is explicit at the boundary, through \`FsmApi.Transfer\`. The runtimes do not silently share registries or translate every integer lookup back into a string lookup.
+Conversion is explicit at the boundary, through `FsmApi.Transfer`. The runtimes do not silently share registries or translate every integer lookup back into a string lookup.
 
 **Parity is tested as behavior, not as matching method names.** The candidate includes trace comparisons for callback order, transition timing, invalid-context suspension/resumption, and tick-boundary definition replacement. Full parity—including diagnostic thresholds and exception paths—remains a release gate.
 
 ## A predictable lifecycle
 
-\`\`\`mermaid
+```mermaid
 stateDiagram-v2
     [*] --> Created
     Created --> Entered: first eligible update
@@ -122,7 +122,7 @@ stateDiagram-v2
     Entered --> Destroyed: explicit destruction
     Suspended --> Destroyed: explicit destruction
     Destroyed --> [*]
-\`\`\`
+```
 
 The important distinction: invalidity suspends callback execution; it does not mean destruction. Definition changes requested during callbacks are committed at a defined tick boundary so handles in one tick observe a stable definition.
 
@@ -146,7 +146,7 @@ The important architectural distinction is that **FSM_API describes and advances
 - [Living navigation prototype — a page that folds to reveal its successor](Documentation/Experience/LivingNavigation.html)
 - [Runtime tick and mutation contract](Documentation/FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md)
 
-The diagrams in \`Documentation/Visuals\` are generated from semantic GUI trees with the Workshop's GUI.SVG adapter. Their source is versioned beside the documentation, and the dedicated workflow regenerates them when the visual contract changes.
+The diagrams in `Documentation/Visuals` are generated from semantic GUI trees with the Workshop's GUI.SVG adapter. Their source is versioned beside the documentation, and the dedicated workflow regenerates them when the visual contract changes.
 
 ## Explore the engineering evidence
 
@@ -163,7 +163,7 @@ The Pages build validates local documentation links and generates the DocFX API 
 
 The current published package remains **TheSingularityWorkshop.FSM_API 1.0.13**. The 2.0 candidate is not published. Package metadata, complete cross-runtime parity, reproducible string-versus-integer performance evidence, compatibility validation, documentation review, and branch reconciliation remain part of release readiness.
 
-No website content, successful build, or readiness percentage authorizes NuGet publication or merge to \`master\`.
+No website content, successful build, or readiness percentage authorizes NuGet publication or merge to `master`.
 
 ---
 
