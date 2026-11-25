@@ -51,9 +51,11 @@ The September 2026 benchmark run produced:
 | 10 | **3,115.7 ns** | **3,600 B** |
 | 50 | **15,736.6 ns** | **18,000 B** |
 
-The measured workload scales approximately linearly in this range.
+A source audit found that this historical group-iteration fixture is **not stationary** across a long BenchmarkDotNet run: each group's StateA callback increments a counter, and a transition moves it to StateB after the counter exceeds 1,000; StateB has no update callback. Depending on warm-up and measurement duration, the benchmark can therefore change from callback work to mostly empty scheduler work during one run. The original source also does not prime or verify a fixed steady-state callback count.
 
-That does **not** mean FSM_API has a universal linear complexity guarantee for every operation. It means this particular experiment showed approximately linear growth when the number of explicitly updated processing groups increased from 1 to 50.
+For that reason, do not interpret the table as a clean scaling curve or as a stable per-group marginal cost. Retain the figures as historical reported observations only. The single-FSM fixture is a different workload: it alternates between two states through successful transitions, so its 305.1 ns / 360 B observation is not a no-transition baseline either. The raw `.diagsession` files do not replace normalized BenchmarkDotNet result exports and full machine/source provenance.
+
+A corrected benchmark should hold callback and transition behavior constant for every measured invocation, prime the runtime before measurement, and verify callback counts outside the timed region. The source-linked 2.0 suite now follows that setup discipline for its initial no-transition scheduler comparison.
 
 ## How to interpret the numbers
 
@@ -75,7 +77,7 @@ is approximately 305 billionths of a second.
 
 The allocation results matter because an operation can be fast while still creating garbage-collection pressure.
 
-The recorded 50-group operation allocates 18,000 B in the benchmark workload. That is evidence about this experiment—not a statement that every application frame using 50 groups will allocate exactly 18 KB.
+The recorded 50-group operation reports 18,000 B in the historical experiment. Because the fixture can change its callback workload during a long run, treat that allocation value as a historical observation too—not a reliable per-frame cost or a regression target.
 
 ## Why the benchmark is useful
 
