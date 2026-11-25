@@ -102,6 +102,62 @@ namespace FSM_API
                 Integer.FsmApi.Interaction.UpdateAll();
             }
 
+            /// <summary>Manually advances one string-backed live instance within its runtime operation scope.</summary>
+            public static void UpdateInstance(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.Update();
+            }
+
+            /// <summary>Manually advances one integer-backed live instance within its runtime operation scope.</summary>
+            public static void UpdateInstance(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.Update();
+            }
+
+            /// <summary>Manually evaluates string-backed transition conditions without running the state's Update callback.</summary>
+            public static void EvaluateConditions(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.EvaluateConditions();
+            }
+
+            /// <summary>Manually evaluates integer-backed transition conditions without running the state's Update callback.</summary>
+            public static void EvaluateConditions(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.EvaluateConditions();
+            }
+
+            /// <summary>Forces a string-backed handle to a named state.</summary>
+            public static void TransitionTo(Legacy.FSMHandle instance, string nextStateName)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.TransitionTo(nextStateName);
+            }
+
+            /// <summary>Forces an integer-backed handle to a state ID.</summary>
+            public static void TransitionTo(Integer.FSMHandleInt instance, int nextStateID)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.TransitionTo(nextStateID);
+            }
+
+            /// <summary>Resets a string-backed handle to its definition's initial state.</summary>
+            public static void ResetInstance(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.ResetFSMInstance();
+            }
+
+            /// <summary>Resets an integer-backed handle to its definition's initial state.</summary>
+            public static void ResetInstance(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.ResetFSMInstance();
+            }
+
             /// <summary>Removes an integer-backed definition and its instances.</summary>
             public static bool Unregister(int fsmID)
             {
