@@ -5,8 +5,8 @@
 **Owner:** The Singularity Workshop  
 **Status (2026-11-25):** 2.0 paired benchmark smoke lane exists; calibrated measurements and performance gates are not yet active.  
 **Related implementation:** [FSM_API_Benchmark](https://github.com/TrentBest/FSM_API_Benchmark)  
-**Benchmark coverage catalog:** [stable IDs and coverage status](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Documentation/BenchmarkCatalog.md)  
-**Regression policy:** [staged comparison and gate policy](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Documentation/RegressionPolicy.md)
+**Benchmark coverage catalog:** [stable IDs and coverage status](https://github.com/TrentBest/FSM_API_Benchmark/blob/benchmark-ledger-foundation/Documentation/BenchmarkCatalog.md)  
+**Regression policy:** [staged comparison and gate policy](https://github.com/TrentBest/FSM_API_Benchmark/blob/benchmark-ledger-foundation/Documentation/RegressionPolicy.md)
 
 ## Purpose
 
