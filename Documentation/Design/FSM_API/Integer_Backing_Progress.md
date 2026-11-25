@@ -1,13 +1,17 @@
 ![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
-# Integer-backed FSM implementation — progress map
+# Integer-backed FSM implementation — historical progress map
 
 **Release checklist:** [FSM_API 2.0.0 Readiness — comprehensive remaining work](../../FSM_API_2.0.0_READINESS.md). This is the authoritative release-gate checklist, including Operation Sith branch cleanup, parity, benchmark, CI, documentation, and publication gates.
 
 
-**Purpose:** make the remaining work visible so the integer-backed design can be resumed without reconstructing the whole vision from scattered commits.
+**Purpose:** preserve the original implementation-progress record without allowing historical snapshots to masquerade as current release status.
 
-> **Status in one sentence (2026-10-19):** the integer-backed runtime, broad tests, and deterministic `FSMCompiler` bridge are present on `development`; current-development CI is green, including run [#547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) at `02da084`. That run passed build/test/package and documentation jobs, uploaded coverage and artifacts, and skipped NuGet publishing. This proves the recorded development snapshot builds; it does not close behavior parity, benchmark evidence, storage validation, branch reconciliation, or release gates.
+> **Current status (2026-11-25):** the active integration candidate is [FSM_API PR #42](https://github.com/TrentBest/FSM_API/pull/42), branch `fix/integer-definition-reregistration`, head `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`. Its latest validation [run #1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836) passed **558/558 tests**, built all six library target frameworks, and completed documentation link validation/DocFX with zero warnings and errors. The integer runtime now has a tick-boundary per-handle move operation; broader parity, identity persistence/versioning, compatibility consumers, and performance evidence remain open. The companion [benchmark laboratory PR #1](https://github.com/TrentBest/FSM_API_Benchmark/pull/1) has a source-linked 2.0 paired benchmark lane, but [run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828) only built and smoke-tested it; calibrated measurements were skipped. **No integer speedup has been measured.**
+>
+> Read the current [string/integer backing contract](../../User%20Guide/12_String_and_Integer_Backing.md) and [2.0 readiness report](../../FSM_API_2.0.0_READINESS.md) for authoritative current details. The material below is a historical snapshot from 2026-10-19 and is retained for provenance, not as the current checklist.
+
+> **Historical status in one sentence (2026-10-19):** the integer-backed runtime, broad tests, and deterministic `FSMCompiler` bridge are present on `development`; current-development CI is green, including run [#547](https://github.com/TrentBest/FSM_API/actions/runs/39185150851) at `02da084`. That run passed build/test/package and documentation jobs, uploaded coverage and artifacts, and skipped NuGet publishing. This proves the recorded development snapshot builds; it does not close behavior parity, benchmark evidence, storage validation, branch reconciliation, or release gates.
 
 <p align="center">
   <a href="Visuals/Integer_Backing_Roadmap.svg">
@@ -15,7 +19,7 @@
   </a>
 </p>
 
-## Current snapshot
+## Historical snapshot (2026-10-19; superseded by the readiness report)
 
 - **Source of the original implementation:** [`development`](https://github.com/TrentBest/FSM_API/tree/feature/fsm-api-2.0)
 - **Current integration target:** [`development`](https://github.com/TrentBest/FSM_API/tree/development)
