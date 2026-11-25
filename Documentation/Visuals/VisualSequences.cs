@@ -8,18 +8,18 @@ using TheSingularityWorkshop.Workshop.Gui.Svg;
 /// </summary>
 public static class VisualSequences
 {
-    public static void WriteAll(string outputDirectory)
+    public static void WriteAll(string destinationDirectory)
     {
-        Directory.CreateDirectory(outputDirectory);
-        Write(outputDirectory, "fsm-api-add-state.svg", BuildAddState(), 1280, 720);
-        Write(outputDirectory, "fsm-api-state-transition.svg", BuildTransition(), 1280, 720);
-        Write(outputDirectory, "fsm-api-tick-atomic-mutation.svg", BuildTickMutation(), 1280, 720);
+        Directory.CreateDirectory(destinationDirectory);
+        Write(destinationDirectory, "fsm-api-add-state.svg", BuildAddState().Build(), 1280, 720);
+        Write(destinationDirectory, "fsm-api-state-transition.svg", BuildTransition().Build(), 1280, 720);
+        Write(destinationDirectory, "fsm-api-tick-atomic-mutation.svg", BuildTickMutation().Build(), 1280, 720);
     }
 
-    private static void Write(string outputDirectory, string name, GuiNode scene, int width, int height)
+    private static void Write(string destinationDirectory, string name, GuiNode scene, int width, int height)
     {
         var svg = new SvgGuiRenderer().Render(scene, width, height);
-        File.WriteAllText(Path.Combine(outputDirectory, name), svg);
+        File.WriteAllText(Path.Combine(destinationDirectory, name), svg);
         Console.WriteLine($"Generated {name}");
     }
 
@@ -38,7 +38,7 @@ public static class VisualSequences
         return scene;
     }
 
-    private static GuiNode BuildAddState()
+    private static GuiBuilder BuildAddState()
     {
         var scene = Frame("fsm-api-add-state",
             "Adding a state: preview becomes part of the definition",
@@ -88,10 +88,10 @@ public static class VisualSequences
         scene.Child("svg-text", "fallback-note", n => n.Text("Static fallback: both states and their completed relationship remain visible.")
             .Property("x", "12").Property("y", "52").Property("fill", "#9fb5c7")
             .Property("font-size", "2.0"));
-        return scene.Build();
+        return scene;
     }
 
-    private static GuiNode BuildTransition()
+    private static GuiBuilder BuildTransition()
     {
         var scene = Frame("fsm-api-state-transition",
             "Executing a transition: lifecycle order matters",
@@ -126,7 +126,7 @@ public static class VisualSequences
         return scene.Build();
     }
 
-    private static GuiNode BuildTickMutation()
+    private static GuiBuilder BuildTickMutation()
     {
         var scene = Frame("fsm-api-tick-atomic-mutation",
             "Definition replacement waits for the tick boundary",
