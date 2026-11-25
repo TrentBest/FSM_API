@@ -29,7 +29,7 @@ The [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmar
 
 The latest benchmark PR validation, [run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828), built both projects, generated the reflection inventory, and passed both BenchmarkDotNet Dry smoke tests. Its calibrated-measurement job was skipped. Therefore it establishes build and fixture invocation, **not performance numbers**. The workflow currently checks out FSM_API `development`, not PR #42's exact candidate commit.
 
-Open draft [PR #5](https://github.com/TrentBest/FSM_API_Benchmark/pull/5) adds a stable semantic benchmark catalog and staged regression policy. These PRs remain unmerged; no calibrated 2.0 measurements or active regression gates are claimed. The paired suite is an initial foundation, not complete API coverage.
+Open draft [PR #5](https://github.com/TrentBest/FSM_API_Benchmark/pull/5) adds a stable semantic benchmark catalog and staged regression policy. These PRs remain unmerged; no calibrated 2.0 measurements or active regression gates are claimed. The paired suite is an initial foundation, not complete API coverage. The historical multi-group fixture has an additional validity caveat: its StateA callback increments a counter and transitions to StateB after 1,000 updates, while StateB has no update callback. A long BenchmarkDotNet warm-up/measurement can therefore change the work being timed. The historical single-FSM fixture alternates successful transitions each tick. Keep the published figures as reported historical observations only; do not use them as a calibrated scaling curve or no-transition baseline.
 
 ## Stable benchmark identity
 
