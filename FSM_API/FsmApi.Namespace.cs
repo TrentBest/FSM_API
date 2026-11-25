@@ -176,6 +176,13 @@ namespace FSM_API
                 LegacyApi.Interaction.MoveInstance(instance, processingGroup);
             }
 
+            /// <summary>Moves an integer-backed instance to another compatible registered definition.</summary>
+            public static void MoveInstance(Integer.FSMHandleInt instance, int targetFSMID)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                Integer.FsmApi.Interaction.MoveInstance(instance, targetFSMID);
+            }
+
             /// <summary>Adds a state to an existing string-backed definition.</summary>
             public static void AddStateToFSM(
                 string fsmName,
