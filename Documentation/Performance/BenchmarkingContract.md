@@ -3,7 +3,7 @@
 # FSM_API Performance Evidence and Benchmark Contract
 
 **Owner:** The Singularity Workshop  
-**Status (2026-10-29):** documentation baseline; performance gates are not yet active.  
+**Status (2026-11-25):** 2.0 paired benchmark smoke lane exists; calibrated measurements and performance gates are not yet active.  
 **Related implementation:** [FSM_API_Benchmark](https://github.com/TrentBest/FSM_API_Benchmark)  
 **Benchmark coverage catalog:** [stable IDs and coverage status](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Documentation/BenchmarkCatalog.md)  
 **Regression policy:** [staged comparison and gate policy](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Documentation/RegressionPolicy.md)
@@ -22,12 +22,14 @@ Do not compare these FPS or memory-delta values directly with BenchmarkDotNet na
 
 ### Operation-level microbenchmarks
 
-The separate [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark) currently references the published FSM_API package version 1.0.13 and targets .NET 8. Its checked-in source currently contains two BenchmarkDotNet entry points:
+The [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark) now has two distinct evidence tracks:
 
-- Single-FSM update with callbacks and transition predicates.
-- Multiple processing-group updates with 1, 10, and 50 groups.
+- The current `master` / `development` baseline project targets `.NET 8` and references the published FSM_API `1.0.13` package. It contains the original string-backed single-FSM and multi-processing-group benchmarks. Two September 2026 `.diagsession` files are retained as diagnostic artifacts; they are not normalized BenchmarkDotNet result sets.
+- Open draft [PR #1](https://github.com/TrentBest/FSM_API_Benchmark/pull/1) adds a broader `.NET 10` 1.x benchmark laboratory and a separate source-linked FSM_API 2.0 comparison project. The 2.0 project currently pairs public string/integer update and successful definition lookup scenarios. It references a separately checked-out FSM_API source tree, not the published 1.0.13 package.
 
-These provide a useful starting point, not complete API coverage. The benchmark catalog marks additional scenarios uncovered until they are implemented and measured. Existing `.diagsession` files are preserved as historical artifacts; their presence alone does not make them normalized or comparable across environments.
+The latest benchmark PR validation, [run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828), built both projects, generated the reflection inventory, and passed both BenchmarkDotNet Dry smoke tests. Its calibrated-measurement job was skipped. Therefore it establishes build and fixture invocation, **not performance numbers**. The workflow currently checks out FSM_API `development`, not PR #42's exact candidate commit.
+
+Open draft [PR #5](https://github.com/TrentBest/FSM_API_Benchmark/pull/5) adds a stable semantic benchmark catalog and staged regression policy. These PRs remain unmerged; no calibrated 2.0 measurements or active regression gates are claimed. The paired suite is an initial foundation, not complete API coverage.
 
 ## Stable benchmark identity
 
