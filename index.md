@@ -4,11 +4,11 @@
 
 **A framework-independent finite-state-machine runtime for .NET.** Define behavior once, bind it to application-owned objects, and let your host decide when the machine advances.
 
-**Development preview · candidate branch · not a NuGet release**
+**Development preview · unreleased 2.0 line · not a NuGet release**
 
-This site is built from the active 2.0 integration candidate. It demonstrates the intended public API and documents the implementation under review. It is **not** a released package: NuGet remains on 1.x until the 2.0 verification and release gates are complete.
+This site is built from the `development` branch. It demonstrates the intended public API and documents the implementation under review. It is **not** a released package: NuGet remains on 1.x until the 2.0 verification and release gates are complete.
 
-[Read the public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md) · [Review release readiness](Documentation/FSM_API_2.0.0_READINESS.md) · [Browse source](https://github.com/TrentBest/FSM_API/tree/fix/integer-definition-reregistration)
+[Read the public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md) · [Review release readiness](Documentation/FSM_API_2.0.0_READINESS.md) · [Browse source](https://github.com/TrentBest/FSM_API/tree/development)
 
 ## The central idea
 
@@ -133,7 +133,7 @@ The diagrams in `Documentation/Visuals` are generated from semantic GUI trees wi
 - [Runtime tick and mutation contract](Documentation/FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md)
 - [Benchmarking contract](Documentation/Performance/BenchmarkingContract.md)
 - [Generated API reference](api/index.html)
-- [Source and tests for this candidate](https://github.com/TrentBest/FSM_API/tree/fix/integer-definition-reregistration)
+- [Source and tests for this candidate](https://github.com/TrentBest/FSM_API/tree/development)
 
 The Pages build validates local documentation links and generates the DocFX API reference from the same candidate source. The site is a review surface, not a substitute for the test suite or a claim that every 2.0 release gate has passed.
 
