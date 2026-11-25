@@ -16,6 +16,7 @@
     "benchmark-contract-docs",
     "development",
     "docs/benchmarking",
+    "docs/fsm-api-theory-and-living-svg",
     "docs/readme-standard",
     "feature/fsm-api-2.0",
     "feature/fsm-api-2.0-next",
@@ -30,9 +31,9 @@
     "master",
     "test/integer-scheduler-parity"
   ],
-  "branch_count": 23,
+  "branch_count": 24,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-24T14:53:21Z",
-  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/45419087378",
-  "triggering_commit": "19949a4539fcd6fef0ffd1235e16a45d3c0b79a2"
+  "evaluated_at": "2026-11-25T14:22:48Z",
+  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/45633366228",
+  "triggering_commit": "b1a6edffe398fca66ce66c6111e184f4b34fc7fd"
 }
