@@ -87,7 +87,7 @@ static GuiNode BuildRepresentations()
     scene.Child("svg-text","transfer-t",n=>n.Text("Transfer").Property("x","45").Property("y","58").Property("fill","#ffffff").Property("font-size","2.2"));
     scene.Child("svg-line","left",n=>n.Property("x1","22").Property("y1","42").Property("x2","48").Property("y2","52").Property("stroke","#ffcf86").Property("stroke-width","0.5"));
     scene.Child("svg-line","right",n=>n.Property("x1","78").Property("y1","42").Property("x2","52").Property("y2","52").Property("stroke","#ffcf86").Property("stroke-width","0.5"));
-    scene.Child("svg-text","shared",n=>n.Text("Same observable contract: lifecycle · transitions · scheduling · errors").Property("x","8").Property("y","77").Property("fill","#eef6ff").Property("font-size","2.4"));
+    scene.Child("svg-text","shared",n=>n.Text("Shared core semantics; group operations remain representation-specific").Property("x","8").Property("y","77").Property("fill","#eef6ff").Property("font-size","2.4"));
     return scene.Build();
 }
 
