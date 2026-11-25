@@ -23,7 +23,7 @@ public static class VisualSequences
         Console.WriteLine($"Generated {name}");
     }
 
-    private static GuiNode Frame(string id, string title, string description)
+    private static GuiBuilder Frame(string id, string title, string description)
     {
         var scene = GuiBuilder.Create("svg-scene", id)
             .Text(title)
