@@ -35,7 +35,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             _fsmID = fsmID;
-            _processRate = processRate;
+            _processRate = FSM.NormalizeProcessRate(processRate, fsmID);
             _processingGroupID = processingGroupID;
         }
 
@@ -58,7 +58,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Sets the automatic processing rate.</summary>
         public FSMBuilderInt WithProcessRate(int rate)
         {
-            _processRate = rate;
+            _processRate = FSM.NormalizeProcessRate(rate, _fsmID);
             return this;
         }
 
