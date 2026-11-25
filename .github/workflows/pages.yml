@@ -12,8 +12,6 @@ on:
       - "scripts/validate_doc_links.py"
       - ".github/workflows/pages.yml"
   pull_request:
-    branches:
-      - development
     paths:
       - "Documentation/**"
       - "FSM_API/**"
