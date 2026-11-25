@@ -8,6 +8,7 @@ Write("fsm-api-ownership.svg", BuildOwnership(), 1280, 1024);
 Write("fsm-api-lifecycle.svg", BuildLifecycle(), 1280, 1024);
 Write("fsm-api-representations.svg", BuildRepresentations(), 1280, 1024);
 Write("fsm-api-tick-boundary.svg", BuildTickBoundary(), 1280, 1024);
+VisualSequences.WriteAll(outputDirectory);
 
 void Write(string name, GuiNode scene, int width, int height)
 {
