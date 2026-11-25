@@ -15,16 +15,16 @@
 - Integer-backed execution remains a separate runtime with its own registry and identity model.
 - The repository name, NuGet package ID, and established namespaces have not been renamed.
 
-## Candidate validation — 2026-11-21
+## Candidate validation — 2026-11-25
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `9aa8345c57e19e2ace5dc235a0045d51f4755034`, based on `development` with **109 commits ahead and 0 behind**. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `05f0067781469fd422351d1a54b417337a73e080`, based on `development`. The PR remains open and draft.
 
-Latest full candidate workflow: [run #1084](https://github.com/TrentBest/FSM_API/actions/runs/44894528903).
+Latest full candidate workflow after the facade and process-rate parity changes: [run #1093](https://github.com/TrentBest/FSM_API/actions/runs/45564693321).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
-- .NET 10 test suite: **539 passed, 0 failed, 0 skipped**.
-- Build diagnostics after the documentation cleanup: **0 warnings, 0 errors**.
+- .NET 10 test suite: **548 passed, 0 failed, 0 skipped**.
+- Build diagnostics: **0 warnings, 0 errors**.
 - NuGet package artifact: generated and uploaded.
 - DLL artifacts: generated and uploaded.
 - Documentation link validation: passed.
@@ -32,11 +32,11 @@ Latest full candidate workflow: [run #1084](https://github.com/TrentBest/FSM_API
 - `publish_nuget`: skipped; no publication was performed.
 - `sith_branch_policy`: skipped because this was a pull-request run, not an authorized publication dispatch.
 
-The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Runs #1074 and #1077 confirm zero build warnings. Codecov's latest processed patch check on the same code/test snapshot reports **88.64% diff coverage against a 68.10% target** (check passed). Forty-one changed lines remain unhit, so the passing threshold should not be mistaken for complete branch coverage. The upload step continues on error and does not make coverage a hard workflow gate.
+The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Run #1093 confirms zero build warnings and errors. Coverage upload succeeded; the latest processed patch percentage should be read from Codecov for this exact head before making a coverage claim.
 
 The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
 
-## Follow-up parity changes — 2026-11-25 (validation pending)
+## Follow-up parity changes — 2026-11-25 (validated)
 
 After the previously recorded candidate workflow, the integration branch received additional parity work:
 
@@ -44,9 +44,9 @@ After the previously recorded candidate workflow, the integration branch receive
 - Integer definition construction and `FSMBuilderInt.WithProcessRate` now normalize rates below `-1` to `0` (event-driven) and emit a diagnostic, matching the string-backed creation contract.
 - Added paired facade tests and integer process-rate boundary tests.
 
-These commits have **not yet been validated by a fresh CI run**. The previously cited run #1084 predates these changes and cannot be used as their test evidence.
+These changes are validated by run #1093: **548/548 tests passed**, with **0 warnings and 0 errors**. The run also generated and uploaded package/DLL artifacts; NuGet publication remained skipped.
 
-A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The generated SVG snapshots and visual review are still pending; do not count the visuals work as complete until the workflow produces the four assets and those images are inspected.
+A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The dedicated workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) succeeded: all four SVGs were generated, committed to the branch, and uploaded as the `fsm-api-living-visuals` artifact. The SVG source and semantic descriptions have been checked; final visual review in a browser remains an editorial check.
 
 ## Remaining 2.0 release gates
 
@@ -62,7 +62,7 @@ A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pu
 
 ## Branch and publication gate
 
-The live GitHub branch inventory checked on 2026-11-21 contains **23 branches**: `master`, `development`, and 21 additional branches. The canonical two-branch policy is therefore not satisfied. The current candidate workflow skipped its Sith branch-policy job because it was a pull-request run. No surplus branch has been deleted as part of this review.
+The live GitHub branch inventory checked on 2026-11-25 contains **24 branches**: `master`, `development`, and 22 additional branches, including the active documentation branch. The canonical two-branch policy is therefore not satisfied. The candidate pull-request workflow skips its dedicated publication-gate job by design. The separate push-triggered Sith Policy workflow ran successfully and refreshed the branch badge; the live inventory still confirms that the two-branch condition is not met. No surplus branch has been deleted as part of this review.
 
 Publication must remain blocked until unique branch work is reconciled, a fresh live inventory proves that exactly `master` and `development` exist, and explicit owner authorization is independently provided. PRs #40 and #41 have had their relevant changes ported into #42, but their source branches remain present and must not be deleted until the reconciliation is reviewed and the owner approves batch cleanup.
 
