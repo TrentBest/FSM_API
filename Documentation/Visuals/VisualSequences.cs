@@ -123,7 +123,7 @@ public static class VisualSequences
             .Property("x", "39").Property("y", "43").Property("fill", "#d6e7f4").Property("font-size", "2.25"));
         scene.Child("svg-text", "enter-step", n => n.Text("3  ENTER S1 on the next eligible update")
             .Property("x", "15").Property("y", "50").Property("fill", "#7ee0bd").Property("font-size", "2.5").Property("font-weight", "700"));
-        return scene.Build();
+        return scene;
     }
 
     private static GuiBuilder BuildTickMutation()
