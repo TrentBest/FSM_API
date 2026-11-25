@@ -144,7 +144,7 @@ The benchmark branch also adds broader 1.x operation benchmarks, an API reflecti
 
 [Validation run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828) succeeded on benchmark commit `7a09fb760af425f20c914d013787b1bed86a9eeb`: both benchmark projects built, the public API inventory was generated, and the legacy and 2.0 BenchmarkDotNet Dry smoke tests passed. The calibrated benchmark job was **skipped**. This proves build/setup/discovery/invocation only; it provides **no timing result and no measured integer speedup**.
 
-Important source boundary: the current workflow checks out FSM_API's `development` branch. It has not yet benchmarked PR #42's exact integer-move candidate commit. Before accepting a 2.0 result, pin and record the exact FSM_API source SHA, run both representations in the same process/environment, preserve raw BenchmarkDotNet Markdown/CSV/JSON and provenance, and validate equivalent observable behavior outside the timed region.
+Important source boundary: the smoke workflow checks out FSM_API's `development` branch. It has not yet benchmarked PR #42's exact integer-move candidate commit. The workflow now accepts an `fsm_api_ref` input during manual dispatch, so the calibrated run can be pinned to a branch, tag, or exact source SHA. Before accepting a 2.0 result, pin and record the exact FSM_API source SHA, run both representations in the same process/environment, preserve raw BenchmarkDotNet Markdown/CSV/JSON and provenance, and validate equivalent observable behavior outside the timed region.
 
 The benchmark PR #5 adds a stable semantic-ID catalog and staged report-only regression policy; it is also open and draft. Neither PR is merged, and no performance regression gate is active.
 
