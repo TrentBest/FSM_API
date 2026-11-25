@@ -1,19 +1,19 @@
 using TheSingularityWorkshop.Workshop.Gui;
 using TheSingularityWorkshop.Workshop.Gui.Svg;
 
-var outputDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Documentation/Visuals"));
-Directory.CreateDirectory(outputDirectory);
+var visualOutputDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Documentation/Visuals"));
+Directory.CreateDirectory(visualOutputDirectory);
 
 Write("fsm-api-ownership.svg", BuildOwnership(), 1280, 1024);
 Write("fsm-api-lifecycle.svg", BuildLifecycle(), 1280, 1024);
 Write("fsm-api-representations.svg", BuildRepresentations(), 1280, 1024);
 Write("fsm-api-tick-boundary.svg", BuildTickBoundary(), 1280, 1024);
-VisualSequences.WriteAll(outputDirectory);
+VisualSequences.WriteAll(visualOutputDirectory);
 
 void Write(string name, GuiNode scene, int width, int height)
 {
     var svg = new SvgGuiRenderer().Render(scene, width, height);
-    File.WriteAllText(Path.Combine(outputDirectory, name), svg);
+    File.WriteAllText(Path.Combine(visualOutputDirectory, name), svg);
     Console.WriteLine($"Generated {name}");
 }
 
