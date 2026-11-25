@@ -23,7 +23,7 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
         {
             var runtime = new IntegerFSMRuntime();
             var source = CreateDefinition(51, 7, null);
-            var target = CreateDefinition(52, 8, null);
+            var target = CreateDefinition(52, 7, null);
             runtime.Register(source, 1);
             runtime.Register(target, 2);
             var context = new TestContext();
