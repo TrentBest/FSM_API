@@ -3,7 +3,17 @@ name: Publish FSM_API showcase to GitHub Pages
 on:
   push:
     branches:
-      - fix/integer-definition-reregistration
+      - development
+    paths:
+      - "Documentation/**"
+      - "FSM_API/**"
+      - "index.md"
+      - "docfx.json"
+      - "scripts/validate_doc_links.py"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    branches:
+      - development
     paths:
       - "Documentation/**"
       - "FSM_API/**"
@@ -31,6 +41,23 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
+
+      - name: Check out pinned GUI.SVG source
+        if: ${{ hashFiles('Documentation/Visuals/FsmApiVisuals.csproj') != '' }}
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TrentBest/TheSingularityWorkshop.GUI
+          ref: b4268c8db4e69908fb0b876f081aa323497d00d3
+          path: TheSingularityWorkshop.GUI
+          persist-credentials: false
+
+      - name: Generate living documentation visuals with GUI.SVG
+        run: |
+          if [[ -f Documentation/Visuals/FsmApiVisuals.csproj ]]; then
+            dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release
+          else
+            echo "GUI.SVG visual generator is not part of this source snapshot; skipping."
+          fi
 
       - name: Validate documentation links
         run: python3 scripts/validate_doc_links.py
