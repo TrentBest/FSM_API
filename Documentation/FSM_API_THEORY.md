@@ -49,7 +49,7 @@ Nested scheduler updates and re-entrant handle updates are rejected. A callback 
 
 See [the runtime tick and mutation contract](FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md) for the normative operation ordering and regression matrix.
 
-## 5. Two representations, one observable contract
+## 5. Two representations, a shared behavioral target
 
 The string-backed and integer-backed runtimes are separate execution paths with independent registries. The integer runtime is not a string lookup hidden behind an integer-shaped API. Explicit conversion belongs at the Transfer boundary.
 
@@ -65,6 +65,8 @@ The string-backed and integer-backed runtimes are separate execution paths with 
 Integer-backed direct-indexed storage currently supports FSM and state IDs from 0 through 1,048,575 inclusive. Out-of-range IDs must be rejected before capacity growth. Sparse IDs inside that range are supported; the limit is a resource boundary, not a recommendation to allocate every slot.
 
 The unified `FSM_API.FsmApi.Interact` facade also exposes representation-matched per-handle operations: `UpdateInstance`, `EvaluateConditions`, `TransitionTo`, and `ResetInstance`. The goal is not identical internal code. The goal is equivalent observable behavior: matching callback traces, transition selection, scheduling cadence, invalidation/resumption, mutation boundaries, destruction, and diagnostic outcomes for equivalent inputs. Tests must compare results and traces rather than merely asserting that both paths execute without throwing.
+
+One known capability gap remains: the string runtime can move an individual live handle between compatible definitions registered in different processing groups. The integer runtime has one definition slot per FSM ID and currently assigns the processing group at definition registration; it does not expose equivalent per-handle movement. Do not infer full API parity from the shared core lifecycle contract. This difference must either be implemented with explicit integer-runtime semantics and regression coverage or retained as a deliberate, documented limitation before the 2.0 API contract is finalized.
 
 ## 6. Error handling is lifecycle policy
 
