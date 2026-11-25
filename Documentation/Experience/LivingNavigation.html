@@ -66,8 +66,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
   <section class="stage-wrap" aria-labelledby="demo-title">
     <div class="stage-head"><span id="demo-title">A two-part fold transition</span><span>Interactive concept · no route change</span></div>
     <div class="stage" id="stage">
-      <div class="destination" aria-hidden="true">
-        <div class="destination-inner"><div class="eyebrow">The next experience</div><h2>Already waiting behind the page.</h2><p>The destination exists before the transition begins. The departing surface reveals it instead of asking the visitor to wait for another document to load.</p></div>
+      <div class="destination" id="destination" aria-hidden="true">
+        <div class="destination-inner" id="destination-content" tabindex="-1"><div class="eyebrow">The next experience</div><h2>Already waiting behind the page.</h2><p>The destination exists before the transition begins. The departing surface reveals it instead of asking the visitor to wait for another document to load.</p></div>
       </div>
       <div class="departing" id="departing" aria-hidden="false">
         <div class="panel panel-top"><div class="panel-content"><div class="eyebrow">Current page · upper half</div><h2>Keep the familiar.</h2><p>Readable content, clear hierarchy, and navigation that behaves the way people expect.</p></div></div>
