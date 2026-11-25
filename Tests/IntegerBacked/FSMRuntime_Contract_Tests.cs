@@ -6,6 +6,7 @@ using NUnit.Framework;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMRuntime = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMRuntime;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
+using IntegerFSMBuilder = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMBuilderInt;
 using TheSingularityWorkshop.FSM_API;
 
 namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
@@ -13,6 +14,40 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
     [TestFixture]
     public class FSMRuntime_Contract_Tests
     {
+        [Test]
+        public void IntegerDefinition_ClampsRatesBelowMinusOneToEventDriven()
+        {
+            var definition = new IntegerFSM(90_001, -2);
+
+            Assert.That(definition.ProcessRate, Is.Zero);
+        }
+
+        [Test]
+        public void IntegerBuilder_ClampsConstructorAndFluentRatesBelowMinusOneToEventDriven()
+        {
+            var constructorRate = new IntegerFSMBuilder(90_002, -2)
+                .State(0)
+                .BuildDefinition();
+            var fluentRate = new IntegerFSMBuilder(90_003)
+                .WithProcessRate(-2)
+                .State(0)
+                .BuildDefinition();
+
+            Assert.That(constructorRate.ProcessRate, Is.Zero);
+            Assert.That(fluentRate.ProcessRate, Is.Zero);
+        }
+
+        [TestCase(-1)]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(3)]
+        public void IntegerDefinition_PreservesSupportedProcessRates(int processRate)
+        {
+            var definition = new IntegerFSM(90_004 + processRate + 1, processRate);
+
+            Assert.That(definition.ProcessRate, Is.EqualTo(processRate));
+        }
+
         [Test]
         public void Contains_ReturnsFalseForUnregisteredDefinition()
         {
