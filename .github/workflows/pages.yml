@@ -15,8 +15,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: github-pages
@@ -44,17 +42,14 @@ jobs:
         run: docfx build
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # pinned commit SHA
         with:
           path: _site
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-24.04
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
     needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    permissions:
+      pages: write
+      id-token: write
+    uses: TrentBest/TheSingularityWorkshop.CiAi/.github/workflows/deploy-pages.yml@5083c452b555d7645dd0c8ab01d76008026da436
