@@ -118,6 +118,14 @@ The important distinction: invalidity suspends callback execution; it does not m
 
 See the [runtime tick and mutation contract](Documentation/FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md) for the exact rules.
 
+## Explore the theory and living visuals
+
+- [FSM_API theory — behavior as an explicit runtime model](Documentation/FSM_API_THEORY.md)
+- [Living visuals and GUI.SVG generator](Documentation/Visuals/README.md)
+- [Runtime tick and mutation contract](Documentation/FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md)
+
+The diagrams in `Documentation/Visuals` are generated from semantic GUI trees with the Workshop's GUI.SVG adapter. Their source is versioned beside the documentation, and the dedicated workflow regenerates them when the visual contract changes.
+
 ## Explore the engineering evidence
 
 - [Public API and namespace contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md)
