@@ -37,7 +37,20 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         {
             FSM_ID = fsmID;
             InitialStateID = AnyStateIdentifier;
-            ProcessRate = processRate;
+            ProcessRate = NormalizeProcessRate(processRate, fsmID);
+        }
+
+        internal static int NormalizeProcessRate(int processRate, int fsmID)
+        {
+            if (processRate < -1)
+            {
+                TheSingularityWorkshop.FSM_API.FsmApi.Error.InvokeInternalApiError(
+                    $"Invalid processRate '{processRate}' for integer FSM '{fsmID}'. Setting to 0 (event-driven).",
+                    null);
+                return 0;
+            }
+
+            return processRate;
         }
 
         /// <summary>
