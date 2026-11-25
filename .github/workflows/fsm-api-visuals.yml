@@ -3,7 +3,7 @@ name: FSM_API living visuals
 on:
   push:
     branches:
-      - docs/fsm-api-theory-and-living-svg
+      - development
     paths:
       - "Documentation/Visuals/**"
       - ".github/workflows/fsm-api-visuals.yml"
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out FSM_API
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned commit SHA
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
