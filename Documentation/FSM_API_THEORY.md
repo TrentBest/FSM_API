@@ -41,7 +41,7 @@ This distinction is foundational: *not currently eligible to execute* is not the
 
 The host owns the clock. Calling Update advances the selected processing group; FSM_API does not start a background loop.
 
-A scheduled update is a logical tick. The runtime selects eligible definitions and handles for that tick, then keeps the selected work on a stable definition view. A definition replacement requested from Enter, Update, a transition condition, Exit, or teardown is queued until the tick boundary. The last replacement requested for an identity during the tick wins.
+A scheduled update is a logical tick. The runtime selects eligible definitions and handles for that tick, then keeps the selected work on a stable definition view. Scheduling rates have the same meaning in both representations: `-1` processes on every host update, `0` is manual/event-driven, and a positive N processes every Nth host update. Values below `-1` normalize to `0` with a diagnostic; they must not accidentally become every-tick execution. A definition replacement requested from Enter, Update, a transition condition, Exit, or teardown is queued until the tick boundary. The last replacement requested for an identity during the tick wins.
 
 This prevents a sibling handle from seeing a new blueprint halfway through a tick while another sibling is still executing the old one. It also makes failures manageable: finalization runs through a `finally` path, pending lifecycle work is processed, and queued registrations are then committed.
 
@@ -64,7 +64,7 @@ The string-backed and integer-backed runtimes are separate execution paths with 
 
 Integer-backed direct-indexed storage currently supports FSM and state IDs from 0 through 1,048,575 inclusive. Out-of-range IDs must be rejected before capacity growth. Sparse IDs inside that range are supported; the limit is a resource boundary, not a recommendation to allocate every slot.
 
-The goal is not identical internal code. The goal is equivalent observable behavior: matching callback traces, transition selection, scheduling cadence, invalidation/resumption, mutation boundaries, destruction, and diagnostic outcomes for equivalent inputs. Tests must compare results and traces rather than merely asserting that both paths execute without throwing.
+The unified `FSM_API.FsmApi.Interact` facade also exposes representation-matched per-handle operations: `UpdateInstance`, `EvaluateConditions`, `TransitionTo`, and `ResetInstance`. The goal is not identical internal code. The goal is equivalent observable behavior: matching callback traces, transition selection, scheduling cadence, invalidation/resumption, mutation boundaries, destruction, and diagnostic outcomes for equivalent inputs. Tests must compare results and traces rather than merely asserting that both paths execute without throwing.
 
 ## 6. Error handling is lifecycle policy
 
