@@ -3,7 +3,17 @@ name: Publish FSM_API showcase to GitHub Pages
 on:
   push:
     branches:
-      - fix/integer-definition-reregistration
+      - development
+    paths:
+      - "Documentation/**"
+      - "FSM_API/**"
+      - "index.md"
+      - "docfx.json"
+      - "scripts/validate_doc_links.py"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    branches:
+      - development
     paths:
       - "Documentation/**"
       - "FSM_API/**"
@@ -15,8 +25,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: github-pages
@@ -27,12 +35,29 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out showcase candidate
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # pinned commit SHA
 
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
+
+      - name: Check out pinned GUI.SVG source
+        if: ${{ hashFiles('Documentation/Visuals/FsmApiVisuals.csproj') != '' }}
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TrentBest/TheSingularityWorkshop.GUI
+          ref: b4268c8db4e69908fb0b876f081aa323497d00d3
+          path: TheSingularityWorkshop.GUI
+          persist-credentials: false
+
+      - name: Generate living documentation visuals with GUI.SVG
+        run: |
+          if [[ -f Documentation/Visuals/FsmApiVisuals.csproj ]]; then
+            dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release
+          else
+            echo "GUI.SVG visual generator is not part of this source snapshot; skipping."
+          fi
 
       - name: Validate documentation links
         run: python3 scripts/validate_doc_links.py
@@ -44,17 +69,14 @@ jobs:
         run: docfx build
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # pinned commit SHA
         with:
           path: _site
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-24.04
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development') }}
     needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    permissions:
+      pages: write
+      id-token: write
+    uses: TrentBest/TheSingularityWorkshop.CiAi/.github/workflows/deploy-pages.yml@5083c452b555d7645dd0c8ab01d76008026da436
