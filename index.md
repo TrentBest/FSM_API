@@ -1,4 +1,4 @@
-![The Singularity Workshop](https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png)
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
 
 # FSM_API 2.0 — Behavior, made explicit
 
@@ -142,3 +142,7 @@ The Pages build validates local documentation links and generates the DocFX API 
 The current published package remains **TheSingularityWorkshop.FSM_API 1.0.13**. The 2.0 candidate is not published. Package metadata, complete cross-runtime parity, reproducible string-versus-integer performance evidence, compatibility validation, documentation review, and branch reconciliation remain part of release readiness.
 
 No website content, successful build, or readiness percentage authorizes NuGet publication or merge to `master`.
+
+---
+
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" height="200" /></p>
