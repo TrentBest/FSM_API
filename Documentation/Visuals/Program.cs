@@ -73,7 +73,7 @@ static GuiNode BuildLifecycle()
 static GuiNode BuildRepresentations()
 {
     var scene = GuiBuilder.Create("svg-scene", "fsm-api-representations")
-        .Text("Two representations, one behavioral contract")
+        .Text("Two representations, a shared behavioral target")
         .Property("description", "String-backed and integer-backed runtimes have independent registries and identity spaces. Explicit Transfer converts definitions between them.");
     scene.Child("svg-rect","string",n=>n.Property("x","5").Property("y","12").Property("width","34").Property("height","30").Property("rx","1").Property("fill","#25385a").Property("stroke","#a5a9f5"));
     scene.Child("svg-text","string-title",n=>n.Text("STRING-BACKED").Property("x","9").Property("y","20").Property("fill","#ffffff").Property("font-size","3").Property("font-weight","700"));
