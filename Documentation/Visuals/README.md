@@ -13,7 +13,7 @@ These visuals are generated from semantic GUI trees by **GUI.SVG**, the SVG inte
 
 ## Generation contract
 
-The generator must use `GuiBuilder` from `TheSingularityWorkshop.GUI.Core` and `SvgGuiRenderer` from `TheSingularityWorkshop.GUI.SVG`. It must not hand-author SVG XML or infer behavior from the artwork. Every label and edge must correspond to a documented API or tested runtime rule.
+The generator must use `GuiBuilder` from `TheSingularityWorkshop.GUI.Core` and `SvgGuiRenderer` from `TheSingularityWorkshop.GUI.SVG`. It must not hand-author SVG XML or infer behavior from the artwork. For a local run, clone `TheSingularityWorkshop.GUI` into the `TheSingularityWorkshop.GUI` subdirectory at the FSM_API repository root, then run `dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release`. Every label and edge must correspond to a documented API or tested runtime rule.
 
 The GUI repository's current SVG adapter guide and runnable gallery are the implementation reference:
 
