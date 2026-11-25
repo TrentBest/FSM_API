@@ -17,9 +17,9 @@
 
 ## Candidate validation — 2026-11-25
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `05f0067781469fd422351d1a54b417337a73e080`, based on `development`. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `56a7da6ff985ecbb8b30aa75666683949601dd9f`, based on `development`. The PR remains open and draft.
 
-Latest full candidate workflow after the facade and process-rate parity changes: [run #1093](https://github.com/TrentBest/FSM_API/actions/runs/45564693321).
+Latest full candidate workflow for the current PR #42 head: [run #1094](https://github.com/TrentBest/FSM_API/actions/runs/45567425387).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
@@ -44,14 +44,14 @@ After the previously recorded candidate workflow, the integration branch receive
 - Integer definition construction and `FSMBuilderInt.WithProcessRate` now normalize rates below `-1` to `0` (event-driven) and emit a diagnostic, matching the string-backed creation contract.
 - Added paired facade tests and integer process-rate boundary tests.
 
-These changes are validated by run #1093: **548/548 tests passed**, with **0 warnings and 0 errors**. The run also generated and uploaded package/DLL artifacts; NuGet publication remained skipped.
+These changes are validated by run #1094 on the current PR head: **548/548 tests passed**, with **0 warnings and 0 errors**. The run also generated and uploaded package/DLL artifacts; NuGet publication remained skipped.
 
-A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The dedicated workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) succeeded: all four SVGs were generated, committed to the branch, and uploaded as the `fsm-api-living-visuals` artifact. The SVG source and semantic descriptions have been checked; final visual review in a browser remains an editorial check.
+A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The dedicated workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) succeeded and generated all four SVGs. A subsequent generator correction expanded the viewBox from 16:9 to 5:4 so every authored element fits; the workflow regenerated and committed all four corrected snapshots at `0d63e40925de914bef3e09992e301aa7b1cdf740`. Each SVG now declares a matching `1280×1024` canvas and `100×80` viewBox. Browser-level visual review remains an editorial check.
 
 ## Remaining 2.0 release gates
 
-1. Complete the full source/API review of the 98-commit integration candidate; the passing CI run is not a substitute for reviewing the complete diff.
-2. Complete string/integer behavioral parity across lifecycle, transitions, invalidation, mutation, exceptions, destruction, and error thresholds/policy. A first direct cross-runtime test now verifies repeated callback failures, instance-threshold removal, definition-threshold unregistration, and error-counter cleanup; multi-handle/threshold interactions and diagnostic-event semantics still need review.
+1. Complete the full source/API review of the 122-commit integration candidate; the passing CI run is not a substitute for reviewing the complete diff.
+2. Complete string/integer behavioral parity across lifecycle, transitions, invalidation, mutation, exceptions, destruction, and error thresholds/policy. The string runtime supports moving one live handle to another compatible processing-group definition; the integer runtime currently binds scheduling group to the definition ID and has no equivalent per-handle move operation. This is a confirmed API/runtime capability gap, not a completed parity item. A first direct cross-runtime test now verifies repeated callback failures, instance-threshold removal, definition-threshold unregistration, and error-counter cleanup; multi-handle/threshold interactions and diagnostic-event semantics still need review.
 3. Specify deterministic identity, reverse mapping, persistence, and versioning contracts, including the integer direct-array boundary.
 4. Produce reproducible 2.0 performance evidence. The companion [FSM_API_Benchmark PR #1](https://github.com/TrentBest/FSM_API_Benchmark/pull/1) contains a broad benchmark suite but is still a draft targeting that repository's `development`, and its project currently references the published FSM_API 1.0.13 package. It does not yet provide equivalent string-backed-versus-integer-backed measurements for this candidate. Align the suite with the exact 2.0 source/package and record environment/provenance before making performance claims.
 5. Verify the intended compatibility matrix with clean consumer restores/tests. The library currently builds `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`; the automated test project currently runs on .NET 10 only. Confirm older .NET Framework/.NET Core consumers through the appropriate `netstandard2.0` asset and explicitly decide whether the direct `net47` target is sufficient for the intended legacy reach.
