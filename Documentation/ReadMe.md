@@ -51,6 +51,8 @@ The SVG is deliberately self-contained and declarative. It uses SVG shapes and a
 - [Runtime modification](User%20Guide/06_FSM_Modifier_Deep_Dive.md)
 - [Error handling](User%20Guide/07_Error_Handling.md)
 - [Performance tips](User%20Guide/08_Performance_Tips.md)
+- [String and integer backing in FSM_API 2.0](User%20Guide/12_String_and_Integer_Backing.md)
+- [Benchmarking and performance evidence](../Benchmarking.md)
 - [Integer-backed implementation progress map](Design/FSM_API/Integer_Backing_Progress.md)
 - [Visual coverage map and next visualization candidates](Design/FSM_API/Visual_Coverage.md)
 - [FSM theory: What Are FSMs?](User%20Guide/Theory/01_What_Are_FSMs.md)
