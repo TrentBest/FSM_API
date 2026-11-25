@@ -400,3 +400,64 @@ Compared the branch with the active candidate. Its changes affect `FSM_API/FSM.c
 Compared the branch's two unique files with the active candidate. The candidate's workflow now builds the solution, tests on `net10.0`, and copies the `net10.0` assembly artifact (the old branch still copied a `net8.0` path despite setting up .NET 10). The candidate test project also no longer generates unnecessary XML documentation for the test assembly.
 
 **Disposition:** the useful .NET 10 validation work is superseded by the newer candidate workflow and the stale artifact path is corrected. PR #39 remains open/draft and the branch remains present; defer cleanup until #42 is accepted and the owner approves the consolidated batch.
+
+
+## Live branch audit — 2026-11-25
+
+This snapshot supersedes the 2026-11-21 inventory above. A fresh live GitHub branch search returned **24 branches**: the two enduring branches plus 22 noncanonical branches. Counts below are point-in-time comparisons; recheck before any owner deletion batch.
+
+### Exact live inventory
+
+**Keep:** `master`, `development`.
+
+**Noncanonical inventory (22):**
+
+- `AddingUnitTests`
+- `HireMeFSMDemo`
+- `RefactoringToHashBacking`
+- `Splitting-FSM_API-class-into-multiple-partial-classes`
+- `TargetingStarcraft2DotNet`
+- `TickCountingSystem`
+- `WindowsFormsEditor`
+- `benchmark-contract-docs`
+- `docs/benchmarking`
+- `docs/fsm-api-theory-and-living-svg`
+- `docs/readme-standard`
+- `feature/fsm-api-2.0`
+- `feature/fsm-api-2.0-next`
+- `feature/fsm-api-2.0-registry`
+- `feature/fsm-api-2.0-work`
+- `feature/integer-backed-runtime`
+- `feature/net10-validation-lane`
+- `fix/context-validity-execution-gate`
+- `fix/integer-array-capacity-boundary`
+- `fix/integer-definition-reregistration`
+- `fix/manual-any-state-evaluation`
+- `test/integer-scheduler-parity`
+
+### Active integration and documentation workstreams
+
+- **2.0 integration candidate:** `fix/integer-definition-reregistration` is 124 commits ahead / 0 behind `development`. It remains the implementation candidate. Keep runtime/source ownership with the implementation workstream; this audit does not merge it or change `master`.
+- **Documentation and GUI.SVG candidate:** `docs/fsm-api-theory-and-living-svg` is 138 commits ahead / 0 behind `development`. Compared directly with the 2.0 candidate, it is 25 commits ahead / 11 behind. Its unique compare footprint is documentation, the theory guide, four generated SVG diagrams, the semantic-tree generator, the visual-generation workflow, README, and site landing page. It is not a second runtime implementation and must be reconciled with the newer candidate before either branch is retired.
+- The documentation branch's GUI.SVG generator now pins the GUI repository to commit [`b4268c8db4e69908fb0b876f081aa323497d00d3`](https://github.com/TrentBest/TheSingularityWorkshop.GUI/commit/b4268c8db4e69908fb0b876f081aa323497d00d3), rather than floating on `development`. The site landing page uses the animated Workshop moniker and canonical footer PNG.
+- The existing GUI.SVG generation run [#45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) completed successfully before the new source pin. The updated pinned workflow has not yet produced a confirmed run; do not treat the earlier run as validation of the changed workflow.
+- The 2.0 candidate's Pages workflow now uploads the Pages artifact and calls CiAi's pinned reusable deploy workflow at [`5083c452b555d7645dd0c8ab01d76008026da436`](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/commit/5083c452b555d7645dd0c8ab01d76008026da436). The reusable workflow was source-checked and is a `workflow_call` deployment boundary. The new Pages workflow revision has not yet been confirmed by a completed Pages run.
+
+### Historical branches against the current candidate
+
+- `feature/fsm-api-2.0-work`, `feature/fsm-api-2.0-next`, and `feature/fsm-api-2.0-registry` retain the same 24-commit historical implementation/test footprint. The earlier pairwise audit found their only branch-specific difference from `feature/fsm-api-2.0` was a workflow-only commit; the current candidate has newer runtime behavior and a stricter publication gate. Do not merge these snapshots wholesale.
+- `feature/fsm-api-2.0` remains a historical implementation source, not a deletion-by-name candidate. Its useful integer runtime/test work was selectively integrated; the prior ledger documents the intentional exclusions and superseded contracts.
+- `fix/context-validity-execution-gate`, `fix/integer-array-capacity-boundary`, `fix/manual-any-state-evaluation`, and `test/integer-scheduler-parity` still have branch-only commits relative to the candidate. The earlier PR/candidate audit records their relevant regression intent as ported into the candidate; preserve their PR/history records until the current integration is accepted and the test evidence is refreshed.
+- `feature/net10-validation-lane` is superseded by the candidate's current .NET 10 build/test/artifact workflow.
+- `AddingUnitTests` has useful state-setter and formatting test intent recorded as ported; its old project metadata and API surface are not a merge target.
+- `benchmark-contract-docs`, `docs/benchmarking`, and `docs/readme-standard` contain documentation already recorded as preserved/adapted on the integration line. Verify exact current blobs and links during final reconciliation; do not merge their old workflow changes wholesale.
+- `RefactoringToHashBacking` is a historical source experiment, not a wholesale merge target. The current string and integer representations have since been separated.
+- `feature/integer-backed-runtime` contains the withdrawn dictionary-backed registry scaffold and a nonbehavioral version-marker test; retain its history as evidence, not as an implementation to merge.
+- `HireMeFSMDemo` and `WindowsFormsEditor` have previously been identified as no-longer-needed side projects. Preserve the final owner decision and PR/reference audit before retirement.
+- `Splitting-FSM_API-class-into-multiple-partial-classes`, `TargetingStarcraft2DotNet`, and `TickCountingSystem` currently compare as zero commits ahead of `development`. These are preliminary low-risk candidates, not yet marked ready: verify open PRs, tags, external references, and exact current heads before the batch deletion recommendation.
+
+### Current disposition
+
+**NOT READY FOR MANUAL BRANCH DELETION.** The live inventory is 24, not two. The 2.0 implementation candidate and documentation/GUI.SVG candidate still need their integration/review boundary resolved, and the updated Pages/visual workflows need current execution evidence. No branch has been merged or deleted by this audit. No change was made to `master`, and no NuGet package was published.
+
+The final owner recommendation must be one consolidated batch containing exact branch names, exact heads, preserved artifacts/tests, PR disposition, and the evidence that makes each deletion safe. Until then, keep all 22 noncanonical refs intact.
