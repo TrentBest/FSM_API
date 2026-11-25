@@ -2,7 +2,7 @@
 
 These visuals are generated from semantic GUI trees by **GUI.SVG**, the SVG interoperability adapter in [TheSingularityWorkshop.GUI](https://github.com/TrentBest/TheSingularityWorkshop.GUI). FSM_API owns the behavior model; GUI Core owns the semantic scene description; GUI.SVG manifests that description as SVG. The SVG is a documentation artifact, not a second runtime or an authoritative execution clock.
 
-## Planned visual set
+## Generated visual set
 
 | Artifact | What it teaches | Source of truth |
 | --- | --- | --- |
@@ -33,11 +33,13 @@ These visuals are generated from semantic GUI trees by **GUI.SVG**, the SVG inte
 
 The generator must use `GuiBuilder` from `TheSingularityWorkshop.GUI.Core` and `SvgGuiRenderer` from `TheSingularityWorkshop.GUI.SVG`. It must not hand-author SVG XML or infer behavior from the artwork. For a local run, clone `TheSingularityWorkshop.GUI` into the `TheSingularityWorkshop.GUI` subdirectory at the FSM_API repository root, then run `dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release`. Every label and edge must correspond to a documented API or tested runtime rule.
 
-The GUI repository's current SVG adapter guide and runnable gallery are the implementation reference:
+The generator workflow pins GUI to [commit b4268c8db4e69908fb0b876f081aa323497d00d3](https://github.com/TrentBest/TheSingularityWorkshop.GUI/commit/b4268c8db4e69908fb0b876f081aa323497d00d3) so a documentation build is reproducible. Updating that pin is an intentional dependency change: review the adapter contract, regenerate the diagrams, and inspect the output before changing it.
 
-- [GUI.SVG adapter contract](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md)
-- [Semantic-tree-to-SVG use case](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/USE_CASES/01-SEMANTIC-TREE-TO-SVG.md)
-- [Runnable SVG gallery generator](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/samples/SvgGallery/Program.cs)
+The pinned GUI source's SVG adapter guide and runnable gallery are the implementation reference:
+
+- [GUI.SVG adapter contract](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/b4268c8db4e69908fb0b876f081aa323497d00d3/docs/SVG_ADAPTER.md)
+- [Semantic-tree-to-SVG use case](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/b4268c8db4e69908fb0b876f081aa323497d00d3/docs/USE_CASES/01-SEMANTIC-TREE-TO-SVG.md)
+- [Runnable SVG gallery generator](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/b4268c8db4e69908fb0b876f081aa323497d00d3/samples/SvgGallery/Program.cs)
 
 The generated assets should be reviewed as images as well as XML. XML validity alone cannot detect clipped labels, overlapping arrows, unreadable contrast, or misleading spatial relationships.
 
