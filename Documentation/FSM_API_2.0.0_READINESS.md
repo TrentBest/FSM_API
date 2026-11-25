@@ -17,9 +17,9 @@
 
 ## Candidate validation — 2026-11-25
 
-The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `0b73a91e3f1ddab03b5284a703b2116f37c3302a`, based on `development`. The PR remains open and draft.
+The current integration candidate is PR [#42](https://github.com/TrentBest/FSM_API/pull/42), head `73f6236f2f6c119ab88fb33e9d92cc1e81092903`, based on `development`. The PR remains open and draft.
 
-Latest PR #42 validation for the integer-move candidate: [run #1105](https://github.com/TrentBest/FSM_API/actions/runs/45570660734).
+Latest PR #42 validation for the integer-move candidate: [run #1106](https://github.com/TrentBest/FSM_API/actions/runs/45571015161).
 
 - Dependency restore: passed.
 - Solution build: passed across the six library target frameworks: `net10.0`, `net6.0`, `netcoreapp3.1`, `netstandard2.1`, `netstandard2.0`, and `net47`.
@@ -32,7 +32,7 @@ Latest PR #42 validation for the integer-move candidate: [run #1105](https://git
 - `publish_nuget`: skipped; no publication was performed.
 - `sith_branch_policy`: skipped because this was a pull-request run, not an authorized publication dispatch.
 
-The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameters. Run #1105 confirms zero build warnings and errors. Coverage upload succeeded; no coverage percentage is claimed here.
+The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameters. Run #1106 confirms zero build warnings and errors. Coverage upload succeeded; no coverage percentage is claimed here.
 
 The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
 
@@ -45,7 +45,7 @@ After the previously recorded candidate workflow, the integration branch receive
 - Added paired facade tests and integer process-rate boundary tests.
 - Added integer-backed per-handle movement to a compatible target FSM ID, with callback-requested moves committed after the complete tick; the concise facade exposes the same operation.
 
-These changes are validated by [run #1105](https://github.com/TrentBest/FSM_API/actions/runs/45570660734) on PR head `0b73a91e3f1ddab03b5284a703b2116f37c3302a`: **558/558 tests passed**, with **0 warnings and 0 errors**. All six library target frameworks built; package/DLL artifacts were generated and uploaded; documentation link validation and DocFX generation passed; NuGet publication remained skipped.
+These changes are validated by [run #1106](https://github.com/TrentBest/FSM_API/actions/runs/45571015161) on PR head `73f6236f2f6c119ab88fb33e9d92cc1e81092903`: **558/558 tests passed**, with **0 warnings and 0 errors**. All six library target frameworks built; package/DLL artifacts were generated and uploaded; documentation link validation and DocFX generation passed; NuGet publication remained skipped.
 
 A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The dedicated workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) succeeded and generated all four SVGs. A subsequent generator correction expanded the viewBox from 16:9 to 5:4 so every authored element fits; the workflow regenerated and committed all four corrected snapshots at `0d63e40925de914bef3e09992e301aa7b1cdf740`. Each SVG now declares a matching `1280×1024` canvas and `100×80` viewBox. Browser-level visual review remains an editorial check.
 
