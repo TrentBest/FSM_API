@@ -109,6 +109,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
   }
   function showNext() {
     window.clearTimeout(timer);
+    destination.setAttribute('aria-hidden', 'true');
+    departing.setAttribute('aria-hidden', 'false');
     if (reduced.matches) {
       arrive('Reduced motion is enabled: the next experience appeared without the fold.');
       return;
