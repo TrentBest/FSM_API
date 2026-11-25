@@ -404,7 +404,7 @@ Compared the branch's two unique files with the active candidate. The candidate'
 
 ## Live branch audit — 2026-11-25
 
-This snapshot supersedes the 2026-11-21 inventory above. A fresh live GitHub branch search returned **24 branches**: the two enduring branches plus 22 noncanonical branches. Counts below are point-in-time comparisons; recheck before any owner deletion batch.
+This snapshot supersedes the 2026-11-21 inventory above. A fresh live GitHub branch search returned **24 branches**: the two enduring branches plus 22 noncanonical branches. Counts below are point-in-time comparisons. The candidate/docs comparison was made against the exact heads recorded below; the ledger-sync commits that follow this snapshot advance those branch heads, so recheck before any owner deletion batch.
 
 ### Exact live inventory
 
@@ -437,8 +437,10 @@ This snapshot supersedes the 2026-11-21 inventory above. A fresh live GitHub bra
 
 ### Active integration and documentation workstreams
 
-- **2.0 integration candidate:** `fix/integer-definition-reregistration` is 124 commits ahead / 0 behind `development`. It remains the implementation candidate. Keep runtime/source ownership with the implementation workstream; this audit does not merge it or change `master`.
-- **Documentation and GUI.SVG candidate:** `docs/fsm-api-theory-and-living-svg` is 138 commits ahead / 0 behind `development`. Compared directly with the 2.0 candidate, it is 25 commits ahead / 11 behind. Its unique compare footprint is documentation, the theory guide, four generated SVG diagrams, the semantic-tree generator, the visual-generation workflow, README, and site landing page. It is not a second runtime implementation and must be reconciled with the newer candidate before either branch is retired.
+**Comparison snapshot:** candidate `cdbcf9b773f65670548740fd1dc3348ec488de17`; docs `9dd8d3c4a4f158f90ee14d6ed80d978d43bdcb22`.
+
+- **2.0 integration candidate:** `fix/integer-definition-reregistration` was 132 commits ahead / 0 behind `development` at audited candidate head `cdbcf9b773f65670548740fd1dc3348ec488de17`. It remains the implementation candidate. Keep runtime/source ownership with the implementation workstream; this audit does not merge it or change `master`.
+- **Documentation and GUI.SVG candidate:** `docs/fsm-api-theory-and-living-svg` was 145 commits ahead / 0 behind `development` at audited docs head `9dd8d3c4a4f158f90ee14d6ed80d978d43bdcb22`. Compared directly with the 2.0 candidate, it was 32 commits ahead / 19 behind. Its unique compare footprint is documentation, the theory guide, four generated SVG diagrams, the semantic-tree generator, the visual-generation workflow, README, and site landing page. It is not a second runtime implementation and must be reconciled with the newer candidate before either branch is retired.
 - The documentation branch's GUI.SVG generator now pins the GUI repository to commit [`b4268c8db4e69908fb0b876f081aa323497d00d3`](https://github.com/TrentBest/TheSingularityWorkshop.GUI/commit/b4268c8db4e69908fb0b876f081aa323497d00d3), rather than floating on `development`. The site landing page uses the animated Workshop moniker and canonical footer PNG.
 - The existing GUI.SVG generation run [#45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) completed successfully before the new source pin. The updated pinned workflow has not yet produced a confirmed run; do not treat the earlier run as validation of the changed workflow.
 - The 2.0 candidate's Pages workflow now uploads the Pages artifact and calls CiAi's pinned reusable deploy workflow at [`5083c452b555d7645dd0c8ab01d76008026da436`](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/commit/5083c452b555d7645dd0c8ab01d76008026da436). The reusable workflow was source-checked and is a `workflow_call` deployment boundary. The new Pages workflow revision has not yet been confirmed by a completed Pages run.
