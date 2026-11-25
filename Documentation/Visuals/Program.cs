@@ -4,10 +4,10 @@ using TheSingularityWorkshop.Workshop.Gui.Svg;
 var outputDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Documentation/Visuals"));
 Directory.CreateDirectory(outputDirectory);
 
-Write("fsm-api-ownership.svg", BuildOwnership(), 1280, 720);
-Write("fsm-api-lifecycle.svg", BuildLifecycle(), 1280, 720);
-Write("fsm-api-representations.svg", BuildRepresentations(), 1280, 720);
-Write("fsm-api-tick-boundary.svg", BuildTickBoundary(), 1280, 720);
+Write("fsm-api-ownership.svg", BuildOwnership(), 1280, 1024);
+Write("fsm-api-lifecycle.svg", BuildLifecycle(), 1280, 1024);
+Write("fsm-api-representations.svg", BuildRepresentations(), 1280, 1024);
+Write("fsm-api-tick-boundary.svg", BuildTickBoundary(), 1280, 1024);
 
 void Write(string name, GuiNode scene, int width, int height)
 {
