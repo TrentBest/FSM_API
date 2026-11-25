@@ -11,6 +11,24 @@ These visuals are generated from semantic GUI trees by **GUI.SVG**, the SVG inte
 | `fsm-api-representations.svg` | Separate string/integer registries and explicit Transfer boundary | Public API contract and facade |
 | `fsm-api-tick-boundary.svg` | Tick snapshot, queued replacement, lifecycle finalization, and boundary commit | Tick-boundary regression tests |
 
+## Generated diagram gallery
+
+### Ownership and responsibility
+
+![FSM_API ownership: host, definition, handle, and caller-owned context](fsm-api-ownership.svg)
+
+### Lifecycle and transition timing
+
+![FSM_API lifecycle: Enter, Update, guard, Exit, and next-update Enter](fsm-api-lifecycle.svg)
+
+### String and integer representations
+
+![Two independent runtime representations connected only by explicit Transfer](fsm-api-representations.svg)
+
+### Tick consistency boundary
+
+![Tick snapshot, execution, queued replacement, and boundary commit](fsm-api-tick-boundary.svg)
+
 ## Generation contract
 
 The generator must use `GuiBuilder` from `TheSingularityWorkshop.GUI.Core` and `SvgGuiRenderer` from `TheSingularityWorkshop.GUI.SVG`. It must not hand-author SVG XML or infer behavior from the artwork. For a local run, clone `TheSingularityWorkshop.GUI` into the `TheSingularityWorkshop.GUI` subdirectory at the FSM_API repository root, then run `dotnet run --project Documentation/Visuals/FsmApiVisuals.csproj --configuration Release`. Every label and edge must correspond to a documented API or tested runtime rule.
