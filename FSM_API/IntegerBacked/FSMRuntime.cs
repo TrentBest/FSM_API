@@ -23,6 +23,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         private readonly List<FSMHandleInt> _pendingRemovalHandles = new List<FSMHandleInt>();
         private readonly List<int> _pendingUnregisterIDs = new List<int>();
         private readonly List<PendingRegistration> _pendingRegistrations = new List<PendingRegistration>();
+        private readonly List<PendingMove> _pendingMoves = new List<PendingMove>();
         private bool _isUpdating;
         private bool _isExecutingHandleUpdate;
         private bool _isFinalizingTick;
@@ -90,6 +91,37 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _handles.Add(handle);
 
             return handle;
+        }
+
+        /// <summary>
+        /// Moves a live handle to another registered integer-backed FSM definition.
+        /// The target must contain the handle's current state. Moves requested during
+        /// an update are committed after the complete tick.
+        /// </summary>
+        public void MoveInstance(FSMHandleInt handle, int targetFSMID)
+        {
+            if (handle == null)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
+            if (targetFSMID < 0 || targetFSMID > FSM.MaximumSupportedArrayIndex)
+            {
+                throw new ArgumentOutOfRangeException(nameof(targetFSMID), "FSM IDs must be within the supported non-negative array-index range.");
+            }
+
+            if (handle.FSM_ID == targetFSMID)
+            {
+                return;
+            }
+
+            if (_isUpdating)
+            {
+                QueueMove(handle, targetFSMID);
+                return;
+            }
+
+            ExecuteHandleUpdate(() => MoveInstanceCore(handle, targetFSMID));
         }
 
         /// <summary>Removes a live integer handle from this runtime.</summary>
@@ -278,6 +310,18 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             _definitionErrorCounts.Remove(fsmID);
         }
 
+        private struct PendingMove
+        {
+            public readonly FSMHandleInt Handle;
+            public readonly int TargetFSMID;
+
+            public PendingMove(FSMHandleInt handle, int targetFSMID)
+            {
+                Handle = handle;
+                TargetFSMID = targetFSMID;
+            }
+        }
+
         private struct PendingRegistration
         {
             public readonly FSM Definition;
@@ -352,6 +396,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 // handle updates are rejected during this phase to avoid an extra pass.
                 ProcessPendingLifecycleChanges();
                 ApplyPendingRegistrations();
+                ApplyPendingMoves();
             }
             finally
             {
@@ -374,6 +419,63 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             _pendingRegistrations.Add(new PendingRegistration(definition, processingGroupID));
+        }
+
+        private void QueueMove(FSMHandleInt handle, int targetFSMID)
+        {
+            for (var i = 0; i < _pendingMoves.Count; i++)
+            {
+                if (ReferenceEquals(_pendingMoves[i].Handle, handle))
+                {
+                    _pendingMoves[i] = new PendingMove(handle, targetFSMID);
+                    return;
+                }
+            }
+
+            _pendingMoves.Add(new PendingMove(handle, targetFSMID));
+        }
+
+        private void ApplyPendingMoves()
+        {
+            if (_pendingMoves.Count == 0)
+            {
+                return;
+            }
+
+            var moves = _pendingMoves.ToArray();
+            _pendingMoves.Clear();
+            for (var i = 0; i < moves.Length; i++)
+            {
+                var move = moves[i];
+                if (move.Handle.IsRegistered && !move.Handle.IsDestroyed && !move.Handle.IsPendingDestruction)
+                {
+                    MoveInstanceCore(move.Handle, move.TargetFSMID);
+                }
+            }
+        }
+
+        private void MoveInstanceCore(FSMHandleInt handle, int targetFSMID)
+        {
+            if (!_handles.Contains(handle) || !handle.IsRegistered || handle.IsDestroyed)
+            {
+                throw new KeyNotFoundException("The integer FSM handle is not registered with this runtime.");
+            }
+
+            if (!TryGetDefinition(targetFSMID, out var targetDefinition))
+            {
+                throw new KeyNotFoundException($"Target integer FSM definition '{targetFSMID}' is not registered.");
+            }
+
+            if (!targetDefinition.HasState(handle.CurrentStateID))
+            {
+                throw new InvalidOperationException(
+                    $"Target integer FSM definition '{targetFSMID}' does not contain current state '{handle.CurrentStateID}'.");
+            }
+
+            // Keep the current state and lifecycle-entry flag. The destination definition
+            // must represent that state, just as the string runtime's compatible move does.
+            handle.Definition = targetDefinition;
+            handle.IsWaitingForValidDefinition = false;
         }
 
         private bool RemovePendingRegistration(int fsmID)
