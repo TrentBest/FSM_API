@@ -35,7 +35,7 @@ h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:1.02;letter-spacing:-.055em;ma
 .panel-content{position:relative;z-index:1;max-width:580px}
 .panel h2{font-size:clamp(1.6rem,4vw,3rem);line-height:1.05;margin:0 0 8px;letter-spacing:-.04em}
 .panel p{margin:0;color:var(--muted)}
-.seam{position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;background:#fff8;box-shadow:0 0 18px #bdb4ff}
+.seam{position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;background:#fff8;box-shadow:0 0 18px #bdb4ff;transition:opacity .25s ease}\n.stage.is-folding .seam,.stage.is-arrived .seam{opacity:0}
 .stage.is-folding .panel-top{animation:fold-top 1.15s cubic-bezier(.7,0,.2,1) forwards}
 .stage.is-folding .panel-bottom{animation:fold-bottom 1.15s cubic-bezier(.7,0,.2,1) forwards}
 .stage.is-arrived .departing{display:none}
@@ -69,7 +69,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
       <div class="destination" aria-hidden="true">
         <div class="destination-inner"><div class="eyebrow">The next experience</div><h2>Already waiting behind the page.</h2><p>The destination exists before the transition begins. The departing surface reveals it instead of asking the visitor to wait for another document to load.</p></div>
       </div>
-      <div class="departing" id="departing">
+      <div class="departing" id="departing" aria-hidden="false">
         <div class="panel panel-top"><div class="panel-content"><div class="eyebrow">Current page · upper half</div><h2>Keep the familiar.</h2><p>Readable content, clear hierarchy, and navigation that behaves the way people expect.</p></div></div>
         <div class="panel panel-bottom"><div class="panel-content"><div class="eyebrow">Current page · lower half</div><h2>Make the change memorable.</h2><p>A surface with depth, motion, light, and a destination on the other side.</p></div></div>
       </div>
@@ -94,28 +94,39 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
   const fold = document.getElementById('fold');
   const reset = document.getElementById('reset');
   const status = document.getElementById('status');
+  const destination = document.getElementById('destination');
+  const destinationContent = document.getElementById('destination-content');
+  const departing = document.getElementById('departing');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let timer;
+  function arrive(message) {
+    stage.classList.remove('is-folding');
+    stage.classList.add('is-arrived');
+    destination.setAttribute('aria-hidden', 'false');
+    departing.setAttribute('aria-hidden', 'true');
+    status.textContent = message;
+    destinationContent.focus();
+  }
   function showNext() {
     window.clearTimeout(timer);
     if (reduced.matches) {
-      stage.classList.add('is-arrived');
-      status.textContent = 'Reduced motion is enabled: the next experience appeared without the fold.';
+      arrive('Reduced motion is enabled: the next experience appeared without the fold.');
       return;
     }
     stage.classList.remove('is-arrived');
     stage.classList.add('is-folding');
     status.textContent = 'The two halves are opening to reveal the next experience.';
     timer = window.setTimeout(() => {
-      stage.classList.remove('is-folding');
-      stage.classList.add('is-arrived');
-      status.textContent = 'The next experience is now in view.';
+      arrive('The next experience is now in view.');
     }, 1180);
   }
   function resetPage() {
     window.clearTimeout(timer);
     stage.classList.remove('is-folding', 'is-arrived');
+    destination.setAttribute('aria-hidden', 'true');
+    departing.setAttribute('aria-hidden', 'false');
     status.textContent = 'The next experience is loaded behind the current surface.';
+    fold.focus();
   }
   fold.addEventListener('click', showNext);
   reset.addEventListener('click', resetPage);
