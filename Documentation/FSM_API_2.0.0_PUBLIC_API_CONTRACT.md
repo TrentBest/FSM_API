@@ -53,7 +53,7 @@ Owns the runtime interaction boundary:
 - Explicit transition requests.
 - Instance movement between compatible processing groups.
 - Reset, pause/resume where supported, and explicit instance/definition destruction.
-- Lifecycle and deferred-mutation behavior.
+- Lifecycle and deferred-mutation behavior. Both string-backed and integer-backed runtimes commit callback-requested definition replacement at the end-of-tick boundary and reject nested scheduler/handle updates. See [the shared runtime tick and mutation contract](FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md).
 - Integer-backed update, unregister, and definition-presence operations where exposed by the integer runtime.
 
 The same observable behavior must be available through both string-backed and integer-backed representations. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
@@ -94,6 +94,7 @@ Tests should use equivalent inputs and assert equivalent traces. A test that mer
 
 - Authored names remain available for readable construction, diagnostics, and tooling.
 - Integer identifiers used for execution must be deterministic within their declared identity scope.
+- The integer-backed direct-indexed storage contract supports IDs from `0` through `FSM.MaximumSupportedArrayIndex` (`1,048,575`), inclusive. Both FSM definition IDs and state IDs outside this range are rejected before capacity growth; sparse IDs within the range remain supported. This is an explicit storage/resource boundary, not a promise that allocating every possible slot is appropriate for every host.
 - `GetHashCode()` is not a persistent identity or cross-process identifier.
 - The contract must distinguish runtime-local IDs from IDs intended for serialization, storage, or wire protocols.
 - Forward and reverse mappings must be explicit, immutable to consumers, and versioned wherever persisted data depends on them.

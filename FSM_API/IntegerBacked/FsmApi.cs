@@ -69,6 +69,12 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 return Runtime.RemoveInstance(handle);
             }
 
+            /// <summary>Moves a live handle to a compatible registered integer-backed definition.</summary>
+            public static void MoveInstance(FSMHandleInt handle, int targetFSMID)
+            {
+                Runtime.MoveInstance(handle, targetFSMID);
+            }
+
             /// <summary>Unregisters an integer-backed definition and its live instances.</summary>
             public static bool Unregister(int fsmID)
             {

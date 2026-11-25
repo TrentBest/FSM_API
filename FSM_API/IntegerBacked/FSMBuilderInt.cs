@@ -24,9 +24,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Creates an integer-backed FSM builder.</summary>
         public FSMBuilderInt(int fsmID, int processRate = 0, int processingGroupID = 0)
         {
-            if (fsmID < 0)
+            if (fsmID < 0 || fsmID > FSM.MaximumSupportedArrayIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(fsmID), "FSM IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(fsmID), "FSM IDs must be within the supported non-negative array-index range.");
             }
 
             if (processingGroupID < 0)
@@ -35,7 +35,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             _fsmID = fsmID;
-            _processRate = processRate;
+            _processRate = FSM.NormalizeProcessRate(processRate, fsmID);
             _processingGroupID = processingGroupID;
         }
 
@@ -58,7 +58,7 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
         /// <summary>Sets the automatic processing rate.</summary>
         public FSMBuilderInt WithProcessRate(int rate)
         {
-            _processRate = rate;
+            _processRate = FSM.NormalizeProcessRate(rate, _fsmID);
             return this;
         }
 
@@ -188,9 +188,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
 
         private static void ValidateStateID(int stateID, string parameterName)
         {
-            if (stateID < 0 || stateID == FSM.AnyStateIdentifier)
+            if (stateID < 0 || stateID > FSM.MaximumSupportedArrayIndex || stateID == FSM.AnyStateIdentifier)
             {
-                throw new ArgumentOutOfRangeException(parameterName, "State IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(parameterName, "State IDs must be within the supported non-negative array-index range.");
             }
         }
     }

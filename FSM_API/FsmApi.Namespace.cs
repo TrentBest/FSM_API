@@ -102,6 +102,62 @@ namespace FSM_API
                 Integer.FsmApi.Interaction.UpdateAll();
             }
 
+            /// <summary>Manually advances one string-backed live instance within its runtime operation scope.</summary>
+            public static void UpdateInstance(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.Update();
+            }
+
+            /// <summary>Manually advances one integer-backed live instance within its runtime operation scope.</summary>
+            public static void UpdateInstance(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.Update();
+            }
+
+            /// <summary>Manually evaluates string-backed transition conditions without running the state's Update callback.</summary>
+            public static void EvaluateConditions(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.EvaluateConditions();
+            }
+
+            /// <summary>Manually evaluates integer-backed transition conditions without running the state's Update callback.</summary>
+            public static void EvaluateConditions(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.EvaluateConditions();
+            }
+
+            /// <summary>Forces a string-backed handle to a named state.</summary>
+            public static void TransitionTo(Legacy.FSMHandle instance, string nextStateName)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.TransitionTo(nextStateName);
+            }
+
+            /// <summary>Forces an integer-backed handle to a state ID.</summary>
+            public static void TransitionTo(Integer.FSMHandleInt instance, int nextStateID)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.TransitionTo(nextStateID);
+            }
+
+            /// <summary>Resets a string-backed handle to its definition's initial state.</summary>
+            public static void ResetInstance(Legacy.FSMHandle instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.ResetFSMInstance();
+            }
+
+            /// <summary>Resets an integer-backed handle to its definition's initial state.</summary>
+            public static void ResetInstance(Integer.FSMHandleInt instance)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                instance.ResetFSMInstance();
+            }
+
             /// <summary>Removes an integer-backed definition and its instances.</summary>
             public static bool Unregister(int fsmID)
             {
@@ -118,6 +174,13 @@ namespace FSM_API
             public static void MoveInstance(Legacy.FSMHandle instance, string processingGroup)
             {
                 LegacyApi.Interaction.MoveInstance(instance, processingGroup);
+            }
+
+            /// <summary>Moves an integer-backed instance to another compatible registered definition.</summary>
+            public static void MoveInstance(Integer.FSMHandleInt instance, int targetFSMID)
+            {
+                if (instance == null) throw new ArgumentNullException(nameof(instance));
+                Integer.FsmApi.Interaction.MoveInstance(instance, targetFSMID);
             }
 
             /// <summary>Adds a state to an existing string-backed definition.</summary>
@@ -247,18 +310,21 @@ namespace FSM_API
         /// <summary>Diagnostic notifications and error-policy controls for the string-backed runtime.</summary>
         public static class Error
         {
+            /// <summary>Gets or sets the number of instance failures allowed before automatic removal.</summary>
             public static int InstanceErrorThreshold
             {
                 get => LegacyApi.Error.InstanceErrorThreshold;
                 set => LegacyApi.Error.InstanceErrorThreshold = value;
             }
 
+            /// <summary>Gets or sets the number of instance removals allowed before automatic definition unregistration.</summary>
             public static int DefinitionErrorThreshold
             {
                 get => LegacyApi.Error.DefinitionErrorThreshold;
                 set => LegacyApi.Error.DefinitionErrorThreshold = value;
             }
 
+            /// <summary>Receives diagnostic notifications raised by the string-backed runtime.</summary>
             public static event LegacyApi.Error.InternalApiErrorEventHandler OnInternalApiError
             {
                 add => LegacyApi.Error.OnInternalApiError += value;
