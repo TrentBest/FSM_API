@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using TheSingularityWorkshop.FSM_API;
+using UnifiedApi = FSM_API.FsmApi;
 using IntegerFSM = TheSingularityWorkshop.FSM_API.IntegerBacked.FSM;
 using IntegerFSMHandle = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMHandleInt;
 using IntegerFSMState = TheSingularityWorkshop.FSM_API.IntegerBacked.FSMState;
@@ -40,19 +41,19 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             var handle = new StringFSMHandle(definition, context);
 
-            FsmApi.Interact.UpdateInstance(handle);
+            UnifiedApi.Interact.UpdateInstance(handle);
             Assert.That(handle.CurrentState, Is.EqualTo("A"));
             Assert.That(trace, Is.EqualTo(new[] { "A.Enter", "A.Update" }));
 
             context.ShouldTransition = true;
-            FsmApi.Interact.EvaluateConditions(handle);
+            UnifiedApi.Interact.EvaluateConditions(handle);
             Assert.That(handle.CurrentState, Is.EqualTo("B"));
 
-            FsmApi.Interact.TransitionTo(handle, "A");
+            UnifiedApi.Interact.TransitionTo(handle, "A");
             Assert.That(handle.CurrentState, Is.EqualTo("A"));
 
-            FsmApi.Interact.TransitionTo(handle, "B");
-            FsmApi.Interact.ResetInstance(handle);
+            UnifiedApi.Interact.TransitionTo(handle, "B");
+            UnifiedApi.Interact.ResetInstance(handle);
             Assert.That(handle.CurrentState, Is.EqualTo("A"));
         }
 
@@ -76,33 +77,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests
 
             var handle = new IntegerFSMHandle(definition, context);
 
-            FsmApi.Interact.UpdateInstance(handle);
+            UnifiedApi.Interact.UpdateInstance(handle);
             Assert.That(handle.CurrentStateID, Is.EqualTo(0));
             Assert.That(trace, Is.EqualTo(new[] { "A.Enter", "A.Update" }));
 
             context.ShouldTransition = true;
-            FsmApi.Interact.EvaluateConditions(handle);
+            UnifiedApi.Interact.EvaluateConditions(handle);
             Assert.That(handle.CurrentStateID, Is.EqualTo(1));
 
-            FsmApi.Interact.TransitionTo(handle, 0);
+            UnifiedApi.Interact.TransitionTo(handle, 0);
             Assert.That(handle.CurrentStateID, Is.EqualTo(0));
 
-            FsmApi.Interact.TransitionTo(handle, 1);
-            FsmApi.Interact.ResetInstance(handle);
+            UnifiedApi.Interact.TransitionTo(handle, 1);
+            UnifiedApi.Interact.ResetInstance(handle);
             Assert.That(handle.CurrentStateID, Is.EqualTo(0));
         }
 
         [Test]
         public void UnifiedInteractHandleOperations_RejectNullHandlesConsistently()
         {
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.UpdateInstance((StringFSMHandle)null));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.UpdateInstance((IntegerFSMHandle)null));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.EvaluateConditions((StringFSMHandle)null));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.EvaluateConditions((IntegerFSMHandle)null));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.TransitionTo((StringFSMHandle)null, "A"));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.TransitionTo((IntegerFSMHandle)null, 0));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.ResetInstance((StringFSMHandle)null));
-            Assert.Throws<System.ArgumentNullException>(() => FsmApi.Interact.ResetInstance((IntegerFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.UpdateInstance((StringFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.UpdateInstance((IntegerFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.EvaluateConditions((StringFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.EvaluateConditions((IntegerFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.TransitionTo((StringFSMHandle)null, "A"));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.TransitionTo((IntegerFSMHandle)null, 0));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.ResetInstance((StringFSMHandle)null));
+            Assert.Throws<System.ArgumentNullException>(() => UnifiedApi.Interact.ResetInstance((IntegerFSMHandle)null));
         }
     }
 }
