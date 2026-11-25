@@ -48,6 +48,33 @@ namespace TheSingularityWorkshop.FSM_API.Tests.IntegerBacked
             Assert.That(definition.ProcessRate, Is.EqualTo(processRate));
         }
 
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void Builder_RejectsFSMIDsBeyondSupportedArrayBoundary(int fsmID)
+        {
+            Assert.That(() => new IntegerFSMBuilder(fsmID), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(IntegerFSM.MaximumSupportedArrayIndex + 1)]
+        [TestCase(int.MaxValue)]
+        public void Builder_RejectsStateIDsBeyondSupportedArrayBoundary(int stateID)
+        {
+            var builder = new IntegerFSMBuilder(90_005);
+
+            Assert.That(() => builder.State(stateID), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void Register_RejectsNegativeProcessingGroupID()
+        {
+            var runtime = new IntegerFSMRuntime();
+            var definition = CreateFSM(90_006);
+
+            Assert.That(() => runtime.Register(definition, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(definition.ProcessingGroupID, Is.Zero);
+            Assert.That(runtime.Contains(definition.FSM_ID), Is.False);
+        }
+
         [Test]
         public void Contains_ReturnsFalseForUnregisteredDefinition()
         {
