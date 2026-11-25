@@ -1,6 +1,6 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-21  
+**Last reviewed:** 2026-11-25  
 **Candidate branch:** `fix/integer-definition-reregistration`  
 **Candidate PR:** [#42](https://github.com/TrentBest/FSM_API/pull/42) — open, draft, targeting `development`
 
@@ -35,6 +35,18 @@ Latest full candidate workflow: [run #1084](https://github.com/TrentBest/FSM_API
 The earlier run #1069 emitted 327 warnings (predominantly missing XML documentation); that issue was addressed by removing unnecessary XML-doc generation from the test assembly and documenting the remaining public library members/parameter. Runs #1074 and #1077 confirm zero build warnings. Codecov's latest processed patch check on the same code/test snapshot reports **88.64% diff coverage against a 68.10% target** (check passed). Forty-one changed lines remain unhit, so the passing threshold should not be mistaken for complete branch coverage. The upload step continues on error and does not make coverage a hard workflow gate.
 
 The project file still declares package version `1.0.13`. The generated package is a CI artifact only; this candidate has not been assigned final 2.0.0 release metadata and has not been published.
+
+## Follow-up parity changes — 2026-11-25 (validation pending)
+
+After the previously recorded candidate workflow, the integration branch received additional parity work:
+
+- The concise `FSM_API.FsmApi.Interact` facade now exposes matching per-handle operations for both representations: `UpdateInstance`, `EvaluateConditions`, `TransitionTo`, and `ResetInstance`.
+- Integer definition construction and `FSMBuilderInt.WithProcessRate` now normalize rates below `-1` to `0` (event-driven) and emit a diagnostic, matching the string-backed creation contract.
+- Added paired facade tests and integer process-rate boundary tests.
+
+These commits have **not yet been validated by a fresh CI run**. The previously cited run #1084 predates these changes and cannot be used as their test evidence.
+
+A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The generated SVG snapshots and visual review are still pending; do not count the visuals work as complete until the workflow produces the four assets and those images are inspected.
 
 ## Remaining 2.0 release gates
 
