@@ -134,7 +134,13 @@ The open, draft [benchmark-laboratory PR #1](https://github.com/TrentBest/FSM_AP
 - `FSMAPI.Execution.Update.NoTransitions`: string-backed and integer-backed public update calls, parameterized by 1/10/50 definitions × 1/10/50 instances per definition.
 - `FSMAPI.Lookup.Definition.ById.Hit`: successful string-backed and integer-backed definition-presence lookups with 1/10/50 definitions.
 
-The execution fixture uses the same context type, callback, process rate, state count, and number of update calls; it primes both runtimes and verifies callback counts before measurement. These are useful initial comparisons, not complete coverage. The benchmark branch also adds broader 1.x operation benchmarks, an API reflection inventory, and a method-level coverage ledger.
+The execution fixture uses the same context type, callback, process rate, state count, and number of update calls; it primes both runtimes and verifies callback counts before measurement. These are useful initial comparisons, not complete coverage.
+
+One important confound is already identified in the source: string-backed public `Interaction.Update(string)` wraps the tick with `Stopwatch.StartNew()`, stops it, and checks a warning threshold; integer-backed public `Interaction.Update(int)` forwards directly to `Runtime.Update`. The public-update pair therefore measures the cost of the current public entry points, including this instrumentation asymmetry. It cannot isolate the benefit of integer identity by itself. A follow-up comparison must measure equivalent scheduler-core paths separately from the string wrapper.
+
+The lookup pair also compares representation-specific key shapes: string name plus processing-group name versus globally unique integer FSM ID. It is a public identity-presence comparison, not a pure string-equality-versus-integer-equality microbenchmark.
+
+The benchmark branch also adds broader 1.x operation benchmarks, an API reflection inventory, and a method-level coverage ledger.
 
 [Validation run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828) succeeded on benchmark commit `7a09fb760af425f20c914d013787b1bed86a9eeb`: both benchmark projects built, the public API inventory was generated, and the legacy and 2.0 BenchmarkDotNet Dry smoke tests passed. The calibrated benchmark job was **skipped**. This proves build/setup/discovery/invocation only; it provides **no timing result and no measured integer speedup**.
 
