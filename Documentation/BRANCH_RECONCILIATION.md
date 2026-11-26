@@ -544,3 +544,14 @@ Every one of the 19 remaining noncanonical refs currently has at least one commi
 **Deletion recommendation:** no additional branch is cleared for owner deletion by this pass. A branch with even one unique commit is not deletion-ready merely because its functionality may have been ported; preserve the unique commit's intent, tests, PR record, and any external references before recommending retirement.
 
 Current integration candidates remain PR [#42](https://github.com/TrentBest/FSM_API/pull/42) and PR [#43](https://github.com/TrentBest/FSM_API/pull/43). No merge, rebase, retarget, deployment, release, package publication, or branch deletion was performed by this follow-up.
+
+
+## Superseding live status — 2026-11-26 04:36Z
+
+This section supersedes the earlier 04:00Z branch inventory and deletion table above. The three owner-approved cleanup refs listed in that earlier section are already absent; their removal is not a new recommendation. The live inventory remains **21 branches**: `master`, `development`, and 19 noncanonical refs. The latest compare confirms that every remaining noncanonical ref has at least one commit ahead of `development`; none is currently cleared for owner deletion.
+
+- Runtime candidate PR [#42](https://github.com/TrentBest/FSM_API/pull/42): `fix/integer-definition-reregistration` at `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9` (138 ahead / 0 behind `development`).
+- Documentation candidate PR [#43](https://github.com/TrentBest/FSM_API/pull/43): `docs/fsm-api-theory-and-living-svg` at `3607771d1142bcb67c0b48071cc3ae86ebafb352` (102 ahead / 25 behind the runtime candidate; merge base `6aa84d7a6db1f246e963d52d98041667430c8294`). The docs branch also compares as 212 commits ahead of `development` because it is a stacked branch containing the runtime ancestry plus its documentation work.
+- The latest Sith Policy workflow on the documentation head is still evaluating; workflow completion alone does not establish compliance. The current exact-two-branch requirement remains unmet.
+
+No further deletion is recommended. Preserve all remaining noncanonical refs until their unique commits, tests, documentation, PR history, tags, and external references have been reconciled. This update changes documentation only; it does not delete refs, merge or retarget PRs, or publish packages.
