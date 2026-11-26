@@ -16,7 +16,7 @@ FSM_API is core technology. Performance changes must be measured against reprodu
 
 ### Large-simulation stress test
 
-[`FSM_API/InitialBenchmark.md`](../../FSM_API/InitialBenchmark.md) records a historical predator/prey simulation with high agent counts and time-sliced updates. It is useful as a record of the workload and historical observations, but its published table does not provide enough environment, source revision, run identity, or raw result provenance to serve as a strict per-commit regression gate without further verification.
+[`InitialBenchmark.md` (historical simulation record)](https://github.com/TrentBest/FSM_API/blob/df1beb53b473d819e5de8fa643954d28aca51cf8/FSM_API/InitialBenchmark.md) records a historical predator/prey simulation with high agent counts and time-sliced updates. It is useful as a record of the workload and historical observations, but its published table does not provide enough environment, source revision, run identity, or raw result provenance to serve as a strict per-commit regression gate without further verification.
 
 Do not compare these FPS or memory-delta values directly with BenchmarkDotNet nanosecond/op or allocated-bytes/op values. They answer different questions and use different workload boundaries.
 
