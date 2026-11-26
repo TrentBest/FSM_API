@@ -35,7 +35,8 @@ h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:1.02;letter-spacing:-.055em;ma
 .panel-content{position:relative;z-index:1;max-width:580px}
 .panel h2{font-size:clamp(1.6rem,4vw,3rem);line-height:1.05;margin:0 0 8px;letter-spacing:-.04em}
 .panel p{margin:0;color:var(--muted)}
-.seam{position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;background:#fff8;box-shadow:0 0 18px #bdb4ff;transition:opacity .25s ease}\n.stage.is-folding .seam,.stage.is-arrived .seam{opacity:0}
+.seam{position:absolute;z-index:3;left:0;right:0;top:50%;height:1px;background:#fff8;box-shadow:0 0 18px #bdb4ff;transition:opacity .25s ease}
+.stage.is-folding .seam,.stage.is-arrived .seam{opacity:0}
 .stage.is-folding .panel-top{animation:fold-top 1.15s cubic-bezier(.7,0,.2,1) forwards}
 .stage.is-folding .panel-bottom{animation:fold-bottom 1.15s cubic-bezier(.7,0,.2,1) forwards}
 .stage.is-arrived .departing{display:none}
@@ -89,7 +90,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
   <p class="footer">Prototype only. This page demonstrates the visual language, not a site-wide navigation implementation. Production navigation should progressively enhance ordinary links, preserve back/forward behavior, and provide a reduced-motion or instant-transition path.</p>
 </main>
 <script>
-(() => {
+document.addEventListener('DOMContentLoaded', () => {
   const stage = document.getElementById('stage');
   const fold = document.getElementById('fold');
   const reset = document.getElementById('reset');
@@ -133,7 +134,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offse
   fold.addEventListener('click', showNext);
   reset.addEventListener('click', resetPage);
   reduced.addEventListener?.('change', resetPage);
-})();
+});
 </script>
 </body>
 </html>
