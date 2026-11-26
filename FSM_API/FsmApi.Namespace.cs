@@ -247,18 +247,21 @@ namespace FSM_API
         /// <summary>Diagnostic notifications and error-policy controls for the string-backed runtime.</summary>
         public static class Error
         {
+            /// <summary>Gets or sets the shared instance-error threshold used by both runtime representations.</summary>
             public static int InstanceErrorThreshold
             {
                 get => LegacyApi.Error.InstanceErrorThreshold;
                 set => LegacyApi.Error.InstanceErrorThreshold = value;
             }
 
+            /// <summary>Gets or sets the shared definition-error threshold used by both runtime representations.</summary>
             public static int DefinitionErrorThreshold
             {
                 get => LegacyApi.Error.DefinitionErrorThreshold;
                 set => LegacyApi.Error.DefinitionErrorThreshold = value;
             }
 
+            /// <summary>Occurs when either runtime reports an internal diagnostic or callback failure.</summary>
             public static event LegacyApi.Error.InternalApiErrorEventHandler OnInternalApiError
             {
                 add => LegacyApi.Error.OnInternalApiError += value;
