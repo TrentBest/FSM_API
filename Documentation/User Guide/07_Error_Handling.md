@@ -50,6 +50,8 @@ When an internal error occurs within the API, such as an exception in user code 
 
 You can subscribe to this event to get real-time diagnostic notifications about non-FSM-specific internal errors, warnings, or significant API events. This allows you to integrate FSM errors with your application's logging or telemetry systems.
 
+**Subscriber contract:** `OnInternalApiError` is invoked synchronously. The current implementation does not catch or isolate exceptions thrown by event subscribers. A subscriber exception propagates to the caller; when it occurs while a scheduled instance failure is being reported, it can interrupt the reporting path before the instance/definition threshold cleanup is queued. Keep diagnostic subscribers non-throwing and catch failures inside the subscriber (or hand off to a separately guarded logging queue). This is current implementation behavior, not an asynchronous delivery guarantee.
+
 3. Instance Degradation (FUBAR'd Instances)
 
 If an FSMHandle instance reports errors, the API increments a per-handle count in an internal dictionary. The implementation does not reset this count after a successful update; it remains until explicitly reset or the handle's count entry is removed during teardown. Therefore, the threshold is a cumulative count since the last reset—not necessarily a run of consecutive failures. When the threshold is reached, shutdown is enqueued for deferred processing.
