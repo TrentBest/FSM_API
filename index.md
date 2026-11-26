@@ -57,15 +57,15 @@ title: FSM_API — Behavior, made visible
   <p class="fsm-note">This is a browser-side teaching model of the FSM lifecycle, not the .NET library running in your browser. It illustrates the important boundary: input can change the context at any time, but state processing advances only when the host calls the update method. A successful transition exits the old state immediately; entry into the new state is deferred until the next tick.</p>
 
   <nav class="fsm-paths" aria-label="Explore FSM_API">
-    <a class="fsm-path" href="Documentation/User%20Guide/00_Introduction.html"><strong>01 · Understand</strong><span>Explore finite state machines, their purpose, and the ideas behind the library.</span></a>
-    <a class="fsm-path" href="Documentation/User%20Guide/03_Getting_Started_CSharp.html"><strong>02 · Build</strong><span>Create a first state machine in ordinary C# — no game engine required.</span></a>
-    <a class="fsm-path" href="Documentation/User%20Guide/01_Core_Concepts.html"><strong>03 · Explore the engine</strong><span>Definitions, instances, contexts, transitions, and lifecycle.</span></a>
-    <a class="fsm-path" href="Documentation/Performance/BenchmarkingContract.html"><strong>04 · Measure</strong><span>See how performance claims are measured and what evidence is required.</span></a>
-    <a class="fsm-path" href="api/"><strong>05 · API reference</strong><span>Browse the generated API documentation and implementation surface.</span></a>
+    <a class="fsm-path" href="User%20Guide/00_Introduction.html"><strong>01 · Understand</strong><span>Explore finite state machines, their purpose, and the ideas behind the library.</span></a>
+    <a class="fsm-path" href="User%20Guide/03_Getting_Started_CSharp.html"><strong>02 · Build</strong><span>Create a first state machine in ordinary C# — no game engine required.</span></a>
+    <a class="fsm-path" href="User%20Guide/01_Core_Concepts.html"><strong>03 · Explore the engine</strong><span>Definitions, instances, contexts, transitions, and lifecycle.</span></a>
+    <a class="fsm-path" href="Performance/BenchmarkingContract.html"><strong>04 · Measure</strong><span>See how performance claims are measured and what evidence is required.</span></a>
+    <a class="fsm-path" href="TheSingularityWorkshop.FSM_API.html"><strong>05 · API reference</strong><span>Browse the generated API documentation and implementation surface.</span></a>
   </nav>
 </div>
 
-<script defer src="Documentation/Experience/fsm-api-experience.js"></script>
+<script defer src="fsm-api-experience.js"></script>
 
 ## The idea behind the machine
 
@@ -75,9 +75,9 @@ That separation is the point. A door, a document, a network connection, a game a
 
 ## Where to go next
 
-- [Finite state machine theory](Documentation/User%20Guide/Theory/README.html) — the conceptual foundations and trade-offs.
-- [Tick boundaries and registry ownership](Documentation/User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.html) — how host cadence and runtime ownership work.
-- [FSM_API 2.0.0 readiness](Documentation/FSM_API_2.0.0_READINESS.html) — current development scope and release gates.
+- [Finite state machine theory](User%20Guide/Theory/README.html) — the conceptual foundations and trade-offs.
+- [Tick boundaries and registry ownership](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.html) — how host cadence and runtime ownership work.
+- [FSM_API 2.0.0 readiness](FSM_API_2.0.0_READINESS.html) — current development scope and release gates.
 - [Source repository](https://github.com/TrentBest/FSM_API) · [NuGet package](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API).
 
 ---
