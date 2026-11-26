@@ -56,6 +56,16 @@ A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pu
 
 Browser-level visual review remains an editorial check. The successful Pages run proves build and artifact generation, not deployment or semantic correctness of every diagram.
 
+
+## Validation refresh — 2026-11-26
+
+The current documentation candidate is `0a53d420e9705047a2a17c0522a6c09976567c1a`. Both [Living visuals run #23](https://github.com/TrentBest/FSM_API/actions/runs/45748841747) and [Pages build #62](https://github.com/TrentBest/FSM_API/actions/runs/45748841948) completed successfully on this exact SHA. The Pages build generated and uploaded the `github-pages` artifact (25,123,514 bytes); its deployment job was skipped because this was a pull-request validation run. These results supersede the earlier run references above for current-head CI status.
+
+The seven committed SVG snapshots were inspected at source level for their accessible labels, descriptions, and instructional text. They cover ownership, lifecycle, state addition, transitions, string/integer representations, tick consistency, and deferred mutation. This was not a browser-rendered visual/editorial review; layout, animation behavior, and visual legibility in target browsers remain open checks.
+
+The live PR comparison is now **86 commits ahead / 25 behind** `fix/integer-definition-reregistration`, with merge base `6aa84d7a6db1f246e963d52d98041667430c8294` and 26 changed files. The branch remains materially diverged. The comparison footprint is documentation, SVG snapshots, generator/workflow, README, and site landing-page changes; reconcile selectively against the implementation candidate before integration. No deployment or merge has occurred.
+
+
 ## String/integer representation and performance evidence — 2026-11-25
 
 The two representations are intentionally distinct. The string API preserves name-oriented authoring and diagnostics; the integer runtime uses caller-supplied FSM/group IDs and array-indexed FSM/state storage. The explicit compiler bridge transfers definitions and returns state-name mappings; it does not transfer live handles. Its ordinal-sorted state IDs are deterministic for the same exact state set, but can shift when that set changes, so they are not durable persistence IDs without a preserved/versioned mapping.
