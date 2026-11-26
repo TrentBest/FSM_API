@@ -47,7 +47,14 @@ After the previously recorded candidate workflow, the integration branch receive
 
 The integer-move implementation was validated by [run #1106](https://github.com/TrentBest/FSM_API/actions/runs/45571015161) on head `73f6236f2f6c119ab88fb33e9d92cc1e81092903`: **558/558 tests passed**, with **0 warnings and 0 errors**. The latest follow-up head `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9` was revalidated by [run #1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836): **558/558 tests passed**, **0 warnings**, **0 errors**, all six library target frameworks built, and documentation links/DocFX generation passed. NuGet publication remained skipped.
 
-A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The latest documentation/showcase build [run #41](https://github.com/TrentBest/FSM_API/actions/runs/45576998780) succeeded: GUI.SVG regeneration, local-link validation, DocFX generation, and artifact upload passed; deployment was skipped on the review branch. A subsequent generator correction expanded the viewBox from 16:9 to 5:4 so every authored element fits; the workflow regenerated and committed all four corrected snapshots at `0d63e40925de914bef3e09992e301aa7b1cdf740`. Each SVG now declares a matching `1280×1024` canvas and `100×80` viewBox. Browser-level visual review remains an editorial check.
+A separate documentation draft, [PR #43](https://github.com/TrentBest/FSM_API/pull/43), adds the theory guide and GUI.SVG-based diagram generator/workflow. The current PR head is `8465b4c82729193f3acedff9397c7b828880df76`.
+
+- Living visuals workflow [run #21](https://github.com/TrentBest/FSM_API/actions/runs/45728782885) succeeded on that exact head. It checked out the pinned GUI.SVG source, generated and committed the SVG snapshots, and uploaded the visuals artifact.
+- Pages build [run #60](https://github.com/TrentBest/FSM_API/actions/runs/45728783381) succeeded on the same head. GUI.SVG generation, documentation-link validation, DocFX generation, and Pages artifact upload passed. The deploy job was skipped for pull-request review; no Pages deployment occurred.
+- GUI.SVG is pinned to source commit [`b4268c8db4e69908fb0b876f081aa323497d00d3`](https://github.com/TrentBest/TheSingularityWorkshop.GUI/commit/b4268c8db4e69908fb0b876f081aa323497d00d3). The seven generated SVG snapshots are committed on the PR head.
+- The documentation branch currently compares 84 commits ahead / 25 behind `fix/integer-definition-reregistration` (merge base `6aa84d7a6db1f246e963d52d98041667430c8294`). Its changed-file footprint is documentation, generated visuals, generator/workflows, README, and site landing page. This is a materially divergent stacked branch and must be reconciled selectively against the current implementation candidate before integration.
+
+Browser-level visual review remains an editorial check. The successful Pages run proves build and artifact generation, not deployment or semantic correctness of every diagram.
 
 ## String/integer representation and performance evidence — 2026-11-25
 
