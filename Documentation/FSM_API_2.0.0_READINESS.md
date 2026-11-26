@@ -143,3 +143,20 @@ The counter-store audit found an additional observable difference that must rema
 - The existing parity test exercises one failing handle per definition and a definition threshold of one. It does not prove behavior for multiple failing handles, same-name definitions in different groups, cross-runtime string counter interference, or mutation through the string getters.
 
 This is a source/documentation finding, not a runtime fix. Error-policy parity remains incomplete until the intended public contract is decided and focused tests cover these cases.
+
+
+## Current evidence refresh — 2026-11-26 04:41Z
+
+This refresh supersedes earlier point-in-time heads, branch counts, and compare values in this report.
+
+- PR #42 remains open and draft at `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, **138 ahead / 0 behind** `development`. Its previously recorded exact-head build/test result remains the latest validation evidence; this refresh did not rerun it.
+- PR #43 remains open and draft at `71088447aeb418e0de405d1862225dc5391e2718`. It is **103 ahead / 25 behind** PR #42's runtime branch (merge base `6aa84d7a6db1f246e963d52d98041667430c8294`) and **216 ahead / 0 behind** `development`. The branch has 27 changed files and must be reconciled selectively, not merged wholesale.
+- Live inventory: **21 branches** (`master`, `development`, and 19 noncanonical). All 19 noncanonical refs retain unique commits ahead of `development`; none is cleared for owner deletion.
+- Sith Policy [run #45756358275](https://github.com/TrentBest/FSM_API/actions/runs/45756358275) completed on the exact PR #43 head. Its workflow conclusion is success, but the evaluated policy is **NON-COMPLIANT** at 21 branches. This branch-scoped evaluation does not refresh the default-branch badge.
+- The last successful Pages and living-visuals validations cited above predate this head. Fresh current-head generation/Pages validation and browser-rendered visual review remain outstanding. The Pages artifact is not a deployment.
+
+### Error-policy parity remains an open implementation/test gate
+
+The source audit confirms that string-backed definition error counts are incremented from the deferred instance-threshold action, while integer-backed definition counts are incremented synchronously in `RecordInstanceError` and teardown is applied at the integer tick boundary. The existing cross-representation test uses one failing handle per definition and a definition threshold of one; it does not prove multi-handle ordering, same-name definitions in different string processing groups, cross-runtime interference from static string counters, or behavior when a diagnostic subscriber throws at each notification stage. Keep error-policy parity explicitly incomplete until the intended contract is selected and focused tests cover these cases.
+
+No merge, rebase, retarget, deletion, deployment, package publication, or release was performed by this refresh.
