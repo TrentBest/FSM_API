@@ -167,6 +167,6 @@ public static class VisualSequences
             .Property("font-size", "2.5").Property("font-weight", "700"));
         scene.Child("svg-text", "finalization", n => n.Text("Finalization processes pending lifecycle work before queued registrations.")
             .Property("x", "9").Property("y", "52").Property("fill", "#9fb5c7").Property("font-size", "2.0"));
-        return scene.Build();
+        return scene;
     }
 }
