@@ -555,3 +555,14 @@ This section supersedes the earlier 04:00Z branch inventory and deletion table a
 - The latest Sith Policy workflow on the documentation head is still evaluating; workflow completion alone does not establish compliance. The current exact-two-branch requirement remains unmet.
 
 No further deletion is recommended. Preserve all remaining noncanonical refs until their unique commits, tests, documentation, PR history, tags, and external references have been reconciled. This update changes documentation only; it does not delete refs, merge or retarget PRs, or publish packages.
+
+
+## Superseding live status — 2026-11-26 04:41Z
+
+This is the current point-in-time inventory and supersedes earlier comparison counts in this file. GitHub currently reports **21 branches**: `master`, `development`, and 19 noncanonical refs. The three owner-approved cleanup refs listed above are absent. Every remaining noncanonical ref still has unique commits ahead of `development`; no additional branch is cleared for deletion.
+
+- Runtime candidate PR [#42](https://github.com/TrentBest/FSM_API/pull/42): head `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, **138 ahead / 0 behind** `development`.
+- Documentation candidate PR [#43](https://github.com/TrentBest/FSM_API/pull/43): head `71088447aeb418e0de405d1862225dc5391e2718`, **103 ahead / 25 behind** the runtime candidate (merge base `6aa84d7a6db1f246e963d52d98041667430c8294`), and **216 ahead / 0 behind** `development`. Its 27-file diff is materially divergent; selective reconciliation remains required.
+- Sith Policy [run #45756358275](https://github.com/TrentBest/FSM_API/actions/runs/45756358275) completed successfully on the exact PR #43 head. The workflow evaluation itself succeeded; the policy result remains **NON-COMPLIANT** because 21 is not the required two-branch inventory. A successful evaluation is not policy compliance.
+
+The compare is not a deletion authorization. All 19 noncanonical refs remain preserved until their unique commits, tests, PR records, tags, and external references are reconciled. No merge, rebase, retarget, deletion, deployment, package publication, or release was performed.
