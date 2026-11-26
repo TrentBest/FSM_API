@@ -12,8 +12,8 @@ public static class VisualSequences
     {
         Directory.CreateDirectory(destinationDirectory);
         Write(destinationDirectory, "fsm-api-add-state.svg", BuildAddState().Build(), 1280, 720);
-        Write(destinationDirectory, "fsm-api-state-transition.svg", BuildTransition(), 1280, 720);
-        Write(destinationDirectory, "fsm-api-tick-atomic-mutation.svg", BuildTickMutation(), 1280, 720);
+        Write(destinationDirectory, "fsm-api-state-transition.svg", BuildTransition().Build(), 1280, 720);
+        Write(destinationDirectory, "fsm-api-tick-atomic-mutation.svg", BuildTickMutation().Build(), 1280, 720);
     }
 
     private static void Write(string destinationDirectory, string name, GuiNode scene, int width, int height)
@@ -91,7 +91,7 @@ public static class VisualSequences
         return scene;
     }
 
-    private static GuiNode BuildTransition()
+    private static GuiBuilder BuildTransition()
     {
         var scene = Frame("fsm-api-state-transition",
             "Executing a transition: lifecycle order matters",
@@ -126,7 +126,7 @@ public static class VisualSequences
         return scene;
     }
 
-    private static GuiNode BuildTickMutation()
+    private static GuiBuilder BuildTickMutation()
     {
         var scene = Frame("fsm-api-tick-atomic-mutation",
             "Definition replacement waits for the tick boundary",
