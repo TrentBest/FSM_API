@@ -80,7 +80,7 @@ An exception in user callback code is a runtime event that must be attributed to
 
 Error events, threshold counters, cleanup, and deferred destruction are part of the public behavioral contract. They must be equivalent across representations or any intentional difference must be explicit. In particular, callback failures during teardown, multiple failing handles, repeated threshold crossings, and diagnostic subscribers that themselves throw require deliberate tests.
 
-The current integration candidate has a direct cross-runtime threshold regression, but multi-handle threshold interactions and diagnostic-event semantics remain review items. Do not describe error parity as complete until those cases are evidenced.
+The current integration candidate has a direct cross-runtime threshold regression, but multi-handle threshold interactions and diagnostic-event semantics remain review items. `OnInternalApiError` is invoked synchronously and subscriber exceptions are not isolated; a throwing subscriber can escape the error-reporting path before threshold cleanup is queued. Keep subscribers non-throwing unless/until the runtime defines and tests a different isolation policy. Do not describe error parity as complete until multi-handle behavior, counter scope, subscriber exceptions, and teardown ordering are evidenced.
 
 ## 7. Identity and persistence are different problems
 
