@@ -22,7 +22,7 @@ Do not compare these FPS or memory-delta values directly with BenchmarkDotNet na
 
 ### Operation-level microbenchmarks
 
-The separate [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark) currently references the published FSM_API package version 1.0.13 and targets .NET 8. Its checked-in source currently contains two BenchmarkDotNet entry points:
+The separate [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark) currently references the published FSM_API package version 1.0.13 and targets .NET 10. The benchmark project's `FSM_Benchmark.csproj` is the source of truth for its target framework. Its checked-in source currently contains two BenchmarkDotNet entry points:
 
 - Single-FSM update with callbacks and transition predicates.
 - Multiple processing-group updates with 1, 10, and 50 groups.
