@@ -473,3 +473,30 @@ The final owner recommendation must be one consolidated batch containing exact b
 - The matching .NET workflow [run #1099](https://github.com/TrentBest/FSM_API/actions/runs/45570154833) completed successfully: **553 passed, 0 failed, 0 skipped**, with **0 build warnings and 0 build errors**. Documentation link validation and DocFX generation passed. Package and DLL artifacts were generated; `publish_nuget` was skipped and no package was published. The Sith publication gate was skipped because this was a PR run.
 - The dedicated GUI.SVG generation workflow [run #45566774697](https://github.com/TrentBest/FSM_API/actions/runs/45566774697) passed before the GUI source was pinned. The newly pinned generator workflow has not yet completed a run; it is scoped to `development` so it becomes the canonical generator after the documentation candidate is integrated.
 - These are build/artifact validations only. **No GitHub Pages deployment is claimed**, and no branch was merged or deleted.
+
+
+## Live branch audit — 2026-11-26 04:00Z
+
+This audit supersedes the 2026-11-25 deletion disposition above. A fresh GitHub branch inventory returned **24 branches**: the canonical `master` and `development`, plus 22 noncanonical branches. The current Sith Policy evaluation [run #491](https://github.com/TrentBest/FSM_API/actions/runs/45752248121) completed successfully but reported **NON-COMPLIANT**; the policy requires exactly the two canonical branches.
+
+### Owner deletion candidates — ready
+
+The following three branch heads are already ancestors of `development` (GitHub compare reports zero commits ahead). Their historical PRs are closed and merged. No tag points directly at the current branch head. A default-branch code search found no hard-coded workflow or source reference to these names; the only matches were the dynamically generated Sith inventory JSON.
+
+| Branch | Exact head | Compare with `development` | PR history | Disposition |
+| --- | --- | --- | --- | --- |
+| `Splitting-FSM_API-class-into-multiple-partial-classes` | `4193ee34fee9625279d2f149adaa1567f2fab097` | 0 ahead / 990 behind | #2 and #3 closed, merged | **Ready for owner deletion** |
+| `TargetingStarcraft2DotNet` | `5318065e48e4245ed4d4db3648d194597916f18a` | 0 ahead / 957 behind | #5 and #6 closed, merged | **Ready for owner deletion** |
+| `TickCountingSystem` | `337ed24508afb332cca3fd6e34a7b90c994cee61` | 0 ahead / 826 behind | #14 and #15 closed, merged | **Ready for owner deletion** |
+
+These are branch-ref cleanup candidates only. Their commits remain reachable through `development`, and their PR records remain in GitHub. No deletion was performed by this audit.
+
+### Remaining branches
+
+The other 19 noncanonical branches are **not cleared for deletion** by this pass. Several still have open PRs or unique commits; others are historical experiments whose exact retained tests, docs, and review records still need a final audit. In particular, keep the current implementation candidate `fix/integer-definition-reregistration` and documentation candidate `docs/fsm-api-theory-and-living-svg` while PRs #42 and #43 remain open. Do not infer deletion readiness merely from age, naming, or an old ledger entry.
+
+### Current integration references
+
+- Runtime candidate: [PR #42](https://github.com/TrentBest/FSM_API/pull/42), head `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, 138 commits ahead / 0 behind `development`; validation [run #1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836) passed with 558 tests and zero build warnings/errors.
+- Documentation candidate: [PR #43](https://github.com/TrentBest/FSM_API/pull/43), head `248e77028687ded5eceaf08c05be135f6cf454b0`, 88 commits ahead / 25 behind the runtime candidate. It remains a stacked, materially diverged documentation/workflow branch and must be selectively reconciled.
+- No PR merge, rebase, retarget, package publication, deployment, or branch deletion was performed.
