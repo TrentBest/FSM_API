@@ -87,6 +87,12 @@ FsmApi.Error.InstanceErrorThreshold = 2; // Enqueue shutdown when 2 errors have 
 FsmApi.Error.DefinitionErrorThreshold = 1; // Destroy the definition after just one instance fails
 ```
 
+Counter inspection and ownership
+
+The string-backed `FsmApi.Error.GetErrorCounts()` and `GetDefinitionErrorCounts()` methods currently return the actual mutable dictionaries used by the implementation. Despite the XML remarks describing these results as read-only, callers can mutate the live counters through the returned objects. Avoid modifying them; use the explicit reset methods instead. String-backed counters are static/shared, and definition counts are keyed by definition name alone, not by processing group.
+
+The integer-backed `FSMRuntime.GetInstanceErrorCounts()` and `GetDefinitionErrorCounts()` methods return dictionary copies. Its counters are scoped to that runtime instance and keyed by handle or integer FSM ID. A modified returned copy does not change runtime accounting. This is a current implementation difference, not evidence of complete error-policy parity.
+
 Manual Reset
 
 The API provides methods to manually reset error counts for specific instances or definitions. This is useful for debugging and testing.
