@@ -9,7 +9,6 @@
     "AddingUnitTests",
     "HireMeFSMDemo",
     "RefactoringToHashBacking",
-    "Splitting-FSM_API-class-into-multiple-partial-classes",
     "TargetingStarcraft2DotNet",
     "TickCountingSystem",
     "WindowsFormsEditor",
@@ -31,9 +30,9 @@
     "master",
     "test/integer-scheduler-parity"
   ],
-  "branch_count": 24,
+  "branch_count": 23,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-25T14:22:48Z",
-  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/45633366228",
-  "triggering_commit": "b1a6edffe398fca66ce66c6111e184f4b34fc7fd"
+  "evaluated_at": "2026-11-26T04:16:35Z",
+  "workflow_run": "https://github.com/TrentBest/FSM_API/actions/runs/45754157317",
+  "triggering_commit": "8dbd2564616671dba1cbd0ab8de51f5c7813affb"
 }
