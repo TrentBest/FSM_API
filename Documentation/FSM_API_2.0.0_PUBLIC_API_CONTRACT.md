@@ -63,12 +63,12 @@ The same observable behavior must be available through both string-backed and in
 Owns the diagnostic and error-policy boundary:
 - Shared internal API diagnostics and subscriptions for runtime failures.
 - String-backed instance- and definition-level error accounting.
-- Integer-backed instance- and definition-level diagnostic snapshots and reset operations.
-- String-backed instance- and definition-level error accounting.
-- Configurable thresholds and explicit shutdown policy.
-- Error context sufficient to identify the definition, instance, state, processing group, and callback phase.
+- Integer-backed instance- and definition-level error accounting, with snapshot and reset operations exposed through the concise facade.
+- The integer runtime reports callback failures through the shared internal diagnostic channel and uses the same configured instance and definition threshold values as the string-backed runtime; counters remain representation-specific.
+- Threshold configuration is shared, not independently configurable per representation. The concise facade does not expose a public integer-specific error-injection operation.
+- Error context sufficient to identify the definition, instance, state, processing group, and callback phase, subject to the details available from each representation.
 - Deterministic behavior when callbacks both invalidate/destroy an instance and throw.
-- Integer-backed diagnostic snapshots, resets, and runtime error reporting are now exposed through the facade. Full threshold-policy and exception-path parity remains a tracked 2.0 release gate.
+- Full threshold-policy and exception-path parity remains a tracked 2.0 release gate.
 
 An invalid context is an execution eligibility gate, not an implicit destruction request. Error policy may explicitly schedule shutdown; validity alone must not.
 
