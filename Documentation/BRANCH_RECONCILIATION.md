@@ -500,3 +500,47 @@ The other 19 noncanonical branches are **not cleared for deletion** by this pass
 - Runtime candidate: [PR #42](https://github.com/TrentBest/FSM_API/pull/42), head `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, 138 commits ahead / 0 behind `development`; validation [run #1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836) passed with 558 tests and zero build warnings/errors.
 - Documentation candidate: [PR #43](https://github.com/TrentBest/FSM_API/pull/43), head `248e77028687ded5eceaf08c05be135f6cf454b0`, 88 commits ahead / 25 behind the runtime candidate. It remains a stacked, materially diverged documentation/workflow branch and must be selectively reconciled.
 - No PR merge, rebase, retarget, package publication, deployment, or branch deletion was performed.
+
+
+
+## Owner cleanup follow-up — 2026-11-26 04:25Z
+
+A fresh live branch inventory confirms that the three previously approved cleanup refs are now absent:
+
+- `Splitting-FSM_API-class-into-multiple-partial-classes`
+- `TargetingStarcraft2DotNet`
+- `TickCountingSystem`
+
+The live inventory is now **21 branches**: `master`, `development`, and 19 noncanonical branches. This is an owner-performed cleanup observation; this audit did not delete any refs.
+
+The latest Sith Policy evaluation [run #45754920124](https://github.com/TrentBest/FSM_API/actions/runs/45754920124) completed its evaluation on documentation head `52501618cd5141e45443fc8ce35f6143314e1487`. The workflow job succeeded, but policy remains **NON-COMPLIANT** because the branch count is still above the exact-two requirement.
+
+### Remaining branch comparison
+
+Every one of the 19 remaining noncanonical refs currently has at least one commit ahead of `development`; none is a zero-ahead deletion candidate in this comparison. The smallest unique histories are:
+
+| Branch | Commits ahead of `development` | Disposition |
+| --- | ---: | --- |
+| `benchmark-contract-docs` | 1 | Preserve pending exact content/PR-reference reconciliation |
+| `feature/integer-backed-runtime` | 1 | Preserve as historical implementation evidence |
+| `HireMeFSMDemo` | 1 | Preserve pending owner retirement decision and reference audit |
+| `AddingUnitTests` | 2 | Preserve until unique test intent is fully accounted for |
+| `feature/net10-validation-lane` | 2 | Superseded workflow is not sufficient reason to discard its unique commits |
+| `RefactoringToHashBacking` | 2 | Preserve historical source experiment |
+| `test/integer-scheduler-parity` | 2 | Preserve regression history pending final evidence review |
+| `WindowsFormsEditor` | 2 | Preserve pending owner retirement decision and reference audit |
+| `docs/benchmarking` | 3 | Preserve until exact documentation content is reconciled |
+| `docs/readme-standard` | 4 | Preserve until exact documentation content is reconciled |
+| `fix/integer-array-capacity-boundary` | 8 | Preserve regression history pending final evidence review |
+| `fix/manual-any-state-evaluation` | 15 | Preserve regression history pending final evidence review |
+| `fix/context-validity-execution-gate` | 17 | Preserve regression history pending final evidence review |
+| `feature/fsm-api-2.0-next` | 24 | Preserve historical integration work |
+| `feature/fsm-api-2.0-registry` | 24 | Preserve historical integration work |
+| `feature/fsm-api-2.0-work` | 24 | Preserve historical integration work |
+| `feature/fsm-api-2.0` | 93 | Preserve historical implementation/test source |
+| `fix/integer-definition-reregistration` | 138 | Active runtime candidate; PR #42 |
+| `docs/fsm-api-theory-and-living-svg` | 211 | Active documentation candidate; PR #43 |
+
+**Deletion recommendation:** no additional branch is cleared for owner deletion by this pass. A branch with even one unique commit is not deletion-ready merely because its functionality may have been ported; preserve the unique commit's intent, tests, PR record, and any external references before recommending retirement.
+
+Current integration candidates remain PR [#42](https://github.com/TrentBest/FSM_API/pull/42) and PR [#43](https://github.com/TrentBest/FSM_API/pull/43). No merge, rebase, retarget, deployment, release, package publication, or branch deletion was performed by this follow-up.
