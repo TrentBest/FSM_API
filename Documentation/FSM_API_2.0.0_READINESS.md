@@ -117,7 +117,7 @@ This section supersedes earlier point-in-time statements above where their branc
 
 ### Reconciliation and deletion disposition
 
-PR #42 is the current implementation candidate and PR #43 is a stacked documentation/generator candidate. Keep the latter isolated until its documentation claims and workflow changes are reconciled against the current #42 implementation head. The 24-branch inventory has now been triaged: three branches are verified as ready for owner deletion because their heads are already contained in `development`, their PRs are closed/merged, and no tags point directly at those heads; the exact names and SHAs are recorded in [the live branch reconciliation audit](BRANCH_RECONCILIATION.md). The remaining 19 noncanonical branches are not cleared for deletion and still require reconciliation. No branch deletion, PR merge, rebase, retarget, deployment, package publication, or release was performed.
+PR #42 is the current implementation candidate and PR #43 is a stacked documentation/generator candidate. Keep the latter isolated until its documentation claims and workflow changes are reconciled against the current #42 implementation head. The three previously owner-approved cleanup branches are now absent from the live inventory. The current inventory is 21 branches: `master`, `development`, and 19 noncanonical branches. Every remaining noncanonical branch has at least one commit ahead of `development`; none is currently cleared for deletion. See [the live branch reconciliation audit](BRANCH_RECONCILIATION.md) for the latest compare counts and exact refs. No further branch deletion, PR merge, rebase, retarget, deployment, package publication, or release was performed.
 
 
 ## Source/API audit correction — 2026-11-26 04:10Z
@@ -131,3 +131,15 @@ A focused review of the current documentation candidate (`b9d045cc98481cccf864e2
 - `FSM_API_THEORY.md` was corrected to describe both runtime movement APIs and the narrower concise-facade surface accurately.
 
 This is a documentation correction, not a runtime change. No package was published and no branch was deleted.
+
+
+## Error-counter API surface audit — 2026-11-26 04:34Z
+
+The counter-store audit found an additional observable difference that must remain explicit in parity claims:
+
+- String-backed `FsmApi.Error` stores instance and definition counters in static dictionaries shared by the string API. Definition counters are keyed by definition name alone, not by processing group.
+- `FsmApi.Error.GetErrorCounts()` and `GetDefinitionErrorCounts()` return the underlying dictionaries. Their XML documentation calls them read-only, but the returned `Dictionary` instances are mutable and changes affect live runtime accounting.
+- Integer-backed counters are owned by each `FSMRuntime`; instance counters are keyed by `FSMHandleInt` and definition counters by integer FSM ID. `GetInstanceErrorCounts()` and `GetDefinitionErrorCounts()` return copies, so callers cannot mutate the live stores through those returned dictionaries.
+- The existing parity test exercises one failing handle per definition and a definition threshold of one. It does not prove behavior for multiple failing handles, same-name definitions in different groups, cross-runtime string counter interference, or mutation through the string getters.
+
+This is a source/documentation finding, not a runtime fix. Error-policy parity remains incomplete until the intended public contract is decided and focused tests cover these cases.
