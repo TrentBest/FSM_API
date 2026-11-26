@@ -37,12 +37,13 @@ jobs:
           set -euo pipefail
           mkdir -p assets
           branch_file="$(mktemp)"
-          trap 'rm -f "$branch_file"' EXIT
+          api_error_file="$(mktemp)"
+          trap 'rm -f "$branch_file" "$api_error_file"' EXIT
           status="UNVERIFIED"
           branches=()
           branch_count="unknown"
 
-          if gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[].name' > "$branch_file"; then
+          if gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[].name' > "$branch_file" 2> "$api_error_file"; then
             mapfile -t branches < <(sort -u "$branch_file")
             branch_count="${#branches[@]}"
             if [[ "$branch_count" -eq 2 &&
@@ -51,6 +52,15 @@ jobs:
               status="COMPLIANT"
             else
               status="NON-COMPLIANT"
+            fi
+          else
+            api_exit_code=$?
+            echo "::error::Sith Policy could not retrieve the GitHub branch inventory (gh api exit code $api_exit_code)."
+            if [[ -s "$api_error_file" ]]; then
+              # Prefix every line so remote CLI diagnostics cannot be parsed as Actions workflow commands.
+              sed 's/^/gh api stderr: /' "$api_error_file"
+            else
+              echo "::error::GitHub CLI returned no diagnostic text; inspect token permissions, API response, and runner environment."
             fi
           fi
 
@@ -181,7 +191,10 @@ jobs:
             echo "- Evaluated: $evaluated_at"
           } >> "$GITHUB_STEP_SUMMARY"
 
-          if [[ "$status" != "COMPLIANT" ]]; then
+          if [[ "$status" == "UNVERIFIED" ]]; then
+            echo "::error::Sith Policy evaluation is UNVERIFIED. A missing branch inventory must never produce a successful check."
+            exit 1
+          elif [[ "$status" == "NON-COMPLIANT" ]]; then
             echo "::warning::Sith Policy is not yet satisfied; this is informational during development. NuGet publication is gated separately."
           else
             echo "Sith Policy satisfied: exactly master and development are present."
