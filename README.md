@@ -234,6 +234,13 @@ See [FSM_API 2.0.0 Readiness](Documentation/FSM_API_2.0.0_READINESS.md) for the 
 
 ---
 
+## Theory and living documentation
+
+- [FSM_API theory — behavior as an explicit runtime model](Documentation/FSM_API_THEORY.md)
+- [String and integer backing — representation boundary and compiler bridge](Documentation/User%20Guide/12_String_and_Integer_Backing.md)
+- [Living visuals generated with GUI.SVG](Documentation/Visuals/README.md)
+- [Runtime tick and mutation contract](Documentation/FSM_RUNTIME_TICK_AND_MUTATION_CONTRACT.md)
+
 ## Development
 
 Open `FSM_API.sln` in Visual Studio, or use the terminal from the repository root:

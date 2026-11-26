@@ -24,6 +24,7 @@
         "src": "Documentation",
         "files": [
           "**/*.md",
+          "**/*.html",
           "**/*.svg",
           "**/*.png",
           "**/*.jpg",

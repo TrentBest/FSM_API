@@ -51,9 +51,11 @@ The September 2026 benchmark run produced:
 | 10 | **3,115.7 ns** | **3,600 B** |
 | 50 | **15,736.6 ns** | **18,000 B** |
 
-The measured workload scales approximately linearly in this range.
+A source audit found that this historical group-iteration fixture is **not stationary** across a long BenchmarkDotNet run: each group's StateA callback increments a counter, and a transition moves it to StateB after the counter exceeds 1,000; StateB has no update callback. Depending on warm-up and measurement duration, the benchmark can therefore change from callback work to mostly empty scheduler work during one run. The original source also does not prime or verify a fixed steady-state callback count.
 
-That does **not** mean FSM_API has a universal linear complexity guarantee for every operation. It means this particular experiment showed approximately linear growth when the number of explicitly updated processing groups increased from 1 to 50.
+For that reason, do not interpret the table as a clean scaling curve or as a stable per-group marginal cost. Retain the figures as historical reported observations only. The single-FSM fixture is a different workload: it alternates between two states through successful transitions, so its 305.1 ns / 360 B observation is not a no-transition baseline either. The raw `.diagsession` files do not replace normalized BenchmarkDotNet result exports and full machine/source provenance.
+
+A corrected benchmark should hold callback and transition behavior constant for every measured invocation, prime the runtime before measurement, and verify callback counts outside the timed region. The source-linked 2.0 suite now follows that setup discipline for its initial no-transition scheduler comparison.
 
 ## How to interpret the numbers
 
@@ -75,7 +77,7 @@ is approximately 305 billionths of a second.
 
 The allocation results matter because an operation can be fast while still creating garbage-collection pressure.
 
-The recorded 50-group operation allocates 18,000 B in the benchmark workload. That is evidence about this experiment—not a statement that every application frame using 50 groups will allocate exactly 18 KB.
+The recorded 50-group operation reports 18,000 B in the historical experiment. Because the fixture can change its callback workload during a long run, treat that allocation value as a historical observation too—not a reliable per-frame cost or a regression target.
 
 ## Why the benchmark is useful
 
@@ -119,7 +121,32 @@ The benchmark source is the authoritative description of what the result means.
 
 ## Reproducing it
 
-The benchmark project targets .NET 10 and references the currently published FSM_API 1.0.13 package.
+The repository currently has two distinct benchmark tracks, and their evidence must not be conflated.
+
+### Released 1.x package baseline
+
+The original benchmark project on the repository's `master` / `development` branches targets `.NET 8` and references the published `TheSingularityWorkshop.FSM_API` package `1.0.13`. It contains two original string-backed entry points: a single-FSM update and updates across 1, 10, or 50 named processing groups. The recorded September 2026 values above are historical observations for that package/workload. The repository's two checked-in `.diagsession` files are diagnostic artifacts, not normalized BenchmarkDotNet CSV/JSON evidence. Keep the numbers as historical context, not as a calibrated regression baseline.
+
+### FSM_API 2.0 paired representation track
+
+The open, draft [benchmark-laboratory PR #1](https://github.com/TrentBest/FSM_API_Benchmark/pull/1) adds a broader .NET 10 suite and a separate source-linked `FSM_Benchmark_2_0` project. The latter references the checked-out FSM_API source project rather than substituting the published 1.0.13 package. It currently pairs:
+
+- `FSMAPI.Execution.Update.NoTransitions`: string-backed and integer-backed public update calls, parameterized by 1/10/50 definitions × 1/10/50 instances per definition.
+- `FSMAPI.Lookup.Definition.ById.Hit`: successful string-backed and integer-backed definition-presence lookups with 1/10/50 definitions.
+
+The execution fixture uses the same context type, callback, process rate, state count, and number of update calls; it primes both runtimes and verifies callback counts before measurement. These are useful initial comparisons, not complete coverage.
+
+One important confound is already identified in the source: string-backed public `Interaction.Update(string)` wraps the tick with `Stopwatch.StartNew()`, stops it, and checks a warning threshold; integer-backed public `Interaction.Update(int)` forwards directly to `Runtime.Update`. The public-update pair therefore measures the cost of the current public entry points, including this instrumentation asymmetry. It cannot isolate the benefit of integer identity by itself. A follow-up comparison must measure equivalent scheduler-core paths separately from the string wrapper.
+
+The lookup pair also compares representation-specific key shapes: string name plus processing-group name versus globally unique integer FSM ID. It is a public identity-presence comparison, not a pure string-equality-versus-integer-equality microbenchmark.
+
+The benchmark branch also adds broader 1.x operation benchmarks, an API reflection inventory, and a method-level coverage ledger.
+
+[Validation run #17](https://github.com/TrentBest/FSM_API_Benchmark/actions/runs/44984466828) succeeded on benchmark commit `7a09fb760af425f20c914d013787b1bed86a9eeb`: both benchmark projects built, the public API inventory was generated, and the legacy and 2.0 BenchmarkDotNet Dry smoke tests passed. The calibrated benchmark job was **skipped**. This proves build/setup/discovery/invocation only; it provides **no timing result and no measured integer speedup**.
+
+Important source boundary: the smoke workflow checks out FSM_API's `development` branch. It has not yet benchmarked PR #42's exact integer-move candidate commit. The workflow now accepts an `fsm_api_ref` input during manual dispatch, so the calibrated run can be pinned to a branch, tag, or exact source SHA. Before accepting a 2.0 result, pin and record the exact FSM_API source SHA, run both representations in the same process/environment, preserve raw BenchmarkDotNet Markdown/CSV/JSON and provenance, and validate equivalent observable behavior outside the timed region.
+
+The benchmark PR #5 adds a stable semantic-ID catalog and staged report-only regression policy; it is also open and draft. Neither PR is merged, and no performance regression gate is active.
 
 Run:
 
@@ -169,7 +196,7 @@ That is deliberately more useful than printing a performance number without tell
 
 ## Historical baseline
 
-These measurements were recorded during the September 2026 FSM_API performance work.
+These 1.x package measurements were recorded during the September 2026 FSM_API performance work. The separate 2.0 source-linked track is still in smoke-test validation; no 2.0 timing has been collected or accepted.
 
 They establish a baseline for the implementation and workload that existed at that time. They should be rerun after changes to:
 
@@ -187,4 +214,4 @@ They establish a baseline for the implementation and workload that existed at th
 
 See the [benchmark evidence contract](Performance/BenchmarkingContract.md) for stable semantic IDs, required run provenance, immutable result history, and staged regression-gate policy. The benchmark suite and its coverage catalog live in the companion [FSM_API_Benchmark repository](https://github.com/TrentBest/FSM_API_Benchmark).
 
-**Release note:** the historical numbers above describe the September 2026 workload and FSM_API 1.0.13. They are not evidence of FSM_API 2.0 performance. Rerun equivalent workloads against the exact candidate commit before making a 2.0 performance claim.
+**Release note:** the historical numbers above describe the September 2026 workload and FSM_API 1.0.13. They are not evidence of FSM_API 2.0 performance. The existence of paired benchmark methods is not itself a measured improvement. Rerun equivalent workloads against the exact candidate commit before making a 2.0 performance claim.
