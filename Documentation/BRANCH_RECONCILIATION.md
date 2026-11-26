@@ -566,3 +566,17 @@ This is the current point-in-time inventory and supersedes earlier comparison co
 - Sith Policy [run #45756358275](https://github.com/TrentBest/FSM_API/actions/runs/45756358275) completed successfully on the exact PR #43 head. The workflow evaluation itself succeeded; the policy result remains **NON-COMPLIANT** because 21 is not the required two-branch inventory. A successful evaluation is not policy compliance.
 
 The compare is not a deletion authorization. All 19 noncanonical refs remain preserved until their unique commits, tests, PR records, tags, and external references are reconciled. No merge, rebase, retarget, deletion, deployment, package publication, or release was performed.
+
+
+## Superseding evidence refresh — 2026-11-26 06:15Z
+
+This section supersedes all earlier point-in-time heads and comparisons above.
+
+- Live GitHub branch inventory: **21 branches** — `master`, `development`, and 19 noncanonical refs. Every remaining noncanonical ref still has unique commits ahead of `development`; none is cleared for owner deletion.
+- Runtime candidate PR [#42](https://github.com/TrentBest/FSM_API/pull/42): `fix/integer-definition-reregistration` at `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, **138 ahead / 0 behind** `development`. Exact-head run [#1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836) passed 558 tests with no failures; package publication was skipped.
+- Documentation candidate PR [#43](https://github.com/TrentBest/FSM_API/pull/43): `docs/fsm-api-theory-and-living-svg` at `3d317ae1f7dfaec9be650ae5d62976339bd3f18f`, **106 ahead / 25 behind** the runtime candidate (merge base `6aa84d7a6db1f246e963d52d98041667430c8294`), and **219 ahead / 0 behind** `development`. Reconcile selectively; do not merge its divergent history wholesale.
+- Sith Policy [run #45757001173](https://github.com/TrentBest/FSM_API/actions/runs/45757001173) completed green but its evaluation was **UNVERIFIED**. This was a false-green workflow result, not a policy pass.
+- Remediation PR [#44](https://github.com/TrentBest/FSM_API/pull/44) adds stderr/exit-code diagnostics and makes `UNVERIFIED` fail the job. Its fresh [Sith Policy run](https://github.com/TrentBest/FSM_API/actions/runs/45766526772) successfully retrieved inventory and correctly reported **NON-COMPLIANT**. The workflow now distinguishes verified violation from inability to verify.
+- PR #44's validation [run](https://github.com/TrentBest/FSM_API/actions/runs/45766581901) passed 489 tests and the documentation build; it reported 273 existing test-project XML documentation warnings and zero build errors. NuGet publication was skipped.
+
+No branch is recommended for deletion. Preserve all 19 noncanonical refs until unique commits, tests, PR history, tags, and external references are reconciled. No merge, rebase, retarget, deletion, deployment, release, or package publication was performed.
