@@ -1,6 +1,6 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-15  
+**Last reviewed:** 2026-11-26  
 **Branch:** `development`
 
 ## Public API migration
@@ -51,3 +51,41 @@ The .NET 10 validation run above skipped its embedded Sith policy job, so it is 
 ## Release boundary
 
 All migration work is isolated to `development`. No merge to `master`, package publication, deployment, or release is authorized by this readiness report.
+
+
+## Review update — 2026-11-26
+
+### Framework compatibility policy
+
+The multi-target strategy is intentional: preserve the widest practical compatibility reach rather than dropping older target frameworks solely because they are out of mainstream support. The current library project targets:
+
+`net10.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net47`
+
+The current CI workflow runs a solution build with the .NET 10 SDK, which builds the library's configured target frameworks, and separately runs the NUnit suite only for `net10.0`. Therefore the evidence model must remain explicit:
+
+- **Compile compatibility:** the CI build must succeed for every target framework listed by the library project.
+- **Behavioral verification:** the current automated test suite runs on .NET 10 only; it does not establish runtime behavior on every historical target.
+- **Consumer support statement:** retain the older targets as compatibility targets, but describe their validation level accurately. Do not imply Microsoft servicing or security support for end-of-life runtimes.
+- **Release gate:** preserve the six-target matrix unless a specific compatibility blocker is found and the owner approves changing the reach.
+
+### API contract and diagnostics review
+
+The public API contract now distinguishes the error-policy implementation more precisely:
+
+- String and integer runtimes maintain representation-specific instance and definition counters.
+- Both runtimes use the same configured instance and definition threshold values.
+- Integer callback failures report through the shared internal diagnostic event.
+- The concise facade exposes integer diagnostic snapshots and reset operations, but does not expose a separate integer threshold configuration or a public integer-specific error-injection method.
+- Full threshold and exception-path behavioral parity remains a release gate.
+
+The concise facade's threshold properties and diagnostic event now have XML summaries, and the legacy string-backed `InvokeInstanceError` method now has complete parameter documentation.
+
+### Remaining evidence gaps found in this review
+
+1. **Framework test coverage:** all six target frameworks are included in the library build matrix, but runtime tests currently execute only on `net10.0`. Decide whether compile-only validation is the intended compatibility promise or whether selected historical runtime test lanes are practical.
+2. **Package version boundary:** the development project still declares package version `1.0.13` while the development documentation describes the 2.0.0 API. This is acceptable as long as development artifacts are not published, but the 2.0 release candidate must explicitly set and verify its intended package version and release notes before any publish workflow is authorized.
+3. **Error parity:** equivalent input/trace tests must cover shared thresholds, callback exceptions, pending removal, definition unregister, resets, and interactions between invalidation and thrown exceptions.
+4. **Public API traceability:** continue mapping every public member to its XML documentation, tests, conceptual explanation, and examples. This review has improved the Error surface but is not a completed whole-library inventory.
+5. **Visual evidence:** living SVGs and theory chapters must be reconciled to the exact runtime implementation and tests before being treated as release evidence.
+
+Documentation-only changes made during this review are on `development`; they do not change runtime behavior, package version, branch inventory, or publication authorization.
