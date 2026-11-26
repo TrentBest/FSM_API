@@ -160,3 +160,20 @@ This refresh supersedes earlier point-in-time heads, branch counts, and compare 
 The source audit confirms that string-backed definition error counts are incremented from the deferred instance-threshold action, while integer-backed definition counts are incremented synchronously in `RecordInstanceError` and teardown is applied at the integer tick boundary. The existing cross-representation test uses one failing handle per definition and a definition threshold of one; it does not prove multi-handle ordering, same-name definitions in different string processing groups, cross-runtime interference from static string counters, or behavior when a diagnostic subscriber throws at each notification stage. Keep error-policy parity explicitly incomplete until the intended contract is selected and focused tests cover these cases.
 
 No merge, rebase, retarget, deletion, deployment, package publication, or release was performed by this refresh.
+
+
+## Current implementation and policy evidence — 2026-11-26 06:15Z
+
+This section supersedes earlier point-in-time heads and workflow conclusions.
+
+- Runtime candidate PR [#42](https://github.com/TrentBest/FSM_API/pull/42) is at `cb81e27062e30d5f0d2022cfb0aa4b0af3ceebb9`, 138 commits ahead of `development`. Exact-head Actions run [#1109](https://github.com/TrentBest/FSM_API/actions/runs/45571547836) passed 558 tests with zero failures; package publication was skipped. This is a candidate, not a released 2.0 package.
+- Documentation PR [#43](https://github.com/TrentBest/FSM_API/pull/43) is at `3d317ae1f7dfaec9be650ae5d62976339bd3f18f`, 106 ahead / 25 behind the runtime candidate and 219 ahead of `development`. Its histories remain divergent; selective reconciliation and fresh Pages/browser validation remain open.
+- The live branch inventory is 21 (two required plus 19 noncanonical); no remaining branch is cleared for owner deletion.
+- The Sith Policy workflow previously produced a green run with an `UNVERIFIED` result. Draft remediation PR [#44](https://github.com/TrentBest/FSM_API/pull/44) now captures GitHub CLI diagnostics and fails closed for `UNVERIFIED`. Fresh run [#45766526772](https://github.com/TrentBest/FSM_API/actions/runs/45766526772) successfully retrieved the inventory and classified the repository `NON-COMPLIANT`, as expected. Actual noncompliance remains informational during ordinary development; release gates must independently enforce policy.
+- PR #44 validation [run](https://github.com/TrentBest/FSM_API/actions/runs/45766581901) passed 489 tests and documentation generation, with 273 XML documentation warnings in the test project and zero build errors. NuGet publication was skipped.
+
+### Error-policy parity remains incomplete
+
+The existing error suite covers the string-backed API's direct counters and deferred threshold path, but the cross-representation parity test does not yet establish multi-handle ordering, same-name string definitions in different processing groups, cross-runtime interference from static string counters, getter mutation semantics, or throwing diagnostic subscribers at each notification stage. Integer runtime counters are per-runtime and exposed as snapshots; string-backed counters are static and getters expose mutable dictionaries. Keep this a characterization/test gate: do not change runtime behavior until the intended contract is explicitly chosen.
+
+No merge, rebase, retarget, branch deletion, release, NuGet publication, or deployment was performed by this refresh.
