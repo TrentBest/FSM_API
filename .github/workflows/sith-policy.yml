@@ -57,7 +57,8 @@ jobs:
             api_exit_code=$?
             echo "::error::Sith Policy could not retrieve the GitHub branch inventory (gh api exit code $api_exit_code)."
             if [[ -s "$api_error_file" ]]; then
-              cat "$api_error_file"
+              # Prefix every line so remote CLI diagnostics cannot be parsed as Actions workflow commands.
+              sed 's/^/gh api stderr: /' "$api_error_file"
             else
               echo "::error::GitHub CLI returned no diagnostic text; inspect token permissions, API response, and runner environment."
             fi
