@@ -119,3 +119,10 @@ Even if you're not a coder, this system provides powerful benefits for your proj
 
 <!-- THE SINGULARITY WORKSHOP FOOTER -->
 <p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
+
+
+## Diagnostic subscriber and counter caveats
+
+`FsmApi.Error.OnInternalApiError` is invoked synchronously on the reporting call path. Subscriber exceptions are not isolated by the event dispatcher and can propagate into runtime error handling. The exact work already performed when a subscriber throws depends on which notification is being raised; callers must not assume threshold cleanup or definition teardown will complete. Keep diagnostic subscribers non-throwing unless the API later defines and tests an isolation policy.
+
+The two representations also differ in when definition failures are counted: the string-backed instance-threshold path enqueues deferred work and increments the definition counter when that work executes; the integer-backed runtime increments its definition counter while recording the threshold-crossing failure and applies queued lifecycle changes at the end of the update tick. This is an observable timing difference, not just a storage detail. The existing parity test covers one failing handle per definition and does not establish multi-handle ordering, same-name string definitions across processing groups, or subscriber-exception behavior. Error-policy parity remains incomplete; do not infer equivalent outcomes for those cases.
