@@ -1,6 +1,6 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-26  
+**Last reviewed:** 2026-11-27  
 **Branch:** `development`
 
 ## Public API migration
@@ -44,7 +44,7 @@ This records workflow/job outcomes and the exact test totals reported by the suc
 
 ## Branch and publication gate
 
-The live branch inventory checked on 2026-11-15 contains 22 branches: `master`, `development`, and 20 additional branches. The canonical two-branch policy is therefore not currently satisfied. A separate Sith Policy workflow reported success, but the direct branch inventory contradicts that result; treat branch compliance as unverified/non-compliant until the discrepancy is resolved. No surplus branch has been deleted as part of this review.
+The live branch inventory checked on 2026-11-27 contains **23 branches**: `master`, `development`, and 21 additional branches. The latest evidence refresh commit (`b79bd725dae58c65b19eee9d31b237605657aac0`) records `branch_count: 23` and `status: NON-COMPLIANT`; the live branch listing independently returns the same 23 branches. The canonical two-branch policy is therefore confirmed non-compliant. No surplus branch has been deleted as part of this review; branch deletion remains owner-controlled.
 
 The .NET 10 validation run above skipped its embedded Sith policy job, so it is not evidence of branch compliance. Publication must remain blocked until a fresh live inventory proves that exactly `master` and `development` exist and the explicit owner authorization requirement is independently met.
 
@@ -86,6 +86,7 @@ The concise facade's threshold properties and diagnostic event now have XML summ
 2. **Package version boundary:** the development project still declares package version `1.0.13` while the development documentation describes the 2.0.0 API. This is acceptable as long as development artifacts are not published, but the 2.0 release candidate must explicitly set and verify its intended package version and release notes before any publish workflow is authorized.
 3. **Error parity:** equivalent input/trace tests must cover shared thresholds, callback exceptions, pending removal, definition unregister, resets, and interactions between invalidation and thrown exceptions.
 4. **Public API traceability:** continue mapping every public member to its XML documentation, tests, conceptual explanation, and examples. This review has improved the Error surface but is not a completed whole-library inventory.
-5. **Visual evidence:** living SVGs and theory chapters must be reconciled to the exact runtime implementation and tests before being treated as release evidence.
+5. **Visual evidence:** living SVGs and theory chapters must be reconciled to the exact runtime implementation and tests before being treated as release evidence.\n6. **API traceability:** an initial source-backed inventory is now recorded in [API_TRACEABILITY_2.0.0.md](API_TRACEABILITY_2.0.0.md). It maps the concise facade to implementation, known test areas, theory, examples, and visuals, while explicitly recording incomplete parity and verification gaps. It is not a parity sign-off.
 
 Documentation-only changes made during this review are on `development`; they do not change runtime behavior, package version, branch inventory, or publication authorization.
+\n\n## Review update — 2026-11-27\n\nThe live Sith-policy evidence was refreshed and confirms 23 branches / `NON-COMPLIANT`; this is consistent with the direct branch listing. The 2.0 API traceability inventory was added on `development`. The inventory found that the concise facade should not be described as offering complete string/integer feature parity: its actual exposed members and the independent integer surface must be described explicitly. No runtime behavior, package version, target framework, branch, merge, publication, or deployment was changed by this documentation pass.\n
