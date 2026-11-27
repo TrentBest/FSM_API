@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\\FSM_API\\FSM_API.csproj" />
+    <ProjectReference Include="../FSM_API/FSM_API.csproj" />
   </ItemGroup>
 
 </Project>
