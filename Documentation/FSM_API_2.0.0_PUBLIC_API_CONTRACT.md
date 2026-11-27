@@ -47,16 +47,13 @@ Creation must not silently start host scheduling. The host remains responsible f
 
 ### Interact
 
-Owns the runtime interaction boundary:
-- Processing-group updates and manual stepping.
-- State and transition inspection/evaluation.
-- Explicit transition requests.
-- Instance movement between compatible processing groups.
-- Reset, pause/resume where supported, and explicit instance/definition destruction.
-- Lifecycle and deferred-mutation behavior.
-- Integer-backed update, unregister, and definition-presence operations where exposed by the integer runtime.
+Owns the runtime interaction boundary. The concise `FSM_API.FsmApi.Interact` facade currently exposes:
+- String-backed processing-group updates, instance movement, runtime state/transition mutation, definition and instance lookup, group removal, and explicit definition/instance destruction.
+- Integer-backed processing-group update, update-all, definition lookup/presence, unregister, instance lookup, and explicit instance destruction.
 
-The same observable behavior must be available through both string-backed and integer-backed representations. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
+The concise facade does **not** currently expose a general explicit-transition request, reset, pause/resume, or integer-backed equivalents for the string-only mutation and group-management methods. Do not infer these capabilities from the module name or from broader conceptual descriptions. The exact current member inventory and evidence gaps are maintained in [API_TRACEABILITY_2.0.0.md](API_TRACEABILITY_2.0.0.md).
+
+String and integer parity is a separate release gate, not a claim that the current facade already offers identical feature sets. For capabilities implemented in both representations, tests must compare observable behavior; for capabilities present in only one representation, record the intentional difference or implement the missing capability before claiming parity. Representation may change lookup/storage mechanics; it must not silently change callback order, transition precedence, entry timing, invalidation, exception handling, or destruction semantics.
 
 ### Error
 
