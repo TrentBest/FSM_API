@@ -15,7 +15,7 @@ The integer runtime is independent: it owns its own registry and integer identit
 | Public module | Facade source | Implementation owner | Current scope |
 |---|---|---|---|
 | `Create` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Create.cs`; `FSM_API/IntegerBacked/FsmApi.cs`; `FSM_API/IntegerBacked/FSMBuilderInt.cs` | String and integer builders/instances; integer definition registration; named processing-group creation |
-| `Transfer` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FsmApi.Transfer.cs` (verify exact path/member implementation before release) | Explicit conversion between representations |
+| `Transfer` | `FSM_API/FsmApi.Namespace.cs` | the `FsmApi.Transfer` partial implementation (source file location still to be identified; do not treat this row as fully traced yet) | Explicit conversion between representations |
 | `Interact` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Interaction.cs`; `FSM_API/IntegerBacked/FsmApi.cs`; `FSM_API/IntegerBacked/FSMRuntime.cs` | Broad string lifecycle/registry operations plus a smaller integer runtime surface |
 | `Error` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Error.cs`; `FSM_API/IntegerBacked/FSMRuntime.cs` | Shared thresholds/diagnostic event; representation-specific counters and integer snapshots/resets |
 
@@ -79,7 +79,7 @@ The integer runtime is independent: it owns its own registry and integer identit
 
 ## 3. Existing test evidence located
 
-The following test areas were identified during this review. These are evidence anchors, not a claim that every row above is fully covered:
+The following test areas were confirmed by opening their source files during this review. These are evidence anchors, not a claim that every row above is fully covered:
 
 - `Tests/IntegerBacked/IntegerRuntimeSurfaceTests.cs` — integer facade build/register/create/update surface.
 - `Tests/IntegerBacked/IntegerParityTests.cs` — lifecycle timing, Any-State priority/callback trace, invalid-context gate, force-transition/reset semantics, sparse IDs, and timer parity.
@@ -114,14 +114,14 @@ The test project currently targets `net10.0` only. The library build matrix targ
 
 ## 6. Source references
 
-- [Concise facade](../../FSM_API/FsmApi.Namespace.cs)
-- [String-backed Create](../../FSM_API/FSM_API.Create.cs)
-- [String-backed Interaction](../../FSM_API/FSM_API.Interaction.cs)
-- [Integer-backed facade](../../FSM_API/IntegerBacked/FsmApi.cs)
-- [Integer-backed builder](../../FSM_API/IntegerBacked/FSMBuilderInt.cs)
-- [Theory learning path](../User%20Guide/Theory/README.md)
-- [Tick boundary theory](../User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
-- [2.0 public API contract](../FSM_API_2.0.0_PUBLIC_API_CONTRACT.md)
-- [2.0 readiness](../FSM_API_2.0.0_READINESS.md)
+- [Concise facade](../FSM_API/FsmApi.Namespace.cs)
+- [String-backed Create](../FSM_API/FSM_API.Create.cs)
+- [String-backed Interaction](../FSM_API/FSM_API.Interaction.cs)
+- [Integer-backed facade](../FSM_API/IntegerBacked/FsmApi.cs)
+- [Integer-backed builder](../FSM_API/IntegerBacked/FSMBuilderInt.cs)
+- [Theory learning path](User%20Guide/Theory/README.md)
+- [Tick boundary theory](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
+- [2.0 public API contract](FSM_API_2.0.0_PUBLIC_API_CONTRACT.md)
+- [2.0 readiness](FSM_API_2.0.0_READINESS.md)
 
 This inventory should be expanded whenever a public member, runtime capability, test, example, or visual changes. Completion requires evidence, not merely a filled table.
