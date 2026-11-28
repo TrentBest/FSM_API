@@ -80,6 +80,20 @@ The 2.0 API is under development on `development`; it is **not the published NuG
 
 See the [public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md) and [source-backed API traceability map](Documentation/API_TRACEABILITY_2.0.0.md). The docs distinguish implemented behavior from remaining verification and release gates.
 
+## The Workshop connection
+
+FSM_API is deliberately a small, framework-independent behavior layer. It is not a monolithic application framework, and the projects around it are not required dependencies. They demonstrate why a reusable behavior substrate matters.
+
+<section class="fsm-ecosystem" aria-label="Related Singularity Workshop projects">
+  <p class="fsm-ecosystem-intro">One behavior model can serve very different systems. These neighboring projects compose, consume, visualize, or demonstrate the same broader Workshop architecture.</p>
+  <div class="fsm-ecosystem-grid">
+    <a class="fsm-ecosystem-card" href="https://github.com/TrentBest/TheSingularityWorkshop.FSM_COS"><strong>FSM_COS · Composition</strong><span>Directly depends on FSM_API for FSM and context primitives. Its responsibility is assembling capabilities, not replacing the behavior engine.</span></a>
+    <a class="fsm-ecosystem-card" href="https://github.com/TrentBest/TheSingularityWorkshop.SingularityBot"><strong>SingularityBot · Application</strong><span>A StarCraft II strategy system whose documented architecture uses FSM_API for match, player, and unit lifecycles. Foundation in progress; not presented as ladder-ready.</span></a>
+    <a class="fsm-ecosystem-card" href="https://github.com/TrentBest/TheSingularityWorkshop.Renderer"><strong>Renderer · Observation</strong><span>An independent rendering stack exploring Event Horizons and observer-relative computational detail.</span></a>
+    <a class="fsm-ecosystem-card" href="https://github.com/TrentBest/WebPage"><strong>WebPage · Experience</strong><span>The Workshop's public-facing web surface and experimental proving ground — where technology should become something visitors can experience.</span></a>
+  </div>
+</section>
+
 ## The next experiment
 
 Start with the [C# getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md), inspect the [generated API reference](https://trentbest.github.io/FSM_API/TheSingularityWorkshop.FSM_API.html), then follow the code and tests behind any behavior that matters to your application.
