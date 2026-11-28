@@ -45,13 +45,9 @@ These examples are therefore source-branch examples, not instructions to install
 
 -----
 
-## Install FSM_API into your c# project using Nuget Package
+## Reference the 2.0 development project
 
-Within your preferred IDE find FSM_API within the NuGet Package Manager and click install.
-
-## Install FSM_API into your project using .NET CLI:
-
-dotnet add package TheSingularityWorkshop.FSM_API
+The examples below use the project reference established in the version-boundary instructions at the top of this guide. The published 1.0.13 NuGet package is a separate legacy API surface; use the repository root README for its compatible installation and quick-start.
 
 ## Integrate the API into your project
 
@@ -253,7 +249,7 @@ public class PureCSharpGameLoop
 
 ## ✅ Step 3: Manual Update Loop
 
-Since you don’t have an engine's `Update()` or `FixedUpdate()` loop, you'll explicitly "tick" the FSMs yourself from your main application loop or a dedicated manager. You'll call `FSM_API.Update()` for the processing group you defined.
+Since you don’t have an engine's `Update()` or `FixedUpdate()` loop, you'll explicitly "tick" the FSMs yourself from your main application loop or a dedicated manager. You'll call `FsmApi.Interaction.Update()` for the processing group you defined.
 
 ### 🕹 Example: `Program.cs` (Main Application Entry Point)
 
@@ -326,7 +322,7 @@ To run this pure C\# FSM example:
   * FSM\_API works seamlessly outside of Unity and other game engines, providing a powerful FSM solution for any pure C\# application.
   * You define your application's data models or entities as classes that implement the **`IStateContext`** interface.
   * FSM definition and instantiation logic remain consistent with Unity usage, using `FsmApi.Create.CreateFiniteStateMachine()` and `FsmApi.Create.CreateInstance()`.
-  * You gain explicit control over when FSMs process their logic by calling `FSM_API.Update("YourGroupName")` from your application's main loop or scheduler.
+  * You gain explicit control over when FSMs process their logic by calling `FsmApi.Interaction.Update("YourGroupName")` from your application's main loop or scheduler.
   * This makes FSM\_API an ideal choice for server-side logic, complex simulations, AI systems, backend services, or custom game engines where you need robust and decoupled state management.
 
 -----
