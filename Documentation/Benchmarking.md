@@ -30,7 +30,7 @@ This is intentionally a real API operation rather than an isolated dictionary or
 
 `FSM_StringGroupIterationBenchmark` creates named processing groups and measures updating 1, 10, and 50 of them.
 
-The benchmark uses BenchmarkDotNet's `[Params]` to vary the workload:
+The companion benchmark source uses the published 1.0.13 API (`FSM_API.Interaction.Update`) and BenchmarkDotNet's `[Params]` to vary the workload:
 
 ~~~csharp
 [Params(1, 10, 50)]
@@ -43,7 +43,7 @@ This is useful because the current API uses string identifiers at this boundary.
 
 ## Recorded result
 
-The September 2026 benchmark run produced:
+The September 2026 benchmark run (data files dated 2026-09-23 in the companion repository) produced:
 
 | Active process groups | Mean | Allocated |
 |---:|---:|---:|
@@ -115,11 +115,11 @@ When reading the benchmark source, look for:
 - `[MemoryDiagnoser]` — allocation measurements.
 - `[CPUUsageDiagnoser]` — CPU diagnostics.
 
-The benchmark source is the authoritative description of what the result means.
+The benchmark source is the authoritative description of what the result means. `SingleFsmUpdateTick` exercises a two-state machine whose counter-driven condition alternates transitions; `UpdateMultipleGroups` explicitly calls `FSM_API.Interaction.Update` for 1, 10, or 50 named groups. These are distinct workloads, not a universal per-frame cost model.
 
 ## Reproducing it
 
-The benchmark project targets .NET 10 and references the currently published FSM_API 1.0.13 package.
+The benchmark project targets .NET 10 and references the currently published FSM_API 1.0.13 package. Its source uses the legacy `FSM_API` entry point because the 2.0 `FsmApi` facade is not part of that published package.
 
 Run:
 
