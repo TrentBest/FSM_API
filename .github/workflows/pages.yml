@@ -1,0 +1,79 @@
+name: FSM_API Documentation Pages
+
+on:
+  push:
+    branches: [development]
+    paths:
+      - "README.md"
+      - "index.md"
+      - "docfx.json"
+      - "Documentation/**"
+      - "FSM_API/**/*.cs"
+      - "FSM_API/**/*.csproj"
+      - "api/**"
+      - "scripts/validate_doc_links.py"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    branches: [development]
+    paths:
+      - "README.md"
+      - "index.md"
+      - "docfx.json"
+      - "Documentation/**"
+      - "FSM_API/**/*.cs"
+      - "FSM_API/**/*.csproj"
+      - "api/**"
+      - "scripts/validate_doc_links.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fsm-api-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Generate and validate DocFX site
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out development
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Validate source documentation links
+        run: python3 scripts/validate_doc_links.py
+
+      - name: Install DocFX
+        run: dotnet tool install --global docfx
+
+      - name: Generate the FSM_API documentation site
+        run: docfx build
+
+      - name: Verify generated reference site
+        run: |
+          set -euo pipefail
+          test -s _site/index.html
+          test -d _site/api
+          test -s _site/sitemap.xml
+          echo "PASS: DocFX generated the FSM_API landing page, API reference, and sitemap."
+
+      - name: Upload validated Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Publish through CiAi
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/development'
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    uses: TrentBest/TheSingularityWorkshop.CiAi/.github/workflows/deploy-pages.yml@5083c452b555d7645dd0c8ab01d76008026da436
