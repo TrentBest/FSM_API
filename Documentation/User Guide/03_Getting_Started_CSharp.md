@@ -4,6 +4,19 @@
 
 This guide shows how to use FSM\_API in non-Unity environments (console, services, backends, robotics, etc.) with clean, minimal dependencies.
 
+> **Version boundary:** The examples in this guide target the **2.0 development API** on the repository's `development` branch. The published NuGet **1.0.13** package still exposes the legacy `FSM_API` entry point and does not contain the 2.0 `FsmApi` facade. For a sample that compiles against the published package, use the 1.0.13 quick-start in the repository [README](../../README.md).
+
+## Build the 2.0 development API from source
+
+The 2.0 API is not yet published to NuGet. From your application directory, clone the development branch and add a project reference:
+
+```powershell
+git clone --branch development https://github.com/TrentBest/FSM_API.git ../FSM_API
+dotnet add reference ../FSM_API/FSM_API/FSM_API.csproj
+```
+
+These examples are therefore source-branch examples, not instructions to install the unreleased API from the current NuGet package.
+
 -----
 
 ## 📚 Table of Contents
@@ -187,7 +200,7 @@ public class PureCSharpGameLoop
 
         // Define the FSM blueprint if it doesn't already exist.
         // The FSM definition is reusable across multiple instances.
-        if (!FSM_API.Exists("CharacterHealthFSM"))
+        if (!FsmApi.Interaction.Exists("CharacterHealthFSM"))
         {
             FsmApi.Create.CreateFiniteStateMachine("CharacterHealthFSM", processRate: 1, processingGroup: "GameLogic")
                 .State("Healthy",
@@ -228,7 +241,7 @@ public class PureCSharpGameLoop
     }
 
     // Call this method from your main application loop to update the FSMs
-    public void UpdateGameLogic() => FSM_API.Update("GameLogic");
+    public void UpdateGameLogic() => FsmApi.Interaction.Update("GameLogic");
 
     // Helper methods for accessing character and FSM state
     public GameCharacterContext GetPlayerCharacter() => playerCharacter;
