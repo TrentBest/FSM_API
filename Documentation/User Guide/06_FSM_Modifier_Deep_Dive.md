@@ -65,7 +65,16 @@ The public `FsmApi.Interaction` module also provides convenience methods for com
 Retrieve the registered definition, then create a modifier:
 
 ```csharp
+using System;
 using TheSingularityWorkshop.FSM_API;
+
+public sealed class PlayerContext : IStateContext
+{
+    public string Name { get; set; } = "Player";
+    public bool IsValid { get; set; } = true;
+    public bool HasSpecialAttack { get; set; }
+    public int Health { get; set; } = 100;
+}
 
 var definition = FsmApi.Interaction.GetFSMDefinition("PlayerFSM", "Update");
 var modifier = new FSMModifier(definition);
@@ -88,7 +97,7 @@ modifier
     .WithModifiedTransition(
         "Damaged",
         "CriticallyInjured",
-        ctx => ctx is CharacterContext character && character.Health <= 10)
+        ctx => ctx is PlayerContext player && player.Health <= 10)
     .WithoutTransition("Running", "Jumping")
     .WithoutState("Dead", "Idle")
     .WithProcessRate(2)
@@ -147,13 +156,12 @@ Definition changes affect the shared blueprint. A live `FSMHandle` also exposes 
 - `FsmApi.Interaction.DestroyInstance(handle)` explicitly destroys the live instance. Destruction is an interaction operation, not a `DestroyHandle()` method on the handle.
 
 Use instance controls deliberately: they change the lifecycle of one running instance, while `FSMModifier` changes the shared definition used by all instances.
-## 💡 Important Considerations and Best Practices
+## 💡 Important considerations and best practices
 
-  Affects All Instances: Remember that changes made with FSMModifier affect the shared blueprint. All active FSMHandle instances created from that blueprint will immediately use the new states, transitions, and properties on their next update cycle.
-
-  Atomicity: The FSMModifier stages changes and applies them all at once when ModifyDefinition() is called. This is a robust design that prevents partial or inconsistent changes from corrupting the FSM blueprint.
-
-  State Removal: Handles in a removed state use a valid supplied fallback when possible, otherwise the FSM's initial state. This path does not guarantee that all application-level effects or cleanup will succeed.
+- **Shared definition:** A modifier changes the blueprint, so every active instance created from that definition observes the updated definition on subsequent processing.
+- **Sequential application:** The staged operations are applied in order, not as an atomic transaction. Do not assume rollback if an operation or callback fails.
+- **State removal:** A valid supplied fallback is preferred; otherwise the FSM's initial state is used. Keep application-level cleanup and recovery behavior explicit.
+- **Review before applying:** Validate state names, transition endpoints, processing-group changes, and callbacks before calling `ModifyDefinition()`.
 
 -----
 
