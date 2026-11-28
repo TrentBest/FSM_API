@@ -308,13 +308,13 @@ namespace FSM_API
                 LegacyApi.Error.ResetInstanceErrorCount(handle);
             }
 
-            /// <summary>Returns a snapshot of string-backed instance error counts.</summary>
+            /// <summary>Returns the live string-backed instance error-count dictionary; changes to the returned dictionary affect the backing counters.</summary>
             public static Dictionary<Legacy.FSMHandle, int> GetErrorCounts()
             {
                 return LegacyApi.Error.GetErrorCounts();
             }
 
-            /// <summary>Returns a snapshot of string-backed definition error counts.</summary>
+            /// <summary>Returns the live string-backed definition error-count dictionary; changes to the returned dictionary affect the backing counters.</summary>
             public static Dictionary<string, int> GetDefinitionErrorCounts()
             {
                 return LegacyApi.Error.GetDefinitionErrorCounts();
@@ -326,13 +326,13 @@ namespace FSM_API
                 LegacyApi.Error.Reset();
             }
 
-            /// <summary>Returns a snapshot of integer-backed instance error counts.</summary>
+            /// <summary>Returns a copy of the integer-backed instance error counts.</summary>
             public static Dictionary<Integer.FSMHandleInt, int> GetIntegerInstanceErrorCounts()
             {
                 return Integer.FsmApi.Runtime.GetInstanceErrorCounts();
             }
 
-            /// <summary>Returns a snapshot of integer-backed definition error counts.</summary>
+            /// <summary>Returns a copy of the integer-backed definition error counts.</summary>
             public static Dictionary<int, int> GetIntegerDefinitionErrorCounts()
             {
                 return Integer.FsmApi.Runtime.GetDefinitionErrorCounts();
