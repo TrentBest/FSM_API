@@ -10,6 +10,8 @@ The companion project is:
 
 **[TrentBest/FSM_API_Benchmark](https://github.com/TrentBest/FSM_API_Benchmark)**
 
+The measured implementations are [the single-FSM update benchmark](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/FSM_Benchmark/FSM_StringPerformanceBaseline.cs) and [the processing-group iteration benchmark](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/FSM_Benchmark/FSM_StringGroupIterationBenchmark.cs). The repository also retains the corresponding [group-iteration Visual Studio diagnostics session](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Data/BenchmarkDotNet_FSM_StringGroupIterationBenchmark_20260923_211222.diagsession) and [single-update diagnostics session](https://github.com/TrentBest/FSM_API_Benchmark/blob/development/Data/BenchmarkDotNet_FSM_StringPerformanceBaseline_20260923_211238.diagsession). These are supporting profiler artifacts; the source workload and recorded table above define the measurement being discussed.
+
 The production package stays focused on state-machine behavior. The benchmark repository contains the experiment, BenchmarkDotNet configuration, workload parameters, and recorded evidence.
 
 ## What are we measuring?
@@ -39,11 +41,11 @@ public int ActiveProcessGroups { get; set; }
 
 The operation then updates the requested groups by name.
 
-This is useful because the current API uses string identifiers at this boundary. The benchmark gives us an observed baseline before any future lookup optimization.
+This is useful because the published 1.0.13 API uses string identifiers at this boundary. The benchmark gives us an observed baseline before any future lookup optimization. It is not an integer-backed versus string-backed comparison.
 
 ## Recorded result
 
-The September 2026 benchmark run (data files dated 2026-09-23 in the companion repository) produced:
+The September 23, 2026 benchmark run produced:
 
 | Active process groups | Mean | Allocated |
 |---:|---:|---:|
@@ -171,7 +173,7 @@ That is deliberately more useful than printing a performance number without tell
 
 These measurements were recorded during the September 2026 FSM_API performance work.
 
-They establish a baseline for the implementation and workload that existed at that time. They should be rerun after changes to:
+They establish a historical baseline for the published 1.0.13 implementation and workload that existed at that time. The currently developing 2.0 integer-backed runtime has not been measured by this report. They should be rerun after changes to:
 
 - processing-group lookup;
 - FSM registration;
