@@ -13,7 +13,7 @@ title: FSM_API — Behavior, made visible
 
   <section class="fsm-proof-strip" aria-label="Current evidence snapshot">
     <article class="fsm-proof"><strong>492 / 492</strong><span>Automated .NET 10 tests passed on development</span><a href="https://github.com/TrentBest/FSM_API/actions/runs/46087635713">Run #1133 · commit 11f56e2</a></article>
-    <article class="fsm-proof"><strong>6 targets</strong><span>Library compile matrix: .NET 10, .NET 6, .NET Core 3.1, .NET Standard 2.1/2.0, .NET Framework 4.7</span><a href="FSM_API_2.0.0_READINESS.html">Compatibility and readiness details</a></article>
+    <article class="fsm-proof"><strong>6 targets</strong><span>Library compile matrix: .NET 10, .NET 6, .NET Core 3.1, .NET Standard 2.1/2.0, .NET Framework 4.7</span><a href="FSM_API_2.0.0_READINESS.md">Compatibility and readiness details</a></article>
     <article class="fsm-proof"><strong>1.0.13</strong><span>Published NuGet release · historical benchmark baseline</span><a href="https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API">Inspect the published package</a></article>
   </section>
 
@@ -49,7 +49,7 @@ title: FSM_API — Behavior, made visible
     </table>
     <div class="fsm-bench-foot">BenchmarkDotNet · September 2026 · published FSM_API 1.0.13 · .NET 10 · string-backed Update(group) workload · historical baseline, not a 2.0 measurement.</div>
   </div>
-  <p class="fsm-evidence-note">The experiment measures real <code>Update(group)</code> calls through the published 1.0.13 interaction API and varies the number of explicitly updated groups. The observed growth is approximately linear for this workload and range. It is not a universal complexity guarantee or a prediction for every application. <a href="Benchmarking.html">Read the benchmark method and interpretation</a> · <a href="https://github.com/TrentBest/FSM_API_Benchmark">Inspect the executable benchmark project</a>.</p>
+  <p class="fsm-evidence-note">The experiment measures real <code>Update(group)</code> calls through the published 1.0.13 interaction API and varies the number of explicitly updated groups. The observed growth is approximately linear for this workload and range. It is not a universal complexity guarantee or a prediction for every application. <a href="Benchmarking.md">Read the benchmark method and interpretation</a> · <a href="https://github.com/TrentBest/FSM_API_Benchmark">Inspect the executable benchmark project</a>.</p>
 
   <div class="fsm-truth" aria-label="How to read the evidence">
     <article><h3>Correctness evidence</h3><p>Automated tests check defined behavior and edge cases. The linked run is tied to an exact source commit; it is stronger evidence than a demo animation or a claim that the library has been used in production.</p></article>
@@ -57,16 +57,16 @@ title: FSM_API — Behavior, made visible
   </div>
 
   <nav class="fsm-paths" aria-label="Explore FSM_API">
-    <a class="fsm-path" href="User%20Guide/00_Introduction.html"><strong>03 · Understand</strong><span>What finite state machines are, and when they are useful.</span></a>
-    <a class="fsm-path" href="User%20Guide/03_Getting_Started_CSharp.html"><strong>04 · Build</strong><span>Create behavior in ordinary C# — no game engine required.</span></a>
-    <a class="fsm-path" href="User%20Guide/01_Core_Concepts.html"><strong>05 · Explore the engine</strong><span>Definitions, instances, contexts, transitions, and lifecycle.</span></a>
-    <a class="fsm-path" href="Performance/BenchmarkingContract.html"><strong>06 · Measure rigorously</strong><span>Stable benchmark identities, provenance, history, and regression policy.</span></a>
-    <a class="fsm-path" href="API_TRACEABILITY_2.0.0.html"><strong>07 · Inspect the contract</strong><span>What the concise API exposes, what each runtime implements, and where parity remains open.</span></a>
+    <a class="fsm-path" href="User%20Guide/00_Introduction.md"><strong>03 · Understand</strong><span>What finite state machines are, and when they are useful.</span></a>
+    <a class="fsm-path" href="User%20Guide/03_Getting_Started_CSharp.md"><strong>04 · Build</strong><span>Create behavior in ordinary C# — no game engine required.</span></a>
+    <a class="fsm-path" href="User%20Guide/01_Core_Concepts.md"><strong>05 · Explore the engine</strong><span>Definitions, instances, contexts, transitions, and lifecycle.</span></a>
+    <a class="fsm-path" href="Performance/BenchmarkingContract.md"><strong>06 · Measure rigorously</strong><span>Stable benchmark identities, provenance, history, and regression policy.</span></a>
+    <a class="fsm-path" href="API_TRACEABILITY_2.0.0.md"><strong>07 · Inspect the contract</strong><span>What the concise API exposes, what each runtime implements, and where parity remains open.</span></a>
     <a class="fsm-path" href="FSM_API_2.0.0_READINESS.html"><strong>08 · Track readiness</strong><span>Release gates and the evidence still required before 2.0 can ship.</span></a>
   </nav>
 </div>
 
-<script defer src="fsm-api-experience.js"></script>
+<script defer src="Documentation/Experience/fsm-api-experience.js"></script>
 
 ## The idea behind the machine
 
