@@ -2,6 +2,8 @@
 
 # FSM_API
 
+**Documentation:** [Read the live FSM_API reference](https://trentbest.github.io/FSM_API/), generated from this repository's DocFX source on `development`.
+
 [![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml) [![FSM_API 2.0.0 estimated progress](assets/fsm-api-progress.svg)](Documentation/FSM_API_2.0.0_READINESS.md)
 **FSM_API is a framework-independent C# finite-state-machine library for defining behavior separately from the objects whose behavior it controls.**
 
