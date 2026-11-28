@@ -144,10 +144,8 @@ namespace TheSingularityWorkshop.FSM_API
             /// Dynamically adds a new transition between two states to an existing Finite State Machine blueprint.
             /// </summary>
             /// <remarks>
-            /// This method internally uses an <see cref="FSMModifier"/> to apply the changes.
-            /// This allows for changing the flow of your FSMs at runtime. If a transition
-            /// from <paramref name="fromState"/> to <paramref name="toState"/> with the exact
-            /// same condition already exists, it will be updated with the new <paramref name="condition"/>.
+            /// The definition replaces any existing transition with the same source and destination.
+            /// Use <see cref="FSM.AnyStateIdentifier"/> as the source to add or replace an Any-State transition.
             /// </remarks>
             /// <param name="fsmName">
             /// The unique name of the FSM blueprint to which the transition will be added or updated.
@@ -208,8 +206,7 @@ namespace TheSingularityWorkshop.FSM_API
                     throw new KeyNotFoundException($"FSM definition '{fsmName}' not found in processing group '{processingGroup}'.");
                 }
 
-                new FSMModifier(fsm).WithTransition(fromState, toState, condition)
-                   .ModifyDefinition();
+                fsm.AddTransition(fromState, toState, condition);
             }
 
 

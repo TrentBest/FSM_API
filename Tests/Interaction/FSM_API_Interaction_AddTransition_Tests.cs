@@ -90,6 +90,27 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(handle.CurrentState, Is.EqualTo("Finished"));
         }
 
+        [Test]
+        public void AddTransition_WhenEndpointsAlreadyExist_ReplacesTheExistingCondition()
+        {
+            const string fsmName = "ReplaceTransitionFSM";
+            const string processingGroup = "Update";
+
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
+                .State("Idle", null, null, null)
+                .State("Finished", null, null, null)
+                .BuildDefinition();
+
+            FsmApi.Interaction.AddTransition(fsmName, "Idle", "Finished", _ => false, processingGroup);
+            FsmApi.Interaction.AddTransition(fsmName, "Idle", "Finished", _ => true, processingGroup);
+
+            var handle = FsmApi.Create.CreateInstance(fsmName, new AnyStateContext(), processingGroup);
+            FsmApi.Interaction.Update(processingGroup);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("Finished"));
+            Assert.That(FsmApi.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(1));
+        }
+
         private bool TestCondition(IStateContext context)
         {
             if(context is FSMTestContext testContext)
