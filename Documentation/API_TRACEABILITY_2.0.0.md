@@ -15,7 +15,7 @@ The integer runtime is independent: it owns its own registry and integer identit
 | Public module | Facade source | Implementation owner | Current scope |
 |---|---|---|---|
 | `Create` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Create.cs`; `FSM_API/IntegerBacked/FsmApi.cs`; `FSM_API/IntegerBacked/FSMBuilderInt.cs` | String and integer builders/instances; integer definition registration; named processing-group creation |
-| `Transfer` | `FSM_API/FsmApi.Namespace.cs` | the `FsmApi.Transfer` partial implementation (source file location still to be identified; do not treat this row as fully traced yet) | Explicit conversion between representations |
+| `Transfer` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FsmApi.cs` → `IntegerBacked.FSMCompiler.Compile` / `Decompile` | Explicit conversion between definitions; runtime instances are not transferred |
 | `Interact` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Interaction.cs`; `FSM_API/IntegerBacked/FsmApi.cs`; `FSM_API/IntegerBacked/FSMRuntime.cs` | Broad string lifecycle/registry operations plus a smaller integer runtime surface |
 | `Error` | `FSM_API/FsmApi.Namespace.cs` | `FSM_API/FSM_API.Error.cs`; `FSM_API/IntegerBacked/FSMRuntime.cs` | Shared thresholds/diagnostic event; representation-specific counters and integer snapshots/resets |
 
@@ -36,8 +36,8 @@ The integer runtime is independent: it owns its own registry and integer identit
 
 | Facade member | Implementation | Verification/documentation status |
 |---|---|---|
-| `ToInteger(FSM, int, int)` | `FsmApi.Transfer.ToInteger` | Requires tests for deterministic mapping, unsupported/invalid definitions, transition preservation, and returned compilation diagnostics. |
-| `ToString(IntegerBacked.FSM, string, string, IReadOnlyDictionary<int,string>)` | `FsmApi.Transfer.ToString` | Requires tests for complete reverse mapping, missing/duplicate names, and round-trip semantic preservation. |
+| `ToInteger(FSM, int, int)` | `FsmApi.Transfer.ToInteger` → `IntegerBacked.FSMCompiler.Compile` | `FSMCompiler_Tests` covers deterministic dense IDs, initial state, actions, regular/Any-State transitions, invalid initial/source/target states, and immutable mappings. |
+| `ToString(IntegerBacked.FSM, string, string, IReadOnlyDictionary<int,string>)` | `FsmApi.Transfer.ToString` → `IntegerBacked.FSMCompiler.Decompile` | `FSMCompiler_Tests` covers reverse mapping, actions/transition behavior, Any-State preservation, missing/duplicate names, and missing initial-state mapping. Facade round-trip also exists in `FsmApiFacadeTests`. |
 
 ### Interact
 
@@ -83,6 +83,8 @@ The following test areas were confirmed by opening their source files during thi
 
 - `Tests/IntegerBacked/IntegerRuntimeSurfaceTests.cs` — integer facade build/register/create/update surface.
 - `Tests/IntegerBacked/IntegerParityTests.cs` — lifecycle timing, Any-State priority/callback trace, invalid-context gate, force-transition/reset semantics, sparse IDs, and timer parity.
+- `Tests/IntegerBacked/FSMCompiler_Tests.cs` — conversion/compiler validation, deterministic mapping, callback/transition preservation, read-only maps, and decompile failure cases.
+- `Tests/FsmApiFacadeTests.cs` — concise facade overloads, conversion round-trip, and integer facade execution.
 - `Tests/Error/FSM_API_ErrorAPI_Tests.cs` — string-backed error API and threshold behavior.
 - `Tests/Interaction/FSM_API_Interaction_MoveInstance_Tests.cs` — deferred move behavior.
 - `Tests/Internal/FSM_API_Internal_DestroyInsance_Tests.cs` — internal destruction behavior.
@@ -105,7 +107,7 @@ The test project currently targets `net10.0` only. The library build matrix targ
 
 1. **Facade contract accuracy:** the prose contract must distinguish the concise facade from the full established-namespace API and list the actual overloads. Do not promise integer equivalents for string-only operations.
 2. **Integer parity:** map each supported string capability to an integer equivalent or record an intentional difference. Existing parity tests cover selected behavior, not the full matrix.
-3. **Transfer correctness:** add round-trip and lossy-conversion tests with explicit diagnostics.
+3. **Transfer correctness:** baseline round-trip/compiler tests exist. Extend them for malformed mapping edge cases, null/empty arguments, action/guard identity expectations, and explicit documentation that conversion transfers definitions—not live runtime instances.
 4. **Error parity:** prove shared thresholds, exception paths, pending removal, definition unregister, counter resets, and validity/destruction interactions with equivalent string/integer traces.
 5. **API docs:** verify every public facade overload has useful XML documentation, parameter/default/exception details, and a 2.0 example where appropriate.
 6. **Examples:** compile representative examples against the development project; do not use published 1.0.13 NuGet as evidence for the unreleased 2.0 facade.
