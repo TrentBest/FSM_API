@@ -89,7 +89,7 @@ As seen in **[03. Getting Started with C\#](03_Getting_Started_CSharp.md)**, pro
       * **"Update"**: For most game logic, input, and visual updates.
       * **"FixedUpdate"**: For physics-related FSMs where precise, fixed-time-step updates are critical.
       * **"LateUpdate"**: For camera logic or actions that depend on all other updates being complete.
-  * **Pure C\#:** Create custom groups (e.g., "AI\_Slow", "NetworkUpdates", "UI\_Input") and call `FSM_API.Update("GroupName")` from your own game loop, scheduler, or event handlers.
+  * **Pure C\#:** Create custom groups (e.g., "AI\_Slow", "NetworkUpdates", "UI\_Input") and call `FsmApi.Interaction.Update("GroupName")` from your own game loop, scheduler, or event handlers.
       * This allows you to update certain groups less frequently than your main loop, even for FSMs with `processRate = 1`.
 
 <!-- end list -->
@@ -97,18 +97,18 @@ As seen in **[03. Getting Started with C\#](03_Getting_Started_CSharp.md)**, pro
 ```csharp
 // In your main game loop or manager (Pure C#)
 // Update core AI every frame
-FSM_API.Update("CoreAI");
+FsmApi.Interaction.Update("CoreAI");
 
 // Update background AI less frequently
 if (Time.elapsed % 0.5f == 0) // Example: update every 0.5 seconds
 {
-    FSM_API.Update("BackgroundAI");
+    FsmApi.Interaction.Update("BackgroundAI");
 }
 ```
 
 ### 2\. **Avoid Redundant FSM Updates**
 
-Ensure you only call `FSM_API.Update("GroupName")` once per tick for each group. Multiple calls will result in redundant processing and wasted CPU cycles. The `FSM_host-specificIntegration` script is designed to handle this correctly for host-specific.
+Ensure you only call `FsmApi.Interaction.Update("GroupName")` once per tick for each group. Multiple calls will result in redundant processing and wasted CPU cycles. The `FSM_host-specificIntegration` script is designed to handle this correctly for host-specific.
 
 ### 3\. **Batch Updates for Large Numbers of FSMs**
 

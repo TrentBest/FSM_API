@@ -23,12 +23,7 @@
       {
         "src": "Documentation",
         "files": [
-          "**/*.md",
-          "**/*.svg",
-          "**/*.png",
-          "**/*.jpg",
-          "**/*.jpeg",
-          "**/*.gif"
+          "**/*.md"
         ]
       },
       {
@@ -46,6 +41,27 @@
     },
     "plugins": [
       "docfx.plugins.mermaid"
+    ],
+    "resource": [
+      {
+        "src": "Documentation",
+        "dest": "Documentation",
+        "files": [
+          "**/*.svg",
+          "**/*.png",
+          "**/*.jpg",
+          "**/*.jpeg",
+          "**/*.gif"
+        ]
+      },
+      {
+        "src": "Documentation/Experience",
+        "dest": "Documentation/Experience",
+        "files": [
+          "**/*.css",
+          "**/*.js"
+        ]
+      }
     ]
   }
 }

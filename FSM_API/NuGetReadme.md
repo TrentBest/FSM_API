@@ -2,13 +2,13 @@
 
 # FSM_API — finite-state behavior you can see
 
-> **Version boundary:** this README documents the 2.0 development API. The currently published NuGet 1.x package still exposes the legacy `FSM_API` entry point; `FsmApi` becomes the supported entry point with the 2.0 release. This development update does not publish or change the package version.
+> **Version boundary:** this README documents the 2.0 development API. The currently published NuGet 1.0.13 package still exposes the legacy `FSM_API` entry point; `FsmApi` is the development entry point for the unreleased 2.0 API. This development update does not publish or change the package version.
 
 A state machine is easier to understand when its states, transitions, and lifecycle can be seen. FSM_API is a pure C# library for describing reusable finite-state behavior and running independent instances in any host application.
 
 [![NuGet version](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=development&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
 
 ## 🟦 01 What
 
@@ -20,7 +20,7 @@ FSM_API separates a behavior's reusable definition from each live instance and f
 - **Processing group:** a named set of FSM instances advanced together by the host.
 
 <p align="center">
-  <a href="https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg">
+  <a href="https://github.com/TrentBest/FSM_API/blob/development/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg">
     <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg" alt="Animated FSM_API architecture: a reusable definition feeds a live instance that evaluates guarded transitions and works through application-owned context data" width="960" />
   </a>
 </p>
@@ -35,7 +35,14 @@ FSM_API is designed to remain host-agnostic: the core is pure C#, does not requi
 
 ## 🔺 03 How
 
-Install [TheSingularityWorkshop.FSM_API from NuGet](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API), then define your context, build a finite-state machine, create an instance, and tick its processing group.
+These examples target the 2.0 development source and are **not compatible with the published 1.0.13 NuGet package**. Clone the `development` branch and add a project reference to `FSM_API/FSM_API.csproj` from your application:
+
+```powershell
+git clone --branch development https://github.com/TrentBest/FSM_API.git ../FSM_API
+dotnet add reference ../FSM_API/FSM_API/FSM_API.csproj
+```
+
+The NuGet badge above reports the published 1.x package version only; it does not mean these 2.0 development examples are available from NuGet.
 
 ```csharp
 using System;
@@ -85,7 +92,7 @@ The host decides when to call Update. Transition conditions determine whether an
 
 - Start with the [C# getting-started guide](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/03_Getting_Started_CSharp.md).
 - Explore [core concepts](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/01_Core_Concepts.md).
-- Read the [theory guides](https://github.com/TrentBest/FSM_API/tree/master/Documentation/User%20Guide/Theory).
+- Read the [theory guides](https://github.com/TrentBest/FSM_API/tree/development/Documentation/User%20Guide/Theory).
 - Inspect the [animated architecture SVG](https://github.com/TrentBest/FSM_API/blob/master/Documentation/User%20Guide/Visuals/FSM_API_Architecture.svg).
 
 ## 🟪 05 Documentation and theory

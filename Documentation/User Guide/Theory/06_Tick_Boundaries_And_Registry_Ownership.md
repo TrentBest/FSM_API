@@ -43,11 +43,11 @@ A stack trace is evidence of where a failure surfaced, not by itself proof of wh
 
 ## Source references
 
-- [`Interaction.Update` and `Interaction.MoveInstance`](../../../FSM_API/FSM_API.Interaction.cs)
-- [`Internal.TickAll`, `Internal.ProcessDeferredModifications`, `Internal.QueueDeferredModification`, and `Internal.DestroyInstance`](../../../FSM_API/FSM_API.Internal.cs)
-- [`Create.CreateInstance`](../../../FSM_API/FSM_API.Create.cs) (creation and registry insertion)
+- [`Interaction.Update` and `Interaction.MoveInstance`](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Interaction.cs)
+- [`Internal.TickAll`, `Internal.ProcessDeferredModifications`, `Internal.QueueDeferredModification`, and `Internal.DestroyInstance`](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Internal.cs)
+- [`Create.CreateInstance`](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Create.cs) (creation and registry insertion)
 - [Handle validity and lifecycle](../../Design/FSM_API/FSM_API/FSMHandle/FSMHandle.md)
-- [Renderer integration investigation](../../../RendererLLM.md)
+- [Renderer integration repository](https://github.com/TrentBest/TheSingularityWorkshop.Renderer)
 
 The implementation and regression tests are authoritative. Revisit this document whenever the registry ownership or deferred-mutation contract changes.
 

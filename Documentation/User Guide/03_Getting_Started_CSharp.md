@@ -4,6 +4,19 @@
 
 This guide shows how to use FSM\_API in non-Unity environments (console, services, backends, robotics, etc.) with clean, minimal dependencies.
 
+> **Version boundary:** The examples in this guide target the **2.0 development API** on the repository's `development` branch. The published NuGet **1.0.13** package still exposes the legacy `FSM_API` entry point and does not contain the 2.0 `FsmApi` facade. For a sample that compiles against the published package, use the 1.0.13 quick-start in the repository [README](https://github.com/TrentBest/FSM_API/blob/development/README.md).
+
+## Build the 2.0 development API from source
+
+The 2.0 API is not yet published to NuGet. From your application directory, clone the development branch and add a project reference:
+
+```powershell
+git clone --branch development https://github.com/TrentBest/FSM_API.git ../FSM_API
+dotnet add reference ../FSM_API/FSM_API/FSM_API.csproj
+```
+
+These examples are therefore source-branch examples, not instructions to install the unreleased API from the current NuGet package.
+
 -----
 
 ## 📚 Table of Contents
@@ -32,13 +45,9 @@ This guide shows how to use FSM\_API in non-Unity environments (console, service
 
 -----
 
-## Install FSM_API into your c# project using Nuget Package
+## Reference the 2.0 development project
 
-Within your preferred IDE find FSM_API within the NuGet Package Manager and click install.
-
-## Install FSM_API into your project using .NET CLI:
-
-dotnet add package TheSingularityWorkshop.FSM_API
+The examples below use the project reference established in the version-boundary instructions at the top of this guide. The published 1.0.13 NuGet package is a separate legacy API surface; use the repository root README for its compatible installation and quick-start.
 
 ## Integrate the API into your project
 
@@ -187,7 +196,7 @@ public class PureCSharpGameLoop
 
         // Define the FSM blueprint if it doesn't already exist.
         // The FSM definition is reusable across multiple instances.
-        if (!FSM_API.Exists("CharacterHealthFSM"))
+        if (!FsmApi.Interaction.Exists("CharacterHealthFSM"))
         {
             FsmApi.Create.CreateFiniteStateMachine("CharacterHealthFSM", processRate: 1, processingGroup: "GameLogic")
                 .State("Healthy",
@@ -228,7 +237,7 @@ public class PureCSharpGameLoop
     }
 
     // Call this method from your main application loop to update the FSMs
-    public void UpdateGameLogic() => FSM_API.Update("GameLogic");
+    public void UpdateGameLogic() => FsmApi.Interaction.Update("GameLogic");
 
     // Helper methods for accessing character and FSM state
     public GameCharacterContext GetPlayerCharacter() => playerCharacter;
@@ -240,7 +249,7 @@ public class PureCSharpGameLoop
 
 ## ✅ Step 3: Manual Update Loop
 
-Since you don’t have an engine's `Update()` or `FixedUpdate()` loop, you'll explicitly "tick" the FSMs yourself from your main application loop or a dedicated manager. You'll call `FSM_API.Update()` for the processing group you defined.
+Since you don’t have an engine's `Update()` or `FixedUpdate()` loop, you'll explicitly "tick" the FSMs yourself from your main application loop or a dedicated manager. You'll call `FsmApi.Interaction.Update()` for the processing group you defined.
 
 ### 🕹 Example: `Program.cs` (Main Application Entry Point)
 
@@ -298,8 +307,7 @@ To run this pure C\# FSM example:
 
 1.  **Create a Console App Project** in your preferred IDE (e.g., Visual Studio, VS Code with C\# extension).
 2.  **Add FSM\_API Reference:**
-      * If FSM\_API is available on NuGet, add it via the NuGet Package Manager.
-      * Otherwise, manually add a reference to the `TheSingularityWorkshop.FSM_API.dll` file.
+      * Add a project reference to the 2.0 development checkout's `FSM_API/FSM_API.csproj`.
 3.  **Add Code Files:**
       * Create `GameCharacterContext.cs` and paste the code from Step 1.
       * Create `PureCSharpGameLoop.cs` and paste the code from Step 2.
@@ -313,7 +321,7 @@ To run this pure C\# FSM example:
   * FSM\_API works seamlessly outside of Unity and other game engines, providing a powerful FSM solution for any pure C\# application.
   * You define your application's data models or entities as classes that implement the **`IStateContext`** interface.
   * FSM definition and instantiation logic remain consistent with Unity usage, using `FsmApi.Create.CreateFiniteStateMachine()` and `FsmApi.Create.CreateInstance()`.
-  * You gain explicit control over when FSMs process their logic by calling `FSM_API.Update("YourGroupName")` from your application's main loop or scheduler.
+  * You gain explicit control over when FSMs process their logic by calling `FsmApi.Interaction.Update("YourGroupName")` from your application's main loop or scheduler.
   * This makes FSM\_API an ideal choice for server-side logic, complex simulations, AI systems, backend services, or custom game engines where you need robust and decoupled state management.
 
 -----

@@ -119,11 +119,11 @@ The test project currently targets `net10.0` only. The library build matrix targ
 
 ## 6. Source references
 
-- [Concise facade](../FSM_API/FsmApi.Namespace.cs)
-- [String-backed Create](../FSM_API/FSM_API.Create.cs)
-- [String-backed Interaction](../FSM_API/FSM_API.Interaction.cs)
-- [Integer-backed facade](../FSM_API/IntegerBacked/FsmApi.cs)
-- [Integer-backed builder](../FSM_API/IntegerBacked/FSMBuilderInt.cs)
+- [Concise facade](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FsmApi.Namespace.cs)
+- [String-backed Create](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Create.cs)
+- [String-backed Interaction](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/FSM_API.Interaction.cs)
+- [Integer-backed facade](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/IntegerBacked/FsmApi.cs)
+- [Integer-backed builder](https://github.com/TrentBest/FSM_API/blob/development/FSM_API/IntegerBacked/FSMBuilderInt.cs)
 - [Theory learning path](User%20Guide/Theory/README.md)
 - [Tick boundary theory](User%20Guide/Theory/06_Tick_Boundaries_And_Registry_Ownership.md)
 - [2.0 public API contract](FSM_API_2.0.0_PUBLIC_API_CONTRACT.md)

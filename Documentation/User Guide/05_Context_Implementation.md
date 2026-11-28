@@ -207,7 +207,7 @@ public class EnemyAI : MonoBehaviour, IStateContext
         Name = gameObject.name; // Assign GameObject's name for FSM_API debugging
 
         // Example FSM Definition (often defined once in a central manager or at startup)
-        if (!FSM_API.Exists("EnemyCombatFSM"))
+        if (!FsmApi.Interaction.Exists("EnemyCombatFSM"))
         {
             FsmApi.Create.CreateFiniteStateMachine("EnemyCombatFSM", processingGroup: "Update")
                 .State("Patrol",

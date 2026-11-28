@@ -12,6 +12,7 @@ on:
       - "FSM_API/**/*.csproj"
       - "api/**"
       - "scripts/validate_doc_links.py"
+      - "scripts/test_fsm_api_experience.cjs"
       - ".github/workflows/pages.yml"
   pull_request:
     branches: [development]
@@ -42,6 +43,12 @@ jobs:
       - name: Check out development
         uses: actions/checkout@v7
 
+      - name: Validate interactive experience JavaScript
+        run: node --check Documentation/Experience/fsm-api-experience.js
+
+      - name: Test interactive experience behavior
+        run: node scripts/test_fsm_api_experience.cjs
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v6
         with:
@@ -61,6 +68,10 @@ jobs:
           set -euo pipefail
           test -s _site/index.html
           test -s _site/sitemap.xml
+          test -s _site/Documentation/Experience/fsm-api-experience.css
+          test -s _site/Documentation/Experience/fsm-api-experience.js
+          grep -q 'data-fsm-demo' _site/index.html
+          grep -q '15,736.6 ns' _site/index.html
           html_count="$(find _site -type f -name '*.html' | wc -l)"
           test "$html_count" -gt 1
           echo "PASS: DocFX generated the FSM_API landing page, documentation pages, and sitemap ($html_count HTML files)."
