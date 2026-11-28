@@ -2,7 +2,7 @@
 
 # FSM_API
 
-**Documentation:** [Read the live FSM_API reference](https://trentbest.github.io/FSM_API/), generated from this repository's DocFX source on `development`.
+**Explore:** [Enter the interactive Behavior Laboratory](https://trentbest.github.io/FSM_API/) · [Read the API and learning guides](Documentation/ReadMe.md) · [Inspect the benchmark evidence](Documentation/Benchmarking.md).
 
 [![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/FSM_API/actions/workflows/sith-policy.yml) [![FSM_API 2.0.0 estimated progress](assets/fsm-api-progress.svg)](Documentation/FSM_API_2.0.0_READINESS.md)
 **FSM_API is a framework-independent C# finite-state-machine library for defining behavior separately from the objects whose behavior it controls.**
@@ -13,53 +13,29 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=development&style=flat-square&logo=github)](https://github.com/TrentBest/FSM_API/actions/workflows/dotnet.yml?query=branch%3Adevelopment)
 [![Code Coverage](https://codecov.io/gh/TrentBest/FSM_API/graph/badge.svg)](https://codecov.io/gh/TrentBest/FSM_API)
 
-## FSM_API 2.0.0 development progress
+## FSM_API 2.0.0 development status
 
-**Estimated readiness: 42%** · Last weighted estimate (pre-migration) · Updated 2026-11-13
+**2.0 is implemented on `development`, under verification, and not released.** The published NuGet package remains **1.0.13**. Do not use the 2.0 API surface as though it were available from the published 1.x package.
 
-The 2.0.0 scope is organized around the public **Create**, **Interact**, **Transfer**, and **Error** modules. The overall score also accounts for cross-cutting parity, identity, verification, performance, Workshop-grade documentation, and release governance. It is not code coverage, file count, or a release date.
+The current development surface includes the concise `FSM_API.FsmApi` facade and the authoritative `TheSingularityWorkshop.FSM_API.FsmApi` implementation. String-backed and integer-backed execution use independent registries. Definition conversion is explicit through `FsmApi.Transfer`; it does not transfer live instances. The concise facade does not expose every operation from either underlying runtime, and full behavioral and diagnostic parity remains an open release gate.
 
-| Workstream | Weight | Estimated completion | Weighted contribution |
-| :-- | --: | --: | --: |
-| Create module and public construction contract | 12% | 50% | 6.00 points |
-| Interact module and runtime lifecycle | 18% | 40% | 7.20 points |
-| Error module and diagnostic policy | 10% | 55% | 5.50 points |
-| String/integer behavioral parity | 15% | 45% | 6.75 points |
-| Identity, compiler bridge, and storage contract | 10% | 60% | 6.00 points |
-| Tests, CI, target frameworks, and package validation | 12% | 55% | 6.60 points |
-| Reproducible performance evidence | 8% | 10% | 0.80 points |
-| Workshop documentation and learning system | 10% | 20% | 2.00 points |
-| Branch reconciliation and release governance | 5% | 20% | 1.00 point |
-| **Weighted total** | **100%** |  | **41.85 → 42%** |
+### Evidence snapshot
 
-### Public API target
+- **Correctness:** development commit [`11f56e2`](https://github.com/TrentBest/FSM_API/commit/11f56e2bff8ee473b090b148318629810de3df88) passed **492 tests, 0 failed, 0 skipped** on .NET 10 in [workflow run #1133](https://github.com/TrentBest/FSM_API/actions/runs/46087635713). This is a commit-specific automated test result, not a claim of production adoption or complete parity.
+- **Build compatibility:** the library compiled for its six configured target frameworks in that workflow. Runtime tests execute on .NET 10 only; older target frameworks are compile-validated, not runtime-tested by this lane.
+- **Performance:** the visible [benchmark baseline](Documentation/Benchmarking.md) is a September 2026 BenchmarkDotNet measurement of the published **1.0.13** package. It is not a measurement of the 2.0 candidate and does not establish a 2.0 speedup.
+- **Documentation:** the [public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md), [source-backed API traceability map](Documentation/API_TRACEABILITY_2.0.0.md), and [readiness gates](Documentation/FSM_API_2.0.0_READINESS.md) distinguish implemented surfaces from unresolved behavior and verification.
 
-The concise 2.0 consumer entry point on `development` is:
+### Remaining release gates
 
-```csharp
-using FSM_API;
+1. Demonstrate string/integer behavioral parity across lifecycle, transitions, invalidation, mutation, exceptions, and destruction—or document deliberate differences.
+2. Resolve and verify diagnostic threshold, exception, counter, and cleanup semantics.
+3. Complete deterministic identity, mapping, persistence, and versioning contracts.
+4. Produce reproducible, equivalent 2.0 benchmark measurements with provenance and historical comparisons.
+5. Finish implementation-linked documentation and verify the public Pages experience.
+6. Reconcile branch history and obtain explicit owner authorization before any release or NuGet publication.
 
-FsmApi.Create.CreateFiniteStateMachine();
-FsmApi.Interact.Update("Update");
-```
-
-The public entry point is `FsmApi`. The established library namespace contains the authoritative implementation and exposes `Create`, `Interaction`, `Error`, `Internal`, and explicit `Transfer` modules. The concise `FSM_API` namespace also exposes `FsmApi` for consumers who prefer `using FSM_API;`; its interaction module is named `Interact`. Both surfaces forward to the same string-backed and integer-backed runtimes. The two runtime registries remain independent; conversion occurs only through `FsmApi.Transfer`. The Error facade forwards the shared string-backed diagnostic system and integer-backed diagnostic snapshots/reset operations. Full diagnostic-policy parity and exception-path semantics remain under audit. See the [2.0 public API and Workshop documentation contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md).
-
-**Version boundary:** the `FsmApi` surface described here is the 2.0 development API. The currently published NuGet 1.x package remains on the legacy `FSM_API` entry point until an explicitly authorized 2.0 release. Examples in the 1.x sections below are retained as historical/current-package guidance.
-
-### What moves the estimate
-
-- **Create:** the original string-backed implementation is now the authoritative `FsmApi` entry point; integer-backed creation remains a distinct runtime surface. Full parity and identity guarantees remain open.
-- **Interact:** update, transition, scheduling, lifecycle, mutation, and destruction semantics still require complete cross-representation parity evidence.
-- **Error:** diagnostics, thresholds, exception paths, and explicit shutdown behavior must be coherent and testable.
-- **String/integer parity:** every supported string capability must have an equivalent integer-backed capability, demonstrated by equivalent observable traces—not merely by the presence of two implementations.
-- **Identity:** deterministic IDs, reverse diagnostic mappings, and storage/versioning boundaries must be explicit.
-- **Verification:** the latest current-development validation [run #992](https://github.com/TrentBest/FSM_API/actions/runs/43697312085) completed successfully with **489 passed, 0 failed, 0 skipped** on .NET 10. The package artifact and documentation artifact were generated, documentation links validated, and Codecov upload succeeded. The conditional Sith and NuGet publication jobs were skipped. This validates the current head only; it does not close the broader parity or release gates.
-- **Performance:** a reproducible equivalent benchmark suite and historical evidence are still required; no speedup is claimed.
-- **Workshop documentation:** existing material is treated as a substantial first draft. The 2.0 pass must elevate it into an implementation-linked learning and reference system with accurate API docs, executable examples, conceptual models, diagrams, operational truth, and maintenance rules.
-- **Release governance:** preserve unique branch work and reconcile history before reducing the repository to `master` and `development`.
-
-The 42% score and module percentages below are the last weighted estimate from before the FsmApi migration; they have not yet been recalculated and must not be read as a current measurement of this commit. The SVG is a compact view of that baseline estimate. Recalculate the score, bars, and table together when the remaining parity, performance, and Workshop documentation evidence is assessed. 100% means all release gates are evidenced and ready for owner review; it does **not** authorize publication.
+**No readiness percentage is published here.** The former 42% figure was a pre-migration estimate from 2026-11-13; its workstream weights were not recalculated against the current implementation and evidence. A stale number would imply more precision than the audit supports. The readiness document is the source of truth for open gates. Completion of the gates means ready for owner review; it does not authorize publication.
 
 ---
 
@@ -143,7 +119,7 @@ using TheSingularityWorkshop.FSM_API;
 
 var door = new DoorContext { RequestOpen = true };
 
-FsmApi.Create.CreateFiniteStateMachine(
+FSM_API.Create.CreateFiniteStateMachine(
         "DoorFSM",
         processRate: 1,
         processingGroup: "Tutorial")
@@ -158,11 +134,11 @@ FsmApi.Create.CreateFiniteStateMachine(
         context => !((DoorContext)context).RequestOpen)
     .BuildDefinition();
 
-_ = FsmApi.Create.CreateInstance("DoorFSM", door, "Tutorial");
+_ = FSM_API.Create.CreateInstance("DoorFSM", door, "Tutorial");
 
 // The host application decides when the FSM is updated.
 for (var tick = 0; tick < 3; tick++)
-    FsmApi.Interaction.Update("Tutorial");
+    FSM_API.Interaction.Update("Tutorial");
 
 Console.WriteLine($"{door.Name} open: {door.IsOpen}");
 
