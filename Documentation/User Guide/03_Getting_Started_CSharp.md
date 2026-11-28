@@ -4,7 +4,7 @@
 
 This guide shows how to use FSM\_API in non-Unity environments (console, services, backends, robotics, etc.) with clean, minimal dependencies.
 
-> **Version boundary:** The examples in this guide target the **2.0 development API** on the repository's `development` branch. The published NuGet **1.0.13** package still exposes the legacy `FSM_API` entry point and does not contain the 2.0 `FsmApi` facade. For a sample that compiles against the published package, use the 1.0.13 quick-start in the repository [README](../../README.md).
+> **Version boundary:** The examples in this guide target the **2.0 development API** on the repository's `development` branch. The published NuGet **1.0.13** package still exposes the legacy `FSM_API` entry point and does not contain the 2.0 `FsmApi` facade. For a sample that compiles against the published package, use the 1.0.13 quick-start in the repository [README](https://github.com/TrentBest/FSM_API/blob/development/README.md).
 
 ## Build the 2.0 development API from source
 
