@@ -96,7 +96,7 @@ FSM_API is a foundational behavior package. It does not depend on FSM_COS, Micro
 
 ## 🟢 04 — See it in a minute
 
-This tutorial uses the published **TheSingularityWorkshop.FSM_API 1.0.13** package and a Visual Studio Console App.
+This tutorial uses the published **TheSingularityWorkshop.FSM_API 1.0.13** package and a Visual Studio Console App. The code intentionally uses the legacy `FSM_API` entry point; the unreleased 2.0 development API uses `FsmApi` instead.
 
 ### 1. Create a project
 
@@ -180,7 +180,7 @@ Already have an application? You do not need to rebuild it around FSM_API.
 2. Implement `IStateContext` on an application-owned object or create a small adapter around an existing model. Provide `Name` and `IsValid`.
 3. Define the state machine during your existing startup/setup phase.
 4. Create an FSM instance for each object that needs the behavior.
-5. Call `FsmApi.Interaction.Update("YourProcessingGroup")` from the update point your application already controls.
+5. Call `FSM_API.Interaction.Update("YourProcessingGroup")` from the update point your application already controls.
 
 Your application continues to own its data, services, UI, networking, and main loop. FSM_API supplies the state/transition mechanism; it does not take over application scheduling or presentation.
 
