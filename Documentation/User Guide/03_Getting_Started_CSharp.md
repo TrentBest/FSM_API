@@ -307,8 +307,7 @@ To run this pure C\# FSM example:
 
 1.  **Create a Console App Project** in your preferred IDE (e.g., Visual Studio, VS Code with C\# extension).
 2.  **Add FSM\_API Reference:**
-      * If FSM\_API is available on NuGet, add it via the NuGet Package Manager.
-      * Otherwise, manually add a reference to the `TheSingularityWorkshop.FSM_API.dll` file.
+      * Add a project reference to the 2.0 development checkout's `FSM_API/FSM_API.csproj`.
 3.  **Add Code Files:**
       * Create `GameCharacterContext.cs` and paste the code from Step 1.
       * Create `PureCSharpGameLoop.cs` and paste the code from Step 2.
