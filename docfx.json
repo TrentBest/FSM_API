@@ -46,6 +46,15 @@
     },
     "plugins": [
       "docfx.plugins.mermaid"
+    ],
+    "resource": [
+      {
+        "src": "Documentation/Experience",
+        "files": [
+          "**/*.css",
+          "**/*.js"
+        ]
+      }
     ]
   }
 }
