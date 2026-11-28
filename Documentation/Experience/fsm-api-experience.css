@@ -62,3 +62,11 @@
 .fsm-truth p { color:var(--fsm-muted); margin:0; font-size:.88rem; }
 @keyframes fsm-pulse { 0%,100% { opacity:.65; box-shadow:0 0 7px currentColor; } 50% { opacity:1; box-shadow:0 0 18px currentColor,0 0 28px rgba(135,224,178,.24); } }\n@keyframes fsm-drift { 0%,100% { transform:translateX(-3px); opacity:.72; } 50% { transform:translateX(3px); opacity:1; } }\n@media(max-width:650px) { .fsm-proof-strip,.fsm-truth { grid-template-columns:1fr; } .fsm-machine { grid-template-columns:1fr; } .fsm-transition .fsm-arrow { transform:rotate(90deg); } .fsm-state { min-height:125px; } .fsm-readout { grid-template-columns:1fr; } .fsm-bench { overflow-x:auto; } .fsm-bench table { min-width:480px; } }
 @media(prefers-reduced-motion:reduce) { .fsm-experience *,.fsm-experience *::before,.fsm-experience *::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+
+.fsm-ecosystem { max-width:1000px; margin:1.6rem auto 0; }
+.fsm-ecosystem-intro { color:var(--fsm-muted); max-width:760px; margin:0 0 1rem; }
+.fsm-ecosystem-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:.75rem; }
+.fsm-ecosystem-card { display:block; padding:1rem; border:1px solid var(--fsm-line); border-radius:13px; background:linear-gradient(145deg,rgba(20,43,64,.88),rgba(7,18,31,.88)); color:var(--fsm-text)!important; text-decoration:none!important; transition:transform .2s,border-color .2s,background .2s; }
+.fsm-ecosystem-card:hover { transform:translateY(-3px); border-color:var(--fsm-amber); background:rgba(24,49,72,.94); }
+.fsm-ecosystem-card strong { display:block; color:#fff; margin-bottom:.35rem; }
+.fsm-ecosystem-card span { display:block; color:var(--fsm-muted); font-size:.84rem; }
