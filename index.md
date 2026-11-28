@@ -9,6 +9,11 @@ title: FSM_API — Behavior, made visible
     <div class="fsm-kicker">The Singularity Workshop · Behavior Laboratory</div>
     <h1>Behavior isn't magic.<span class="fsm-hero-line">Make it visible.</span></h1>
     <p>Every application is full of things that change: a door opens, an agent reacts, a workflow advances, a connection fails and recovers. FSM_API gives those changes an explicit model — states, conditions, actions, and a heartbeat controlled by your application.</p>
+    <div class="fsm-live-badges" aria-label="Live repository and package status">
+      <a href="https://github.com/TrentBest/FSM_API/actions/workflows/dotnet.yml"><img src="https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=development&label=development%20build" alt=".NET development build status"></a>
+      <a href="https://github.com/TrentBest/FSM_API/actions/workflows/pages.yml"><img src="https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/pages.yml?branch=development&label=Pages%20pipeline" alt="Pages pipeline status"></a>
+      <a href="https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API"><img src="https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?label=published%20NuGet" alt="Published NuGet version"></a>
+    </div>
   </header>
 
   <section class="fsm-proof-strip" aria-label="Current evidence snapshot">
