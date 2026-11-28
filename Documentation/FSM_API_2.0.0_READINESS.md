@@ -1,6 +1,6 @@
 # FSM_API 2.0.0 — Development Readiness
 
-**Last reviewed:** 2026-11-27  
+**Last reviewed:** 2026-11-28  
 **Branch:** `development`
 
 ## Public API migration
@@ -90,3 +90,22 @@ The concise facade's threshold properties and diagnostic event now have XML summ
 
 Documentation-only changes made during this review are on `development`; they do not change runtime behavior, package version, branch inventory, or publication authorization.
 \n\n## Review update — 2026-11-27\n\nThe live Sith-policy evidence was refreshed and confirms 23 branches / `NON-COMPLIANT`; this is consistent with the direct branch listing. The 2.0 API traceability inventory was added on `development`. The inventory found that the concise facade should not be described as offering complete string/integer feature parity: its actual exposed members and the independent integer surface must be described explicitly. No runtime behavior, package version, target framework, branch, merge, publication, or deployment was changed by this documentation pass.\n
+
+## Review update — 2026-11-28
+
+### Transfer and diagnostic contract findings
+
+- The concise Transfer facade is fully located: `FSM_API/FsmApi.cs` delegates to `IntegerBacked.FSMCompiler.Compile` and `Decompile`. Conversion preserves definition behavior through shared callbacks/conditions and explicit state mappings; it does not transfer live instances.
+- Existing compiler tests cover deterministic dense IDs, initial-state preservation, action and regular/Any-State transition preservation, invalid source/target/initial states, read-only mapping objects, reverse conversion, and round-trip behavior. These are existing tests, not newly added tests.
+- The string-backed `GetErrorCounts()` and `GetDefinitionErrorCounts()` methods return their live mutable backing dictionaries. Integer-backed getters return copies. The concise `Reset()` clears only string-backed counters; integer reset methods are per-handle/per-definition.
+- The runtimes share threshold settings but schedule threshold cleanup differently: string-backed cleanup uses the deferred-modification queue; integer-backed cleanup processes pending lifecycle changes at the end of its update call. These differences remain explicit parity/contract questions, not assumed equivalence.
+
+### Current verification and branch evidence
+
+- Latest completed full .NET workflow observed during this review: [run #1125](https://github.com/TrentBest/FSM_API/actions/runs/46087202082), exact commit `14be41e594e3d2cd2c6db7d23b84a1832c373db6`. Solution build/package and documentation jobs succeeded; .NET 10 tests reported **489 passed, 0 failed, 0 skipped**. The build emitted 282 warnings and 0 errors. NuGet publication and the embedded Sith gate were skipped.
+- Newer documentation commits are being validated separately. The latest observed .NET run is [run #1130](https://github.com/TrentBest/FSM_API/actions/runs/46087374098), currently in progress at the time of this update; do not treat the earlier successful run as validation of the latest commit.
+- The latest direct live branch inventory contains **24 branches**, including `development`, `master`, and 22 additional branches. The exact-two-branch Sith policy remains **NON-COMPLIANT**. No branch was deleted; surplus-branch cleanup remains owner-controlled.
+- The Pages workflow is push-triggered and uses the CiAi deployment workflow. Its latest observed run is [run #71](https://github.com/TrentBest/FSM_API/actions/runs/46087374455), in progress. I did not manually dispatch a deployment; this automation is triggered by development pushes.
+- Package version remains `1.0.13`; all six library target frameworks remain unchanged. No runtime implementation, package publication, merge to `master`, or branch deletion was performed.
+
+The detailed source/test map is maintained in [API_TRACEABILITY_2.0.0.md](API_TRACEABILITY_2.0.0.md). These findings improve documentation accuracy but do not constitute 2.0 parity sign-off.

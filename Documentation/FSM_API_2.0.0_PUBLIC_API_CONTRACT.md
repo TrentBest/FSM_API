@@ -13,7 +13,7 @@ using FSM_API;
 The concise `FSM_API.FsmApi` facade exposes four modules:
 
 - `FsmApi.Create` — define FSMs, compile definitions, and create instances.
-- `FsmApi.Interact` — update, inspect, transition, move, reset, and explicitly destroy live FSMs.
+- `FsmApi.Interact` — update, inspect, perform the exposed string-backed definition mutations, move string-backed instances, and explicitly destroy supported definitions/instances. The concise facade does not expose a general explicit-transition request or reset operation.
 - `FsmApi.Transfer` — explicitly convert definitions between the independent string-backed and integer-backed representations.
 - `FsmApi.Error` — configure error policy and observe/report diagnostics.
 
@@ -59,9 +59,9 @@ String and integer parity is a separate release gate, not a claim that the curre
 
 Owns the diagnostic and error-policy boundary:
 - Shared internal API diagnostics and subscriptions for runtime failures.
-- String-backed instance- and definition-level error accounting.
-- Integer-backed instance- and definition-level error accounting, with snapshot and reset operations exposed through the concise facade.
-- The integer runtime reports callback failures through the shared internal diagnostic channel and uses the same configured instance and definition threshold values as the string-backed runtime; counters remain representation-specific.
+- String-backed instance- and definition-level error accounting. The concise facade's string counter getters return the live mutable backing dictionaries, not snapshots; `Reset()` clears only string-backed counters.
+- Integer-backed instance- and definition-level error accounting. The concise facade's integer counter getters return copies; it exposes per-instance and per-definition resets, but no global integer-counter reset.
+- Both runtimes use the same configured instance and definition threshold values, but counters remain representation-specific and threshold cleanup is scheduled differently: the string runtime uses its deferred-modification queue, while the integer runtime processes pending lifecycle changes at the end of its update call.
 - Threshold configuration is shared, not independently configurable per representation. The concise facade does not expose a public integer-specific error-injection operation.
 - Error context sufficient to identify the definition, instance, state, processing group, and callback phase, subject to the details available from each representation.
 - Deterministic behavior when callbacks both invalidate/destroy an instance and throw.
