@@ -68,14 +68,6 @@ Retrieve the registered definition, then create a modifier:
 using System;
 using TheSingularityWorkshop.FSM_API;
 
-public sealed class PlayerContext : IStateContext
-{
-    public string Name { get; set; } = "Player";
-    public bool IsValid { get; set; } = true;
-    public bool HasSpecialAttack { get; set; }
-    public int Health { get; set; } = 100;
-}
-
 var definition = FsmApi.Interaction.GetFSMDefinition("PlayerFSM", "Update");
 var modifier = new FSMModifier(definition);
 
@@ -102,6 +94,14 @@ modifier
     .WithoutState("Dead", "Idle")
     .WithProcessRate(2)
     .ModifyDefinition();
+
+public sealed class PlayerContext : IStateContext
+{
+    public string Name { get; set; } = "Player";
+    public bool IsValid { get; set; } = true;
+    public bool HasSpecialAttack { get; set; }
+    public int Health { get; set; } = 100;
+}
 ```
 
 The available staging methods are:
