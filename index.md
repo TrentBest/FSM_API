@@ -12,7 +12,7 @@ title: FSM_API — Behavior, made visible
   </header>
 
   <section class="fsm-proof-strip" aria-label="Current evidence snapshot">
-    <article class="fsm-proof"><strong>492 / 492</strong><span>Automated .NET 10 tests passed on development</span><a href="https://github.com/TrentBest/FSM_API/actions/runs/46087635713">Run #1133 · commit 11f56e2</a></article>
+    <article class="fsm-proof"><strong>492 / 492</strong><span>Automated .NET 10 tests passed on development</span><a href="https://github.com/TrentBest/FSM_API/actions/runs/46087840183">Run #1134 · commit f296d4f</a></article>
     <article class="fsm-proof"><strong>6 targets</strong><span>Library compile matrix: .NET 10, .NET 6, .NET Core 3.1, .NET Standard 2.1/2.0, .NET Framework 4.7</span><a href="FSM_API_2.0.0_READINESS.md">Compatibility and readiness details</a></article>
     <article class="fsm-proof"><strong>1.0.13</strong><span>Published NuGet release · historical benchmark baseline</span><a href="https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API">Inspect the published package</a></article>
   </section>
@@ -52,7 +52,7 @@ title: FSM_API — Behavior, made visible
   <p class="fsm-evidence-note">The experiment measures real <code>Update(group)</code> calls through the published 1.0.13 interaction API and varies the number of explicitly updated groups. The observed growth is approximately linear for this workload and range. It is not a universal complexity guarantee or a prediction for every application. <a href="Benchmarking.md">Read the benchmark method and interpretation</a> · <a href="https://github.com/TrentBest/FSM_API_Benchmark">Inspect the executable benchmark project</a>.</p>
 
   <div class="fsm-truth" aria-label="How to read the evidence">
-    <article><h3>Correctness evidence</h3><p>Automated tests check defined behavior and edge cases. The linked run is tied to an exact source commit; it is stronger evidence than a demo animation or a claim that the library has been used in production.</p></article>
+    <article><h3>Correctness evidence</h3><p>Automated tests check defined behavior and edge cases. The linked run is tied to the current development source commit; it is stronger evidence than a demo animation or a claim that the library has been used in production. The build succeeded with 261 warnings and 0 errors, so the project is not presented as warning-free.</p></article>
     <article><h3>Performance evidence</h3><p>Benchmarks measure a specific workload on a specific runtime and environment. The published 1.0.13 figures are useful baseline data; they do not establish 2.0 speedups.</p></article>
   </div>
 
