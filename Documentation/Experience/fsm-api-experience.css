@@ -70,3 +70,8 @@
 .fsm-ecosystem-card:hover { transform:translateY(-3px); border-color:var(--fsm-amber); background:rgba(24,49,72,.94); }
 .fsm-ecosystem-card strong { display:block; color:#fff; margin-bottom:.35rem; }
 .fsm-ecosystem-card span { display:block; color:var(--fsm-muted); font-size:.84rem; }
+
+.fsm-live-badges { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:.45rem; margin:1.2rem auto 0; }
+.fsm-live-badges a { display:inline-flex; border-radius:5px; overflow:hidden; opacity:.92; transition:opacity .2s,transform .2s; }
+.fsm-live-badges a:hover { opacity:1; transform:translateY(-2px); }
+.fsm-live-badges img { display:block; height:22px; }
