@@ -15,7 +15,7 @@
 
 ## FSM_API 2.0.0 development status
 
-**2.0 is implemented on `development`, under verification, and not released.** The published NuGet package remains **1.0.13**. Do not use the 2.0 API surface as though it were available from the published 1.x package.
+**The 2.0 development API is present on `development`, under verification, and not released.** The published NuGet package remains **1.0.13**. Do not use the 2.0 API surface as though it were available from the published 1.x package.
 
 The current development surface includes the concise `FSM_API.FsmApi` facade and the authoritative `TheSingularityWorkshop.FSM_API.FsmApi` implementation. String-backed and integer-backed execution use independent registries. Definition conversion is explicit through `FsmApi.Transfer`; it does not transfer live instances. The concise facade does not expose every operation from either underlying runtime, and full behavioral and diagnostic parity remains an open release gate.
 
