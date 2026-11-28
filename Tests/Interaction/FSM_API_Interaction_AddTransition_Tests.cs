@@ -55,6 +55,41 @@ namespace TheSingularityWorkshop.FSM_API.Tests.Interaction
             Assert.That(FsmApi.Interaction.GetFSMDefinition(fsmName, processingGroup).GetAllTransitions().Count, Is.EqualTo(1), "FSM should have one transition after adding one.");
         }
 
+        private sealed class AnyStateContext : IStateContext
+        {
+            public bool IsValid { get; set; } = true;
+            public string Name { get; set; } = "AnyStateTransitionTest";
+            public int Context_ID => 91001;
+            public bool HasEnteredCurrentState { get; set; }
+        }
+
+        [Test]
+        public void AddTransition_WithAnyStateIdentifier_RegistersAndExecutesAnyStateTransition()
+        {
+            const string fsmName = "AnyStateTransitionFSM";
+            const string processingGroup = "Update";
+
+            FsmApi.Create.CreateFiniteStateMachine(fsmName, -1, processingGroup)
+                .State("Idle", null, null, null)
+                .State("Finished", null, null, null)
+                .BuildDefinition();
+
+            FsmApi.Interaction.AddTransition(
+                fsmName,
+                FSM.AnyStateIdentifier,
+                "Finished",
+                _ => true,
+                processingGroup);
+
+            var definition = FsmApi.Interaction.GetFSMDefinition(fsmName, processingGroup);
+            Assert.That(definition.GetAllTransitions().Single().From, Is.EqualTo(FSM.AnyStateIdentifier));
+
+            var handle = FsmApi.Create.CreateInstance(fsmName, new AnyStateContext(), processingGroup);
+            FsmApi.Interaction.Update(processingGroup);
+
+            Assert.That(handle.CurrentState, Is.EqualTo("Finished"));
+        }
+
         private bool TestCondition(IStateContext context)
         {
             if(context is FSMTestContext testContext)

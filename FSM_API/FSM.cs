@@ -162,14 +162,13 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Adds a **normal transition** between two specific states in your FSM blueprint.
+        /// Adds or replaces a transition in this FSM blueprint.
         /// </summary>
         /// <remarks>
-        /// A "normal" transition only gets checked if your FSM is currently
-        /// in the <paramref name="from"/> state. If you add a transition
-        /// that already exists between the same <paramref name="from"/> and
-        /// <paramref name="to"/> states, the new one you define will
-        /// replace the old one.
+        /// A regular transition is checked only while the FSM is in its source state.
+        /// When <paramref name="from"/> is <see cref="AnyStateIdentifier"/>, the transition
+        /// is stored as an Any-State transition and is evaluated regardless of the current state.
+        /// Adding a transition with an existing source/destination pair replaces that transition.
         /// </remarks>
         /// <param name="from">The name of the starting state for this transition.</param>
         /// <param name="to">The name of the state the FSM will move to if this transition happens.</param>
@@ -191,7 +190,13 @@ namespace TheSingularityWorkshop.FSM_API
                 return;
             }
 
-            // Remove existing transition if it matches (from, to) pair for clean updates
+            if (string.Equals(from, AnyStateIdentifier, StringComparison.Ordinal))
+            {
+                AddAnyStateTransition(to, cond);
+                return;
+            }
+
+            // Remove an existing regular transition with the same endpoints before adding its replacement.
             _transitions.RemoveAll(t => t.From == from && t.To == to);
             _transitions.Add(new FSMTransition(from, to, cond));
         }
@@ -813,17 +818,21 @@ namespace TheSingularityWorkshop.FSM_API
         }
 
         /// <summary>
-        /// Removes a specific normal transition between two states from the FSM blueprint.
+        /// Removes a regular or Any-State transition from the FSM blueprint.
         /// </summary>
-        /// <param name="from">The name of the state where the transition starts.</param>
-        /// <param name="to">The name of the state where the transition ends.</param>
+        /// <param name="from">
+        /// The source state, or <see cref="AnyStateIdentifier"/> for an Any-State transition.
+        /// </param>
+        /// <param name="to">The destination state.</param>
         public void RemoveTransition(string from, string to)
         {
-            if (HasTransition(from, to))
+            if (string.Equals(from, AnyStateIdentifier, StringComparison.Ordinal))
             {
-                var fsmTransition = _transitions.First(s => s.From == from && s.To == to);
-                _transitions.Remove(fsmTransition);
+                _anyStateTransitions.RemoveAll(t => t.To == to);
+                return;
             }
+
+            _transitions.RemoveAll(t => t.From == from && t.To == to);
         }
 
         /// <summary>
