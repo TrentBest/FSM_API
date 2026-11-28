@@ -32,9 +32,9 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (definition.FSM_ID < 0)
+            if (definition.FSM_ID < 0 || definition.FSM_ID > FSM.MaximumSupportedArrayIndex)
             {
-                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be non-negative array indexes.");
+                throw new ArgumentOutOfRangeException(nameof(definition), "FSM IDs must be within the supported non-negative array-index range.");
             }
 
             definition.ProcessingGroupID = processingGroupID;
@@ -383,9 +383,16 @@ namespace TheSingularityWorkshop.FSM_API.IntegerBacked
             }
 
             var newLength = _definitions.Length == 0 ? 4 : _definitions.Length;
+            if (requiredLength > FSM.MaximumSupportedArrayIndex + 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(requiredLength), "Definition array capacity exceeds the supported integer-backed limit.");
+            }
+
             while (newLength < requiredLength)
             {
-                newLength *= 2;
+                newLength = newLength >= (FSM.MaximumSupportedArrayIndex + 1) / 2
+                    ? FSM.MaximumSupportedArrayIndex + 1
+                    : newLength * 2;
             }
 
             Array.Resize(ref _definitions, newLength);
