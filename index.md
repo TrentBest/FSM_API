@@ -49,7 +49,7 @@ title: FSM_API — Behavior, made visible
     </table>
     <div class="fsm-bench-foot">BenchmarkDotNet · September 2026 · published FSM_API 1.0.13 · .NET 10 · string-backed Update(group) workload · historical baseline, not a 2.0 measurement.</div>
   </div>
-  <p class="fsm-evidence-note">The experiment measures real <code>FsmApi.Interaction.Update(group)</code> calls and varies the number of explicitly updated groups. The observed growth is approximately linear for this workload and range. It is not a universal complexity guarantee or a prediction for every application. <a href="Benchmarking.html">Read the benchmark method and interpretation</a> · <a href="https://github.com/TrentBest/FSM_API_Benchmark">Inspect the executable benchmark project</a>.</p>
+  <p class="fsm-evidence-note">The experiment measures real <code>Update(group)</code> calls through the published 1.0.13 interaction API and varies the number of explicitly updated groups. The observed growth is approximately linear for this workload and range. It is not a universal complexity guarantee or a prediction for every application. <a href="Benchmarking.html">Read the benchmark method and interpretation</a> · <a href="https://github.com/TrentBest/FSM_API_Benchmark">Inspect the executable benchmark project</a>.</p>
 
   <div class="fsm-truth" aria-label="How to read the evidence">
     <article><h3>Correctness evidence</h3><p>Automated tests check defined behavior and edge cases. The linked run is tied to an exact source commit; it is stronger evidence than a demo animation or a claim that the library has been used in production.</p></article>
@@ -66,7 +66,7 @@ title: FSM_API — Behavior, made visible
   </nav>
 </div>
 
-<script defer src="Documentation/Experience/fsm-api-experience.js"></script>
+<script defer src="fsm-api-experience.js"></script>
 
 ## The idea behind the machine
 
