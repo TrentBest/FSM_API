@@ -54,125 +54,99 @@ C)  Hot Reloading: Modifying FSM logic in a live environment (e.g., development 
 
 D)  A/B Testing: Dynamically switching between different FSM behaviors for experimentation.
 
-## 🔑 Accessing and Using the FSMModifier
+## 🔑 Accessing and using FSMModifier
 
-The FSMModifier is an internal class, so you can't create it directly. Instead, you access its functionality through a set of public, static helper methods on FsmApi.Interaction. These methods are designed to simplify common modification tasks like adding or removing states and transitions.
+`FSMModifier` is a **public** type. Create it from an existing string-backed `FSM` definition, stage the changes you want, and call `ModifyDefinition()` to apply them.
 
-The FSMModifier uses a fluent API pattern where you first stage the changes you want to make and then apply them with a single ModifyDefinition() call. All changes are batched and applied sequentially when ModifyDefinition() is called, making the process safe and predictable.
+The public `FsmApi.Interaction` module also provides convenience methods for common add/remove operations. Those wrappers apply their changes immediately through the modifier. For changing existing state actions or transition conditions, use `FSMModifier` directly.
 
-## 🛠 FSMModifier Methods: Altering the Blueprint
+## 🛠 Stage and apply definition changes
 
-A modifier's fluent calls stage requested edits. They take effect when you call `ModifyDefinition()`; that method locates the registered definition and applies the staged changes in a defined order.
+Retrieve the registered definition, then create a modifier:
 
-![FSMModifier staging and application order](Visuals/Modifier_Staging_And_Application.svg)
-
-The current application order is: process group/rate changes, remove states (redirecting handles in those states), add states, modify existing states, remove transitions, add transitions, then modify existing transitions. This is an ordered sequence, **not a documented atomic transaction**. Do not assume all-or-nothing rollback if an operation throws; validate requested edits and handle failures at the application boundary.
-
-
-
-All the methods below are called on an instance of the FSMModifier class. You get this instance by calling a public method on FsmApi.Interaction.
-
-Staging Changes with With... and Without...
-
-## WithState(): Adding a New State
-
-This method adds a new state to an existing FSM definition. If a state with the given name already exists, the operation is ignored. Use WithModifiedState() to change an existing state.
-
-C# Example:
 ```csharp
+using TheSingularityWorkshop.FSM_API;
 
+var definition = FsmApi.Interaction.GetFSMDefinition("PlayerFSM", "Update");
+var modifier = new FSMModifier(definition);
+
+modifier
+    .WithState(
+        "SpecialAttack",
+        onEnter: ctx => Console.WriteLine("Prepare special attack!"),
+        onUpdate: ctx => Console.WriteLine("Execute special attack."),
+        onExit: ctx => Console.WriteLine("Finish special attack."))
+    .WithModifiedState(
+        "Idle",
+        onEnter: ctx => Console.WriteLine("Entered the revised Idle state."),
+        onUpdate: null,
+        onExit: ctx => Console.WriteLine("Leaving revised Idle state."))
+    .WithTransition(
+        "Idle",
+        "SpecialAttack",
+        ctx => ctx is PlayerContext player && player.HasSpecialAttack)
+    .WithModifiedTransition(
+        "Damaged",
+        "CriticallyInjured",
+        ctx => ctx is CharacterContext character && character.Health <= 10)
+    .WithoutTransition("Running", "Jumping")
+    .WithoutState("Dead", "Idle")
+    .WithProcessRate(2)
+    .ModifyDefinition();
+```
+
+The available staging methods are:
+
+| Method | Purpose |
+|---|---|
+| `WithState` | Add a state if it does not already exist |
+| `WithModifiedState` | Replace the actions on an existing state |
+| `WithTransition` | Add a transition if that endpoint pair does not already exist |
+| `WithModifiedTransition` | Replace the condition on an existing transition |
+| `WithoutState` | Remove a state and provide a preferred fallback |
+| `WithoutTransition` | Remove a transition by source and destination |
+| `WithProcessGroup` | Move the definition and its instances to another group |
+| `WithProcessRate` | Change the definition's processing rate |
+| `ModifyDefinition` | Apply the staged operations |
+
+The application order is sequential: process-group/rate changes, state removals, state additions, state modifications, transition removals, transition additions, then transition-condition modifications. This is **not an atomic transaction**. Do not assume all-or-nothing rollback if an operation or callback fails.
+
+When removing a state, active handles in that state are moved to the requested fallback when it exists and is not the removed state. If the fallback is blank, missing, or invalid, the FSM's initial state is used. Design that fallback deliberately.
+
+## Convenience methods on FsmApi.Interaction
+
+For common add/remove operations, the facade offers direct methods:
+
+```csharp
 FsmApi.Interaction.AddStateToFSM(
     "PlayerFSM",
     "SpecialAttack",
     onEnter: ctx => Console.WriteLine("Prepare special attack!"),
     onUpdate: ctx => Console.WriteLine("Execute special attack."),
-    onExit: ctx => Console.WriteLine("Cleanup after special attack.")
-);
-```
+    onExit: ctx => Console.WriteLine("Finish special attack."));
 
-## WithModifiedState(): Updating an Existing State
-
-This method modifies the actions (onEnter, onUpdate, and onExit) of a state that is already part of the FSM blueprint. If the state doesn't exist, the operation is ignored.
-
-C# Example:
-```csharp
-
-// Change the "Idle" state's behavior
-FsmApi.Interaction.ModifyState(
-    "PlayerFSM",
-    "Idle",
-    onEnter: ctx => Console.WriteLine("Entered a NEW and improved Idle state."),
-    onUpdate: null, // You can pass null to remove an action
-    onExit: ctx => Console.WriteLine("Exiting new Idle state.")
-);
-```
-
-## WithoutState(): Removing a State
-
-This method stages a state for removal from the FSM definition.
-
-C# Example:
-```csharp
-// Remove a state and transition all instances to "InitialState"
-FsmApi.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", null);
-```
-
-When the removed state is the current state of an active handle, `ModifyDefinition()` first attempts the supplied fallback state. If that state exists in the definition and is not the state being removed, the handle transitions there using the normal transition behavior. If the fallback is blank, missing, or names the state being removed, the handle instead transitions to the FSM's `InitialState`. This is a safety net, not a substitute for designing a valid default state and its entry behavior.
-
-![State removal fallback flow: use a valid requested fallback, otherwise the FSM's InitialState.](Visuals/State_Removal_Fallback.svg)
-
-The default state is a recovery path, not magic. Give it a deliberate, safe behavior. Conversely, an empty FSM definition can still be structurally valid and inert: with no states or transitions, there is simply no state behavior to execute.
-
-## WithTransition(): Creating a New Path
-
-This method adds a new transition rule between two states. If the transition already exists, the operation is ignored. Use WithModifiedTransition() to change an existing one.
-
-C# Example:
-```csharp
-// Add a new transition from "Idle" to "Sleeping"
 FsmApi.Interaction.AddTransition(
     "PlayerFSM",
     "Idle",
-    "Sleeping",
-    ctx => ((PlayerContext)ctx).IsTired() && DateTime.Now.Hour > 21
-);
-```
-## WithModifiedTransition(): Updating a Transition
+    "SpecialAttack",
+    ctx => ctx is PlayerContext player && player.HasSpecialAttack);
 
-This method updates the condition of an existing transition between two states. If the transition doesn't exist, the operation is ignored.
-
-C# Example:
-```csharp
-// Change the condition for the "Damaged" -> "CriticallyInjured" transition
-FsmApi.Interaction.ModifyTransition(
-    "PlayerFSM",
-    "Damaged",
-    "CriticallyInjured",
-    ctx => ((CharacterContext)ctx).Health <= 10 // Change from 25 to 10
-);
-```
-
-## WithoutTransition(): Blocking a Path
-
-This method removes a specific transition rule. It requires the fromState and toState names to uniquely identify the transition.
-
-C# Example:
-```csharp
-// Remove the transition from "Running" to "Jumping"
 FsmApi.Interaction.RemoveTransition("PlayerFSM", "Running", "Jumping");
+FsmApi.Interaction.RemoveStateFromFSM("PlayerFSM", "Dead", "Idle");
 ```
-## 🔄 Manipulating Live FSM Instances (FSMHandle)
 
-While FSMModifier changes the FSM blueprint, the FSMHandle provides methods to directly influence individual, live FSMHandle instances at runtime. These operations do not alter the underlying FSM definition.
+These wrappers cover adding/removing states and transitions. They do **not** expose `ModifyState` or `ModifyTransition` methods; use `FSMModifier.WithModifiedState` and `FSMModifier.WithModifiedTransition` to change existing definitions.
 
-  TransitionTo(): Forces an FSMHandle instance to immediately transition to a specified state, bypassing any conditions. This is useful for debug commands or for recovering from an error state.
+## 🔄 Manipulating live FSM instances (FSMHandle)
 
-  ResetFSMInstance(): Resets the FSM instance to its initial state, as defined in its blueprint.
+Definition changes affect the shared blueprint. A live `FSMHandle` also exposes instance-level controls that do not change the definition:
 
-  EvaluateConditions(): Manually checks all transition rules from the current state. This is especially useful for FSMs with a ProcessRate of 0, which do not update automatically.
+- `handle.TransitionTo("StateName")` forces that instance to a target state, bypassing transition conditions.
+- `handle.ResetFSMInstance()` returns the instance to its initial state.
+- `handle.EvaluateConditions()` explicitly evaluates transition conditions for that instance.
+- `FsmApi.Interaction.DestroyInstance(handle)` explicitly destroys the live instance. Destruction is an interaction operation, not a `DestroyHandle()` method on the handle.
 
-  DestroyHandle(): Shuts down this FSM instance, removes it from the API's internal system, and calls the OnExit action of its current state. This is a crucial cleanup step for any live instance that is no longer needed.
-
+Use instance controls deliberately: they change the lifecycle of one running instance, while `FSMModifier` changes the shared definition used by all instances.
 ## 💡 Important Considerations and Best Practices
 
   Affects All Instances: Remember that changes made with FSMModifier affect the shared blueprint. All active FSMHandle instances created from that blueprint will immediately use the new states, transitions, and properties on their next update cycle.
