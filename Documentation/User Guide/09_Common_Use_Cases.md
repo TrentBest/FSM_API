@@ -151,7 +151,10 @@ FsmApi.Create.CreateFiniteStateMachine("MainMenuFlow", processingGroup: "UI_Inpu
     .Transition("Credits", "MainMenu", ctx => ((UIManagerContext)ctx).CreditsBackButtonCLicked())
     .BuildDefinition();
 
-// FsmApi.Interaction.Update("UI_Input") can be called by the host when a button event requests processing
+var menuHandle = FsmApi.Create.CreateInstance("MainMenuFlow", uiManagerContext, "UI_Input");
+
+// For processRate: 0, update the context from the input event and evaluate this instance:
+menuHandle.EvaluateConditions();
 ```
 
 -----
@@ -204,7 +207,7 @@ Managing the lifecycle of a network connection.
   * **FSM\_API Advantage:**
       * Handles complexity: Network states can be tricky due to asynchronous operations and error conditions. FSMs simplify this.
       * Clear error paths: Define specific error states and how to recover or report them.
-      * Event-driven: Can use `FsmApi.Interaction.Update("BackendProcessor")` to advance FSMs based on network events (e.g., `OnConnected`, `OnDisconnected`).
+      * Event-driven: Update the connection context from the network callback, then call `EvaluateConditions()` on that connection's live `FSMHandle`. A processing rate of `0` is manual; a group `Update` does not schedule it like a positive-rate FSM.
 
 -----
 
