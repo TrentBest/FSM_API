@@ -85,7 +85,7 @@ var fsmBuilder = FsmApi.Create.CreateFiniteStateMachine(
       * `processRate = 1`: Updates **every tick** of its processing group.
       * `processRate = N` (where N \> 1): Updates **every N ticks** of its processing group. (e.g., `processRate = 2` means it updates every other tick).
       * Default: `1`
-  * `processingGroup` (string, optional): Assigns a **default processing group** name for instances created from this definition. Processing groups (e.g., "Update", "FixedUpdate", "AI\_Logic") allow you to organize and update multiple FSMs together from a single `FSM_API.Update("GroupName")` call.
+  * `processingGroup` (string, optional): Assigns a **default processing group** name for instances created from this definition. Processing groups (e.g., "Update", "FixedUpdate", "AI\_Logic") allow you to organize and update multiple FSMs together from a single `FsmApi.Interaction.Update("GroupName")` call.
       * Default: `Update`. The host application decides when to tick this group, for example from its own update loop or an explicit C# loop.
 
 -----
@@ -308,7 +308,7 @@ An empty builder is allowed. That example registers an unnamed definition with z
 | `AnyTransition(...)`    | Defines a global conditional rule for moving from *any* state to a specific destination state. These have higher priority than regular transitions.                                                                          |
 | `WithProcessRate(...)`  | Sets the default update frequency (`onUpdate` calls and transition checks) for instances of this FSM definition. (e.g., every tick, every N ticks, or only when manually stepped).                                          |
 | `WithName(...)`         | Assigns the unique identifier for this FSM definition blueprint.                                                                                                                                                             |
-| `WithProcessingGroup(...)` | Assigns the default processing group for instances of this FSM definition, controlling when they are collectively updated by `FSM_API.Update("GroupName")`.                                                                 |
+| `WithProcessingGroup(...)` | Assigns the default processing group for instances of this FSM definition, controlling when they are collectively updated by `FsmApi.Interaction.Update("GroupName")`.                                                                 |
 | `BuildDefinition()`     | Registers the FSM definition. May be used with a populated or empty builder.                                                                                                                                                |
 | `Build()`               | Alias for `BuildDefinition()`; useful for the parameterless `new FSMBuilder().Build()` empty-definition pattern.                                                                                                           |
 
