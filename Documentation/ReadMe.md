@@ -4,9 +4,11 @@
 
 A state machine is easier to understand when you can watch its structure and timing. FSM_API turns named states, guarded transitions, and state actions into reusable behavior—without tying the core library to a game engine, UI framework, or application domain.
 
+> **Version boundary:** This documentation follows the 2.0 development API on `development`. The published NuGet 1.0.13 package remains on the legacy `FSM_API` entry point; the 2.0 `FsmApi` surface shown here is not yet published. For a 1.0.13-compatible quick-start, see the repository [README](../README.md).
+
 [![NuGet](https://img.shields.io/nuget/v/TheSingularityWorkshop.FSM_API?style=flat-square&logo=nuget)](https://www.nuget.org/packages/TheSingularityWorkshop.FSM_API)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=master&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/TrentBest/FSM_API/dotnet.yml?branch=development&style=flat-square)](https://github.com/TrentBest/FSM_API/actions)
 
 ## 🟦 01 What
 
