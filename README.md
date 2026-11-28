@@ -21,7 +21,7 @@ The current development surface includes the concise `FSM_API.FsmApi` facade and
 
 ### Evidence snapshot
 
-- **Correctness:** development commit [`11f56e2`](https://github.com/TrentBest/FSM_API/commit/11f56e2bff8ee473b090b148318629810de3df88) passed **492 tests, 0 failed, 0 skipped** on .NET 10 in [workflow run #1133](https://github.com/TrentBest/FSM_API/actions/runs/46087635713). This is a commit-specific automated test result, not a claim of production adoption or complete parity.
+- **Correctness:** development commit [`f296d4f`](https://github.com/TrentBest/FSM_API/commit/f296d4f93115bdf528699e2c0ca64b753be9850b) passed **492 tests, 0 failed, 0 skipped** on .NET 10 in [workflow run #1134](https://github.com/TrentBest/FSM_API/actions/runs/46087840183). This is a commit-specific automated test result, not a claim of production adoption or complete parity. The build completed with 261 warnings and 0 errors; warning cleanup remains open.
 - **Build compatibility:** the library compiled for its six configured target frameworks in that workflow. Runtime tests execute on .NET 10 only; older target frameworks are compile-validated, not runtime-tested by this lane.
 - **Performance:** the visible [benchmark baseline](Documentation/Benchmarking.md) is a September 2026 BenchmarkDotNet measurement of the published **1.0.13** package. It is not a measurement of the 2.0 candidate and does not establish a 2.0 speedup.
 - **Documentation:** the [public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md), [source-backed API traceability map](Documentation/API_TRACEABILITY_2.0.0.md), and [readiness gates](Documentation/FSM_API_2.0.0_READINESS.md) distinguish implemented surfaces from unresolved behavior and verification.
