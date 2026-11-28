@@ -12,6 +12,7 @@ on:
       - "FSM_API/**/*.csproj"
       - "api/**"
       - "scripts/validate_doc_links.py"
+      - "scripts/test_fsm_api_experience.cjs"
       - ".github/workflows/pages.yml"
   pull_request:
     branches: [development]
@@ -44,6 +45,9 @@ jobs:
 
       - name: Validate interactive experience JavaScript
         run: node --check Documentation/Experience/fsm-api-experience.js
+
+      - name: Test interactive experience behavior
+        run: node scripts/test_fsm_api_experience.cjs
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v6
