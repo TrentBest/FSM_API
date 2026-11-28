@@ -82,6 +82,6 @@ See the [public API contract](Documentation/FSM_API_2.0.0_PUBLIC_API_CONTRACT.md
 
 ## The next experiment
 
-Start with the [C# getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md), inspect the [generated API reference](xref:TheSingularityWorkshop.FSM_API.FsmApi), then follow the code and tests behind any behavior that matters to your application.
+Start with the [C# getting-started guide](Documentation/User%20Guide/03_Getting_Started_CSharp.md), inspect the [generated API reference](https://trentbest.github.io/FSM_API/TheSingularityWorkshop.FSM_API.html), then follow the code and tests behind any behavior that matters to your application.
 
 <sub>The interactive model is a teaching aid. Source code, tests, benchmark provenance, and generated API reference remain authoritative.</sub>
