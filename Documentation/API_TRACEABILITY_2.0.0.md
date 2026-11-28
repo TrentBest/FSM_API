@@ -50,7 +50,7 @@ The integer runtime is independent: it owns its own registry and integer identit
 | `Contains(int)` | Integer | Registration/re-registration boundary tests |
 | `MoveInstance(FSMHandle, string)` | String | Deferred-mutation boundary tests |
 | `AddStateToFSM(...)` | String | Runtime modifier tests; duplicate-state/update semantics |
-| `AddTransition(...)` | String | Runtime modifier tests; replacement and guard semantics |
+| `AddTransition(...)` | String | `FSM_API.Interaction.AddTransition` delegates to `FSM.AddTransition`; supports the Any-State sentinel and replaces an existing transition with the same endpoints. Regression tests cover Any-State registration/execution and replacement. |
 | `DestroyFiniteStateMachine(string, string)` | String | Definition destruction and dependent-instance teardown |
 | `Exists(string, string)` | String | Registry lookup tests |
 | `GetAllDefinitionNames(string)` | String | Snapshot/ordering/empty-group semantics |
@@ -58,7 +58,7 @@ The integer runtime is independent: it owns its own registry and integer identit
 | `RemoveProcessingGroup(string)` | String | Group removal and dependent definition/instance lifecycle |
 | `DestroyInstance(FSMHandle)` | String | Explicit destruction, repeated destruction, and registry safety |
 | `RemoveStateFromFSM(...)` | String | Fallback-state validity and active-instance behavior |
-| `RemoveTransition(...)` | String | Transition removal and active-instance behavior |
+| `RemoveTransition(...)` | String | `FSMModifier.WithoutTransition` → `FSM.RemoveTransition`; normal and Any-State transitions are removed from their respective collections. Regression coverage now includes Any-State removal. |
 | `GetInstance(string, IStateContext, string)` | String | Identity/context matching and missing-instance behavior |
 | `GetFSMDefinition(string, string)` | String | Definition lookup and missing-definition behavior |
 | `GetFSMDefinition(int)` | Integer | Integer registry lookup |
@@ -84,6 +84,9 @@ The following test areas were confirmed by opening their source files during thi
 - `Tests/IntegerBacked/IntegerRuntimeSurfaceTests.cs` — integer facade build/register/create/update surface.
 - `Tests/IntegerBacked/IntegerParityTests.cs` — lifecycle timing, Any-State priority/callback trace, invalid-context gate, force-transition/reset semantics, sparse IDs, and timer parity.
 - `Tests/IntegerBacked/FSMCompiler_Tests.cs` — conversion/compiler validation, deterministic mapping, callback/transition preservation, read-only maps, and decompile failure cases.
+- `Tests/IntegerBacked/FSMRuntime_Tests.cs` and `FSMRuntime_LifecycleEdgeCase_Tests.cs` — integer callback failure reporting, shared threshold use, and deferred teardown behavior.
+- `Tests/Interaction/FSM_API_Interaction_AddTransition_Tests.cs` — normal transition addition plus Any-State registration/execution and endpoint replacement regressions.
+- `Tests/Interaction/FSM_API_Interaction_RemoveTransition_Tests.cs` — Any-State removal regression.
 - `Tests/FsmApiFacadeTests.cs` — concise facade overloads, conversion round-trip, and integer facade execution.
 - `Tests/Error/FSM_API_ErrorAPI_Tests.cs` — string-backed error API and threshold behavior.
 - `Tests/Interaction/FSM_API_Interaction_MoveInstance_Tests.cs` — deferred move behavior.

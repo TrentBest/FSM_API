@@ -102,10 +102,17 @@ Documentation-only changes made during this review are on `development`; they do
 
 ### Current verification and branch evidence
 
-- Latest completed full .NET workflow observed during this review: [run #1125](https://github.com/TrentBest/FSM_API/actions/runs/46087202082), exact commit `14be41e594e3d2cd2c6db7d23b84a1832c373db6`. Solution build/package and documentation jobs succeeded; .NET 10 tests reported **489 passed, 0 failed, 0 skipped**. The build emitted 282 warnings and 0 errors. NuGet publication and the embedded Sith gate were skipped.
-- Newer documentation commits are being validated separately. The latest observed .NET run is [run #1130](https://github.com/TrentBest/FSM_API/actions/runs/46087374098), currently in progress at the time of this update; do not treat the earlier successful run as validation of the latest commit.
+- Latest completed full .NET workflow: [run #1133](https://github.com/TrentBest/FSM_API/actions/runs/46087635713), exact commit `11f56e2bff8ee473b090b148318629810de3df88`. Solution build/package and documentation jobs succeeded; .NET 10 tests reported **492 passed, 0 failed, 0 skipped**. The build emitted 285 warnings and 0 errors. NuGet publication and the embedded Sith gate were skipped.
+- The Any-State regression was first exposed by run #1132 (one failing test). The interaction facade was then corrected to delegate to the replacement-aware FSM operation; run #1133 verifies the corrected implementation and all 492 tests pass.
 - The latest direct live branch inventory contains **24 branches**, including `development`, `master`, and 22 additional branches. The exact-two-branch Sith policy remains **NON-COMPLIANT**. No branch was deleted; surplus-branch cleanup remains owner-controlled.
-- The Pages workflow is push-triggered and uses the CiAi deployment workflow. Its latest observed run is [run #71](https://github.com/TrentBest/FSM_API/actions/runs/46087374455), in progress. I did not manually dispatch a deployment; this automation is triggered by development pushes.
+- The Pages workflow is push-triggered and uses the CiAi deployment workflow. [Run #74](https://github.com/TrentBest/FSM_API/actions/runs/46087635960) completed source-link validation, DocFX generation, artifact verification, and deployment for this development commit. The live site is [FSM_API Pages](https://trentbest.github.io/FSM_API/). I did not manually dispatch deployment; the repository automation ran because the development branch was updated.
 - Package version remains `1.0.13`; all six library target frameworks remain unchanged. No runtime implementation, package publication, merge to `master`, or branch deletion was performed.
 
 The detailed source/test map is maintained in [API_TRACEABILITY_2.0.0.md](API_TRACEABILITY_2.0.0.md). These findings improve documentation accuracy but do not constitute 2.0 parity sign-off.
+
+
+### Interaction transition correction — 2026-11-28
+
+The interaction-level transition APIs now route the reserved Any-State source to the dedicated Any-State transition collection. Removal uses the matching Any-State collection rather than searching only normal transitions. The public interaction add operation now delegates directly to the replacement-aware FSM definition method, so adding an existing source/destination pair replaces its condition as documented. Regression tests cover Any-State registration and execution, normal endpoint replacement, and Any-State removal.
+
+The first regression run exposed a remaining facade/modifier no-op; that failure was corrected before the successful 492-test run above. This change is limited to string-backed transition definition mutation; integer runtime behavior and package metadata were not changed.

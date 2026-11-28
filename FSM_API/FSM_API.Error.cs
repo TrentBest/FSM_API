@@ -75,20 +75,14 @@ namespace TheSingularityWorkshop.FSM_API
             }
 
             /// <summary>
-            /// Invokes an error specifically related to a misbehaving FSM instance.
+            /// Records a failure for a string-backed FSM instance and schedules cleanup when its
+            /// cumulative error count reaches <see cref="InstanceErrorThreshold"/>.
             /// </summary>
             /// <remarks>
-            /// This method tracks instance-specific errors and will automatically shut down
-            /// the <paramref name="handle"/> if its error count reaches the <see cref="InstanceErrorThreshold"/>.
+            /// Threshold-triggered shutdown is queued for deferred processing. A null handle is
+            /// reported through the internal diagnostic channel and does not throw.
             /// </remarks>
-            /// <param name="handle">The <see cref="FSMHandle"/> instance that encountered the error.</param>
-            /// <param name="message">A descriptive message about the instance error.</param>
-            /// <param name="exception">The associated exception, or null if no exception occurred.</param>
-            /// <param name="processGroup">The name of the processing group where the error occurred (default is "Update").</param>
-            /// <exception cref="ArgumentNullException">Thrown if <paramref name="handle"/> is null.</exception>
-
-            /// <summary>Records an error for a string-backed instance and schedules cleanup when its threshold is reached.</summary>
-            /// <param name="handle">The instance that encountered the error. A null handle is reported as an internal API error.</param>
+            /// <param name="handle">The instance that encountered the failure.</param>
             /// <param name="message">A descriptive message for the failure.</param>
             /// <param name="exception">The associated exception, or null when no exception is available.</param>
             /// <param name="processGroup">The processing group associated with the failure.</param>
