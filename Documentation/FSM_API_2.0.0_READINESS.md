@@ -75,7 +75,7 @@ The public API contract now distinguishes the error-policy implementation more p
 - String and integer runtimes maintain representation-specific instance and definition counters.
 - Both runtimes use the same configured instance and definition threshold values.
 - Integer callback failures report through the shared internal diagnostic event.
-- The concise facade exposes integer diagnostic snapshots and reset operations, but does not expose a separate integer threshold configuration or a public integer-specific error-injection method.
+- The concise facade exposes integer counter copies and per-instance/per-definition reset operations, but no global integer-counter reset, separate integer threshold configuration, or public integer-specific error-injection method. The string counter getters return live mutable backing dictionaries, whereas integer getters return copies; `Reset()` clears only string-backed counters.
 - Full threshold and exception-path behavioral parity remains a release gate.
 
 The concise facade's threshold properties and diagnostic event now have XML summaries, and the legacy string-backed `InvokeInstanceError` method now has complete parameter documentation.
@@ -84,7 +84,7 @@ The concise facade's threshold properties and diagnostic event now have XML summ
 
 1. **Framework test coverage:** all six target frameworks are included in the library build matrix, but runtime tests currently execute only on `net10.0`. Decide whether compile-only validation is the intended compatibility promise or whether selected historical runtime test lanes are practical.
 2. **Package version boundary:** the development project still declares package version `1.0.13` while the development documentation describes the 2.0.0 API. This is acceptable as long as development artifacts are not published, but the 2.0 release candidate must explicitly set and verify its intended package version and release notes before any publish workflow is authorized.
-3. **Error parity:** equivalent input/trace tests must cover shared thresholds, callback exceptions, pending removal, definition unregister, resets, and interactions between invalidation and thrown exceptions.
+3. **Error parity:** equivalent input/trace tests must cover shared thresholds, callback exceptions, pending removal, definition unregister, resets, and interactions between invalidation and thrown exceptions. Cleanup scheduling differs between runtimes, as do counter getter ownership and global reset scope; these are explicit contract differences to resolve or preserve deliberately.
 4. **Public API traceability:** continue mapping every public member to its XML documentation, tests, conceptual explanation, and examples. This review has improved the Error surface but is not a completed whole-library inventory.
 5. **Visual evidence:** living SVGs and theory chapters must be reconciled to the exact runtime implementation and tests before being treated as release evidence.\n6. **API traceability:** an initial source-backed inventory is now recorded in [API_TRACEABILITY_2.0.0.md](API_TRACEABILITY_2.0.0.md). It maps the concise facade to implementation, known test areas, theory, examples, and visuals, while explicitly recording incomplete parity and verification gaps. It is not a parity sign-off.
 
